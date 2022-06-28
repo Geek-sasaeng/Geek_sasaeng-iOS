@@ -11,7 +11,7 @@ class ViewController: UIViewController {
   
   var titleLabel: UILabel = {
     let label = UILabel()
-    label.text = "긱사생"
+    label.text = "Test"
     label.textColor = UIColor.black
     label.textAlignment = .center
     label.font = UIFont.boldSystemFont(ofSize: 40)
