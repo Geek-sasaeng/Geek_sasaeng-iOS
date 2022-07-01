@@ -153,14 +153,9 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
-				103F1453286ACA84004B637B /* AppDelegate.swift */,
-				103F1455286ACA84004B637B /* SceneDelegate.swift */,
-				103F1483286ACB95004B637B /* LoginVC.swift */,
-				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
-				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
-				A2B42089286F151100278F92 /* AuthNumVC.swift */,
-				A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */,
-				A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */,
+				A2B4208F286F1F1300278F92 /* App */,
+				A2B4208D286F1EE000278F92 /* ViewController */,
+				A2B4208E286F1F0500278F92 /* Extension */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
@@ -216,6 +211,35 @@
 				F40A4332AB72CABC3268D5FC /* Pods-GeeksasaengTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		A2B4208D286F1EE000278F92 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				103F1483286ACB95004B637B /* LoginVC.swift */,
+				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
+				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
+				A2B42089286F151100278F92 /* AuthNumVC.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		A2B4208E286F1F0500278F92 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */,
+				A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		A2B4208F286F1F1300278F92 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				103F1453286ACA84004B637B /* AppDelegate.swift */,
+				103F1455286ACA84004B637B /* SceneDelegate.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		C1A439548434797F19CEBE66 /* Frameworks */ = {
