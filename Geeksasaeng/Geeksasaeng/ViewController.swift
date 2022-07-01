@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     label.text = "Test"
     label.textColor = UIColor.black
     label.textAlignment = .center
-    label.font = UIFont.boldSystemFont(ofSize: 40)
+    label.font = UIFont(name: "GmarketSansMedium", size: 100)
     return label
   }()
   
