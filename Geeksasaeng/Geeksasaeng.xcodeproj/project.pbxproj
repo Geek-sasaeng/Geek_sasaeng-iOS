@@ -46,6 +46,8 @@
 		A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
+		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
+		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
@@ -552,6 +554,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
+				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
@@ -570,6 +573,7 @@
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
+				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
