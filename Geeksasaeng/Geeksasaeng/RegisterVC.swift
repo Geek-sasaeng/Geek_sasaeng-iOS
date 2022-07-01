@@ -57,6 +57,7 @@ class RegisterViewController: UIViewController {
     var nickNameCheckButton = UIButton()
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -159,7 +160,7 @@ class RegisterViewController: UIViewController {
         nextButton.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(28)
-            make.top.equalTo(nickNameTextField.snp.bottom).offset(200)
+            make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }
         
