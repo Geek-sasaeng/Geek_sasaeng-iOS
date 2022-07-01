@@ -30,6 +30,9 @@
 		1078712D286EBB8A008EDF78 /* GmarketSansMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1078712C286EBB8A008EDF78 /* GmarketSansMedium.otf */; };
 		1078712E286EBB8A008EDF78 /* GmarketSansMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1078712C286EBB8A008EDF78 /* GmarketSansMedium.otf */; };
 		1078712F286EBB8A008EDF78 /* GmarketSansMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1078712C286EBB8A008EDF78 /* GmarketSansMedium.otf */; };
+		1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
+		10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
+		10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
 		701864496BC654D343AB4930 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
 		A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
@@ -90,6 +93,7 @@
 		1078711B286EBAC3008EDF78 /* SpoqaHanSansNeo-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Regular.otf"; sourceTree = "<group>"; };
 		1078711C286EBAC3008EDF78 /* SpoqaHanSansNeo-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Light.otf"; sourceTree = "<group>"; };
 		1078712C286EBB8A008EDF78 /* GmarketSansMedium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansMedium.otf; sourceTree = "<group>"; };
+		1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyTableViewCell.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
 		724884CEEFB929FF25B554A0 /* Pods-Geeksasaeng.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.debug.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.debug.xcconfig"; sourceTree = "<group>"; };
@@ -163,6 +167,7 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
+				1078713D286F7A7E008EDF78 /* Cell */,
 				A2B4208F286F1F1300278F92 /* App */,
 				A2B42098286F249800278F92 /* TabBarController.swift */,
 				A2B4208D286F1EE000278F92 /* ViewController */,
@@ -209,6 +214,14 @@
 				1078711B286EBAC3008EDF78 /* SpoqaHanSansNeo-Regular.otf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		1078713D286F7A7E008EDF78 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
@@ -527,6 +540,7 @@
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
+				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
@@ -543,6 +557,7 @@
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
+				10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,6 +567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
+				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,

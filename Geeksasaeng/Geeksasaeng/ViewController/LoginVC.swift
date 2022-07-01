@@ -90,21 +90,21 @@ class LoginViewController: UIViewController {
     view.backgroundColor = .white
 
     addSubViews()
-    configLayout()
+    configLayouts()
   }
   
   // MARK: Config Methods
   func addSubViews() {
-    self.view.addSubview(logoImageView)
-    self.view.addSubview(idTextField)
-    self.view.addSubview(passwordTextField)
-    self.view.addSubview(loginButton)
-    self.view.addSubview(naverLoginButton)
-    self.view.addSubview(automaticLoginButton)
-    self.view.addSubview(signUpButton)
+    view.addSubview(logoImageView)
+    view.addSubview(idTextField)
+    view.addSubview(passwordTextField)
+    view.addSubview(loginButton)
+    view.addSubview(naverLoginButton)
+    view.addSubview(automaticLoginButton)
+    view.addSubview(signUpButton)
   }
   
-  func configLayout() {
+  func configLayouts() {
     logoImageView.snp.makeConstraints { make in
       make.width.height.equalTo(133)
       make.centerX.equalTo(self.view.center)
@@ -151,6 +151,8 @@ class LoginViewController: UIViewController {
   }
 }
 
+
+// Extensions
 extension UIView {
 
   func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
