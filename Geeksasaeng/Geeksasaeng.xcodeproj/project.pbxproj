@@ -14,7 +14,7 @@
 		103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F146A286ACA86004B637B /* GeeksasaengTests.swift */; };
 		103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1474286ACA86004B637B /* GeeksasaengUITests.swift */; };
 		103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1476286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift */; };
-		103F1484286ACB95004B637B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1483286ACB95004B637B /* ViewController.swift */; };
+		103F1484286ACB95004B637B /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1483286ACB95004B637B /* LoginVC.swift */; };
 		1078711D286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */; };
 		1078711E286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */; };
 		1078711F286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */; };
@@ -61,7 +61,7 @@
 		103F1470286ACA86004B637B /* GeeksasaengUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GeeksasaengUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1474286ACA86004B637B /* GeeksasaengUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeeksasaengUITests.swift; sourceTree = "<group>"; };
 		103F1476286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeeksasaengUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		103F1483286ACB95004B637B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		103F1483286ACB95004B637B /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Bold.otf"; sourceTree = "<group>"; };
 		10787119286EBAC3008EDF78 /* SpoqaHanSansNeo-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Medium.otf"; sourceTree = "<group>"; };
 		1078711B286EBAC3008EDF78 /* SpoqaHanSansNeo-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Regular.otf"; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 			children = (
 				103F1453286ACA84004B637B /* AppDelegate.swift */,
 				103F1455286ACA84004B637B /* SceneDelegate.swift */,
-				103F1483286ACB95004B637B /* ViewController.swift */,
+				103F1483286ACB95004B637B /* LoginVC.swift */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
@@ -310,7 +310,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				103F1484286ACB95004B637B /* ViewController.swift in Sources */,
+				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 			);
