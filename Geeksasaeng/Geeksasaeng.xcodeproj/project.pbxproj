@@ -149,14 +149,10 @@
 			children = (
 				103F1453286ACA84004B637B /* AppDelegate.swift */,
 				103F1455286ACA84004B637B /* SceneDelegate.swift */,
-<<<<<<< HEAD
-				103F1483286ACB95004B637B /* ViewController.swift */,
 				A2FA89A5286EC9E900CB3B55 /* RegisterViewController.swift */,
 				A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */,
 				A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */,
-=======
 				103F1483286ACB95004B637B /* LoginVC.swift */,
->>>>>>> 3d76892f5c590231fac8be2681dab2722d2ab3ca
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
@@ -477,12 +473,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< HEAD
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
-				103F1484286ACB95004B637B /* ViewController.swift in Sources */,
-=======
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
->>>>>>> 3d76892f5c590231fac8be2681dab2722d2ab3ca
+				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterViewController.swift in Sources */,
@@ -679,7 +672,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -708,7 +701,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
