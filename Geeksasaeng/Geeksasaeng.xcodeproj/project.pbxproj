@@ -36,6 +36,13 @@
 		A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
 		A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
 		A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
+		A2B42099286F249800278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
+		A2B420A1286F32FD00278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A0286F32FD00278F92 /* DeliveryVC.swift */; };
+		A2B420A2286F32FD00278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A0286F32FD00278F92 /* DeliveryVC.swift */; };
+		A2B420A3286F32FD00278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A0286F32FD00278F92 /* DeliveryVC.swift */; };
+		A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A4286F370F00278F92 /* PartyVC.swift */; };
+		A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A4286F370F00278F92 /* PartyVC.swift */; };
+		A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A4286F370F00278F92 /* PartyVC.swift */; };
 		A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
@@ -89,6 +96,9 @@
 		8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
 		A2B42089286F151100278F92 /* AuthNumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumVC.swift; sourceTree = "<group>"; };
+		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		A2B420A0286F32FD00278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
+		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
 		A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
@@ -154,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				A2B4208F286F1F1300278F92 /* App */,
+				A2B42098286F249800278F92 /* TabBarController.swift */,
 				A2B4208D286F1EE000278F92 /* ViewController */,
 				A2B4208E286F1F0500278F92 /* Extension */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
@@ -220,6 +231,8 @@
 				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
 				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
 				A2B42089286F151100278F92 /* AuthNumVC.swift */,
+				A2B420A0286F32FD00278F92 /* DeliveryVC.swift */,
+				A2B420A4286F370F00278F92 /* PartyVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -505,12 +518,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
+				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
+				A2B420A1286F32FD00278F92 /* DeliveryVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
@@ -521,6 +537,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2B420A2286F32FD00278F92 /* DeliveryVC.swift in Sources */,
+				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
@@ -533,6 +551,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2B420A3286F32FD00278F92 /* DeliveryVC.swift in Sources */,
+				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
