@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 class EmailAuthViewController: UIViewController {
+    
     // MARK: - Subviews
     
     var progressBar: UIView = {
@@ -31,8 +32,19 @@ class EmailAuthViewController: UIViewController {
     var emailAddressTextField = UITextField()
     
     var authSendButton = UIButton()
+    var nextButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("다음", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .customFont(.neoBold, size: 20)
+        button.layer.cornerRadius = 5
+        button.backgroundColor = .mainColor
+        button.clipsToBounds = true
+        return button
+    }()
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -112,6 +124,15 @@ class EmailAuthViewController: UIViewController {
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
             make.height.equalTo(41)
+        }
+        
+        /* nextButton */
+        view.addSubview(nextButton)
+        nextButton.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.right.equalToSuperview().inset(28)
+            make.bottom.equalToSuperview().inset(51)
+            make.height.equalTo(51)
         }
     }
     
