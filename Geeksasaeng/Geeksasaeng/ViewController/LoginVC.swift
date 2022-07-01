@@ -18,13 +18,23 @@ class LoginViewController: UIViewController {
 
   var idTextField: UITextField = {
     var textField = UITextField()
-    textField.placeholder = "아이디"
+    textField.font = .customFont(.neoLight, size: 14)
+    textField.attributedPlaceholder = NSAttributedString(
+        string: "아이디",
+        attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+    )
+    textField.makeBottomLine(335)
     return textField
   }()
   
   var passwordTextField: UITextField = {
     var textField = UITextField()
-    textField.placeholder = "비밀번호"
+    textField.font = .customFont(.neoLight, size: 14)
+    textField.attributedPlaceholder = NSAttributedString(
+        string: "비밀번호",
+        attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+    )
+    textField.makeBottomLine(335)
     return textField
   }()
   
@@ -32,27 +42,44 @@ class LoginViewController: UIViewController {
     let button = UIButton()
     button.setTitle("로그인", for: .normal)
     button.setTitleColor(UIColor.black, for: .normal)
+    button.titleLabel?.font = .customFont(.neoBold, size: 20)
+    button.titleLabel?.textColor = .white
+    button.backgroundColor = UIColor.init(hex: 0x29ABE2)
+    button.setTitleColor(UIColor.white, for: .normal)
+    button.layer.cornerRadius = 5
     return button
   }()
   
   let naverLoginButton: UIButton = {
     let button = UIButton()
-    button.setTitle("네이버 로그인", for: .normal)
+    button.setImage(UIImage(named: "naverLogo"), for: .normal)
+    button.adjustsImageWhenHighlighted = false
+    button.setTitle("  네이버 로그인", for: .normal)
     button.setTitleColor(UIColor.black, for: .normal)
+    button.titleLabel?.font = .customFont(.neoBold, size: 20)
+    button.titleLabel?.textColor = .white
+    button.backgroundColor = UIColor.init(hex: 0x00C73C)
+    button.setTitleColor(UIColor.white, for: .normal)
+    button.layer.cornerRadius = 5
     return button
   }()
   
   var automaticLoginButton: UIButton = {
     let button = UIButton()
-    button.setTitle("자동 로그인", for: .normal)
-    button.setTitleColor(UIColor.black, for: .normal)
+    button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+    button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
+    button.setTitle(" 자동 로그인", for: .normal)
+    button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+    button.titleLabel?.font = .customFont(.neoLight, size: 15)
     return button
   }()
   
   var signUpButton: UIButton = {
     let button = UIButton()
     button.setTitle("회원가입", for: .normal)
-    button.setTitleColor(UIColor.black, for: .normal)
+    button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+    button.titleLabel?.font = .customFont(.neoLight, size: 15)
+    button.makeBottomLine(55)
     return button
   }()
   
@@ -88,26 +115,28 @@ class LoginViewController: UIViewController {
       make.centerX.equalTo(self.logoImageView)
       make.top.equalTo(self.logoImageView.snp.bottom).offset(50)
       make.left.equalTo(23)
-      make.right.equalTo(-23)
+      make.width.equalTo(314)
     }
     
     passwordTextField.snp.makeConstraints { make in
       make.centerX.equalTo(self.logoImageView)
       make.top.equalTo(self.idTextField.snp.bottom).offset(30)
       make.left.equalTo(23)
-      make.right.equalTo(-23)
+      make.width.equalTo(314)
     }
     
     loginButton.snp.makeConstraints { make in
       make.centerX.equalTo(self.logoImageView)
       make.width.equalTo(314)
       make.top.equalTo(self.passwordTextField.snp.bottom).offset(50)
+      make.height.equalTo(51)
     }
     
     naverLoginButton.snp.makeConstraints { make in
       make.centerX.equalTo(self.logoImageView)
       make.width.equalTo(314)
       make.top.equalTo(self.loginButton.snp.bottom).offset(10)
+      make.height.equalTo(51)
     }
 
     automaticLoginButton.snp.makeConstraints { make in
@@ -122,17 +151,12 @@ class LoginViewController: UIViewController {
   }
 }
 
+extension UIView {
 
-//extension UITextField {
-//
-//  func useUnderline() -> Void {
-//    let border = CALayer()
-//    let borderWidth = CGFloat(2.0) // Border Width
-//    border.borderColor = UIColor(red: 239, green: 239, blue: 239, alpha: 1).cgColor
-//    border.frame = CGRect(origin: CGPoint(x: 0,y :self.frame.size.height - borderWidth), size: CGSize(width: self.frame.size.width, height: self.frame.size.height))
-//    border.borderWidth = borderWidth
-//    self.layer.addSublayer(border)
-//    self.layer.masksToBounds = true
-//  }
-//
-//}
+  func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
+      let border = CALayer()
+      border.backgroundColor = color.cgColor
+      border.frame = CGRect(x: 0, y: self.frame.size.height - width, width: self.frame.size.width, height: width)
+      self.layer.addSublayer(border)
+  }
+}
