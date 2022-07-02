@@ -70,6 +70,7 @@ class AuthNumViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = .mainColor
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(completeRegister), for: .touchUpInside)
         return button
     }()
     
@@ -157,6 +158,14 @@ class AuthNumViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.masksToBounds = false
+    }
+    
+    // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
+    @objc func completeRegister() {
+        let loginVC = LoginViewController()
+        loginVC.modalTransitionStyle = .coverVertical
+        loginVC.modalPresentationStyle = .fullScreen
+        present(loginVC, animated: true)
     }
         
 }

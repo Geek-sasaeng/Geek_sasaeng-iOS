@@ -40,8 +40,17 @@ class EmailAuthViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = .mainColor
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
         return button
     }()
+    
+    // MARK: - Properties
+    
+    var idData: String!
+    var pwData: String!
+    var pwCheckData: String!
+    var nickNameData: String!
+    
     
     // MARK: - Life Cycle
     
@@ -190,5 +199,33 @@ class EmailAuthViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.masksToBounds = false
+    }
+    
+    @objc func showNextView() {
+        let authNumVC = AuthNumViewController()
+        
+        sendRegisterRequest()
+        
+        authNumVC.modalTransitionStyle = .crossDissolve
+        authNumVC.modalPresentationStyle = .fullScreen
+        present(authNumVC, animated: true)
+    }
+    
+    func sendRegisterRequest() {
+        // Request 생성.
+        guard let school = self.schoolTextField.text,
+              let email = self.emailTextField.text,
+              let emailAddress = self.emailAddressTextField.text
+        else { return }
+        
+        let input = RegisterInput(checkPassword: pwCheckData,
+                                  email: email+emailAddress,
+                                  loginId: idData,
+                                  nickname: nickNameData,
+                                  password: pwData,
+                                  phoneNumber: "01012341234",
+                                  universityName: school)
+        
+        RegisterManager.registerUser(self, input)
     }
 }

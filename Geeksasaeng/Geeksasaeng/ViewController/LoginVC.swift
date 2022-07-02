@@ -47,6 +47,7 @@ class LoginViewController: UIViewController {
     button.backgroundColor = UIColor.init(hex: 0x29ABE2)
     button.setTitleColor(UIColor.white, for: .normal)
     button.layer.cornerRadius = 5
+      button.addTarget(self, action: #selector(tapLoginButton), for: .touchUpInside)
     return button
   }()
   
@@ -151,7 +152,7 @@ class LoginViewController: UIViewController {
     }
   }
     
-    @objc func showRegisterView(sender: UIButton!) {
+    @objc func showRegisterView() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
         
@@ -161,6 +162,21 @@ class LoginViewController: UIViewController {
         present(registerVC, animated: true)
     }
    
+    @objc func tapLoginButton() {
+        // 로그인 시도
+        if let id = self.idTextField.text,
+           let pw = self.passwordTextField.text {
+            let input = LoginInput(loginId: id, password: pw)
+            LoginManager.login(self, input)
+        }
+    }
+    
+    public func showHomeView() {
+        let tabBarController = TabBarController()
+        tabBarController.modalTransitionStyle = .crossDissolve
+        tabBarController.modalPresentationStyle = .fullScreen
+        present(tabBarController, animated: true)
+    }
 }
 
 
