@@ -34,9 +34,9 @@ class RegisterViewController: UIViewController {
   var pwCheckTextField = UITextField()
   var nickNameTextField = UITextField()
   
-  var remainTimeLabel: UILabel = {
+  var idAvailableLabel: UILabel = {
     let label = UILabel()
-    label.text = "00분 00초 남았어요"
+    label.text = "사용 가능한 아이디입니다"
     label.textColor = .mainColor
     label.font = .customFont(.neoMedium, size: 13)
     return label
@@ -148,9 +148,9 @@ class RegisterViewController: UIViewController {
       make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
     }
     
-    /* remainTimeLabel */
-    view.addSubview(remainTimeLabel)
-    remainTimeLabel.snp.makeConstraints { make in
+    /* idAvailableLabel */
+    view.addSubview(idAvailableLabel)
+      idAvailableLabel.snp.makeConstraints { make in
       make.left.equalToSuperview().inset(40)
       make.top.equalTo(idTextField.snp.bottom).offset(21)
     }
