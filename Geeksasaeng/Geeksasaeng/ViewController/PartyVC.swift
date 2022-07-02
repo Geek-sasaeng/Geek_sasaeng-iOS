@@ -12,12 +12,6 @@ class PartyViewController: UIViewController {
 
     // MARK: - Subviews
     
-    var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "Back"), for: .normal)
-        return button
-    }()
-    
     var reportButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "Report"), for: .normal)
@@ -201,7 +195,6 @@ class PartyViewController: UIViewController {
     
     private func setLayouts() {
         [
-            backButton,
             reportButton,
             profileImageView,
             nickNameLabel,
@@ -219,11 +212,6 @@ class PartyViewController: UIViewController {
             signUpButton,
             arrowImageView
         ].forEach { view.addSubview($0) }
-        
-        backButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(52)
-            make.left.equalToSuperview().inset(24)
-        }
         
         reportButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
@@ -345,5 +333,18 @@ class PartyViewController: UIViewController {
         verticalStackView.spacing = 24
         
         mapView.layer.cornerRadius = 5
+        
+        /* Navigation Bar Attrs */
+        self.navigationItem.title = "파티 보기"
+        navigationItem.hidesBackButton = true   // 원래 백버튼은 숨기고,
+        
+        // 커스텀한 새 백버튼으로 구성
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem?.tintColor = .black
+    }
+    
+    // 이전 화면으로 돌아가기
+    @objc func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated:true)
     }
 }

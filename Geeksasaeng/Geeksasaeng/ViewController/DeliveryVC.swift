@@ -287,19 +287,33 @@ class DeliveryViewController: UIViewController {
     button.layer.shadowOffset = CGSize(width: 0, height: 0)
     button.layer.masksToBounds = false
   }
+    
+    func setNav() {
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        backButton.image = UIImage(named: "Back")
+        backButton.tintColor = .black
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+    }
 }
 
 
 // MARK: Extensions
 extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 10
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "PartyTableViewCell", for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
     
-    return cell
-  }
-  
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PartyTableViewCell", for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = PartyViewController()
+        print("DEBUG: 셀 선택 화면 전환 성공")
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
 }
