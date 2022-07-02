@@ -80,6 +80,7 @@ class LoginViewController: UIViewController {
     button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
     button.titleLabel?.font = .customFont(.neoLight, size: 15)
     button.makeBottomLine(55)
+    button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside)
     return button
   }()
   
@@ -149,6 +150,17 @@ class LoginViewController: UIViewController {
       make.top.equalTo(self.automaticLoginButton.snp.bottom).offset(45)
     }
   }
+    
+    @objc func showRegisterView(sender: UIButton!) {
+        // registerVC로 화면 전환.
+        let registerVC = RegisterViewController()
+        
+        registerVC.modalTransitionStyle = .coverVertical
+        registerVC.modalPresentationStyle = .fullScreen
+        
+        present(registerVC, animated: true)
+    }
+   
 }
 
 

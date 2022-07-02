@@ -169,10 +169,10 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
-				1078713D286F7A7E008EDF78 /* Cell */,
 				A2B4208F286F1F1300278F92 /* App */,
 				A2B42098286F249800278F92 /* TabBarController.swift */,
 				A2B4208D286F1EE000278F92 /* ViewController */,
+				1078713D286F7A7E008EDF78 /* Cell */,
 				A2B4208E286F1F0500278F92 /* Extension */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
