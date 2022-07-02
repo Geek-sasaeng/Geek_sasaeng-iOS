@@ -176,6 +176,7 @@ class PartyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
 
         horizontalStackView1 = UIStackView(arrangedSubviews: [orderLabel, orderReserveDateLabel, orderReserveTimeLabel])
         horizontalStackView2 = UIStackView(arrangedSubviews: [matchingLabel, matchingDataLabel])
