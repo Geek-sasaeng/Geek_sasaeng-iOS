@@ -12,18 +12,18 @@ class RegisterManager {
     public static func registerUser(_ viewController : EmailAuthViewController, _ parameter : RegisterInput) {
         AF.request("https://geeksasaeng.shop/members", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
-            .validate()
-            .responseDecodable(of: RegisterModel.self) { response in
-                switch response.result {
-                case .success(let result):
-                    if result.isSuccess! {
-                        print("DEBUG: 성공")
-                    } else {
-                        print("DEBUG:", result.message!)
-                    }
-                case .failure(let error):
-                    print("DEBUG:", error.localizedDescription)
+        .validate()
+        .responseDecodable(of: RegisterModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 성공")
+                } else {
+                    print("DEBUG:", result.message!)
                 }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
             }
+        }
     }
 }

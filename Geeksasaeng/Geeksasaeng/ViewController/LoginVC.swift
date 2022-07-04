@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 class LoginViewController: UIViewController {
-    // MARK: Components
+    
+    // MARK: Subviews
+    
     let logoImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(imageLiteralResourceName: "AppLogo"))
         return imageView
@@ -42,9 +44,7 @@ class LoginViewController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
-        //    button.setTitleColor(UIColor.black, for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.titleLabel?.textColor = UIColor(hex: 0xA8A8A8)
         button.backgroundColor = UIColor.init(hex: 0xEFEFEF)
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 5
@@ -94,21 +94,15 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .white
         
         addSubViews()
-        configLayouts()
+        setLayouts()
     }
     
-    // MARK: Config Methods
-    func addSubViews() {
-        view.addSubview(logoImageView)
-        view.addSubview(idTextField)
-        view.addSubview(passwordTextField)
-        view.addSubview(loginButton)
-        view.addSubview(naverLoginButton)
-        view.addSubview(automaticLoginButton)
-        view.addSubview(signUpButton)
+    // MARK: Set Function
+    private func addSubViews() {
+        [logoImageView, idTextField, passwordTextField, loginButton, naverLoginButton, automaticLoginButton, signUpButton].forEach { view.addSubview($0) }
     }
     
-    func configLayouts() {
+    private func setLayouts() {
         logoImageView.snp.makeConstraints { make in
             make.width.height.equalTo(133)
             make.centerX.equalTo(self.view.center)
@@ -155,7 +149,7 @@ class LoginViewController: UIViewController {
     }
     
     
-    // MARK: Methods
+    // MARK: Functions
     @objc func showRegisterView() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
@@ -178,6 +172,7 @@ class LoginViewController: UIViewController {
     @objc func didChangeTextField(_ sender: UITextField) {
         let text = sender.text ?? ""
         
+        // 정규식 넣어서 수정 예정
         switch sender {
         case idTextField:
             if text.count >= 1 && passwordTextField.text?.count ?? 0 >= 1 {
@@ -209,10 +204,12 @@ class LoginViewController: UIViewController {
         tabBarController.modalPresentationStyle = .fullScreen
         present(tabBarController, animated: true)
     }
+    
 }
 
 
-// Extensions
+// MARK: - Extensions
+
 extension UIView {
     
     func addBottomBorderWithColor(color: UIColor, width: CGFloat) {

@@ -40,6 +40,7 @@ class AuthNumViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
         textField.makeBottomLine(187)
+        textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()
     
@@ -61,15 +62,16 @@ class AuthNumViewController: UIViewController {
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
-
+    
     var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.layer.cornerRadius = 5
-        button.backgroundColor = .mainColor
+        button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
+        button.isEnabled = false
         button.addTarget(self, action: #selector(completeRegister), for: .touchUpInside)
         return button
     }()
@@ -107,7 +109,7 @@ class AuthNumViewController: UIViewController {
             make.left.equalTo(progressBar.snp.right)
             make.right.equalToSuperview().inset(25)
         }
-            
+        
         [
             authNumLabel,
             authNumTextField,
@@ -167,5 +169,17 @@ class AuthNumViewController: UIViewController {
         loginVC.modalPresentationStyle = .fullScreen
         present(loginVC, animated: true)
     }
-        
+    
+    @objc func didChangeTextField(_ sender: UITextField) {
+        if authNumTextField.text?.count ?? 0 >= 1 {
+            nextButton.isEnabled = true
+            nextButton.setTitleColor(.white, for: .normal)
+            nextButton.backgroundColor = .mainColor
+        } else {
+            nextButton.isEnabled = false
+            nextButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+            nextButton.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+    }
+    
 }

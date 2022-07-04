@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class DeliveryViewController: UIViewController {
-    
+
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */

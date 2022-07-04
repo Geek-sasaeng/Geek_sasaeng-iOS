@@ -17,7 +17,7 @@ extension UIFont {
         case neoMedium = "SpoqaHanSansNeo-Medium"
         case neoRegular = "SpoqaHanSansNeo-Regular"
     }
-
+    
     static func customFont(_ type: customFontType, size: CGFloat) -> UIFont {
         return UIFont(name: "\(type.rawValue)", size: size)!
     }

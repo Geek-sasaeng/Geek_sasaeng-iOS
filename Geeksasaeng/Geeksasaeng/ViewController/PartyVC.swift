@@ -125,7 +125,7 @@ class PartyViewController: UIViewController {
     var horizontalStackView4: UIStackView!
     
     var verticalStackView: UIStackView!
-
+    
     var mapView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xEFEFEF)
