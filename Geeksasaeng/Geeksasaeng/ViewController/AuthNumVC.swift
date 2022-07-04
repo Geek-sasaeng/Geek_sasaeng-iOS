@@ -47,10 +47,8 @@ class AuthNumViewController: UIViewController {
     var reSendButton: UIButton = {
         let button = UIButton()
         button.setTitle("재전송 하기", for: .normal)
-        button.setTitleColor(.mainColor, for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.layer.cornerRadius = 5
-        button.backgroundColor = .white
         button.clipsToBounds = true
         return button
     }()
@@ -83,7 +81,7 @@ class AuthNumViewController: UIViewController {
         view.backgroundColor = .white
         
         setLayouts()
-        makeButtonShadow(reSendButton)
+        reSendButton.setActivatedButton()
     }
     
     // MARK: - Functions
@@ -153,15 +151,6 @@ class AuthNumViewController: UIViewController {
         }
     }
     
-    // 버튼 뒤의 mainColor의 Shadow를 만드는 함수
-    private func makeButtonShadow(_ button: UIButton) {
-        button.layer.shadowRadius = 4
-        button.layer.shadowColor = UIColor.mainColor.cgColor
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = CGSize(width: 0, height: 0)
-        button.layer.masksToBounds = false
-    }
-    
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     @objc func completeRegister() {
         let loginVC = LoginViewController()
@@ -172,14 +161,11 @@ class AuthNumViewController: UIViewController {
     
     @objc func didChangeTextField(_ sender: UITextField) {
         if authNumTextField.text?.count ?? 0 >= 1 {
-            nextButton.isEnabled = true
-            nextButton.setTitleColor(.white, for: .normal)
-            nextButton.backgroundColor = .mainColor
+            nextButton.setActivatedNextButton()
         } else {
-            nextButton.isEnabled = false
-            nextButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-            nextButton.backgroundColor = UIColor(hex: 0xEFEFEF)
+            nextButton.setDeactivatedNextButton()
         }
     }
     
 }
+
