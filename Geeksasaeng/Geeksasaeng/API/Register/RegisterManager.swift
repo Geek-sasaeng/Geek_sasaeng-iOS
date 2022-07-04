@@ -25,6 +25,5 @@ class RegisterManager {
                     print("DEBUG:", error.localizedDescription)
                 }
             }
-        
     }
 }

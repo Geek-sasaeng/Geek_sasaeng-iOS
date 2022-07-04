@@ -29,8 +29,4 @@ class LoginManager {
                 }
             }
     }
-    
-    private func showHomeView() {
-        
-    }
 }

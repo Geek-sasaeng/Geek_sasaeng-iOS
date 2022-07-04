@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class PartyViewController: UIViewController {
-
+    
     // MARK: - Subviews
     
     var reportButton: UIButton = {
@@ -172,12 +172,12 @@ class PartyViewController: UIViewController {
         return imageView
     }()
     
-    // MARK: - Life Cycle
+    // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-
+        
         horizontalStackView1 = UIStackView(arrangedSubviews: [orderLabel, orderReserveDateLabel, orderReserveTimeLabel])
         horizontalStackView2 = UIStackView(arrangedSubviews: [matchingLabel, matchingDataLabel])
         horizontalStackView3 = UIStackView(arrangedSubviews: [categoryLabel, categoryDataLabel])
@@ -187,7 +187,7 @@ class PartyViewController: UIViewController {
             horizontalStackView2,
             horizontalStackView3,
             horizontalStackView4
-            ])
+        ])
         setLayouts()
         setAttributes()
     }

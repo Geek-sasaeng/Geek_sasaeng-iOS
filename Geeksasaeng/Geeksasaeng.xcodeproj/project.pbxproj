@@ -300,8 +300,8 @@
 				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
 				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
 				A2B42089286F151100278F92 /* AuthNumVC.swift */,
-				A2B420A4286F370F00278F92 /* PartyVC.swift */,
 				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
+				A2B420A4286F370F00278F92 /* PartyVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -597,7 +597,6 @@
 				A2085AD7287054E900D6CF79 /* LoginManager.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
-				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
