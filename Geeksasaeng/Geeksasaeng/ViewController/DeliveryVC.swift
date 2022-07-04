@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class DeliveryViewController: UIViewController {
-    // MARK: Variables
+    // MARK: Subviews
     let leftBarButtonItem: UIBarButtonItem = {
         var schoolImageView = UIImageView(image: UIImage(systemName: "book"))
         schoolImageView.tintColor = .black
@@ -37,9 +37,7 @@ class DeliveryViewController: UIViewController {
         searchButton.tintColor = .black
         searchButton.titleLabel?.font = .customFont(.neoBold, size: 20)
         
-        let stackView = UIStackView(arrangedSubviews: [searchButton])
-        
-        let barButton = UIBarButtonItem(customView: stackView)
+        let barButton = UIBarButtonItem(customView: searchButton)
         
         return barButton
     }()
@@ -175,8 +173,8 @@ class DeliveryViewController: UIViewController {
         view.backgroundColor = .white
         
         addSubViews()
-        configLayouts()
-        configTableView()
+        setLayouts()
+        setTableView()
         makeButtonShadow(createPartyButton)
     }
     
@@ -190,21 +188,12 @@ class DeliveryViewController: UIViewController {
     }
     
     
-    // MARK: Config Methods
+    // MARK: Set Methods
     func addSubViews() {
-        view.addSubview(categoryStackView)
-        view.addSubview(deliveryPartyBar)
-        view.addSubview(marketBar)
-        view.addSubview(helperBar)
-        view.addSubview(adImageView)
-        view.addSubview(filterImageView)
-        view.addSubview(peopleFilterView)
-        view.addSubview(timeFilterView)
-        view.addSubview(partyTableView)
-        view.addSubview(createPartyButton)
+        [categoryStackView, deliveryPartyBar, marketBar, helperBar, adImageView, filterImageView, peopleFilterView, timeFilterView, partyTableView, createPartyButton].forEach { view.addSubview($0) }
     }
     
-    func configLayouts() {
+    func setLayouts() {
         categoryStackView.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
             make.centerX.equalTo(self.view.center)
@@ -271,7 +260,7 @@ class DeliveryViewController: UIViewController {
         }
     }
     
-    func configTableView() {
+    func setTableView() {
         partyTableView.dataSource = self
         partyTableView.delegate = self
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
