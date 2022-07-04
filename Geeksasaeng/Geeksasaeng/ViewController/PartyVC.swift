@@ -21,6 +21,7 @@ class PartyViewController: UIViewController {
     var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image =  UIImage(named: "ProfileImage")
+        imageView.layer.cornerRadius = 13
         return imageView
     }()
     
@@ -70,61 +71,113 @@ class PartyViewController: UIViewController {
         return view
     }()
     
-    var orderLabel: UILabel = {
-        let label = UILabel()
-        label.text = "주문 예정 시간"
-        return label
+    var verticalStackView: UIStackView = {
+        
+        var timeStackView: UIStackView = {
+            var orderLabel: UILabel = {
+                let label = UILabel()
+                label.text = "주문 예정 시간"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            var orderReserveDateLabel: UILabel = {
+                let label = UILabel()
+                label.text = "05월 15일"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            var orderReserveTimeLabel: UILabel = {
+                let label = UILabel()
+                label.text = "23시 00분"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            
+            let stackView = UIStackView(arrangedSubviews: [orderLabel, orderReserveDateLabel, orderReserveTimeLabel])
+            return stackView
+        }()
+        
+        var matchingStackView: UIStackView = {
+            var matchingLabel: UILabel = {
+                let label = UILabel()
+                label.text = "매칭 현황"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            var matchingDataLabel: UILabel = {
+                let label = UILabel()
+                label.text = "2/4"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            
+            let stackView = UIStackView(arrangedSubviews: [matchingLabel, matchingDataLabel])
+            return stackView
+        }()
+        
+        var categoryStackView: UIStackView = {
+            var categoryLabel: UILabel = {
+                let label = UILabel()
+                label.text = "카테고리"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            var categoryDataLabel: UILabel = {
+                let label = UILabel()
+                label.text = "중식"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            
+            let stackView = UIStackView(arrangedSubviews: [categoryLabel, categoryDataLabel])
+            return stackView
+        }()
+        
+        var locationStackView: UIStackView = {
+            var pickupLocationLabel: UILabel = {
+                let label = UILabel()
+                label.text = "수령 장소"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            var pickupLocationDataLabel: UILabel = {
+                let label = UILabel()
+                label.text = "제1기숙사 후문"
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            
+            let stackView = UIStackView(arrangedSubviews: [pickupLocationLabel, pickupLocationDataLabel])
+            return stackView
+        }()
+        
+        [
+            timeStackView,
+            matchingStackView,
+            categoryStackView,
+            locationStackView
+        ].forEach {
+            $0.axis = .horizontal
+            $0.alignment = .fill
+            $0.distribution = .fill
+            $0.spacing = 20
+        }
+        
+        /* Vertical StackView */
+        let stackView = UIStackView(arrangedSubviews: [
+            timeStackView,
+            matchingStackView,
+            categoryStackView,
+            locationStackView
+        ])
+        
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 24
+        
+        return stackView
     }()
-    var orderReserveDateLabel: UILabel = {
-        let label = UILabel()
-        label.text = "05월 15일"
-        return label
-    }()
-    var orderReserveTimeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "23시 00분"
-        return label
-    }()
-    
-    var matchingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "매칭 현황"
-        return label
-    }()
-    var matchingDataLabel: UILabel = {
-        let label = UILabel()
-        label.text = "2/4"
-        return label
-    }()
-    
-    var categoryLabel: UILabel = {
-        let label = UILabel()
-        label.text = "카테고리"
-        return label
-    }()
-    var categoryDataLabel: UILabel = {
-        let label = UILabel()
-        label.text = "중식"
-        return label
-    }()
-    
-    var pickupLocationLabel: UILabel = {
-        let label = UILabel()
-        label.text = "수령 장소"
-        return label
-    }()
-    var pickupLocationDataLabel: UILabel = {
-        let label = UILabel()
-        label.text = "제1기숙사 후문"
-        return label
-    }()
-    
-    var horizontalStackView1: UIStackView!
-    var horizontalStackView2: UIStackView!
-    var horizontalStackView3: UIStackView!
-    var horizontalStackView4: UIStackView!
-    
-    var verticalStackView: UIStackView!
     
     var mapView: UIView = {
         let view = UIView()
@@ -178,16 +231,6 @@ class PartyViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        horizontalStackView1 = UIStackView(arrangedSubviews: [orderLabel, orderReserveDateLabel, orderReserveTimeLabel])
-        horizontalStackView2 = UIStackView(arrangedSubviews: [matchingLabel, matchingDataLabel])
-        horizontalStackView3 = UIStackView(arrangedSubviews: [categoryLabel, categoryDataLabel])
-        horizontalStackView4 = UIStackView(arrangedSubviews: [pickupLocationLabel, pickupLocationDataLabel])
-        verticalStackView = UIStackView(arrangedSubviews: [
-            horizontalStackView1,
-            horizontalStackView2,
-            horizontalStackView3,
-            horizontalStackView4
-        ])
         setLayouts()
         setAttributes()
     }
@@ -300,38 +343,6 @@ class PartyViewController: UIViewController {
     }
     
     private func setAttributes() {
-        profileImageView.layer.cornerRadius = 1
-        
-        [
-            orderLabel,
-            orderReserveDateLabel,
-            orderReserveTimeLabel,
-            matchingLabel,
-            matchingDataLabel,
-            categoryLabel,
-            categoryDataLabel,
-            pickupLocationLabel,
-            pickupLocationDataLabel
-        ].forEach {
-            $0.font = .customFont(.neoMedium, size: 13)
-        }
-        
-        [
-            horizontalStackView1,
-            horizontalStackView2,
-            horizontalStackView3,
-            horizontalStackView4
-        ].forEach {
-            $0!.axis = .horizontal
-            $0!.alignment = .fill
-            $0!.distribution = .fill
-            $0!.spacing = 20
-        }
-        
-        verticalStackView.axis = .vertical
-        verticalStackView.alignment = .fill
-        verticalStackView.distribution = .fill
-        verticalStackView.spacing = 24
         
         mapView.layer.cornerRadius = 5
         

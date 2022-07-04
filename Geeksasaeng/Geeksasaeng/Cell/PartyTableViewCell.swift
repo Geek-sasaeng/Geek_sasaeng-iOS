@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 class PartyTableViewCell: UITableViewCell {
+    
     // MARK: Subviews
+    
     var timeLabel: UILabel = {
         var label = UILabel()
         label.text = "3시간 48분 남았어요"
@@ -73,13 +75,14 @@ class PartyTableViewCell: UITableViewCell {
     
     var badgeImageView: UIImageView = {
         var imageView = UIImageView()
-        imageView.image = UIImage(named: "profileImage")
+        imageView.image = UIImage(named: "ProfileImage")
         
         return imageView
     }()
     
     
     // MARK: layoutSubviews()
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -87,8 +90,8 @@ class PartyTableViewCell: UITableViewCell {
         configLayouts()
     }
     
-    
     // MARK: Set Functions
+    
     func addSubViews() {
         contentView.addSubview(timeLabel)
         contentView.addSubview(titleLabel)
