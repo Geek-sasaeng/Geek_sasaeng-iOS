@@ -244,25 +244,25 @@ class DeliveryViewController: UIViewController {
         adImageView.snp.makeConstraints { make in
             make.width.equalTo(324)
             make.height.equalTo(86)
-            make.top.equalTo(deliveryPartyBar.snp.bottom).offset(10)
+            make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
             make.centerX.equalTo(view.center)
         }
         
         filterImageView.snp.makeConstraints { make in
             make.width.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(10)
+            make.top.equalTo(adImageView.snp.bottom).offset(13)
             make.left.equalTo(adImageView.snp.left)
         }
         peopleFilterView.snp.makeConstraints { make in
             make.width.equalTo(73)
             make.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(10)
+            make.top.equalTo(adImageView.snp.bottom).offset(13)
             make.left.equalTo(filterImageView.snp.right).offset(10)
         }
         timeFilterView.snp.makeConstraints { make in
             make.width.equalTo(93)
             make.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(10)
+            make.top.equalTo(adImageView.snp.bottom).offset(13)
             make.left.equalTo(peopleFilterView.snp.right).offset(10)
         }
         
