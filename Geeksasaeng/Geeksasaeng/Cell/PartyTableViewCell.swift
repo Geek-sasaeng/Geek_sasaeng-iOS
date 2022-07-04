@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class PartyTableViewCell: UITableViewCell {
-    // MARK: Variables
+    // MARK: Subviews
     var timeLabel: UILabel = {
         var label = UILabel()
         label.text = "3시간 48분 남았어요"
@@ -88,7 +88,7 @@ class PartyTableViewCell: UITableViewCell {
     }
     
     
-    // MARK: Config Methods
+    // MARK: Set Functions
     func addSubViews() {
         contentView.addSubview(timeLabel)
         contentView.addSubview(titleLabel)
