@@ -10,7 +10,6 @@ import SnapKit
 
 class RegisterViewController: UIViewController {
     // MARK: - Subviews
-    
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
@@ -54,29 +53,9 @@ class RegisterViewController: UIViewController {
         return button
     }()
     
-    var idCheckButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("중복 확인", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.isEnabled = false
-        return button
-    }()
+    var idCheckButton = UIButton()
     
-    var nickNameCheckButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("중복 확인", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.isEnabled = false
-        return button
-    }()
+    var nickNameCheckButton = UIButton()
     
     // MARK: - Life Cycle
     
@@ -223,11 +202,8 @@ class RegisterViewController: UIViewController {
         nickNameTextField = setTextFieldAttrs(width: 210)
         
         /* 중복 확인 버튼 attrs */
-        //    idCheckButton = setRedundancyCheckButtonAttrs()
-        //    nickNameCheckButton = setRedundancyCheckButtonAttrs()
-        /* make button shadow */
-        //    makeButtonShadow(idCheckButton)
-        //    makeButtonShadow(nickNameCheckButton)
+        setRedundancyCheckButtonAttrs(idCheckButton)
+        setRedundancyCheckButtonAttrs(nickNameCheckButton)
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -250,41 +226,14 @@ class RegisterViewController: UIViewController {
         return textField
     }
     
-    // 중복 확인 버튼
-    //  private func setRedundancyCheckButtonAttrs() -> UIButton {
-    //    let button = UIButton()
-    //    button.setTitle("중복 확인", for: .normal)
-    //    button.setTitleColor(.mainColor, for: .normal)
-    //    button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-    //    button.layer.cornerRadius = 5
-    //    button.backgroundColor = .white
-    //    button.clipsToBounds = true
-    //    return button
-    //  }
-    
-    private func setRedundancyCheckButtonAttrs(_ button: UIButton) {
-        button.isEnabled = true
-        button.setTitleColor(.mainColor, for: .normal)
-        button.backgroundColor = .white
-    }
-    
-    private func unSetRedundancyCheckButtonAttrs(_ button: UIButton) {
-        button.isEnabled = false
+    func setRedundancyCheckButtonAttrs(_ button: UIButton) {
+        button.setTitle("중복 확인", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        button.layer.cornerRadius = 5
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
-    }
-    
-    // 버튼 뒤의 mainColor의 Shadow를 만드는 함수
-    private func makeButtonShadow(_ button: UIButton) {
-        button.layer.shadowRadius = 4
-        button.layer.shadowColor = UIColor.mainColor.cgColor
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = CGSize(width: 0, height: 0)
-        button.layer.masksToBounds = false
-    }
-    
-    private func removeButtonShadow(_ button: UIButton) {
-        button.layer.shadowRadius = 0
+        button.clipsToBounds = true
+        button.isEnabled = false
     }
     
     private func setTextFieldTarget() {
@@ -316,29 +265,21 @@ class RegisterViewController: UIViewController {
     
     @objc func didChangeTextField(_ sender: UITextField) {
         if idTextField.text?.count ?? 0 >= 1 {
-            setRedundancyCheckButtonAttrs(idCheckButton)
-            makeButtonShadow(idCheckButton)
+            idCheckButton.setActivatedButton()
         } else if idTextField.text?.count ?? 0 < 1 {
-            unSetRedundancyCheckButtonAttrs(idCheckButton)
-            removeButtonShadow(idCheckButton)
+            idCheckButton.setDeactivatedButton()
         }
         if nickNameTextField.text?.count ?? 0 >= 1 {
-            setRedundancyCheckButtonAttrs(nickNameCheckButton)
-            makeButtonShadow(nickNameCheckButton)
+            nickNameCheckButton.setActivatedButton()
         } else if nickNameTextField.text?.count ?? 0 < 1 {
-            unSetRedundancyCheckButtonAttrs(nickNameCheckButton)
-            removeButtonShadow(nickNameCheckButton)
+            nickNameCheckButton.setDeactivatedButton()
         }
         
         if idTextField.text?.count ?? 0 >= 1 && pwTextField.text?.count ?? 0 >= 1 &&
             pwCheckTextField.text?.count ?? 0 >= 1 && nickNameTextField.text?.count ?? 0 >= 1 {
-            nextButton.isEnabled = true
-            nextButton.setTitleColor(.white, for: .normal)
-            nextButton.backgroundColor = .mainColor
+            nextButton.setActivatedNextButton()
         } else {
-            nextButton.isEnabled = false
-            nextButton.tintColor = UIColor(hex: 0xA8A8A8)
-            nextButton.backgroundColor = UIColor(hex: 0xEFEFEF)
+            nextButton.setDeactivatedNextButton()
         }
     }
 }
@@ -379,4 +320,33 @@ extension UIButton {
         }
     }
     
+    func setActivatedNextButton() {
+        self.isEnabled = true
+        self.setTitleColor(.white, for: .normal)
+        self.backgroundColor = .mainColor
+    }
+    
+    func setDeactivatedNextButton() {
+        self.isEnabled = false
+        self.tintColor = UIColor(hex: 0xA8A8A8)
+        self.backgroundColor = UIColor(hex: 0xEFEFEF)
+    }
+    
+    func setActivatedButton() {
+        self.isEnabled = true
+        self.setTitleColor(.mainColor, for: .normal)
+        self.backgroundColor = .white
+        self.layer.shadowRadius = 4
+        self.layer.shadowColor = UIColor.mainColor.cgColor
+        self.layer.shadowOpacity = 0.5
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.masksToBounds = false
+    }
+    
+    func setDeactivatedButton() {
+        self.isEnabled = false
+        self.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        self.backgroundColor = UIColor(hex: 0xEFEFEF)
+        self.layer.shadowRadius = 0
+    }
 }
