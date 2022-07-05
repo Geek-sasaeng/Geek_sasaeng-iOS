@@ -13,7 +13,7 @@ class DeliveryViewController: UIViewController {
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */
-    let leftBarButtonItem: UIBarButtonItem = {
+    var leftBarButtonItem: UIBarButtonItem = {
         var schoolImageView = UIImageView(image: UIImage(systemName: "book"))
         schoolImageView.tintColor = .black
         schoolImageView.snp.makeConstraints { make in
@@ -32,7 +32,7 @@ class DeliveryViewController: UIViewController {
         return barButton
     }()
     
-    let rightBarButtonItem: UIBarButtonItem = {
+    var rightBarButtonItem: UIBarButtonItem = {
         let searchButton = UIButton()
         searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.tintColor = .black
@@ -42,33 +42,23 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Category */
-    let categoryStackView: UIStackView = {
-        let deliveryPartyLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = .black
-            label.text = "배달파티"
-            return label
-        }()
-        let marketLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = UIColor(hex: 0xCBCBCB)
-            label.text = "마켓"
-            return label
-        }()
-        let helperLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = UIColor(hex: 0xCBCBCB)
-            label.text = "헬퍼"
-            return label
-        }()
-        for label in [deliveryPartyLabel, marketLabel, helperLabel] {
-            label.font = .customFont(.neoMedium, size: 14)
-        }
-        
-        let stackView = UIStackView(arrangedSubviews: [deliveryPartyLabel, marketLabel, helperLabel])
-        stackView.spacing = 75
-        
-        return stackView
+    var deliveryPartyLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.text = "배달파티"
+        return label
+    }()
+    var marketLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .init(hex: 0xCBCBCB)
+        label.text = "마켓"
+        return label
+    }()
+    var helperLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .init(hex: 0xCBCBCB)
+        label.text = "헬퍼"
+        return label
     }()
     
     var deliveryPartyBar: UIView = {
@@ -79,13 +69,13 @@ class DeliveryViewController: UIViewController {
     
     var marketBar: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(hex: 0xF2F2F2)
+        view.backgroundColor = .init(hex: 0xCBCBCB)
         return view
     }()
     
     var helperBar: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(hex: 0xF2F2F2)
+        view.backgroundColor = .init(hex: 0xCBCBCB)
         return view
     }()
     
@@ -187,9 +177,9 @@ class DeliveryViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTableView()
+        setLabelTap()
         makeButtonShadow(createPartyButton)
     }
-    
     
     // MARK: - viewDidLayoutSubviews()
     
@@ -202,52 +192,60 @@ class DeliveryViewController: UIViewController {
     
     // MARK: - Functions
     
-    func addSubViews() {
-        view.addSubview(categoryStackView)
-        view.addSubview(deliveryPartyBar)
-        view.addSubview(marketBar)
-        view.addSubview(helperBar)
-        view.addSubview(adImageView)
-        view.addSubview(filterImageView)
-        view.addSubview(peopleFilterView)
-        view.addSubview(timeFilterView)
-        view.addSubview(partyTableView)
-        view.addSubview(createPartyButton)
+    private func addSubViews() {
+        [
+            deliveryPartyLabel, marketLabel, helperLabel,
+            deliveryPartyBar, marketBar, helperBar,
+            adImageView,
+            filterImageView, peopleFilterView, timeFilterView,
+            partyTableView,
+            createPartyButton
+        ].forEach { view.addSubview($0) }
     }
     
-    func setLayouts() {
+    private func setLayouts() {
         
-        categoryStackView.snp.makeConstraints { make in
+        /* Category Tap */
+        deliveryPartyLabel.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
-            make.centerX.equalTo(self.view.center)
+            make.centerX.equalTo(deliveryPartyBar.snp.centerX)
         }
-        
+        marketLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
+            make.centerX.equalTo(marketBar.snp.centerX)
+        }
+        helperLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
+            make.centerX.equalTo(helperBar.snp.centerX)
+        }
         deliveryPartyBar.snp.makeConstraints { make in
+            make.top.equalTo(deliveryPartyLabel.snp.bottom).offset(5)
+            make.left.equalToSuperview().inset(18)
             make.height.equalTo(3)
             make.width.equalTo(110)
-            make.top.equalTo(categoryStackView.snp.bottom).offset(5)
-            make.left.equalToSuperview().inset(25)
         }
         marketBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(categoryStackView.snp.bottom).offset(5)
+            make.top.equalTo(marketLabel.snp.bottom).offset(5)
             make.left.equalTo(deliveryPartyBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.height.equalTo(3)
+            make.width.equalTo(110)
         }
         helperBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(categoryStackView.snp.bottom).offset(5)
+            make.top.equalTo(helperLabel.snp.bottom).offset(5)
             make.left.equalTo(marketBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.right.equalToSuperview().inset(18)
+            make.height.equalTo(3)
         }
         
+        /* Ad */
         adImageView.snp.makeConstraints { make in
-            make.width.equalTo(324)
-            make.height.equalTo(86)
             make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(18)
             make.centerX.equalTo(view.center)
+            make.height.equalTo(86)
         }
         
+        /* Filter */
         filterImageView.snp.makeConstraints { make in
             make.width.height.equalTo(30)
             make.top.equalTo(adImageView.snp.bottom).offset(13)
@@ -266,12 +264,14 @@ class DeliveryViewController: UIViewController {
             make.left.equalTo(peopleFilterView.snp.right).offset(10)
         }
         
+        /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(500)
             make.top.equalTo(timeFilterView.snp.bottom).offset(20)
         }
         
+        /* Button */
         createPartyButton.snp.makeConstraints { make in
             make.width.height.equalTo(62)
             make.bottom.equalToSuperview().offset(-100)
@@ -279,19 +279,81 @@ class DeliveryViewController: UIViewController {
         }
     }
     
-    func setTableView() {
+    private func setTableView() {
         partyTableView.dataSource = self
         partyTableView.delegate = self
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
         partyTableView.rowHeight = 118
     }
     
-    func makeButtonShadow(_ button: UIButton) {
+    private func makeButtonShadow(_ button: UIButton) {
         button.layer.shadowRadius = 4
         button.layer.shadowColor = UIColor(hex: 0xA8A8A8).cgColor
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.masksToBounds = false
+    }
+    
+    private func setLabelTap() {
+        for label in [deliveryPartyLabel, marketLabel, helperLabel] {
+            label.font = .customFont(.neoMedium, size: 14)
+            
+            // 탭 제스쳐를 label에 추가 -> label을 클릭했을 때 액션이 발생하도록.
+            let labelTapGesture = UITapGestureRecognizer(target: self,
+                                                         action: #selector(clickCategoryLabel(sender:)))
+            labelTapGesture.numberOfTapsRequired = 1
+            labelTapGesture.numberOfTouchesRequired = 1
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(labelTapGesture)
+        }
+    }
+    
+    @objc private func clickCategoryLabel(sender: UIGestureRecognizer) {
+        // 해당하는 카테고리의 내용으로 리스트를 변경
+        let thisLabel = sender.view as! UILabel
+
+        if let category = thisLabel.text {
+            switch category {
+            case "배달파티":
+                print("DEBUG: 배달파티")
+                // 바 색깔 파란색으로 활성화
+                deliveryPartyBar.backgroundColor = .mainColor
+                marketBar.backgroundColor = .init(hex: 0xCBCBCB)
+                helperBar.backgroundColor = .init(hex: 0xCBCBCB)
+                // 텍스트 색깔 활성화
+                deliveryPartyLabel.textColor = .init(hex: 0x2F2F2F)
+                marketLabel.textColor = .init(hex: 0xCBCBCB)
+                helperLabel.textColor = .init(hex: 0xCBCBCB)
+                // 배달파티 리스트 보여주기
+                break
+            case "마켓":
+                print("DEBUG: 마켓")
+                // 바 색깔 파란색으로 활성화
+                deliveryPartyBar.backgroundColor = .init(hex: 0xCBCBCB)
+                marketBar.backgroundColor = .mainColor
+                helperBar.backgroundColor = .init(hex: 0xCBCBCB)
+                // 텍스트 색깔 활성화
+                deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
+                marketLabel.textColor = .init(hex: 0x2F2F2F)
+                helperLabel.textColor = .init(hex: 0xCBCBCB)
+                // 마켓 리스트 보여주기
+                break
+            case "헬퍼":
+                print("DEBUG: 헬퍼")
+                // 바 색깔 파란색으로 활성화
+                deliveryPartyBar.backgroundColor = .init(hex: 0xCBCBCB)
+                marketBar.backgroundColor = .init(hex: 0xCBCBCB)
+                helperBar.backgroundColor = .mainColor
+                // 텍스트 색깔 활성화
+                deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
+                marketLabel.textColor = .init(hex: 0xCBCBCB)
+                helperLabel.textColor = .init(hex: 0x2F2F2F)
+                // 헬퍼 리스트 보여주기
+                break
+            default:
+                return
+            }
+        }
     }
 }
 
