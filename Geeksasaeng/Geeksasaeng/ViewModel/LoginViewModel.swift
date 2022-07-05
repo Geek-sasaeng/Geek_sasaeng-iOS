@@ -8,7 +8,7 @@
 import Alamofire
 
 // 로그인 API 연동
-class LoginManager {
+class LoginViewModel {
     
     public static func login(_ viewController : LoginViewController, _ parameter : LoginInput) {
         AF.request("https://geeksasaeng.shop/login", method: .post,

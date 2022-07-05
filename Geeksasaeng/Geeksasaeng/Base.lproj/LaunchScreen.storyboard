@@ -29,15 +29,15 @@
                                     <constraint firstAttribute="width" constant="209" id="rG2-OR-feI"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="긱사생" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kHs-fF-jyc">
-                                <rect key="frame" x="161" y="506" width="92.5" height="32"/>
-                                <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="32"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="쉽고 편리한 연결 메이트" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sCg-8G-Nrx">
+                                <rect key="frame" x="113" y="478" width="188.5" height="18"/>
+                                <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="쉽고 편리한 연결 메이트" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8F9-L2-EL0">
-                                <rect key="frame" x="113" y="478" width="188.5" height="18"/>
-                                <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="긱사생" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gge-ag-Akg">
+                                <rect key="frame" x="161" y="506" width="92.5" height="32"/>
+                                <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -45,12 +45,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="8F9-L2-EL0" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="2Va-DX-HOK"/>
                             <constraint firstItem="mUB-Fx-6Fw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="220" id="2W8-tc-SA9"/>
-                            <constraint firstItem="kHs-fF-jyc" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="3Cm-bw-eny"/>
-                            <constraint firstItem="8F9-L2-EL0" firstAttribute="top" secondItem="mUB-Fx-6Fw" secondAttribute="bottom" constant="5" id="Xc2-U5-A5v"/>
-                            <constraint firstItem="kHs-fF-jyc" firstAttribute="top" secondItem="8F9-L2-EL0" secondAttribute="bottom" constant="10" id="c4K-m4-Q2r"/>
+                            <constraint firstItem="sCg-8G-Nrx" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="dmT-w4-2FX"/>
+                            <constraint firstItem="sCg-8G-Nrx" firstAttribute="top" secondItem="mUB-Fx-6Fw" secondAttribute="bottom" constant="5" id="gc4-bX-Wd4"/>
+                            <constraint firstItem="gge-ag-Akg" firstAttribute="top" secondItem="sCg-8G-Nrx" secondAttribute="bottom" constant="10" id="ojW-6J-1ie"/>
                             <constraint firstItem="mUB-Fx-6Fw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="vHf-1v-lVN"/>
+                            <constraint firstItem="gge-ag-Akg" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="zGm-4n-yg5"/>
                         </constraints>
                     </view>
                 </viewController>

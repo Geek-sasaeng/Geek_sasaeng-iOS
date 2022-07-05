@@ -9,6 +9,7 @@ target 'Geeksasaeng' do
   pod 'SnapKit', '~> 5.6.0'
   pod 'Kingfisher', '~> 7.0'
   pod 'Alamofire'
+  pod 'naveridlogin-sdk-ios'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths

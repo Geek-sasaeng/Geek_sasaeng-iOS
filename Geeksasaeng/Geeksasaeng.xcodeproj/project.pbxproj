@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
+		100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99828745DDE008947DD /* NaverLoginModel.swift */; };
 		103F1454286ACA84004B637B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1453286ACA84004B637B /* AppDelegate.swift */; };
 		103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1455286ACA84004B637B /* SceneDelegate.swift */; };
 		103F145D286ACA86004B637B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
@@ -35,21 +37,15 @@
 		10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
 		701864496BC654D343AB4930 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
-		A2085ACA2870488E00D6CF79 /* RegisterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterManager.swift */; };
-		A2085ACB2870488E00D6CF79 /* RegisterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterManager.swift */; };
-		A2085ACC2870488E00D6CF79 /* RegisterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterManager.swift */; };
-		A2085ACE2870489C00D6CF79 /* RegisterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ACD2870489C00D6CF79 /* RegisterInput.swift */; };
-		A2085ACF2870489C00D6CF79 /* RegisterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ACD2870489C00D6CF79 /* RegisterInput.swift */; };
-		A2085AD02870489C00D6CF79 /* RegisterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ACD2870489C00D6CF79 /* RegisterInput.swift */; };
+		A2085ACA2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
+		A2085ACB2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
+		A2085ACC2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
 		A2085AD2287048A800D6CF79 /* RegisterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterModel.swift */; };
 		A2085AD3287048A800D6CF79 /* RegisterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterModel.swift */; };
 		A2085AD4287048A800D6CF79 /* RegisterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterModel.swift */; };
-		A2085AD7287054E900D6CF79 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginManager.swift */; };
-		A2085AD8287054E900D6CF79 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginManager.swift */; };
-		A2085AD9287054E900D6CF79 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginManager.swift */; };
-		A2085ADB287054F900D6CF79 /* LoginInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADA287054F900D6CF79 /* LoginInput.swift */; };
-		A2085ADC287054F900D6CF79 /* LoginInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADA287054F900D6CF79 /* LoginInput.swift */; };
-		A2085ADD287054F900D6CF79 /* LoginInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADA287054F900D6CF79 /* LoginInput.swift */; };
+		A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginViewModel.swift */; };
+		A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginViewModel.swift */; };
+		A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginViewModel.swift */; };
 		A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
 		A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
 		A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
@@ -96,6 +92,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		100FB99628745DA3008947DD /* NaverLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginViewModel.swift; sourceTree = "<group>"; };
+		100FB99828745DDE008947DD /* NaverLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginModel.swift; sourceTree = "<group>"; };
 		103F1450286ACA84004B637B /* Geeksasaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geeksasaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1453286ACA84004B637B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103F1455286ACA84004B637B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -118,11 +116,9 @@
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
 		724884CEEFB929FF25B554A0 /* Pods-Geeksasaeng.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.debug.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.debug.xcconfig"; sourceTree = "<group>"; };
 		8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A2085AC92870488E00D6CF79 /* RegisterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterManager.swift; sourceTree = "<group>"; };
-		A2085ACD2870489C00D6CF79 /* RegisterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterInput.swift; sourceTree = "<group>"; };
+		A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 		A2085AD1287048A800D6CF79 /* RegisterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterModel.swift; sourceTree = "<group>"; };
-		A2085AD6287054E900D6CF79 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
-		A2085ADA287054F900D6CF79 /* LoginInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInput.swift; sourceTree = "<group>"; };
+		A2085AD6287054E900D6CF79 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085ADE2870550200D6CF79 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
 		A2B42089286F151100278F92 /* AuthNumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumVC.swift; sourceTree = "<group>"; };
@@ -167,6 +163,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		100FB99328745AA6008947DD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A2085AD1287048A800D6CF79 /* RegisterModel.swift */,
+				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
+				100FB99828745DDE008947DD /* NaverLoginModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		100FB99428745AAC008947DD /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */,
+				A2085AD6287054E900D6CF79 /* LoginViewModel.swift */,
+				100FB99628745DA3008947DD /* NaverLoginViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		100FB99528745BE3008947DD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1078713D286F7A7E008EDF78 /* Cell */,
+				A2B4208D286F1EE000278F92 /* ViewController */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		103F1447286ACA84004B637B = {
 			isa = PBXGroup;
 			children = (
@@ -193,11 +218,10 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
+				100FB99528745BE3008947DD /* View */,
+				100FB99428745AAC008947DD /* ViewModel */,
+				100FB99328745AA6008947DD /* Model */,
 				A2B4208F286F1F1300278F92 /* App */,
-				A2B42098286F249800278F92 /* TabBarController.swift */,
-				A2B4208D286F1EE000278F92 /* ViewController */,
-				1078713D286F7A7E008EDF78 /* Cell */,
-				A2085AC82870486A00D6CF79 /* API */,
 				A2B4208E286F1F0500278F92 /* Extension */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
@@ -264,38 +288,10 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		A2085AC82870486A00D6CF79 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				A2085AD5287054D700D6CF79 /* Register */,
-				A2085AE22870550600D6CF79 /* Login */,
-			);
-			path = API;
-			sourceTree = "<group>";
-		};
-		A2085AD5287054D700D6CF79 /* Register */ = {
-			isa = PBXGroup;
-			children = (
-				A2085AC92870488E00D6CF79 /* RegisterManager.swift */,
-				A2085ACD2870489C00D6CF79 /* RegisterInput.swift */,
-				A2085AD1287048A800D6CF79 /* RegisterModel.swift */,
-			);
-			path = Register;
-			sourceTree = "<group>";
-		};
-		A2085AE22870550600D6CF79 /* Login */ = {
-			isa = PBXGroup;
-			children = (
-				A2085AD6287054E900D6CF79 /* LoginManager.swift */,
-				A2085ADA287054F900D6CF79 /* LoginInput.swift */,
-				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
-			);
-			path = Login;
-			sourceTree = "<group>";
-		};
 		A2B4208D286F1EE000278F92 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A2B42098286F249800278F92 /* TabBarController.swift */,
 				103F1483286ACB95004B637B /* LoginVC.swift */,
 				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
 				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
@@ -590,18 +586,18 @@
 				A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */,
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
-				A2085ADB287054F900D6CF79 /* LoginInput.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
-				A2085ACE2870489C00D6CF79 /* RegisterInput.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterModel.swift in Sources */,
-				A2085AD7287054E900D6CF79 /* LoginManager.swift in Sources */,
+				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
+				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
-				A2085ACA2870488E00D6CF79 /* RegisterManager.swift in Sources */,
+				A2085ACA2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
+				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
@@ -612,14 +608,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2085ACB2870488E00D6CF79 /* RegisterManager.swift in Sources */,
+				A2085ACB2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
-				A2085ADC287054F900D6CF79 /* LoginInput.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
-				A2085AD8287054E900D6CF79 /* LoginManager.swift in Sources */,
-				A2085ACF2870489C00D6CF79 /* RegisterInput.swift in Sources */,
+				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
@@ -638,18 +632,16 @@
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterModel.swift in Sources */,
-				A2085AD02870489C00D6CF79 /* RegisterInput.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
-				A2085AD9287054E900D6CF79 /* LoginManager.swift in Sources */,
+				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
-				A2085ACC2870488E00D6CF79 /* RegisterManager.swift in Sources */,
+				A2085ACC2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
-				A2085ADD287054F900D6CF79 /* LoginInput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

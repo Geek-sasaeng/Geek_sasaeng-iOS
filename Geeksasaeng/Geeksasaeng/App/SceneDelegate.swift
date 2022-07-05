@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NaverThirdPartyLogin
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -19,6 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController = LoginViewController()
         self.window?.rootViewController = rootViewController
         self.window?.makeKeyAndVisible()
+    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        NaverThirdPartyLoginConnection.getSharedInstance().receiveAccessToken(URLContexts.first?.url)
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

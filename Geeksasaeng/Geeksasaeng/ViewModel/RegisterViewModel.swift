@@ -8,7 +8,7 @@
 import Alamofire
 
 // 회원가입 API 연동
-class RegisterManager {
+class RegisterViewModel {
     public static func registerUser(_ viewController : EmailAuthViewController, _ parameter : RegisterInput) {
         AF.request("https://geeksasaeng.shop/members", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
