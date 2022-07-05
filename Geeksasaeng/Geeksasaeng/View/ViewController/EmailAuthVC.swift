@@ -234,6 +234,6 @@ class EmailAuthViewController: UIViewController {
                                   phoneNumber: "01012341234",
                                   universityName: school)
         
-        RegisterManager.registerUser(self, input)
+        RegisterViewModel.registerUser(self, input)
     }
 }
