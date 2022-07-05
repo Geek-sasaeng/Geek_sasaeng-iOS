@@ -164,7 +164,7 @@ class DeliveryViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "CreatePartyMark"), for: .normal)
         button.layer.cornerRadius = 31
-        button.backgroundColor = .white
+        button.backgroundColor = .mainColor
         return button
     }()
     
