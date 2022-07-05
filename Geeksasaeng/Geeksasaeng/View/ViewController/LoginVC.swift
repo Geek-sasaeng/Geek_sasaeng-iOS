@@ -11,9 +11,10 @@ import NaverThirdPartyLogin
 
 class LoginViewController: UIViewController {
     
-    // MARK: Subviews
+    // MARK: - Subviews
+    
     let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(imageLiteralResourceName: "AppLogo"))
+        let imageView = UIImageView(image: UIImage(named: "AppLogo"))
         return imageView
     }()
     
@@ -55,7 +56,7 @@ class LoginViewController: UIViewController {
     
     let naverLoginButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "naverLogo"), for: .normal)
+        button.setImage(UIImage(named: "NaverLogo"), for: .normal)
         button.adjustsImageWhenHighlighted = false
         button.setTitle("  네이버 로그인", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
@@ -88,13 +89,13 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    
-    // MARK: Variables
+    // MARK: - Variables
 //    let naverLoginInstance = NaverThirdPartyLoginConnection.getSharedInstance()
     let naverLoginVM = naverLoginViewModel()
     
     
-    // MARK: viewDidLoad()
+    // MARK: - viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -105,7 +106,7 @@ class LoginViewController: UIViewController {
         setLayouts()
     }
     
-    // MARK: Set Function
+    // MARK: - Set Function
     private func addSubViews() {
         [logoImageView, idTextField, passwordTextField, loginButton, naverLoginButton, automaticLoginButton, signUpButton].forEach { view.addSubview($0) }
     }
@@ -157,7 +158,7 @@ class LoginViewController: UIViewController {
     }
     
     
-    // MARK: Functions
+    // MARK: - Functions
     @objc func showRegisterView() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()

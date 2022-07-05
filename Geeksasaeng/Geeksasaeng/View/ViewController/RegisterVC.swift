@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 class RegisterViewController: UIViewController {
+    
     // MARK: - Subviews
+    
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor

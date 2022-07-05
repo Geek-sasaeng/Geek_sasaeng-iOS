@@ -22,35 +22,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppLogo" translatesAutoresizingMaskIntoConstraints="NO" id="mUB-Fx-6Fw">
-                                <rect key="frame" x="102.5" y="264" width="209" height="209"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="209" id="S2T-DT-dgU"/>
-                                    <constraint firstAttribute="width" constant="209" id="rG2-OR-feI"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="쉽고 편리한 연결 메이트" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sCg-8G-Nrx">
-                                <rect key="frame" x="113" y="478" width="188.5" height="18"/>
-                                <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="18"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="긱사생" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gge-ag-Akg">
-                                <rect key="frame" x="161" y="506" width="92.5" height="32"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="긱사생" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kHs-fF-jyc">
+                                <rect key="frame" x="161" y="490" width="92.5" height="32"/>
                                 <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="쉽고 편리한 연결 메이트" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8F9-L2-EL0">
+                                <rect key="frame" x="113" y="453" width="188.5" height="18"/>
+                                <fontDescription key="fontDescription" name="GmarketSansMedium" family="Gmarket Sans" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppLogo" translatesAutoresizingMaskIntoConstraints="NO" id="zBt-SH-uRD">
+                                <rect key="frame" x="102.5" y="239" width="209" height="209"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="209" id="jgQ-jc-Q8k"/>
+                                    <constraint firstAttribute="width" constant="209" id="wdo-Ev-KPv"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="mUB-Fx-6Fw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="220" id="2W8-tc-SA9"/>
-                            <constraint firstItem="sCg-8G-Nrx" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="dmT-w4-2FX"/>
-                            <constraint firstItem="sCg-8G-Nrx" firstAttribute="top" secondItem="mUB-Fx-6Fw" secondAttribute="bottom" constant="5" id="gc4-bX-Wd4"/>
-                            <constraint firstItem="gge-ag-Akg" firstAttribute="top" secondItem="sCg-8G-Nrx" secondAttribute="bottom" constant="10" id="ojW-6J-1ie"/>
-                            <constraint firstItem="mUB-Fx-6Fw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="vHf-1v-lVN"/>
-                            <constraint firstItem="gge-ag-Akg" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="zGm-4n-yg5"/>
+                            <constraint firstItem="8F9-L2-EL0" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="2Va-DX-HOK"/>
+                            <constraint firstItem="kHs-fF-jyc" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="3Cm-bw-eny"/>
+                            <constraint firstItem="zBt-SH-uRD" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" constant="239" id="9km-0j-H2h"/>
+                            <constraint firstItem="kHs-fF-jyc" firstAttribute="top" secondItem="8F9-L2-EL0" secondAttribute="bottom" constant="19" id="c4K-m4-Q2r"/>
+                            <constraint firstItem="zBt-SH-uRD" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="d0h-iz-bvy"/>
+                            <constraint firstItem="8F9-L2-EL0" firstAttribute="top" secondItem="zBt-SH-uRD" secondAttribute="bottom" constant="5" id="rHy-er-Ufo"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -60,7 +60,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AppLogo" width="215" height="215"/>
+        <image name="AppLogo" width="96.5" height="96.5"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

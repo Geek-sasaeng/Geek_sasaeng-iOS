@@ -351,7 +351,7 @@ class PartyViewController: UIViewController {
         navigationItem.hidesBackButton = true   // 원래 백버튼은 숨기고,
         
         // 커스텀한 새 백버튼으로 구성
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
