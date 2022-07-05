@@ -10,10 +10,10 @@ import SnapKit
 
 class LoginViewController: UIViewController {
     
-    // MARK: Subviews
+    // MARK: - Subviews
     
     let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(imageLiteralResourceName: "AppLogo"))
+        let imageView = UIImageView(image: UIImage(named: "AppLogo"))
         return imageView
     }()
     
@@ -55,7 +55,7 @@ class LoginViewController: UIViewController {
     
     let naverLoginButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "naverLogo"), for: .normal)
+        button.setImage(UIImage(named: "NaverLogo"), for: .normal)
         button.adjustsImageWhenHighlighted = false
         button.setTitle("  네이버 로그인", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
@@ -88,7 +88,7 @@ class LoginViewController: UIViewController {
     }()
     
     
-    // MARK: viewDidLoad()
+    // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
