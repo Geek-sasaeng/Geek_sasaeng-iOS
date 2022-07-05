@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import NaverThirdPartyLogin
 
 class LoginViewController: UIViewController {
     
@@ -64,6 +65,7 @@ class LoginViewController: UIViewController {
         button.backgroundColor = UIColor.init(hex: 0x00C73C)
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(tapNaverloginButton), for: .touchUpInside)
         return button
     }()
     
@@ -87,17 +89,24 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Variables
+//    let naverLoginInstance = NaverThirdPartyLoginConnection.getSharedInstance()
+    let naverLoginVM = naverLoginViewModel()
+    
     
     // MARK: - viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        naverLoginVM.setInstanceDelegate(self)
         
         addSubViews()
         setLayouts()
     }
     
-    // MARK: Set Function
+    // MARK: - Set Function
     private func addSubViews() {
         [logoImageView, idTextField, passwordTextField, loginButton, naverLoginButton, automaticLoginButton, signUpButton].forEach { view.addSubview($0) }
     }
@@ -149,7 +158,7 @@ class LoginViewController: UIViewController {
     }
     
     
-    // MARK: Functions
+    // MARK: - Functions
     @objc func showRegisterView() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
@@ -165,7 +174,16 @@ class LoginViewController: UIViewController {
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
             let input = LoginInput(loginId: id, password: pw)
-            LoginManager.login(self, input)
+            LoginViewModel.login(self, input)
+        }
+    }
+    
+    @objc func tapNaverloginButton() {
+        naverLoginVM.requestLogin()
+        if naverLoginVM.isExistToken() {
+            showHomeView()
+        } else {
+            print("===Login Fail===")
         }
     }
     
@@ -217,5 +235,28 @@ extension UIView {
         border.backgroundColor = color.cgColor
         border.frame = CGRect(x: 0, y: self.frame.size.height - width, width: self.frame.size.width, height: width)
         self.layer.addSublayer(border)
+    }
+}
+
+extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
+    // 로그인 성공
+    func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
+        print("네이버 로그인 성공")
+        naverLoginVM.naverLoginPaser(self)
+    }
+    
+    // 접근 토큰 갱신
+    func oauth20ConnectionDidFinishRequestACTokenWithRefreshToken() {
+        print("네이버 토큰\(naverLoginVM.returnToken())")
+    }
+    
+    // 토큰 삭제
+    func oauth20ConnectionDidFinishDeleteToken() {
+        print("네이버 로그아웃")
+    }
+    
+    // 모든 에러 출력
+    func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
+        print("에러 = \(error.localizedDescription)")
     }
 }

@@ -1,24 +1,28 @@
 PODS:
   - Alamofire (5.6.1)
   - Kingfisher (7.2.2)
+  - naveridlogin-sdk-ios (4.1.3)
   - SnapKit (5.6.0)
 
 DEPENDENCIES:
   - Alamofire
   - Kingfisher (~> 7.0)
+  - naveridlogin-sdk-ios
   - SnapKit (~> 5.6.0)
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - Kingfisher
+    - naveridlogin-sdk-ios
     - SnapKit
 
 SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   Kingfisher: 184d4d1a8c36666e663caf8e08abe87898595c53
+  naveridlogin-sdk-ios: b9d7c20677981177ed994ecb1c8c2b49f223277d
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 8f1ff4dadd3e68fb71508dcac77f869f0c1401e9
+PODFILE CHECKSUM: 2386a0c5e59f7353ef6e3786c44c7adbc58117b7
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.2

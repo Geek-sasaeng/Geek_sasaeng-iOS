@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NaverThirdPartyLogin
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -13,7 +14,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        sleep(1)
+        sleep(2) // Launch Screen 노출
+        
+        application.registerForRemoteNotifications()
+        let instance = NaverThirdPartyLoginConnection.getSharedInstance()
+        instance?.isNaverAppOauthEnable = true
+        instance?.isInAppOauthEnable = true
+        
+        instance?.serviceUrlScheme = "naverlogin"
+        instance?.consumerKey = "Dh4Y6xfM_mbltrjzEKwF"
+        instance?.consumerSecret = "VID6insDOM"
+        instance?.appName = "긱사생"
+        
+        return true
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        NaverThirdPartyLoginConnection.getSharedInstance().application(app, open: url, options: options)
+        
         return true
     }
     

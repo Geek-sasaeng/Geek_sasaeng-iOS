@@ -2,3 +2,4 @@ ${PODS_ROOT}/Target Support Files/Pods-Geeksasaeng-GeeksasaengUITests/Pods-Geeks
 ${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
 ${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
+${PODS_ROOT}/naveridlogin-sdk-ios/NaverThirdPartyLogin.framework
