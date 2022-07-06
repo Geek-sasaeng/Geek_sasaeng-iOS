@@ -17,9 +17,9 @@ class AdCarouselModel {
     // cell에 들어갈 데이터를 만들어서 배열에 넣는다.
     static let adCellDataArray: [AdCarouselData] = [
         AdCarouselData(cellImagePath: "BannerAd"),
-        AdCarouselData(cellImagePath: "BannerAd"),
-        AdCarouselData(cellImagePath: "BannerAd"),
-        AdCarouselData(cellImagePath: "BannerAd"),
-        AdCarouselData(cellImagePath: "BannerAd")
+        AdCarouselData(cellImagePath: "NaverLogo"),
+        AdCarouselData(cellImagePath: "Report"),
+        AdCarouselData(cellImagePath: "ProfileImage"),
+        AdCarouselData(cellImagePath: "Community")
     ]
 }

@@ -11,8 +11,11 @@ import SnapKit
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
-    
+    // 광고 배너 이미지 데이터 배열
     let adCellDataArray = AdCarouselModel.adCellDataArray
+    
+    // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
+    var nowPage: Int = 0
     
     // MARK: - Subviews
     
@@ -84,12 +87,6 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Ad Collection View */
-//    var adImageView: UIImageView = {
-//        var imageView = UIImageView(image: UIImage(named: "BannerAd"))
-//        imageView.layer.cornerRadius = 5
-//        imageView.clipsToBounds = true
-//        return imageView
-//    }()
     private lazy var adCollectionView: UICollectionView = {
         // 셀 레이아웃 설정
         let layout = UICollectionViewFlowLayout()
@@ -104,9 +101,9 @@ class DeliveryViewController: UIViewController {
         
         // 위에서 만든 레이아웃을 따르는 collection view 생성
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        // content의 간격 설정 -> collection view가 차지하게 될 레이아웃을 설정하는 것
-//        collectionView.contentInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
+        // indicator 숨김
         collectionView.showsHorizontalScrollIndicator = false
+        // 직접 페이징 가능하도록
         collectionView.isPagingEnabled = true
         
         return collectionView
@@ -205,6 +202,7 @@ class DeliveryViewController: UIViewController {
         setCollectionView()
         
         setLabelTap()
+        setAdCollectionViewTimer()
         makeButtonShadow(createPartyButton)
     }
     
@@ -264,13 +262,7 @@ class DeliveryViewController: UIViewController {
             make.height.equalTo(3)
         }
         
-//        /* Ad */
-//        ad.snp.makeConstraints { make in
-//            make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
-//            make.left.right.equalToSuperview().inset(18)
-//            make.centerX.equalTo(view.center)
-//            make.height.equalTo(86)
-//        }
+        /* Ad */
         adCollectionView.snp.makeConstraints { make in
             make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
             make.left.right.equalToSuperview()
@@ -395,9 +387,32 @@ class DeliveryViewController: UIViewController {
         }
     }
     
-    // 광고 배너
-    private func makeAdCarousel() {
+    /* 광고 배너 자동 스크롤 기능 */
+    /* 3초마다 실행되는 타이머를 세팅 */
+    func setAdCollectionViewTimer() {
+        let _: Timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { (Timer) in
+            self.moveToNextAd()
+        }
+    }
+    
+    /* 다음 광고로 자동 스크롤 */
+    func moveToNextAd() {
+        print("DEBUG: ", nowPage)
+        // 현재 페이지가 마지막 페이지일 경우,
+        if nowPage == adCellDataArray.count - 1 {
+            // 맨 처음 페이지로 돌아가도록
+            adCollectionView.isPagingEnabled = false    // 자동 스크롤을 위해서 잠시 수동 스크롤 기능을 끈 것.
+            adCollectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
+            adCollectionView.isPagingEnabled = true
+            nowPage = 0
+            return
+        }
         
+        // 다음 페이지로 전환
+        nowPage += 1
+        adCollectionView.isPagingEnabled = false
+        adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
+        adCollectionView.isPagingEnabled = true
     }
 }
 
@@ -426,21 +441,36 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
-    // 광고 몇 개 넣을지 설정.
+    /* cell(광고) 몇 개 넣을지 설정 */
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return adCellDataArray.count
     }
     
-    // cell에 어떤 이미지의 광고를 넣을지 설정.
+    /* cell에 어떤 이미지의 광고를 넣을지 설정 */
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        // AdCollectionViewCell 타입의 cell 생성.
+        // AdCollectionViewCell 타입의 cell 생성
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdCollectionViewCell.identifier, for: indexPath) as? AdCollectionViewCell else { return UICollectionViewCell() }
         
-        // cell의 이미지(광고 이미지) 설정.
+        // cell의 이미지(광고 이미지) 설정
         cell.cellImageView.image = UIImage(named: adCellDataArray[indexPath.item].cellImagePath)
         print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
         
         return cell
     }
+    
+    /* 수동 스크롤이 끝났을 때 실행되는 함수 */
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if adCollectionView == scrollView {
+            // 현재 보이는 셀(광고)의 row로 nowPage 값을 변경한다
+            for cell in adCollectionView.visibleCells {
+                /* 원래 collection view면 한번에 여러 개의 셀이 보일 수도 있으므로 visibleCells은 배열의 형태를 가지고 있지만,
+                   우리 어플에서는 한번에 하나씩의 광고만 보여지므로 이 for문은 한번만 실행됨 */
+                if let row = adCollectionView.indexPath(for: cell)?.item {
+                    nowPage = row
+                }
+            }
+        }
+    }
+    
 }
