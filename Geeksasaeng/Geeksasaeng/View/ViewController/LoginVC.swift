@@ -76,6 +76,7 @@ class LoginViewController: UIViewController {
         button.setTitle(" 자동 로그인", for: .normal)
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
         button.titleLabel?.font = .customFont(.neoLight, size: 15)
+        button.addTarget(self, action: #selector(tapAutomaticLoginButton), for: .touchUpInside)
         return button
     }()
     
@@ -184,6 +185,14 @@ class LoginViewController: UIViewController {
             showHomeView()
         } else {
             print("===Login Fail===")
+        }
+    }
+    
+    @objc func tapAutomaticLoginButton() {
+        if automaticLoginButton.currentImage == UIImage(systemName: "rectangle") {
+            automaticLoginButton.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
+        } else {
+            automaticLoginButton.setImage(UIImage(systemName: "rectangle"), for: .normal)
         }
     }
     
