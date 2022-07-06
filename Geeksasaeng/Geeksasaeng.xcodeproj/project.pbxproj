@@ -36,7 +36,6 @@
 		10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
 		10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
-		701864496BC654D343AB4930 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
 		A2085ACA2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
 		A2085ACB2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
 		A2085ACC2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
@@ -49,6 +48,12 @@
 		A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
 		A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
 		A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
+		A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
+		A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
+		A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
+		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
+		A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
+		A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
 		A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
@@ -62,6 +67,9 @@
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
+		A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
+		A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
+		A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
@@ -120,11 +128,13 @@
 		A2085AD1287048A800D6CF79 /* RegisterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterModel.swift; sourceTree = "<group>"; };
 		A2085AD6287054E900D6CF79 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085ADE2870550200D6CF79 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		A219B272287575E4000F34A3 /* AdCarouselModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCarouselModel.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
 		A2B42089286F151100278F92 /* AuthNumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumVC.swift; sourceTree = "<group>"; };
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
+		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
 		A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
@@ -140,7 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				701864496BC654D343AB4930 /* Pods_Geeksasaeng.framework in Frameworks */,
+				A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,6 +179,7 @@
 				A2085AD1287048A800D6CF79 /* RegisterModel.swift */,
 				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
 				100FB99828745DDE008947DD /* NaverLoginModel.swift */,
+				A219B272287575E4000F34A3 /* AdCarouselModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -218,10 +229,10 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
+				A2B4208F286F1F1300278F92 /* App */,
 				100FB99528745BE3008947DD /* View */,
 				100FB99428745AAC008947DD /* ViewModel */,
 				100FB99328745AA6008947DD /* Model */,
-				A2B4208F286F1F1300278F92 /* App */,
 				A2B4208E286F1F0500278F92 /* Extension */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
@@ -271,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */,
+				A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -585,6 +597,7 @@
 			files = (
 				A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */,
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
+				A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterModel.swift in Sources */,
@@ -599,6 +612,7 @@
 				A2085ACA2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
+				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
 			);
@@ -609,10 +623,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2085ACB2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
+				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
+				A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
+				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
@@ -631,6 +648,8 @@
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
+				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
+				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterModel.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
@@ -640,6 +659,7 @@
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
+				A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A2085ACC2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 			);
@@ -812,6 +832,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_WORKSPACE = NO;
 			};
 			name = Debug;
 		};
@@ -841,6 +862,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_WORKSPACE = NO;
 			};
 			name = Release;
 		};

@@ -60,7 +60,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AppLogo" width="96.5" height="96.5"/>
+        <image name="AppLogo" width="290" height="290"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

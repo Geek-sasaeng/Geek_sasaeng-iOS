@@ -9,7 +9,11 @@ import UIKit
 import SnapKit
 
 class DeliveryViewController: UIViewController {
-
+    
+    // MARK: - Properties
+    
+    let adCellDataArray = AdCarouselModel.adCellDataArray
+    
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */
@@ -79,12 +83,33 @@ class DeliveryViewController: UIViewController {
         return view
     }()
     
-    /* Ad */
-    var adImageView: UIImageView = {
-        var imageView = UIImageView(image: UIImage(named: "BannerAd"))
-        imageView.layer.cornerRadius = 5
-        imageView.clipsToBounds = true
-        return imageView
+    /* Ad Collection View */
+//    var adImageView: UIImageView = {
+//        var imageView = UIImageView(image: UIImage(named: "BannerAd"))
+//        imageView.layer.cornerRadius = 5
+//        imageView.clipsToBounds = true
+//        return imageView
+//    }()
+    private lazy var adCollectionView: UICollectionView = {
+        // 셀 레이아웃 설정
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        // 광고 셀 크기 설정
+        let width = UIScreen.main.bounds.width
+        layout.itemSize = CGSize(width: width, height: width / 3.7)
+
+        // 광고 이미지 사이 간격 설정
+        layout.minimumLineSpacing = 0
+        
+        // 위에서 만든 레이아웃을 따르는 collection view 생성
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        // content의 간격 설정 -> collection view가 차지하게 될 레이아웃을 설정하는 것
+//        collectionView.contentInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isPagingEnabled = true
+        
+        return collectionView
     }()
     
     /* Filter */
@@ -177,6 +202,8 @@ class DeliveryViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTableView()
+        setCollectionView()
+        
         setLabelTap()
         makeButtonShadow(createPartyButton)
     }
@@ -196,7 +223,7 @@ class DeliveryViewController: UIViewController {
         [
             deliveryPartyLabel, marketLabel, helperLabel,
             deliveryPartyBar, marketBar, helperBar,
-            adImageView,
+            adCollectionView,
             filterImageView, peopleFilterView, timeFilterView,
             partyTableView,
             createPartyButton
@@ -237,30 +264,35 @@ class DeliveryViewController: UIViewController {
             make.height.equalTo(3)
         }
         
-        /* Ad */
-        adImageView.snp.makeConstraints { make in
+//        /* Ad */
+//        ad.snp.makeConstraints { make in
+//            make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
+//            make.left.right.equalToSuperview().inset(18)
+//            make.centerX.equalTo(view.center)
+//            make.height.equalTo(86)
+//        }
+        adCollectionView.snp.makeConstraints { make in
             make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(18)
-            make.centerX.equalTo(view.center)
+            make.left.right.equalToSuperview()
             make.height.equalTo(86)
         }
         
         /* Filter */
         filterImageView.snp.makeConstraints { make in
             make.width.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(13)
-            make.left.equalTo(adImageView.snp.left)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
+            make.left.equalTo(adCollectionView.snp.left).offset(18)
         }
         peopleFilterView.snp.makeConstraints { make in
             make.width.equalTo(73)
             make.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(13)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
             make.left.equalTo(filterImageView.snp.right).offset(10)
         }
         timeFilterView.snp.makeConstraints { make in
             make.width.equalTo(93)
             make.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(13)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
             make.left.equalTo(peopleFilterView.snp.right).offset(10)
         }
         
@@ -286,6 +318,14 @@ class DeliveryViewController: UIViewController {
         partyTableView.rowHeight = 118
     }
     
+    // collection view 등록
+    private func setCollectionView() {
+        adCollectionView.delegate = self
+        adCollectionView.dataSource = self
+        adCollectionView.clipsToBounds = true
+        adCollectionView.register(AdCollectionViewCell.self, forCellWithReuseIdentifier: AdCollectionViewCell.identifier)
+    }
+    
     private func makeButtonShadow(_ button: UIButton) {
         button.layer.shadowRadius = 4
         button.layer.shadowColor = UIColor(hex: 0xA8A8A8).cgColor
@@ -294,25 +334,24 @@ class DeliveryViewController: UIViewController {
         button.layer.masksToBounds = false
     }
     
+    // label에 탭 제스쳐 추가
     private func setLabelTap() {
         for label in [deliveryPartyLabel, marketLabel, helperLabel] {
             label.font = .customFont(.neoMedium, size: 14)
             
-            // 탭 제스쳐를 label에 추가 -> label을 클릭했을 때 액션이 발생하도록.
+            // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
             let labelTapGesture = UITapGestureRecognizer(target: self,
-                                                         action: #selector(clickCategoryLabel(sender:)))
-            labelTapGesture.numberOfTapsRequired = 1
-            labelTapGesture.numberOfTouchesRequired = 1
+                                                         action: #selector(tapCategoryLabel(sender:)))
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(labelTapGesture)
         }
     }
     
-    @objc private func clickCategoryLabel(sender: UIGestureRecognizer) {
-        // 해당하는 카테고리의 내용으로 리스트를 변경
-        let thisLabel = sender.view as! UILabel
+    // 카테고리 탭의 label을 탭하면 실행되는 함수
+    @objc private func tapCategoryLabel(sender: UIGestureRecognizer) {
+        let label = sender.view as! UILabel
 
-        if let category = thisLabel.text {
+        if let category = label.text {
             switch category {
             case "배달파티":
                 print("DEBUG: 배달파티")
@@ -355,10 +394,15 @@ class DeliveryViewController: UIViewController {
             }
         }
     }
+    
+    // 광고 배너
+    private func makeAdCarousel() {
+        
+    }
 }
 
 
-// MARK: - Extensions
+// MARK: - UITableViewDataSource, UITableViewDelegate
 
 extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -376,5 +420,27 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
         print("DEBUG: 셀 선택 화면 전환 성공")
         self.navigationController?.pushViewController(viewController, animated: true)
     }
+}
+
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+
+extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
+    // 광고 몇 개 넣을지 설정.
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return adCellDataArray.count
+    }
+    
+    // cell에 어떤 이미지의 광고를 넣을지 설정.
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        // AdCollectionViewCell 타입의 cell 생성.
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdCollectionViewCell.identifier, for: indexPath) as? AdCollectionViewCell else { return UICollectionViewCell() }
+        
+        // cell의 이미지(광고 이미지) 설정.
+        cell.cellImageView.image = UIImage(named: adCellDataArray[indexPath.item].cellImagePath)
+        print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
+        
+        return cell
+    }
 }
