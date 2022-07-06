@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         self.window = UIWindow(windowScene: windowScene)
         
-        let rootViewController = LoginViewController()
+        let rootViewController = EmailAuthViewController()
         self.window?.rootViewController = rootViewController
         self.window?.makeKeyAndVisible()
     }

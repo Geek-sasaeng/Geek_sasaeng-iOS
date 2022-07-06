@@ -54,6 +54,7 @@ class EmailAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.isEnabled = false
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
         return button
     }()
     
@@ -249,6 +250,11 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
+    @objc func tapAuthSendButton() {
+        authSendButton.setDeactivatedButton()
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+    }
+    
     func sendRegisterRequest() {
         // Request 생성.
         guard let school = self.schoolTextField.text,
@@ -265,5 +271,31 @@ class EmailAuthViewController: UIViewController {
                                   universityName: school)
         
         RegisterViewModel.registerUser(self, input)
+    }
+}
+
+extension UIViewController {
+    func showToast(viewController: UIViewController, message : String, font: UIFont) {
+        let toastLabel = UILabel()
+        toastLabel.backgroundColor = UIColor(hex: 0x003C56).withAlphaComponent(0.6)
+        toastLabel.textColor = UIColor.white
+        toastLabel.font = font
+        toastLabel.textAlignment = .center;
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.layer.cornerRadius = 5;
+        toastLabel.clipsToBounds  =  true
+        viewController.view.addSubview(toastLabel)
+        toastLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(viewController.view.center)
+            make.width.equalTo(226)
+            make.height.equalTo(61)
+            make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)
+        }
+        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
+            toastLabel.alpha = 0.0
+        }, completion: {(isCompleted) in
+            toastLabel.removeFromSuperview()
+        })
     }
 }

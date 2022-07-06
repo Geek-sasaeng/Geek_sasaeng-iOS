@@ -63,18 +63,19 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.isEnabled = false
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
         return button
     }()
     
-//    var 건너띄기Button: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("회원가입", for: .normal)
-//        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
-//        button.titleLabel?.font = .customFont(.neoLight, size: 15)
-//        button.makeBottomLine(55)
-//        button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside)
-//        return button
-//    }()
+    var passButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("건너뛰기", for: .normal)
+        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+        button.titleLabel?.font = .customFont(.neoLight, size: 15)
+        button.makeBottomLine(55)
+//        button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside) -> view 띄우기
+        return button
+    }()
     
     var nextButton: UIButton = {
         let button = UIButton()
@@ -209,6 +210,12 @@ class PhoneAuthViewController: UIViewController {
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }
+        
+        view.addSubview(passButton)
+        passButton.snp.makeConstraints { make in
+            make.centerX.equalTo(view.center)
+            make.bottom.equalTo(nextButton.snp.top).offset(-40)
+        }
     }
     
     private func setAttributes() {
@@ -267,5 +274,10 @@ class PhoneAuthViewController: UIViewController {
     @objc func tapAuthSendButton() {
         authSendButton.setDeactivatedButton()
         authResendButton.setActivatedButton()
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+    }
+    
+    @objc func tapAuthResendButton() {
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
     }
 }

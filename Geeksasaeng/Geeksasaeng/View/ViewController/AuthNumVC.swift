@@ -58,12 +58,13 @@ class AuthNumViewController: UIViewController {
         return textField
     }()
     
-    var reSendButton: UIButton = {
+    var authResendButton: UIButton = {
         let button = UIButton()
         button.setTitle("재전송 하기", for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
         return button
     }()
     
@@ -95,7 +96,7 @@ class AuthNumViewController: UIViewController {
         view.backgroundColor = .white
         
         setLayouts()
-        reSendButton.setActivatedButton()
+        authResendButton.setActivatedButton()
     }
     
     // MARK: - Functions
@@ -144,7 +145,7 @@ class AuthNumViewController: UIViewController {
             authNumLabel,
             authNumTextField,
             remainTimeLabel,
-            reSendButton,
+            authResendButton,
             nextButton
         ].forEach { view.addSubview($0) }
         
@@ -166,8 +167,8 @@ class AuthNumViewController: UIViewController {
             make.top.equalTo(authNumTextField.snp.bottom).offset(21)
         }
         
-        /* reSendButton */
-        reSendButton.snp.makeConstraints { make in
+        /* authResendButton */
+        authResendButton.snp.makeConstraints { make in
             make.top.equalTo(remainBar.snp.bottom).offset(80)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
@@ -198,6 +199,10 @@ class AuthNumViewController: UIViewController {
         } else {
             nextButton.setDeactivatedNextButton()
         }
+    }
+    
+    @objc func tapAuthResendButton() {
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
     }
     
 }
