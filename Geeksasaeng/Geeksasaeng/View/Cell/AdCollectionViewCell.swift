@@ -18,10 +18,11 @@ class AdCollectionViewCell: UICollectionViewCell {
     
     var cellImageView: UIImageView = {
         let imageView = UIImageView()
-        // TODO: cornerRadius가 적용되지 않는 상황
         imageView.clipsToBounds = true
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 5
+        imageView.backgroundColor = .mainColor  // test. 배포 때는 없앨 것
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
     

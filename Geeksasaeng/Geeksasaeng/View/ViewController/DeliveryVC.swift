@@ -94,7 +94,7 @@ class DeliveryViewController: UIViewController {
         
         // 광고 셀 크기 설정
         let width = UIScreen.main.bounds.width
-        layout.itemSize = CGSize(width: width, height: width / 3.7)
+        layout.itemSize = CGSize(width: width, height: 85)  // 높이를 확정해야 cornerRadius가 적용됨.
 
         // 광고 이미지 사이 간격 설정
         layout.minimumLineSpacing = 0
