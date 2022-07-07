@@ -89,6 +89,9 @@ class AuthNumViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Variables
+    var fromNaverRegister = false
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -115,7 +118,11 @@ class AuthNumViewController: UIViewController {
         
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.width.equalTo(195)
+            if fromNaverRegister {
+                make.width.equalTo((UIScreen.main.bounds.width - 50) / 3 * 2)
+            } else {
+                make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 3)
+            }
             make.left.equalToSuperview().inset(25)
         }
         
@@ -186,11 +193,15 @@ class AuthNumViewController: UIViewController {
     
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     @objc func showNextView() {
-        let phoneAuthVC = PhoneAuthViewController()
+        let agreementVC = AgreementViewController()
         
-        phoneAuthVC.modalTransitionStyle = .crossDissolve
-        phoneAuthVC.modalPresentationStyle = .fullScreen
-        present(phoneAuthVC, animated: true)
+        agreementVC.modalTransitionStyle = .crossDissolve
+        agreementVC.modalPresentationStyle = .fullScreen
+        if fromNaverRegister {
+            agreementVC.fromNaverRegister = true
+        }
+        
+        present(agreementVC, animated: true)
     }
     
     @objc func didChangeTextField(_ sender: UITextField) {

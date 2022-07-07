@@ -1,14 +1,14 @@
 //
-//  EmailAuthVC.swift
+//  NaverRegisterVC.swift
 //  Geeksasaeng
 //
-//  Created by 서은수 on 2022/07/01.
+//  Created by 조동진 on 2022/07/07.
 //
 
 import UIKit
 import SnapKit
 
-class EmailAuthViewController: UIViewController {
+class NaverRegisterViewController: UIViewController {
     
     // MARK: - Subviews
     
@@ -38,12 +38,36 @@ class EmailAuthViewController: UIViewController {
         return imageView
     }()
     
+    var nickNameLabel = UILabel()
     var schoolLabel = UILabel()
     var emailLabel = UILabel()
     
+    var nickNameTextField = UITextField()
     var schoolTextField = UITextField()
     var emailTextField = UITextField()
     var emailAddressTextField = UITextField()
+    
+    var nickNameCheckButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("중복 확인", for: .normal)
+        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        button.layer.cornerRadius = 5
+        button.backgroundColor = UIColor(hex: 0xEFEFEF)
+        button.clipsToBounds = true
+        button.isEnabled = false
+        button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
+        return button
+    }()
+    
+    var nickNameAvailableLabel: UILabel = {
+        let label = UILabel()
+        label.text = "사용 가능한 닉네임입니다"
+        label.textColor = .mainColor
+        label.font = .customFont(.neoMedium, size: 13)
+        label.isHidden = true
+        return label
+    }()
     
     var authSendButton: UIButton = {
         var button = UIButton()
@@ -66,18 +90,10 @@ class EmailAuthViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
-        button.isEnabled = false
         button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
-    
-    // MARK: - Properties
-    
-    var idData: String!
-    var pwData: String!
-    var pwCheckData: String!
-    var nickNameData: String!
-    
     
     // MARK: - Life Cycle
     
@@ -94,16 +110,17 @@ class EmailAuthViewController: UIViewController {
     
     private func setLayouts() {
         /* progress Bar */
-        view.addSubview(progressBar)
+        [progressBar, remainBar, progressIcon, remainIcon].forEach {
+            view.addSubview($0)
+        }
+        
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 2)
+            make.width.equalTo((UIScreen.main.bounds.width - 50) / 3)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
         
-        /* remain Bar */
-        view.addSubview(remainBar)
         remainBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -111,7 +128,6 @@ class EmailAuthViewController: UIViewController {
             make.right.equalToSuperview().inset(25)
         }
         
-        view.addSubview(progressIcon)
         progressIcon.snp.makeConstraints { make in
             make.width.equalTo(35)
             make.height.equalTo(22)
@@ -119,7 +135,6 @@ class EmailAuthViewController: UIViewController {
             make.left.equalTo(progressBar.snp.right).inset(15)
         }
         
-        view.addSubview(remainIcon)
         remainIcon.snp.makeConstraints { make in
             make.width.equalTo(22)
             make.height.equalTo(36)
@@ -129,54 +144,63 @@ class EmailAuthViewController: UIViewController {
         
         /* labels */
         [
+            nickNameLabel,
             schoolLabel,
-            emailLabel
+            emailLabel,
         ].forEach {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.left.equalToSuperview().inset(27)
             }
         }
-        /* schoolLabel */
-        schoolLabel.snp.makeConstraints { make in
+        
+        nickNameLabel.snp.makeConstraints { make in
             make.top.equalTo(progressBar.snp.bottom).offset(50)
         }
-        /* emailLabel */
+        
+        schoolLabel.snp.makeConstraints { make in
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(108)
+        }
+        
         emailLabel.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(81)
         }
         
         /* text fields */
         [
+            nickNameTextField,
             schoolTextField,
             emailTextField,
-            emailAddressTextField
         ].forEach {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.left.equalToSuperview().inset(36)
             }
         }
-        /* schoolTextField */
+        
+        nickNameTextField.snp.makeConstraints { make in
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
+        }
+        
         schoolTextField.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(15)
         }
-        /* emailTextField */
+        
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(emailLabel.snp.bottom).offset(15)
         }
-        /* emailAddressTextField */
+        
+        view.addSubview(emailAddressTextField)
         emailAddressTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
         }
         
-        /* authSendButton */
-        view.addSubview(authSendButton)
-        authSendButton.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(243)
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(105)
-            make.height.equalTo(41)
+        /* nickNameAvailableLabel */
+        view.addSubview(nickNameAvailableLabel)
+        nickNameAvailableLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
         }
         
         /* nextButton */
@@ -187,24 +211,39 @@ class EmailAuthViewController: UIViewController {
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }
+        
+        /* nickNameCheckButton */
+        view.addSubview(nickNameCheckButton)
+        nickNameCheckButton.snp.makeConstraints { make in
+            make.top.equalTo(remainBar.snp.bottom).offset(82)
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(81)
+            make.height.equalTo(41)
+        }
+        
+        /* authSendButton */
+        view.addSubview(authSendButton)
+        authSendButton.snp.makeConstraints { make in
+            make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(10)
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(105)
+            make.height.equalTo(41)
+        }
     }
     
     private func setAttributes() {
-        /* labels attr */
+        /* label attr */
+        nickNameLabel = setMainLabelAttrs("닉네임")
         schoolLabel = setMainLabelAttrs("학교 선택")
         emailLabel = setMainLabelAttrs("이메일 입력")
         
         /* textFields attr */
+        nickNameTextField = setTextFieldAttrs(msg: "3-8자 영문으로 입력", width: 210)
         schoolTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
         emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
         emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
-        
-        /* authSendButton attr */
-        //        authSendButton = setAuthSendButtonAttrs()
-        //        makeButtonShadow(authSendButton)
     }
     
-    // 공통 속성을 묶어놓은 함수
     private func setMainLabelAttrs(_ text: String) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -225,29 +264,14 @@ class EmailAuthViewController: UIViewController {
     }
     
     private func setTextFieldTarget() {
-        [schoolTextField, emailTextField, emailAddressTextField].forEach { textField in
+        [nickNameTextField, schoolTextField, emailTextField, emailAddressTextField].forEach { textField in
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
     
-    @objc func showNextView() {
-        let authNumVC = AuthNumViewController()
-        
-        sendRegisterRequest()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        present(authNumVC, animated: true)
-    }
-    
-    @objc func didChangeTextField(_ sender: UITextField) {
-        if schoolTextField.text?.count ?? 0 >= 1 && emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
-            nextButton.setActivatedNextButton()
-            authSendButton.setActivatedButton()
-        } else {
-            nextButton.setDeactivatedNextButton()
-            authSendButton.setDeactivatedButton()
-        }
+    @objc func tapNickNameCheckButton() {
+        nickNameCheckButton.setDeactivatedButton()
+        nickNameAvailableLabel.isHidden = false
     }
     
     @objc func tapAuthSendButton() {
@@ -255,47 +279,35 @@ class EmailAuthViewController: UIViewController {
         self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
     }
     
-    func sendRegisterRequest() {
-        // Request 생성.
-        guard let school = self.schoolTextField.text,
-              let email = self.emailTextField.text,
-              let emailAddress = self.emailAddressTextField.text
-        else { return }
+    // EmailAuthVC로 화면 전환.
+    @objc func showNextView() {
+        let authNumVC = AuthNumViewController()
         
-        let input = RegisterInput(checkPassword: pwCheckData,
-                                  email: email+emailAddress,
-                                  loginId: idData,
-                                  nickname: nickNameData,
-                                  password: pwData,
-                                  phoneNumber: "01012341234",
-                                  universityName: school)
+        authNumVC.modalTransitionStyle = .crossDissolve
+        authNumVC.modalPresentationStyle = .fullScreen
+        authNumVC.fromNaverRegister = true
         
-        RegisterViewModel.registerUser(self, input)
+        present(authNumVC, animated: true)
     }
-}
-
-extension UIViewController {
-    func showToast(viewController: UIViewController, message : String, font: UIFont) {
-        let toastLabel = UILabel()
-        toastLabel.backgroundColor = UIColor(hex: 0x003C56).withAlphaComponent(0.6)
-        toastLabel.textColor = UIColor.white
-        toastLabel.font = font
-        toastLabel.textAlignment = .center;
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 5;
-        toastLabel.clipsToBounds  =  true
-        viewController.view.addSubview(toastLabel)
-        toastLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(viewController.view.center)
-            make.width.equalTo(226)
-            make.height.equalTo(61)
-            make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)
+    
+    @objc func didChangeTextField(_ sender: UITextField) {
+        if nickNameTextField.text?.count ?? 0 >= 1 {
+            nickNameCheckButton.setActivatedButton()
+        } else if nickNameTextField.text?.count ?? 0 < 1 {
+            nickNameCheckButton.setDeactivatedButton()
         }
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
-            toastLabel.alpha = 0.0
-        }, completion: {(isCompleted) in
-            toastLabel.removeFromSuperview()
-        })
+        
+        if emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
+            authSendButton.setActivatedButton()
+        } else if emailAddressTextField.text?.count ?? 0 < 1 {
+            authSendButton.setDeactivatedButton()
+        }
+
+        if nickNameTextField.text?.count ?? 0 >= 1 && schoolTextField.text?.count ?? 0 >= 1 &&
+            emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
+            nextButton.setActivatedNextButton()
+        } else {
+            nextButton.setDeactivatedNextButton()
+        }
     }
 }
