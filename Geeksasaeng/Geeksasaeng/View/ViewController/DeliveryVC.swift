@@ -9,7 +9,14 @@ import UIKit
 import SnapKit
 
 class DeliveryViewController: UIViewController {
-
+    
+    // MARK: - Properties
+    // 광고 배너 이미지 데이터 배열
+    let adCellDataArray = AdCarouselModel.adCellDataArray
+    
+    // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
+    var nowPage: Int = 0
+    
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */
@@ -79,12 +86,27 @@ class DeliveryViewController: UIViewController {
         return view
     }()
     
-    /* Ad */
-    var adImageView: UIImageView = {
-        var imageView = UIImageView(image: UIImage(named: "BannerAd"))
-        imageView.layer.cornerRadius = 5
-        imageView.clipsToBounds = true
-        return imageView
+    /* Ad Collection View */
+    private lazy var adCollectionView: UICollectionView = {
+        // 셀 레이아웃 설정
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        // 광고 셀 크기 설정
+        let width = UIScreen.main.bounds.width
+        layout.itemSize = CGSize(width: width, height: 85)  // 높이를 확정해야 cornerRadius가 적용됨.
+
+        // 광고 이미지 사이 간격 설정
+        layout.minimumLineSpacing = 0
+        
+        // 위에서 만든 레이아웃을 따르는 collection view 생성
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        // indicator 숨김
+        collectionView.showsHorizontalScrollIndicator = false
+        // 직접 페이징 가능하도록
+        collectionView.isPagingEnabled = true
+        
+        return collectionView
     }()
     
     /* Filter */
@@ -177,7 +199,10 @@ class DeliveryViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTableView()
+        setCollectionView()
+        
         setLabelTap()
+        setAdCollectionViewTimer()
         makeButtonShadow(createPartyButton)
     }
     
@@ -196,7 +221,7 @@ class DeliveryViewController: UIViewController {
         [
             deliveryPartyLabel, marketLabel, helperLabel,
             deliveryPartyBar, marketBar, helperBar,
-            adImageView,
+            adCollectionView,
             filterImageView, peopleFilterView, timeFilterView,
             partyTableView,
             createPartyButton
@@ -238,29 +263,28 @@ class DeliveryViewController: UIViewController {
         }
         
         /* Ad */
-        adImageView.snp.makeConstraints { make in
+        adCollectionView.snp.makeConstraints { make in
             make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(18)
-            make.centerX.equalTo(view.center)
+            make.left.right.equalToSuperview()
             make.height.equalTo(86)
         }
         
         /* Filter */
         filterImageView.snp.makeConstraints { make in
             make.width.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(13)
-            make.left.equalTo(adImageView.snp.left)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
+            make.left.equalTo(adCollectionView.snp.left).offset(18)
         }
         peopleFilterView.snp.makeConstraints { make in
             make.width.equalTo(73)
             make.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(13)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
             make.left.equalTo(filterImageView.snp.right).offset(10)
         }
         timeFilterView.snp.makeConstraints { make in
             make.width.equalTo(93)
             make.height.equalTo(30)
-            make.top.equalTo(adImageView.snp.bottom).offset(13)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
             make.left.equalTo(peopleFilterView.snp.right).offset(10)
         }
         
@@ -286,6 +310,14 @@ class DeliveryViewController: UIViewController {
         partyTableView.rowHeight = 118
     }
     
+    // collection view 등록
+    private func setCollectionView() {
+        adCollectionView.delegate = self
+        adCollectionView.dataSource = self
+        adCollectionView.clipsToBounds = true
+        adCollectionView.register(AdCollectionViewCell.self, forCellWithReuseIdentifier: AdCollectionViewCell.identifier)
+    }
+    
     private func makeButtonShadow(_ button: UIButton) {
         button.layer.shadowRadius = 4
         button.layer.shadowColor = UIColor(hex: 0xA8A8A8).cgColor
@@ -294,25 +326,24 @@ class DeliveryViewController: UIViewController {
         button.layer.masksToBounds = false
     }
     
+    // label에 탭 제스쳐 추가
     private func setLabelTap() {
         for label in [deliveryPartyLabel, marketLabel, helperLabel] {
             label.font = .customFont(.neoMedium, size: 14)
             
-            // 탭 제스쳐를 label에 추가 -> label을 클릭했을 때 액션이 발생하도록.
+            // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
             let labelTapGesture = UITapGestureRecognizer(target: self,
-                                                         action: #selector(clickCategoryLabel(sender:)))
-            labelTapGesture.numberOfTapsRequired = 1
-            labelTapGesture.numberOfTouchesRequired = 1
+                                                         action: #selector(tapCategoryLabel(sender:)))
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(labelTapGesture)
         }
     }
     
-    @objc private func clickCategoryLabel(sender: UIGestureRecognizer) {
-        // 해당하는 카테고리의 내용으로 리스트를 변경
-        let thisLabel = sender.view as! UILabel
+    // 카테고리 탭의 label을 탭하면 실행되는 함수
+    @objc private func tapCategoryLabel(sender: UIGestureRecognizer) {
+        let label = sender.view as! UILabel
 
-        if let category = thisLabel.text {
+        if let category = label.text {
             switch category {
             case "배달파티":
                 print("DEBUG: 배달파티")
@@ -355,10 +386,38 @@ class DeliveryViewController: UIViewController {
             }
         }
     }
+    
+    /* 광고 배너 자동 스크롤 기능 */
+    /* 3초마다 실행되는 타이머를 세팅 */
+    func setAdCollectionViewTimer() {
+        let _: Timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { (Timer) in
+            self.moveToNextAd()
+        }
+    }
+    
+    /* 다음 광고로 자동 스크롤 */
+    func moveToNextAd() {
+        print("DEBUG: ", nowPage)
+        // 현재 페이지가 마지막 페이지일 경우,
+        if nowPage == adCellDataArray.count - 1 {
+            // 맨 처음 페이지로 돌아가도록
+            adCollectionView.isPagingEnabled = false    // 자동 스크롤을 위해서 잠시 수동 스크롤 기능을 끈 것.
+            adCollectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
+            adCollectionView.isPagingEnabled = true
+            nowPage = 0
+            return
+        }
+        
+        // 다음 페이지로 전환
+        nowPage += 1
+        adCollectionView.isPagingEnabled = false
+        adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
+        adCollectionView.isPagingEnabled = true
+    }
 }
 
 
-// MARK: - Extensions
+// MARK: - UITableViewDataSource, UITableViewDelegate
 
 extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -375,6 +434,43 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
         let viewController = PartyViewController()
         print("DEBUG: 셀 선택 화면 전환 성공")
         self.navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+
+extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    /* cell(광고) 몇 개 넣을지 설정 */
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return adCellDataArray.count
+    }
+    
+    /* cell에 어떤 이미지의 광고를 넣을지 설정 */
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        // AdCollectionViewCell 타입의 cell 생성
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdCollectionViewCell.identifier, for: indexPath) as? AdCollectionViewCell else { return UICollectionViewCell() }
+        
+        // cell의 이미지(광고 이미지) 설정
+        cell.cellImageView.image = UIImage(named: adCellDataArray[indexPath.item].cellImagePath)
+        print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
+        
+        return cell
+    }
+    
+    /* 수동 스크롤이 끝났을 때 실행되는 함수 */
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if adCollectionView == scrollView {
+            // 현재 보이는 셀(광고)의 row로 nowPage 값을 변경한다
+            for cell in adCollectionView.visibleCells {
+                /* 원래 collection view면 한번에 여러 개의 셀이 보일 수도 있으므로 visibleCells은 배열의 형태를 가지고 있지만,
+                   우리 어플에서는 한번에 하나씩의 광고만 보여지므로 이 for문은 한번만 실행됨 */
+                if let row = adCollectionView.indexPath(for: cell)?.item {
+                    nowPage = row
+                }
+            }
+        }
     }
     
 }
