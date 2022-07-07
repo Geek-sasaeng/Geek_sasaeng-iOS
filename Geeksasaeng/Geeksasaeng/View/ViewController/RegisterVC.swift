@@ -53,6 +53,16 @@ class RegisterViewController: UIViewController {
         label.text = "사용 가능한 아이디입니다"
         label.textColor = .mainColor
         label.font = .customFont(.neoMedium, size: 13)
+        label.isHidden = true
+        return label
+    }()
+    
+    var nickNameAvailableLabel: UILabel = {
+        let label = UILabel()
+        label.text = "사용 가능한 아이디입니다"
+        label.textColor = .mainColor
+        label.font = .customFont(.neoMedium, size: 13)
+        label.isHidden = true
         return label
     }()
     
@@ -69,9 +79,27 @@ class RegisterViewController: UIViewController {
         return button
     }()
     
-    var idCheckButton = UIButton()
+    var idCheckButton:  UIButton = {
+        let button = UIButton()
+        button.setTitle("중복 확인", for: .normal)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        button.layer.cornerRadius = 5
+        button.clipsToBounds = true
+        button.setDeactivatedButton()
+        button.addTarget(self, action: #selector(tapIdCheckButton), for: .touchUpInside)
+        return button
+    }()
     
-    var nickNameCheckButton = UIButton()
+    var nickNameCheckButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("중복 확인", for: .normal)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        button.layer.cornerRadius = 5
+        button.clipsToBounds = true
+        button.setDeactivatedButton()
+        button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
+        return button
+    }()
     
     // MARK: - Life Cycle
     
@@ -91,7 +119,7 @@ class RegisterViewController: UIViewController {
         view.addSubview(progressBar)
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
-            make.width.equalTo(66) // 1/5 -> 62
+            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
@@ -182,11 +210,20 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
         }
         
-        /* idAvailableLabel */
-        view.addSubview(idAvailableLabel)
+        /* AvailableLabel */
+        [idAvailableLabel, nickNameAvailableLabel].forEach {
+            view.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.left.equalToSuperview().inset(40)
+            }
+        }
+        
         idAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
             make.top.equalTo(idTextField.snp.bottom).offset(21)
+        }
+        
+        nickNameAvailableLabel.snp.makeConstraints { make in
+            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
         }
         
         /* nextButton */
@@ -232,10 +269,6 @@ class RegisterViewController: UIViewController {
         pwTextField = setTextFieldAttrs(width: 307)
         pwCheckTextField = setTextFieldAttrs(width: 307)
         nickNameTextField = setTextFieldAttrs(width: 210)
-        
-        /* 중복 확인 버튼 attrs */
-        setRedundancyCheckButtonAttrs(idCheckButton)
-        setRedundancyCheckButtonAttrs(nickNameCheckButton)
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -256,16 +289,6 @@ class RegisterViewController: UIViewController {
         )
         textField.makeBottomLine(width)
         return textField
-    }
-    
-    func setRedundancyCheckButtonAttrs(_ button: UIButton) {
-        button.setTitle("중복 확인", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.isEnabled = false
     }
     
     private func setTextFieldTarget() {
@@ -313,6 +336,14 @@ class RegisterViewController: UIViewController {
         } else {
             nextButton.setDeactivatedNextButton()
         }
+    }
+    
+    @objc func tapIdCheckButton() {
+        idAvailableLabel.isHidden = false
+    }
+    
+    @objc func tapNickNameCheckButton() {
+        nickNameAvailableLabel.isHidden = false
     }
 }
 

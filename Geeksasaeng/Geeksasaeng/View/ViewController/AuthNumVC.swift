@@ -58,12 +58,13 @@ class AuthNumViewController: UIViewController {
         return textField
     }()
     
-    var reSendButton: UIButton = {
+    var authResendButton: UIButton = {
         let button = UIButton()
         button.setTitle("재전송 하기", for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
         return button
     }()
     
@@ -88,6 +89,9 @@ class AuthNumViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Variables
+    var fromNaverRegister = false
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -95,7 +99,7 @@ class AuthNumViewController: UIViewController {
         view.backgroundColor = .white
         
         setLayouts()
-        reSendButton.setActivatedButton()
+        authResendButton.setActivatedButton()
     }
     
     // MARK: - Functions
@@ -114,7 +118,11 @@ class AuthNumViewController: UIViewController {
         
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.width.equalTo(195)
+            if fromNaverRegister {
+                make.width.equalTo((UIScreen.main.bounds.width - 50) / 3 * 2)
+            } else {
+                make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 3)
+            }
             make.left.equalToSuperview().inset(25)
         }
         
@@ -144,7 +152,7 @@ class AuthNumViewController: UIViewController {
             authNumLabel,
             authNumTextField,
             remainTimeLabel,
-            reSendButton,
+            authResendButton,
             nextButton
         ].forEach { view.addSubview($0) }
         
@@ -166,8 +174,8 @@ class AuthNumViewController: UIViewController {
             make.top.equalTo(authNumTextField.snp.bottom).offset(21)
         }
         
-        /* reSendButton */
-        reSendButton.snp.makeConstraints { make in
+        /* authResendButton */
+        authResendButton.snp.makeConstraints { make in
             make.top.equalTo(remainBar.snp.bottom).offset(80)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
@@ -185,11 +193,15 @@ class AuthNumViewController: UIViewController {
     
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     @objc func showNextView() {
-        let phoneAuthVC = PhoneAuthViewController()
+        let agreementVC = AgreementViewController()
         
-        phoneAuthVC.modalTransitionStyle = .crossDissolve
-        phoneAuthVC.modalPresentationStyle = .fullScreen
-        present(phoneAuthVC, animated: true)
+        agreementVC.modalTransitionStyle = .crossDissolve
+        agreementVC.modalPresentationStyle = .fullScreen
+        if fromNaverRegister {
+            agreementVC.fromNaverRegister = true
+        }
+        
+        present(agreementVC, animated: true)
     }
     
     @objc func didChangeTextField(_ sender: UITextField) {
@@ -198,6 +210,10 @@ class AuthNumViewController: UIViewController {
         } else {
             nextButton.setDeactivatedNextButton()
         }
+    }
+    
+    @objc func tapAuthResendButton() {
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
     }
     
 }

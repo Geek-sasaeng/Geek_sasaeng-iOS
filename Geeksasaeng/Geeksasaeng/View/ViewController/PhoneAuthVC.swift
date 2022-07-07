@@ -63,18 +63,88 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.isEnabled = false
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
         return button
     }()
     
-//    var 건너띄기Button: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("회원가입", for: .normal)
-//        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
-//        button.titleLabel?.font = .customFont(.neoLight, size: 15)
-//        button.makeBottomLine(55)
-//        button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside)
-//        return button
-//    }()
+    var passButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("건너뛰기", for: .normal)
+        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+        button.titleLabel?.font = .customFont(.neoLight, size: 15)
+        button.makeBottomLine(55)
+        button.addTarget(self, action: #selector(showPassView), for: .touchUpInside)
+        return button
+    }()
+    
+    var passView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 5
+        view.snp.makeConstraints { make in
+            make.width.equalTo(276)
+            make.height.equalTo(284)
+        }
+        
+        let titleLabel = UILabel()
+        let lineView = UIView()
+        let contentLabel = UILabel()
+        let confirmButton = UIButton()
+        
+        [titleLabel, lineView, contentLabel, confirmButton].forEach {
+            view.addSubview($0)
+        }
+        
+        /* set titleLabel */
+        titleLabel.text = "건너뛰기"
+        titleLabel.textColor = .black
+        titleLabel.font = .customFont(.neoRegular, size: 18)
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(25)
+        }
+        
+        lineView.backgroundColor = UIColor.init(hex: 0xEFEFEF)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.width.equalTo(230)
+            make.height.equalTo(1)
+            make.centerX.equalToSuperview()
+        }
+        
+        /* set contentLabel */
+        contentLabel.text = "본 단계에서는 앱 내의 커뮤니티와 프로필 등의 기능을 사용하기 위해 필요한 정보를 수집합니다.\n정보 입력이 완료되지 않을 시\n 앱 사용 범위가 제한될 수 있으며, 추후 입력이 가능함을 알립니다."
+        contentLabel.numberOfLines = 0
+        contentLabel.textColor = .black
+        contentLabel.font = .customFont(.neoRegular, size: 14)
+        let attrString = NSMutableAttributedString(string: contentLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 5
+        paragraphStyle.alignment = .center
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        contentLabel.attributedText = attrString
+        contentLabel.snp.makeConstraints { make in
+            make.width.equalTo(193)
+            make.height.equalTo(144)
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(20)
+        }
+        
+        confirmButton.setTitleColor(.white, for: .normal)
+        confirmButton.setTitle("확인", for: .normal)
+        confirmButton.clipsToBounds = true
+        confirmButton.layer.cornerRadius = 5
+        confirmButton.backgroundColor = .mainColor
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.width.equalTo(60)
+            make.height.equalTo(30)
+        }
+        
+        return view
+    }()
     
     var nextButton: UIButton = {
         let button = UIButton()
@@ -115,8 +185,7 @@ class PhoneAuthViewController: UIViewController {
         view.addSubview(progressBar)
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
-            make.width.equalTo(260) // step = 65 -> device 가로 길이 / 5로 수정
-//            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 4)
+            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 4)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
@@ -209,6 +278,12 @@ class PhoneAuthViewController: UIViewController {
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }
+        
+        view.addSubview(passButton)
+        passButton.snp.makeConstraints { make in
+            make.centerX.equalTo(view.center)
+            make.bottom.equalTo(nextButton.snp.top).offset(-40)
+        }
     }
     
     private func setAttributes() {
@@ -267,5 +342,22 @@ class PhoneAuthViewController: UIViewController {
     @objc func tapAuthSendButton() {
         authSendButton.setDeactivatedButton()
         authResendButton.setActivatedButton()
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+    }
+    
+    @objc func tapAuthResendButton() {
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+    }
+    
+    @objc func showPassView() {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        
+        view.addSubview(passView)
+        passView.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
     }
 }

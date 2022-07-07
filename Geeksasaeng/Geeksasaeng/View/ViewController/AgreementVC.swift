@@ -48,6 +48,9 @@ class AgreementViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Variables
+    var fromNaverRegister = false
+    
     // MARK: - viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +73,7 @@ class AgreementViewController: UIViewController {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
-            make.width.equalTo(323) // 62
+            make.width.equalTo(UIScreen.main.bounds.width - 67)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
