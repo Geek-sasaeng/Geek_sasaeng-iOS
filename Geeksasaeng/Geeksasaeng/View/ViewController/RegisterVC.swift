@@ -15,13 +15,27 @@ class RegisterViewController: UIViewController {
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 1.5
         return view
     }()
     
     var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 1.5
         return view
+    }()
+    
+    var progressIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
+        return imageView
+    }()
+    
+    var remainIcon: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
+        return imageView
     }()
     
     var idLabel = UILabel()
@@ -77,7 +91,7 @@ class RegisterViewController: UIViewController {
         view.addSubview(progressBar)
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
-            make.width.equalTo(62)
+            make.width.equalTo(66) // 1/5 -> 62
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
@@ -89,6 +103,22 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalTo(progressBar.snp.right)
             make.right.equalToSuperview().inset(25)
+        }
+        
+        view.addSubview(progressIcon)
+        progressIcon.snp.makeConstraints { make in
+            make.width.equalTo(35)
+            make.height.equalTo(22)
+            make.top.equalTo(progressBar.snp.top).offset(-10)
+            make.left.equalTo(progressBar.snp.right).inset(15)
+        }
+        
+        view.addSubview(remainIcon)
+        remainIcon.snp.makeConstraints { make in
+            make.width.equalTo(22)
+            make.height.equalTo(36)
+            make.top.equalTo(progressBar.snp.top).offset(-8)
+            make.right.equalTo(remainBar.snp.right).offset(3)
         }
         
         /* labels */

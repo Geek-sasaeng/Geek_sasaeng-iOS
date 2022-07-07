@@ -1,17 +1,16 @@
 //
-//  EmailAuthVC.swift
+//  PhoneAuthVC.swift
 //  Geeksasaeng
 //
-//  Created by 서은수 on 2022/07/01.
+//  Created by 조동진 on 2022/07/06.
 //
 
 import UIKit
 import SnapKit
 
-class EmailAuthViewController: UIViewController {
+class PhoneAuthViewController: UIViewController {
     
     // MARK: - Subviews
-    
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
@@ -38,16 +37,26 @@ class EmailAuthViewController: UIViewController {
         return imageView
     }()
     
-    var schoolLabel = UILabel()
-    var emailLabel = UILabel()
+    var phoneNumLabel = UILabel()
+    var authLabel = UILabel()
     
-    var schoolTextField = UITextField()
-    var emailTextField = UITextField()
-    var emailAddressTextField = UITextField()
+    var phoneNumTextField = UITextField()
+    var authTextField = UITextField()
     
     var authSendButton: UIButton = {
         var button = UIButton()
         button.setTitle("인증번호 전송", for: .normal)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        button.layer.cornerRadius = 5
+        button.clipsToBounds = true
+        button.setActivatedButton()
+        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
+        return button
+    }()
+    
+    var authResendButton: UIButton = {
+        var button = UIButton()
+        button.setTitle("재전송 하기", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.layer.cornerRadius = 5
@@ -56,6 +65,16 @@ class EmailAuthViewController: UIViewController {
         button.clipsToBounds = true
         return button
     }()
+    
+//    var 건너띄기Button: UIButton = {
+//        let button = UIButton()
+//        button.setTitle("회원가입", for: .normal)
+//        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+//        button.titleLabel?.font = .customFont(.neoLight, size: 15)
+//        button.makeBottomLine(55)
+//        button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside)
+//        return button
+//    }()
     
     var nextButton: UIButton = {
         let button = UIButton()
@@ -96,7 +115,8 @@ class EmailAuthViewController: UIViewController {
         view.addSubview(progressBar)
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
-            make.width.equalTo(130)
+            make.width.equalTo(260) // step = 65 -> device 가로 길이 / 5로 수정
+//            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 4)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
@@ -128,51 +148,54 @@ class EmailAuthViewController: UIViewController {
         
         /* labels */
         [
-            schoolLabel,
-            emailLabel
+            phoneNumLabel,
+            authLabel
         ].forEach {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.left.equalToSuperview().inset(27)
             }
         }
-        /* schoolLabel */
-        schoolLabel.snp.makeConstraints { make in
+        /* phoneNumLabel */
+        phoneNumLabel.snp.makeConstraints { make in
             make.top.equalTo(progressBar.snp.bottom).offset(50)
         }
-        /* emailLabel */
-        emailLabel.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(81)
+        /* authLabel */
+        authLabel.snp.makeConstraints { make in
+            make.top.equalTo(phoneNumLabel.snp.bottom).offset(81)
         }
         
         /* text fields */
         [
-            schoolTextField,
-            emailTextField,
-            emailAddressTextField
+            phoneNumTextField,
+            authTextField,
         ].forEach {
             view.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.left.equalToSuperview().inset(36)
             }
         }
-        /* schoolTextField */
-        schoolTextField.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(15)
+        /* phoneNumTextField */
+        phoneNumTextField.snp.makeConstraints { make in
+            make.top.equalTo(phoneNumLabel.snp.bottom).offset(15)
         }
-        /* emailTextField */
-        emailTextField.snp.makeConstraints { make in
-            make.top.equalTo(emailLabel.snp.bottom).offset(15)
-        }
-        /* emailAddressTextField */
-        emailAddressTextField.snp.makeConstraints { make in
-            make.top.equalTo(emailTextField.snp.bottom).offset(35)
+        /* authTextField */
+        authTextField.snp.makeConstraints { make in
+            make.top.equalTo(authLabel.snp.bottom).offset(15)
         }
         
         /* authSendButton */
         view.addSubview(authSendButton)
         authSendButton.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(243)
+            make.bottom.equalTo(phoneNumTextField.snp.bottom).offset(10)
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(105)
+            make.height.equalTo(41)
+        }
+        
+        view.addSubview(authResendButton)
+        authResendButton.snp.makeConstraints { make in
+            make.bottom.equalTo(authTextField.snp.bottom).offset(10)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
             make.height.equalTo(41)
@@ -190,17 +213,12 @@ class EmailAuthViewController: UIViewController {
     
     private func setAttributes() {
         /* labels attr */
-        schoolLabel = setMainLabelAttrs("학교 선택")
-        emailLabel = setMainLabelAttrs("이메일 입력")
+        phoneNumLabel = setMainLabelAttrs("휴대폰 번호 입력")
+        authLabel = setMainLabelAttrs("인증번호 입력")
         
         /* textFields attr */
-        schoolTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
-        emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
-        emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
-        
-        /* authSendButton attr */
-        //        authSendButton = setAuthSendButtonAttrs()
-        //        makeButtonShadow(authSendButton)
+        phoneNumTextField = setTextFieldAttrs(msg: "- 제외 숫자만 입력하세요", width: 187)
+        authTextField = setTextFieldAttrs(msg: "입력하세요", width: 187)
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -224,46 +242,30 @@ class EmailAuthViewController: UIViewController {
     }
     
     private func setTextFieldTarget() {
-        [schoolTextField, emailTextField, emailAddressTextField].forEach { textField in
-            textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
+        [phoneNumTextField, authTextField].forEach { textField in
+            textField.addTarget(self, action: #selector(didChangeTextField), for: .editingChanged)
+        }
+    }
+    
+    @objc func didChangeTextField() {
+        print("it works")
+        if phoneNumTextField.text?.count ?? 0 >= 1 && authTextField.text?.count ?? 0 >= 1 {
+            nextButton.setActivatedNextButton()
+        } else {
+            nextButton.setDeactivatedNextButton()
         }
     }
     
     @objc func showNextView() {
-        let authNumVC = AuthNumViewController()
+        let agreementVC = AgreementViewController()
         
-        sendRegisterRequest()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        present(authNumVC, animated: true)
+        agreementVC.modalTransitionStyle = .crossDissolve
+        agreementVC.modalPresentationStyle = .fullScreen
+        present(agreementVC, animated: true)
     }
     
-    @objc func didChangeTextField(_ sender: UITextField) {
-        if schoolTextField.text?.count ?? 0 >= 1 && emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
-            nextButton.setActivatedNextButton()
-            authSendButton.setActivatedButton()
-        } else {
-            nextButton.setDeactivatedNextButton()
-            authSendButton.setDeactivatedButton()
-        }
-    }
-    
-    func sendRegisterRequest() {
-        // Request 생성.
-        guard let school = self.schoolTextField.text,
-              let email = self.emailTextField.text,
-              let emailAddress = self.emailAddressTextField.text
-        else { return }
-        
-        let input = RegisterInput(checkPassword: pwCheckData,
-                                  email: email+emailAddress,
-                                  loginId: idData,
-                                  nickname: nickNameData,
-                                  password: pwData,
-                                  phoneNumber: "01012341234",
-                                  universityName: school)
-        
-        RegisterViewModel.registerUser(self, input)
+    @objc func tapAuthSendButton() {
+        authSendButton.setDeactivatedButton()
+        authResendButton.setActivatedButton()
     }
 }
