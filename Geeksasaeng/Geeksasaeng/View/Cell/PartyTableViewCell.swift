@@ -10,7 +10,7 @@ import SnapKit
 
 class PartyTableViewCell: UITableViewCell {
     
-    // MARK: Subviews
+    // MARK: - Subviews
     
     var timeLabel: UILabel = {
         var label = UILabel()
@@ -81,7 +81,7 @@ class PartyTableViewCell: UITableViewCell {
     }()
     
     
-    // MARK: layoutSubviews()
+    // MARK: - layoutSubviews()
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -90,7 +90,7 @@ class PartyTableViewCell: UITableViewCell {
         configLayouts()
     }
     
-    // MARK: Set Functions
+    // MARK: - Set Functions
     
     func addSubViews() {
         contentView.addSubview(timeLabel)
