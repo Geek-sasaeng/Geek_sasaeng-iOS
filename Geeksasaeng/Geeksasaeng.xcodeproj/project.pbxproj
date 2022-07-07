@@ -45,12 +45,9 @@
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
-		A2085ACA2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
-		A2085ACB2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
-		A2085ACC2870488E00D6CF79 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */; };
-		A2085AD2287048A800D6CF79 /* RegisterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterModel.swift */; };
-		A2085AD3287048A800D6CF79 /* RegisterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterModel.swift */; };
-		A2085AD4287048A800D6CF79 /* RegisterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterModel.swift */; };
+		A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterAPI.swift */; };
+		A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterAPI.swift */; };
+		A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterAPI.swift */; };
 		A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginViewModel.swift */; };
 		A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginViewModel.swift */; };
 		A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD6287054E900D6CF79 /* LoginViewModel.swift */; };
@@ -136,8 +133,7 @@
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
 		724884CEEFB929FF25B554A0 /* Pods-Geeksasaeng.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.debug.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.debug.xcconfig"; sourceTree = "<group>"; };
 		8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
-		A2085AD1287048A800D6CF79 /* RegisterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterModel.swift; sourceTree = "<group>"; };
+		A2085AD1287048A800D6CF79 /* RegisterAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAPI.swift; sourceTree = "<group>"; };
 		A2085AD6287054E900D6CF79 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085ADE2870550200D6CF79 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		A219B272287575E4000F34A3 /* AdCarouselModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCarouselModel.swift; sourceTree = "<group>"; };
@@ -188,7 +184,6 @@
 		100FB99328745AA6008947DD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A2085AD1287048A800D6CF79 /* RegisterModel.swift */,
 				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
 				100FB99828745DDE008947DD /* NaverLoginModel.swift */,
 				A219B272287575E4000F34A3 /* AdCarouselModel.swift */,
@@ -199,7 +194,6 @@
 		100FB99428745AAC008947DD /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				A2085AC92870488E00D6CF79 /* RegisterViewModel.swift */,
 				A2085AD6287054E900D6CF79 /* LoginViewModel.swift */,
 				100FB99628745DA3008947DD /* NaverLoginViewModel.swift */,
 			);
@@ -241,6 +235,7 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
+				10C8D26F287735E60044552A /* Network */,
 				A2B4208F286F1F1300278F92 /* App */,
 				100FB99328745AA6008947DD /* Model */,
 				100FB99528745BE3008947DD /* View */,
@@ -297,6 +292,14 @@
 				A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		10C8D26F287735E60044552A /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				A2085AD1287048A800D6CF79 /* RegisterAPI.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
@@ -615,7 +618,7 @@
 				A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
-				A2085AD2287048A800D6CF79 /* RegisterModel.swift in Sources */,
+				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
@@ -625,7 +628,6 @@
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
-				A2085ACA2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
@@ -640,7 +642,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2085ACB2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
@@ -654,7 +655,7 @@
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
-				A2085AD3287048A800D6CF79 /* RegisterModel.swift in Sources */,
+				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				1040FB9B2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
@@ -671,7 +672,7 @@
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
-				A2085AD4287048A800D6CF79 /* RegisterModel.swift in Sources */,
+				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
 				10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
@@ -684,7 +685,6 @@
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
-				A2085ACC2870488E00D6CF79 /* RegisterViewModel.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
