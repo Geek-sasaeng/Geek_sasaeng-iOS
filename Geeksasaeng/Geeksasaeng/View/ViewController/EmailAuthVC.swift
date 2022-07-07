@@ -270,7 +270,7 @@ class EmailAuthViewController: UIViewController {
                                   phoneNumber: "01012341234",
                                   universityName: school)
         
-        RegisterViewModel.registerUser(self, input)
+//        RegisterViewModel.registerUser(self, input)
     }
 }
 
