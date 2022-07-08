@@ -8,6 +8,8 @@
 import UIKit
 
 class TabBarController: UITabBarController {
+    // MARK: - Variables
+    var loginVM: LoginViewModel?
     
     // MARK: - Life Cycle
     
@@ -19,6 +21,9 @@ class TabBarController: UITabBarController {
         tabBar.layer.borderWidth = 1
         tabBar.layer.borderColor = UIColor(hex: 0xF2F2F2).cgColor
         setupVCs()
+        
+        let deliveryVC = self.viewControllers![0] as! DeliveryViewController
+        deliveryVC.loginVM = loginVM
     }
     
     // MARK: - Functions
@@ -30,6 +35,7 @@ class TabBarController: UITabBarController {
             createNavController(for: DeliveryViewController(), title: "채팅", image: UIImage.init(named: "Chat")!),
             createNavController(for: DeliveryViewController(), title: "프로필", image: UIImage.init(named: "Profile")!),
         ]
+        
     }
     
     fileprivate func createNavController(for rootViewController: UIViewController,

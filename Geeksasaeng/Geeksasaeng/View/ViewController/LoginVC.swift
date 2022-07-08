@@ -91,8 +91,13 @@ class LoginViewController: UIViewController {
     }()
     
     // MARK: - Variables
-//    let naverLoginInstance = NaverThirdPartyLoginConnection.getSharedInstance()
+    let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
+    var jwt: String? {
+        didSet {
+            loginVM.setJwt(jwt ?? "Fail to load jwt")
+        }
+    }
     
     
     // MARK: - viewDidLoad()
@@ -101,6 +106,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+//        attemptAutoLogin()
         naverLoginVM.setInstanceDelegate(self)
         
         addSubViews()
@@ -160,6 +166,14 @@ class LoginViewController: UIViewController {
     
     
     // MARK: - Functions
+    private func attemptAutoLogin() {
+        if let id = UserDefaults.standard.string(forKey: "id") {
+            let password = UserDefaults.standard.string(forKey: "password")
+            let input = LoginInput(loginId: id, password: password)
+            loginVM.login(self, input)
+        }
+    }
+    
     @objc func showRegisterView() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
@@ -175,7 +189,7 @@ class LoginViewController: UIViewController {
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
             let input = LoginInput(loginId: id, password: pw)
-            LoginViewModel.login(self, input)
+            loginVM.login(self, input)
         }
     }
     
@@ -227,6 +241,7 @@ class LoginViewController: UIViewController {
     
     public func showHomeView() {
         let tabBarController = TabBarController()
+        tabBarController.loginVM = loginVM
         tabBarController.modalTransitionStyle = .crossDissolve
         tabBarController.modalPresentationStyle = .fullScreen
         present(tabBarController, animated: true)

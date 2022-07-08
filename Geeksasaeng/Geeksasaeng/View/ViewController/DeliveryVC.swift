@@ -20,6 +20,8 @@ class DeliveryViewController: UIViewController {
     var isDropDownPeople = false
     var isDropDownTime = false
     
+    var loginVM: LoginViewModel?
+    
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */
@@ -291,11 +293,15 @@ class DeliveryViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Variables
+//    let loginVM: LoginViewModel?
+    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        print("===\(loginVM?.getJwt())===")
         
         addSubViews()
         setLayouts()
