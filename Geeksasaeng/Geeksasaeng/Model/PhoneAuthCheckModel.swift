@@ -8,19 +8,19 @@
 import Foundation
 
 // Response
-struct PhoneAuthNumModel: Decodable {
+struct PhoneAuthCheckModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
     var message: String?
-    var result: PhoneAuthNumResult?
+    var result: PhoneAuthCheckResult?
 }
 
-struct PhoneAuthNumResult: Decodable {
+struct PhoneAuthCheckResult: Decodable {
     var statusName: String?
 }
 
 // Request
-struct PhoneAuthNumInput: Encodable {
+struct PhoneAuthCheckInput: Encodable {
     var recipientPhoneNumber: String?
     var verifyRandomNumber: String?
 }

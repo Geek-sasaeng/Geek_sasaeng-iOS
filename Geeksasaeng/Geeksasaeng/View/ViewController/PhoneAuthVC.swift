@@ -336,7 +336,7 @@ class PhoneAuthViewController: UIViewController {
         // 인증번호 일치/불일치 확인
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
-            let input = PhoneAuthNumInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
+            let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
             PhoneAuthNumViewModel.requestCheckPhoneAuthNum(self, input)
         }
     }

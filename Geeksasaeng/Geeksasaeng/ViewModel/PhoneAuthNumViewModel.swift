@@ -9,10 +9,10 @@ import Foundation
 import Alamofire
 
 class PhoneAuthNumViewModel {
-    public static func requestCheckPhoneAuthNum(_ viewController: PhoneAuthViewController, _ parameter: PhoneAuthNumInput) {
+    public static func requestCheckPhoneAuthNum(_ viewController: PhoneAuthViewController, _ parameter: PhoneAuthCheckInput) {
         AF.request("https://geeksasaeng.shop/sms/verification", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
             .validate()
-            .responseDecodable(of: PhoneAuthNumModel.self) {
+            .responseDecodable(of: PhoneAuthCheckModel.self) {
                 response in
                 switch response.result {
                 case .success(let result):
