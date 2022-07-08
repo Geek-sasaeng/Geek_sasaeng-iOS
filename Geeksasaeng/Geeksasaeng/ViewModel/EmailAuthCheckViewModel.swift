@@ -1,24 +1,24 @@
 //
-//  PhoneAuthNumViewModel.swift
+//  EmailAuthCheckViewModel.swift
 //  Geeksasaeng
 //
-//  Created by 서은수 on 2022/07/08.
+//  Created by 서은수 on 2022/07/09.
 //
 
 import Foundation
 import Alamofire
 
-class PhoneAuthNumViewModel {
-    public static func requestCheckPhoneAuthNum(_ viewController: PhoneAuthViewController, _ parameter: PhoneAuthCheckInput) {
-        AF.request("https://geeksasaeng.shop/sms/verification", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
+class EmailAuthCheckViewModel {
+    public static func requestCheckEmailAuth(_ viewController: AuthNumViewController, _ parameter: EmailAuthCheckInput) {
+        AF.request("https://geeksasaeng.shop/members/email/check", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
             .validate()
-            .responseDecodable(of: PhoneAuthCheckModel.self) {
+            .responseDecodable(of: EmailAuthCheckModel.self) {
                 response in
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 성공")
-                        // 성공하면 이용 약관 화면으로 넘어간다.
+                        // 성공하면 휴대폰 인증 화면으로 넘어간다.
                         viewController.showNextView()
                     } else {
                         print("DEBUG: 실패", result.message!)

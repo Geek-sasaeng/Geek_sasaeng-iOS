@@ -8,10 +8,11 @@
 import UIKit
 import SnapKit
 
+/* 이메일 인증번호 입력하는 화면의 VC */
 class AuthNumViewController: UIViewController {
     
     // MARK: - Properties
-    
+    /* 이전 화면에서 받아온 데이터들 */
     var university: String? = nil
     var email: String? = nil
     
@@ -90,7 +91,7 @@ class AuthNumViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.isEnabled = false
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(checkEmailAuthNum), for: .touchUpInside)
         return button
     }()
     
@@ -197,8 +198,15 @@ class AuthNumViewController: UIViewController {
     }
     
     /* 이메일 인증번호 입력 후 다음 버튼을 누르면
-     -> 휴대폰 번호 인증 화면 띄우기 */
-    @objc func showNextView() {
+     -> 인증번호 일치하는지 API를 통해서 판단 */
+    @objc private func checkEmailAuthNum() {
+        if let authNum = self.authNumTextField.text {
+            EmailAuthCheckViewModel.requestCheckEmailAuth(self, EmailAuthCheckInput(email: email, key: authNum))
+        }
+    }
+    
+    /* 인증번호 일치했을 때만 휴대폰 번호 인증하는 화면 띄우기 */
+    public func showNextView() {
         let phoneAuthVC = PhoneAuthViewController()
         
         phoneAuthVC.modalTransitionStyle = .crossDissolve

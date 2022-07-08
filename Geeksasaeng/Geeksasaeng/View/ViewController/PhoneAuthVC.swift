@@ -337,7 +337,7 @@ class PhoneAuthViewController: UIViewController {
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
             let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
-            PhoneAuthNumViewModel.requestCheckPhoneAuthNum(self, input)
+            PhoneAuthCheckViewModel.requestCheckPhoneAuth(self, input)
         }
     }
     
