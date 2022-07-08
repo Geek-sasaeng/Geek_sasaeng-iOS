@@ -155,7 +155,7 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.isEnabled = false
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(checkPhoneAuthNum), for: .touchUpInside)
         return button
     }()
     
@@ -331,7 +331,18 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    @objc func showNextView() {
+    @objc func checkPhoneAuthNum() {
+        /* 현재는 인증번호 입력한 게 맞는지도 다음 버튼을 눌렀을 때 확인함 -> 하지만 디자인 수정 가능성 있음. */
+        // 인증번호 일치/불일치 확인
+        if let phoneNum = phoneNumTextField.text,
+           let authNum = authTextField.text {
+            let input = PhoneAuthNumInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
+            PhoneAuthNumViewModel.requestCheckPhoneAuthNum(self, input)
+        }
+    }
+    
+    public func showNextView() {
+        // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
         
         agreementVC.modalTransitionStyle = .crossDissolve

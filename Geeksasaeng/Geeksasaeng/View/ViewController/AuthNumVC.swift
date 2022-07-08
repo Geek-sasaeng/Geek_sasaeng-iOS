@@ -191,17 +191,15 @@ class AuthNumViewController: UIViewController {
         }
     }
     
-    // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
+    /* 이메일 인증번호 입력 후 다음 버튼을 누르면
+     -> 휴대폰 번호 인증 화면 띄우기 */
     @objc func showNextView() {
-        let agreementVC = AgreementViewController()
+        let phoneAuthVC = PhoneAuthViewController()
         
-        agreementVC.modalTransitionStyle = .crossDissolve
-        agreementVC.modalPresentationStyle = .fullScreen
-        if fromNaverRegister {
-            agreementVC.fromNaverRegister = true
-        }
+        phoneAuthVC.modalTransitionStyle = .crossDissolve
+        phoneAuthVC.modalPresentationStyle = .fullScreen
         
-        present(agreementVC, animated: true)
+        present(phoneAuthVC, animated: true)
     }
     
     @objc func didChangeTextField(_ sender: UITextField) {
