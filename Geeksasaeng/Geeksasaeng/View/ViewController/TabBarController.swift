@@ -8,9 +8,6 @@
 import UIKit
 
 class TabBarController: UITabBarController {
-    // MARK: - Variables
-    var loginVM: LoginViewModel?
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -21,9 +18,6 @@ class TabBarController: UITabBarController {
         tabBar.layer.borderWidth = 1
         tabBar.layer.borderColor = UIColor(hex: 0xF2F2F2).cgColor
         setupVCs()
-        
-        let deliveryVC = self.viewControllers![0] as! DeliveryViewController
-        deliveryVC.loginVM = loginVM
     }
     
     // MARK: - Functions

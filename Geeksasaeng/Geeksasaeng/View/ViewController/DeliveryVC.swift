@@ -293,15 +293,11 @@ class DeliveryViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Variables
-//    let loginVM: LoginViewModel?
-    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        print("===\(loginVM?.getJwt())===")
         
         addSubViews()
         setLayouts()
@@ -314,6 +310,8 @@ class DeliveryViewController: UIViewController {
         setFilterViewTap()
         
         makeButtonShadow(createPartyButton)
+        
+        print("====\(LoginModel.jwt)====")
     }
     
     // MARK: - viewDidLayoutSubviews()

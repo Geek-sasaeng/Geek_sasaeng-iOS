@@ -9,9 +9,6 @@ import Alamofire
 
 // 로그인 API 연동
 class LoginViewModel {
-    // MARK: - Model
-    var loginModel = LoginModel()
-    
     public func login(_ viewController : LoginViewController, _ parameter : LoginInput) {
         AF.request("https://geeksasaeng.shop/login", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
@@ -27,10 +24,9 @@ class LoginViewModel {
                         UserDefaults.standard.set(parameter.password, forKey: "password")
                     }
                     
+                    // static property에 jwt 값 저장
+                    LoginModel.jwt = result.result?.jwt
                     // 홈 화면으로 이동
-                    if viewController.jwt == nil {
-                        viewController.jwt = result.result?.jwt
-                    }
                     viewController.showHomeView()
                 } else {
                     print("DEBUG:", result.message!)
@@ -39,14 +35,6 @@ class LoginViewModel {
                 print("DEBUG:", error.localizedDescription)
             }
         }
-    }
-    
-    func setJwt(_ jwt: String) {
-        loginModel.jwt = jwt
-    }
-    
-    func getJwt() -> String {
-        return loginModel.jwt ?? "There is not JWT"
     }
 }
 

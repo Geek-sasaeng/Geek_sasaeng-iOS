@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct LoginModel {
-    var jwt: String?
+class LoginModel {
+    static var jwt: String?
 }
 
 // 로그인을 요청했을 때 받게 될 Response의 형태.

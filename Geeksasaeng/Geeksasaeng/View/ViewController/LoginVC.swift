@@ -93,11 +93,6 @@ class LoginViewController: UIViewController {
     // MARK: - Variables
     let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
-    var jwt: String? {
-        didSet {
-            loginVM.setJwt(jwt ?? "Fail to load jwt")
-        }
-    }
     
     
     // MARK: - viewDidLoad()
@@ -106,7 +101,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-//        attemptAutoLogin()
+        attemptAutoLogin()
         naverLoginVM.setInstanceDelegate(self)
         
         addSubViews()
@@ -241,7 +236,6 @@ class LoginViewController: UIViewController {
     
     public func showHomeView() {
         let tabBarController = TabBarController()
-        tabBarController.loginVM = loginVM
         tabBarController.modalTransitionStyle = .crossDissolve
         tabBarController.modalPresentationStyle = .fullScreen
         present(tabBarController, animated: true)
