@@ -339,14 +339,19 @@ class PhoneAuthViewController: UIViewController {
         present(agreementVC, animated: true)
     }
     
+    /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */
     @objc func tapAuthSendButton() {
         authSendButton.setDeactivatedButton()
         authResendButton.setActivatedButton()
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+        tapAuthResendButton()   // API 호출
     }
     
+    // API를 통해 서버에 인증번호 전송을 요청하는 코드
     @objc func tapAuthResendButton() {
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+        if let phoneNum = self.phoneNumTextField.text {
+            let input = PhoneAuthInput(recipientPhoneNumber: phoneNum)
+            PhoneAuthViewModel.requestSendPhoneAuth(self, input)
+        }
     }
     
     @objc func showPassView() {

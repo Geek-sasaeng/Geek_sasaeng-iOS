@@ -270,7 +270,7 @@ class EmailAuthViewController: UIViewController {
                                   phoneNumber: "01012341234",
                                   universityName: school)
         
-        RegisterViewModel.registerUser(self, input)
+        RegisterAPI.registerUser(self, input)
     }
 }
 
@@ -282,6 +282,7 @@ extension UIViewController {
         toastLabel.font = font
         toastLabel.textAlignment = .center;
         toastLabel.text = message
+        toastLabel.numberOfLines = 0
         toastLabel.alpha = 1.0
         toastLabel.layer.cornerRadius = 5;
         toastLabel.clipsToBounds  =  true
