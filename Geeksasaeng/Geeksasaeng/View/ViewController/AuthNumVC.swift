@@ -8,7 +8,13 @@
 import UIKit
 import SnapKit
 
+/* 이메일 인증번호 입력하는 화면의 VC */
 class AuthNumViewController: UIViewController {
+    
+    // MARK: - Properties
+    /* 이전 화면에서 받아온 데이터들 */
+    var university: String? = nil
+    var email: String? = nil
     
     // MARK: - Subviews
     
@@ -85,7 +91,7 @@ class AuthNumViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.isEnabled = false
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(checkEmailAuthNum), for: .touchUpInside)
         return button
     }()
     
@@ -191,6 +197,14 @@ class AuthNumViewController: UIViewController {
         }
     }
     
+    /* 이메일 인증번호 입력 후 다음 버튼을 누르면
+     -> 인증번호 일치하는지 API를 통해서 판단 */
+    @objc private func checkEmailAuthNum() {
+        if let authNum = self.authNumTextField.text {
+            EmailAuthCheckViewModel.requestCheckEmailAuth(self, EmailAuthCheckInput(email: email, key: authNum))
+        }
+    }
+    
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     @objc func showNextView() {
         if fromNaverRegister {
@@ -200,6 +214,7 @@ class AuthNumViewController: UIViewController {
             
             present(agreementVC, animated: true)
         } else {
+            /* 인증번호 일치했을 때에만 휴대폰 번호 인증하는 화면 띄우기 */
             let phoneAuthVC = PhoneAuthViewController()
             phoneAuthVC.modalTransitionStyle = .crossDissolve
             phoneAuthVC.modalPresentationStyle = .fullScreen
@@ -216,8 +231,16 @@ class AuthNumViewController: UIViewController {
         }
     }
     
+    // 이메일 재전송 하기 버튼 눌렀을 때 실행되는 함수
     @objc func tapAuthResendButton() {
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+        if let email = email,
+           let univ = university {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            
+            print("DEBUG: ", email, univ)
+            let input = EmailAuthInput(email: email, university: univ)
+            // 이메일로 인증번호 전송하는 API 호출
+            EmailAuthViewModel.requestSendEmail(self, input)
+        }
     }
     
 }

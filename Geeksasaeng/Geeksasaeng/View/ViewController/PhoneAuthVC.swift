@@ -156,7 +156,7 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.isEnabled = false
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(checkPhoneAuthNum), for: .touchUpInside)
         return button
     }()
     
@@ -332,7 +332,18 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    @objc func showNextView() {
+    @objc func checkPhoneAuthNum() {
+        /* 현재는 인증번호 입력한 게 맞는지도 다음 버튼을 눌렀을 때 확인함 -> 하지만 디자인 수정 가능성 있음. */
+        // 인증번호 일치/불일치 확인
+        if let phoneNum = phoneNumTextField.text,
+           let authNum = authTextField.text {
+            let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
+            PhoneAuthCheckViewModel.requestCheckPhoneAuth(self, input)
+        }
+    }
+    
+    public func showNextView() {
+        // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
         
         agreementVC.modalTransitionStyle = .crossDissolve
@@ -340,14 +351,19 @@ class PhoneAuthViewController: UIViewController {
         present(agreementVC, animated: true)
     }
     
+    /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */
     @objc func tapAuthSendButton() {
         authSendButton.setDeactivatedButton()
         authResendButton.setActivatedButton()
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+        tapAuthResendButton()   // API 호출
     }
     
+    // API를 통해 서버에 인증번호 전송을 요청하는 코드
     @objc func tapAuthResendButton() {
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+        if let phoneNum = self.phoneNumTextField.text {
+            let input = PhoneAuthInput(recipientPhoneNumber: phoneNum)
+            PhoneAuthViewModel.requestSendPhoneAuth(self, input)
+        }
     }
     
     @objc func showPassView() {

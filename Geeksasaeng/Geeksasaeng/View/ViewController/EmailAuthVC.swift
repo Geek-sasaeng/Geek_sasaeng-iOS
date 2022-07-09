@@ -192,12 +192,15 @@ class EmailAuthViewController: UIViewController {
     private func setAttributes() {
         /* labels attr */
         schoolLabel = setMainLabelAttrs("학교 선택")
-        emailLabel = setMainLabelAttrs("이메일 입력")
+        emailLabel = setMainLabelAttrs("학교 이메일 입력")
         
         /* textFields attr */
         schoolTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
         emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
         emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
+        emailAddressTextField.isUserInteractionEnabled = false  // 유저가 입력하는 것이 아니라 학교에 따라 자동 설정되는 것.
+        // TODO: emailAddress -> UILabel로 바뀌어야 할 듯
+        emailAddressTextField.text = "@gachon.ac.kr"   //test
         
         /* authSendButton attr */
         //        authSendButton = setAuthSendButtonAttrs()
@@ -230,16 +233,6 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    @objc func showNextView() {
-        let authNumVC = AuthNumViewController()
-        
-        sendRegisterRequest()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        present(authNumVC, animated: true)
-    }
-    
     @objc func didChangeTextField(_ sender: UITextField) {
         if schoolTextField.text?.count ?? 0 >= 1 && emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
@@ -250,11 +243,33 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    @objc func tapAuthSendButton() {
-        authSendButton.setDeactivatedButton()
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+    @objc private func tapAuthSendButton() {
+        if let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
+           let univ = schoolTextField.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            authSendButton.setDeactivatedButton()   // 비활성화
+            
+            print("DEBUG: ", email+emailAddress, univ)
+            let input = EmailAuthInput(email: email+emailAddress, university: univ)
+            // 이메일로 인증번호 전송하는 API 호출
+            EmailAuthViewModel.requestSendEmail(self, input)
+        }
     }
     
+    @objc func showNextView() {
+        let authNumVC = AuthNumViewController()
+        
+        authNumVC.modalTransitionStyle = .crossDissolve
+        authNumVC.modalPresentationStyle = .fullScreen
+        
+        // 학교 정보랑 학교 이메일 정보 넘겨줘야 한다 -> 재전송 하기 버튼 때문에
+        authNumVC.university = schoolTextField.text!
+        authNumVC.email = emailTextField.text! + "@gachon.ac.kr"
+        
+        present(authNumVC, animated: true)
+    }
+    
+    // TODO: 이거 마지막 화면으로 옮겨야 됨. 회원가입 완료하는 함수.
     func sendRegisterRequest() {
         // Request 생성.
         guard let school = self.schoolTextField.text,
@@ -270,7 +285,7 @@ class EmailAuthViewController: UIViewController {
                                   phoneNumber: "01012341234",
                                   universityName: school)
         
-//        RegisterViewModel.registerUser(self, input)
+        RegisterAPI.registerUser(self, input)
     }
 }
 
@@ -282,6 +297,7 @@ extension UIViewController {
         toastLabel.font = font
         toastLabel.textAlignment = .center;
         toastLabel.text = message
+        toastLabel.numberOfLines = 0
         toastLabel.alpha = 1.0
         toastLabel.layer.cornerRadius = 5;
         toastLabel.clipsToBounds  =  true

@@ -235,7 +235,7 @@ class NaverRegisterViewController: UIViewController {
         /* label attr */
         nickNameLabel = setMainLabelAttrs("닉네임")
         schoolLabel = setMainLabelAttrs("학교 선택")
-        emailLabel = setMainLabelAttrs("이메일 입력")
+        emailLabel = setMainLabelAttrs("학교 이메일 입력")
         
         /* textFields attr */
         nickNameTextField = setTextFieldAttrs(msg: "3-8자 영문으로 입력", width: 210)
