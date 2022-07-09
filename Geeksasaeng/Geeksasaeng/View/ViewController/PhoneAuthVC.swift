@@ -136,6 +136,7 @@ class PhoneAuthViewController: UIViewController {
         confirmButton.clipsToBounds = true
         confirmButton.layer.cornerRadius = 5
         confirmButton.backgroundColor = .mainColor
+        confirmButton.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(contentLabel.snp.bottom).offset(5)

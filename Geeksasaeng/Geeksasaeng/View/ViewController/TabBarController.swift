@@ -8,7 +8,6 @@
 import UIKit
 
 class TabBarController: UITabBarController {
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -30,6 +29,7 @@ class TabBarController: UITabBarController {
             createNavController(for: DeliveryViewController(), title: "채팅", image: UIImage.init(named: "Chat")!),
             createNavController(for: DeliveryViewController(), title: "프로필", image: UIImage.init(named: "Profile")!),
         ]
+        
     }
     
     fileprivate func createNavController(for rootViewController: UIViewController,

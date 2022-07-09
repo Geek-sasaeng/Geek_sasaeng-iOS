@@ -205,14 +205,22 @@ class AuthNumViewController: UIViewController {
         }
     }
     
-    /* 인증번호 일치했을 때만 휴대폰 번호 인증하는 화면 띄우기 */
-    public func showNextView() {
-        let phoneAuthVC = PhoneAuthViewController()
-        
-        phoneAuthVC.modalTransitionStyle = .crossDissolve
-        phoneAuthVC.modalPresentationStyle = .fullScreen
-        
-        present(phoneAuthVC, animated: true)
+    // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
+    @objc func showNextView() {
+        if fromNaverRegister {
+            let agreementVC = AgreementViewController()
+            agreementVC.modalTransitionStyle = .crossDissolve
+            agreementVC.modalPresentationStyle = .fullScreen
+            
+            present(agreementVC, animated: true)
+        } else {
+            /* 인증번호 일치했을 때에만 휴대폰 번호 인증하는 화면 띄우기 */
+            let phoneAuthVC = PhoneAuthViewController()
+            phoneAuthVC.modalTransitionStyle = .crossDissolve
+            phoneAuthVC.modalPresentationStyle = .fullScreen
+            
+            present(phoneAuthVC, animated: true)
+        }
     }
     
     @objc func didChangeTextField(_ sender: UITextField) {

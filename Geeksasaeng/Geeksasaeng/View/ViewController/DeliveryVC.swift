@@ -20,6 +20,8 @@ class DeliveryViewController: UIViewController {
     var isDropDownPeople = false
     var isDropDownTime = false
     
+    var loginVM: LoginViewModel?
+    
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */
@@ -308,6 +310,8 @@ class DeliveryViewController: UIViewController {
         setFilterViewTap()
         
         makeButtonShadow(createPartyButton)
+        
+        print("====\(LoginModel.jwt)====")
     }
     
     // MARK: - viewDidLayoutSubviews()
