@@ -202,24 +202,22 @@ class AuthNumViewController: UIViewController {
     }
     
     private func startTimer() {
-        if timer == nil {
-            timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
-            timer?.schedule(deadline: .now(), repeating: 1)
-            timer?.setEventHandler(handler: { [weak self] in
-                guard let self = self else { return }
-                self.currentSeconds -= 1
-                let minutes = self.currentSeconds / 60
-                let seconds = self.currentSeconds % 60
-                self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
-                
-                if self.currentSeconds <= 0 {
-                    self.timer?.cancel()
-                    self.remainTimeLabel.textColor = .red
-                    self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
-                }
-            })
-            timer?.resume()
-        }
+        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+        timer?.schedule(deadline: .now(), repeating: 1)
+        timer?.setEventHandler(handler: { [weak self] in
+            guard let self = self else { return }
+            self.currentSeconds -= 1
+            let minutes = self.currentSeconds / 60
+            let seconds = self.currentSeconds % 60
+            self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
+            
+            if self.currentSeconds <= 0 {
+                self.timer?.cancel()
+                self.remainTimeLabel.textColor = .red
+                self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+            }
+        })
+        timer?.resume()
     }
     
     /* 이메일 인증번호 입력 후 다음 버튼을 누르면
@@ -258,6 +256,9 @@ class AuthNumViewController: UIViewController {
     
     // 이메일 재전송 하기 버튼 눌렀을 때 실행되는 함수
     @objc func tapAuthResendButton() {
+        timer?.cancel()
+        currentSeconds = 300
+        startTimer()
         if let email = email,
            let univ = university {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
             

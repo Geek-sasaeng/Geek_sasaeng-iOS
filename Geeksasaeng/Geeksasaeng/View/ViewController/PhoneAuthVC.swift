@@ -188,7 +188,6 @@ class PhoneAuthViewController: UIViewController {
         setAttributes()
         setLayouts()
         setTextFieldTarget()
-        startTimer()
     }
     
     // MARK: - Functions
@@ -307,24 +306,22 @@ class PhoneAuthViewController: UIViewController {
     }
     
     private func startTimer() {
-        if timer == nil {
-            timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
-            timer?.schedule(deadline: .now(), repeating: 1)
-            timer?.setEventHandler(handler: { [weak self] in
-                guard let self = self else { return }
-                self.currentSeconds -= 1
-                let minutes = self.currentSeconds / 60
-                let seconds = self.currentSeconds % 60
-                self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
-                
-                if self.currentSeconds <= 0 {
-                    self.timer?.cancel()
-                    self.remainTimeLabel.textColor = .red
-                    self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
-                }
-            })
-            timer?.resume()
-        }
+        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+        timer?.schedule(deadline: .now(), repeating: 1)
+        timer?.setEventHandler(handler: { [weak self] in
+            guard let self = self else { return }
+            self.currentSeconds -= 1
+            let minutes = self.currentSeconds / 60
+            let seconds = self.currentSeconds % 60
+            self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
+            
+            if self.currentSeconds <= 0 {
+                self.timer?.cancel()
+                self.remainTimeLabel.textColor = .red
+                self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+            }
+        })
+        timer?.resume()
     }
     
     private func setAttributes() {
@@ -393,13 +390,20 @@ class PhoneAuthViewController: UIViewController {
     
     /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */
     @objc func tapAuthSendButton() {
+        startTimer()
         authSendButton.setDeactivatedButton()
         authResendButton.setActivatedButton()
-        tapAuthResendButton()   // API 호출
+        if let phoneNum = self.phoneNumTextField.text {
+            let input = PhoneAuthInput(recipientPhoneNumber: phoneNum)
+            PhoneAuthViewModel.requestSendPhoneAuth(self, input)
+        }   // API 호출
     }
     
     // API를 통해 서버에 인증번호 전송을 요청하는 코드
     @objc func tapAuthResendButton() {
+        timer?.cancel()
+        currentSeconds = 300
+        startTimer()
         if let phoneNum = self.phoneNumTextField.text {
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum)
             PhoneAuthViewModel.requestSendPhoneAuth(self, input)

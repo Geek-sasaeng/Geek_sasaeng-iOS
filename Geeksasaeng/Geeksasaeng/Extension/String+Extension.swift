@@ -10,7 +10,7 @@ import UIKit
 extension String {
     func isValidId() -> Bool {
         // 대문자 or 소문자, 숫자, 6-20자
-        let idExpression = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}"
+        let idExpression = "^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6,20}"
         let idValidation = NSPredicate.init(format: "SELF MATCHES %@", idExpression)
         
         return idValidation.evaluate(with: self)
@@ -18,7 +18,6 @@ extension String {
     
     func isValidPassword() -> Bool {
         // 대문자, 소문자, 특수문자, 숫자, 8자 이상
-//        let pwExpression = "^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}"
         let pwExpression = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-])[A-Za-z0-9!@#$%^&*()_+=-]{8,}"
         let pwValidation = NSPredicate.init(format: "SELF MATCHES %@", pwExpression)
         
