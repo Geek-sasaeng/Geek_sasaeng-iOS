@@ -8,9 +8,9 @@
 import UIKit
 
 extension UIViewController {
-    func showToast(viewController: UIViewController, message : String, font: UIFont) {
+    func showToast(viewController: UIViewController, message : String, font: UIFont, color: UIColor) {
         let toastLabel = UILabel()
-        toastLabel.backgroundColor = UIColor(hex: 0x003C56).withAlphaComponent(0.6)
+        toastLabel.backgroundColor = color.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
         toastLabel.font = font
         toastLabel.textAlignment = .center;
