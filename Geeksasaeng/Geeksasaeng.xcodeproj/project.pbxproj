@@ -97,6 +97,12 @@
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
+		A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
+		A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
+		A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
+		A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
+		A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
+		A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
 		A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
@@ -174,6 +180,8 @@
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
+		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
+		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
 		A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -223,6 +231,7 @@
 				A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */,
 				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
 				A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */,
+				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -236,6 +245,7 @@
 				A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */,
 				A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */,
 				A2513F142878612B0029C279 /* PhoneAuthCheckViewModel.swift */,
+				A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -661,6 +671,7 @@
 				A2513F212878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
+				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
@@ -672,6 +683,7 @@
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				A2513F152878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
+				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
@@ -690,6 +702,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				A2513F1A287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
@@ -701,6 +714,7 @@
 				A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
+				A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
@@ -728,6 +742,7 @@
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513F1F287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
+				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
@@ -737,6 +752,7 @@
 				10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
+				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2513F232878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
