@@ -193,15 +193,19 @@ class AuthNumViewController: UIViewController {
     
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     @objc func showNextView() {
-        let agreementVC = AgreementViewController()
-        
-        agreementVC.modalTransitionStyle = .crossDissolve
-        agreementVC.modalPresentationStyle = .fullScreen
         if fromNaverRegister {
-            agreementVC.fromNaverRegister = true
+            let agreementVC = AgreementViewController()
+            agreementVC.modalTransitionStyle = .crossDissolve
+            agreementVC.modalPresentationStyle = .fullScreen
+            
+            present(agreementVC, animated: true)
+        } else {
+            let phoneAuthVC = PhoneAuthViewController()
+            phoneAuthVC.modalTransitionStyle = .crossDissolve
+            phoneAuthVC.modalPresentationStyle = .fullScreen
+            
+            present(phoneAuthVC, animated: true)
         }
-        
-        present(agreementVC, animated: true)
     }
     
     @objc func didChangeTextField(_ sender: UITextField) {
