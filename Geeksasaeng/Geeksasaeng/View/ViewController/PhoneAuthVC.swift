@@ -147,6 +147,13 @@ class PhoneAuthViewController: UIViewController {
         return view
     }()
     
+    var remainTimeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .mainColor
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    
     var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
@@ -167,6 +174,10 @@ class PhoneAuthViewController: UIViewController {
     var pwCheckData: String!
     var nickNameData: String!
     
+    // Timer
+    var currentSeconds = 300 // 남은 시간
+    var timer: DispatchSourceTimer?
+    
     
     // MARK: - Life Cycle
     
@@ -177,6 +188,7 @@ class PhoneAuthViewController: UIViewController {
         setAttributes()
         setLayouts()
         setTextFieldTarget()
+        startTimer()
     }
     
     // MARK: - Functions
@@ -285,6 +297,34 @@ class PhoneAuthViewController: UIViewController {
             make.centerX.equalTo(view.center)
             make.bottom.equalTo(nextButton.snp.top).offset(-40)
         }
+        
+        /* remainTimeLabel */
+        view.addSubview(remainTimeLabel)
+        remainTimeLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.top.equalTo(authTextField.snp.bottom).offset(21)
+        } // authTextField 레이아웃 초기화 이후에 레이아웃 설정해줘야 하기 때문에 일단 뒤에 배치
+    }
+    
+    private func startTimer() {
+        if timer == nil {
+            timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+            timer?.schedule(deadline: .now(), repeating: 1)
+            timer?.setEventHandler(handler: { [weak self] in
+                guard let self = self else { return }
+                self.currentSeconds -= 1
+                let minutes = self.currentSeconds / 60
+                let seconds = self.currentSeconds % 60
+                self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
+                
+                if self.currentSeconds <= 0 {
+                    self.timer?.cancel()
+                    self.remainTimeLabel.textColor = .red
+                    self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+                }
+            })
+            timer?.resume()
+        }
     }
     
     private func setAttributes() {
@@ -342,7 +382,7 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    public func showNextView() {
+    @objc public func showNextView() {
         // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
         
