@@ -83,34 +83,58 @@ class PhoneAuthViewController: UIViewController {
         view.clipsToBounds = true
         view.layer.cornerRadius = 5
         view.snp.makeConstraints { make in
-            make.width.equalTo(276)
-            make.height.equalTo(284)
+            make.width.equalTo(256)
+            make.height.equalTo(298)
         }
         
-        let titleLabel = UILabel()
-        let lineView = UIView()
-        let contentLabel = UILabel()
-        let confirmButton = UIButton()
-        
-        [titleLabel, lineView, contentLabel, confirmButton].forEach {
-            view.addSubview($0)
+        /* top View: 건너뛰기 */
+        let topSubView = UIView()
+        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        view.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+            make.top.equalToSuperview()
         }
         
         /* set titleLabel */
+        let titleLabel = UILabel()
         titleLabel.text = "건너뛰기"
-        titleLabel.textColor = .black
-        titleLabel.font = .customFont(.neoRegular, size: 18)
+        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
+        titleLabel.font = .customFont(.neoRegular, size: 14)
+        topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(25)
+            make.center.equalToSuperview()
         }
         
-        lineView.backgroundColor = UIColor.init(hex: 0xEFEFEF)
-        lineView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.width.equalTo(230)
-            make.height.equalTo(1)
-            make.centerX.equalToSuperview()
+        /* set cancelButton */
+        let cancelButton = UIButton()
+        cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
+        cancelButton.titleLabel?.font = .customFont(.neoRegular, size: 15)
+        cancelButton.addTarget(self, action: #selector(removePassView), for: .touchUpInside)
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView()
+        bottomSubView.backgroundColor = UIColor.white
+        view.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(206)
+            make.top.equalTo(topSubView.snp.bottom)
+        }
+        
+        let contentLabel = UILabel()
+        let lineView = UIView()
+        let confirmButton = UIButton()
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
         }
         
         /* set contentLabel */
@@ -120,7 +144,7 @@ class PhoneAuthViewController: UIViewController {
         contentLabel.font = .customFont(.neoRegular, size: 14)
         let attrString = NSMutableAttributedString(string: contentLabel.text!)
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 5
+        paragraphStyle.lineSpacing = 6
         paragraphStyle.alignment = .center
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         contentLabel.attributedText = attrString
@@ -128,18 +152,26 @@ class PhoneAuthViewController: UIViewController {
             make.width.equalTo(193)
             make.height.equalTo(144)
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(20)
+            make.top.equalToSuperview().offset(15)
         }
         
-        confirmButton.setTitleColor(.white, for: .normal)
+        /* set lineView */
+        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(15)
+            make.width.equalTo(230)
+            make.height.equalTo(1)
+            make.centerX.equalToSuperview()
+        }
+        
+        /* set confirmButton */
+        confirmButton.setTitleColor(.mainColor, for: .normal)
         confirmButton.setTitle("확인", for: .normal)
-        confirmButton.clipsToBounds = true
-        confirmButton.layer.cornerRadius = 5
-        confirmButton.backgroundColor = .mainColor
+        confirmButton.titleLabel?.font = .customFont(.neoRegular, size: 18)
         confirmButton.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.top.equalTo(lineView.snp.bottom).offset(15)
             make.width.equalTo(60)
             make.height.equalTo(30)
         }
@@ -173,6 +205,7 @@ class PhoneAuthViewController: UIViewController {
     var pwData: String!
     var pwCheckData: String!
     var nickNameData: String!
+    var visualEffectView: UIVisualEffectView?
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -415,10 +448,16 @@ class PhoneAuthViewController: UIViewController {
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
         view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
         
         view.addSubview(passView)
         passView.snp.makeConstraints { make in
             make.center.equalTo(view.center)
         }
+    }
+    
+    @objc func removePassView() {
+        passView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
     }
 }
