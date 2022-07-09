@@ -342,7 +342,7 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    public func showNextView() {
+    @objc public func showNextView() {
         // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
         
