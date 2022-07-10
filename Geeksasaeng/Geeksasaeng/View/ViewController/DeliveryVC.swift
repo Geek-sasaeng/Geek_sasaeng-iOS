@@ -18,9 +18,6 @@ class DeliveryViewController: UIViewController {
     
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
-    var isDropDownTime = false
-    
-    var loginVM: LoginViewModel?
     
     // MARK: - Subviews
     
@@ -122,7 +119,7 @@ class DeliveryViewController: UIViewController {
     /* People Filter */
     var peopleFilterLabel: UILabel = {
         let label = UILabel()
-        label.text = "2명 이하"
+        label.text = "인원 선택"
         label.font = .customFont(.neoMedium, size: 11)
         label.textColor = UIColor(hex: 0xA8A8A8)
         return label
@@ -134,8 +131,7 @@ class DeliveryViewController: UIViewController {
     }()
     lazy var peopleFilterView: UIView = {
         var view = UIView()
-        view.layer.borderColor = UIColor.init(hex: 0xD8D8D8).cgColor
-        view.layer.borderWidth = 1
+        view.backgroundColor = .init(hex: 0xF8F8F8)
         view.layer.cornerRadius = 3
         
         [
@@ -157,50 +153,109 @@ class DeliveryViewController: UIViewController {
     }()
    
     /* Time Filter */
-    var timeFilterLabel: UILabel = {
+    // 아침
+    var breakfastFilterView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        view.layer.cornerRadius = 3
+        view.snp.makeConstraints { make in
+            make.width.equalTo(41)
+            make.height.equalTo(28)
+        }
+        
         let label = UILabel()
-        label.text = "아침   -   점심"
+        label.text = "아침"
         label.font = .customFont(.neoMedium, size: 11)
         label.textColor = UIColor(hex: 0xA8A8A8)
-        return label
-    }()
-    var timeFilterToggleImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-        imageView.tintColor = UIColor(hex: 0xD8D8D8)
-        return imageView
-    }()
-    lazy var timeFilterView: UIView = {
-        var view = UIView()
-        view.layer.borderColor = UIColor.init(hex: 0xD8D8D8).cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 3
         
-        [
-            timeFilterLabel,
-            timeFilterToggleImageView
-        ].forEach { view.addSubview($0) }
-        
-        timeFilterLabel.snp.makeConstraints { make in
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(10)
         }
-        timeFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(9)
-            make.height.equalTo(6)
-            make.centerY.equalToSuperview().offset(-1)
-            make.left.equalTo(timeFilterLabel.snp.right).offset(9)
+        
+        return view
+    }()
+    // 점심
+    var launchFilterView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        view.layer.cornerRadius = 3
+        view.snp.makeConstraints { make in
+            make.width.equalTo(41)
+            make.height.equalTo(28)
         }
+        
+        let label = UILabel()
+        label.text = "점심"
+        label.font = .customFont(.neoMedium, size: 11)
+        label.textColor = UIColor(hex: 0xA8A8A8)
+        
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        
+        return view
+    }()
+    // 저녁
+    var dinnerFilterView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        view.layer.cornerRadius = 3
+        view.snp.makeConstraints { make in
+            make.width.equalTo(41)
+            make.height.equalTo(28)
+        }
+        
+        let label = UILabel()
+        label.text = "저녁"
+        label.font = .customFont(.neoMedium, size: 11)
+        label.textColor = UIColor(hex: 0xA8A8A8)
+        
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        
+        return view
+    }()
+    // 야식
+    var midnightSnackFilterView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        view.layer.cornerRadius = 3
+        view.snp.makeConstraints { make in
+            make.width.equalTo(41)
+            make.height.equalTo(28)
+        }
+        
+        let label = UILabel()
+        label.text = "야식"
+        label.font = .customFont(.neoMedium, size: 11)
+        label.textColor = UIColor(hex: 0xA8A8A8)
+        
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        
         return view
     }()
     
+    /* 시간 관련 필터뷰들을 묶어놓는 스택뷰 */
+    lazy var timeOptionStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [breakfastFilterView, launchFilterView, dinnerFilterView, midnightSnackFilterView])
+        stackView.spacing = 10
+        return stackView
+    }()
+    
     /* Expanded Filter Views */
-    /* peopleFilterView 눌렀을 때 확장되는 부분의 뷰 */
-    lazy var peopleDropDownView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.isHidden = true
-        
-        // stackView 생성
+    /* DropDown뷰의 데이터가 들어갈 stackView 생성 */
+    lazy var peopleOptionStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.sizeToFit()
@@ -212,70 +267,41 @@ class DeliveryViewController: UIViewController {
         // stackView label 내용 구성
         setVLabelList(["2명 이하", "4명 이하", "6명 이하", "8명 이하", "10명 이하"], stackView)
         
-        view.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(12)
-            make.left.equalToSuperview().inset(11)
-        }
-        return view
+        return stackView
     }()
-    /* timeFilterView 눌렀을 때 확장되는 부분의 뷰 */
-    lazy var timeDropDownView: UIView = {
+    
+    /* peopleFilterView 눌렀을 때 확장되는 부분의 뷰 */
+    lazy var peopleDropDownView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .init(hex: 0xF8F8F8)
         view.isHidden = true
         
-        // Horizontal StackView 1개 생성
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.sizeToFit()
-        stackView.layoutIfNeeded()
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .leading
-        stackView.spacing = 20
-        
-        // Vertical StackView 두개 생성
-        let leftLabelStackView = UIStackView()
-        let rightLabelStackView = UIStackView()
-        // stackView 내용 구성
-        setVLabelList(["아침", "점심", "저녁", "야식"], leftLabelStackView)
-        setVLabelList(["아침", "점심", "저녁", "야식"], rightLabelStackView)
-        // 속성
-        [leftLabelStackView, rightLabelStackView].forEach({ stack in
-            stack.axis = .vertical
-            stack.spacing = 10
-        })
-        
-        // Horizontal StackView에 Vertical StackView 2개를 추가
-        stackView.addArrangedSubview(leftLabelStackView)
-        stackView.addArrangedSubview(rightLabelStackView)
-        
-        view.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
+        view.addSubview(peopleOptionStackView)
+        peopleOptionStackView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(12)
             make.left.equalToSuperview().inset(11)
         }
         return view
     }()
     
-    /* peopleFilterView가 dropdown 됐을 때 테두리를 활성화 시켜주기 위해 생성한 컨테이너 뷰 */
+    /* peopleFilterView가 dropdown 됐을 때 테두리 그림자를 활성화 시켜주기 위해 생성한 컨테이너 뷰 */
     lazy var peopleFilterContainerView: UIView = {
         var view = UIView()
-        view.layer.borderColor = UIColor.mainColor.cgColor
-        view.layer.borderWidth = 1
+        view.backgroundColor = .none
+        view.layer.borderWidth = 5
+        view.clipsToBounds = true
         view.layer.cornerRadius = 3
         view.isHidden = true
+        
+        // 테두리 그림자 생성
+        view.layer.shadowRadius = 3
+        view.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.masksToBounds = false
+        
         [peopleFilterView, peopleDropDownView].forEach { view.addSubview($0) }
-        return view
-    }()
-    /* timeFilterView가 dropdown 됐을 때 테두리를 활성화 시켜주기 위해 생성한 컨테이너 뷰 */
-    lazy var timeFilterContainerView: UIView = {
-        var view = UIView()
-        view.layer.borderColor = UIColor.mainColor.cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 3
-        view.isHidden = true
-        [timeFilterView, timeDropDownView].forEach { view.addSubview($0) }
+        
         return view
     }()
     
@@ -306,8 +332,8 @@ class DeliveryViewController: UIViewController {
         setCollectionView()
         
         setLabelTap()
-        setAdCollectionViewTimer()
         setFilterViewTap()
+        setAdCollectionViewTimer()
         
         makeButtonShadow(createPartyButton)
         
@@ -330,9 +356,9 @@ class DeliveryViewController: UIViewController {
             deliveryPartyLabel, marketLabel, helperLabel,
             deliveryPartyBar, marketBar, helperBar,
             adCollectionView,
-            filterImageView, peopleFilterView, timeFilterView,
-            peopleDropDownView, timeDropDownView,
-            peopleFilterContainerView, timeFilterContainerView,
+            filterImageView, peopleFilterView,
+            timeOptionStackView,
+            peopleDropDownView, peopleFilterContainerView,
             partyTableView,
             createPartyButton
         ].forEach { view.addSubview($0) }
@@ -391,10 +417,8 @@ class DeliveryViewController: UIViewController {
             make.top.equalTo(adCollectionView.snp.bottom).offset(13)
             make.left.equalTo(filterImageView.snp.right).offset(16)
         }
-        timeFilterView.snp.makeConstraints { make in
-            make.width.equalTo(102)
-            make.height.equalTo(30)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
+        timeOptionStackView.snp.makeConstraints { make in
+            make.centerY.equalTo(peopleFilterView.snp.centerY)
             make.left.equalTo(peopleFilterView.snp.right).offset(10)
         }
         peopleDropDownView.snp.makeConstraints { make in
@@ -403,30 +427,18 @@ class DeliveryViewController: UIViewController {
             make.top.equalTo(peopleFilterView.snp.bottom)
             make.left.equalTo(filterImageView.snp.right).offset(16)
         }
-        timeDropDownView.snp.makeConstraints { make in
-            make.width.equalTo(timeFilterView)
-            make.height.equalTo(116)
-            make.top.equalTo(timeFilterView.snp.bottom)
-            make.left.equalTo(peopleFilterView.snp.right).offset(10)
-        }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(79)
             make.height.equalTo(170)
             make.top.equalTo(adCollectionView.snp.bottom).offset(13)
             make.left.equalTo(filterImageView.snp.right).offset(16)
         }
-        timeFilterContainerView.snp.makeConstraints { make in
-            make.width.equalTo(102)
-            make.height.equalTo(146)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
-            make.left.equalTo(peopleFilterView.snp.right).offset(10)
-        }
         
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(500)
-            make.top.equalTo(timeFilterView.snp.bottom).offset(20)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(20)
         }
         
         /* Button */
@@ -459,7 +471,7 @@ class DeliveryViewController: UIViewController {
               /* Filter Label */
               let filterLabel = UILabel()
               let filterText = passedArray[i]
-              filterLabel.textColor = .init(hex: 0xA8A8A8)
+              filterLabel.textColor = .init(hex: 0xD8D8D8)
               filterLabel.font = .customFont(.neoMedium, size: 11)
               filterLabel.text = filterText
               
@@ -470,11 +482,11 @@ class DeliveryViewController: UIViewController {
     
     /* 버튼 뒤에 색 번지는 효과 추가 */
     private func makeButtonShadow(_ button: UIButton) {
-        button.layer.shadowRadius = 4
+        button.layer.shadowRadius = 3
         button.layer.shadowColor = UIColor.mainColor.cgColor
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
-        button.layer.masksToBounds = false
+        button.layer.masksToBounds = true
     }
     
     /* label에 탭 제스쳐 추가 */
@@ -488,6 +500,38 @@ class DeliveryViewController: UIViewController {
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(labelTapGesture)
         }
+        
+        // 필터뷰 DropDown의 데이터에게 탭 제스쳐를 추가한다.
+        peopleOptionStackView.subviews.forEach { view in
+            let label = view as! UILabel
+            print(label.text!)
+            // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
+            let labelTapGesture = UITapGestureRecognizer(target: self,
+                                                         action: #selector(tapPeopleOption(sender:)))
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(labelTapGesture)
+        }
+        
+        // timeOptionStackView의 서브뷰 안의 label에게 탭 제스쳐를 추가한다.
+        timeOptionStackView.subviews.forEach { view in
+            view.subviews.forEach { sub in
+                let label = sub as! UILabel
+                print(label.text!)
+                // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
+                let labelTapGesture = UITapGestureRecognizer(target: self,
+                                                             action: #selector(tapTimeOption(sender:)))
+                label.isUserInteractionEnabled = true
+                label.addGestureRecognizer(labelTapGesture)
+            }
+        }
+    }
+    
+    /* peopleFilterView에 탭 제스처 추가 */
+    private func setFilterViewTap() {
+        let viewTapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(showDropDown))
+        peopleFilterView.isUserInteractionEnabled = true
+        peopleFilterView.addGestureRecognizer(viewTapGesture)
     }
     
     /* 카테고리 탭의 label을 탭하면 실행되는 함수 */
@@ -538,6 +582,58 @@ class DeliveryViewController: UIViewController {
         }
     }
     
+    /* peopleFilterView 탭하면 실행되는 함수 -> DropDown */
+    @objc private func showDropDown() {
+        print("DEBUG: filter view tap")
+        
+        // 필터뷰 확장
+        isDropDownPeople = !isDropDownPeople
+        peopleDropDownView.isHidden = !isDropDownPeople
+        peopleFilterContainerView.isHidden = !isDropDownPeople
+        
+        self.view.bringSubviewToFront(peopleFilterContainerView)    // 테두리 그림자 보이게 하려고 view를 앞으로 가져옴.
+        self.view.bringSubviewToFront(peopleDropDownView)   // 테이블뷰에 가리지 않도록 dropdown view를 앞으로 가져옴.
+        self.view.bringSubviewToFront(peopleFilterView) // peopleFilterView의 탭 제스쳐를 감지해야 하므로 view를 앞으로 가져옴.
+        if isDropDownPeople {
+            peopleFilterView.layer.cornerRadius = 0
+            peopleFilterLabel.textColor = .mainColor
+            peopleFilterToggleImageView.image =  UIImage(named: "ToggleDownMark")
+        } else {
+            peopleFilterView.layer.cornerRadius = 3     // 원래대로 돌려놓기
+            peopleFilterToggleImageView.image =  UIImage(named: "ToggleMark")
+        }
+    }
+    
+    /* peopleFilterView의 Option으로 있는 label을 탭하면 실행되는 함수 */
+    @objc private func tapPeopleOption(sender: UIGestureRecognizer) {
+        let label = sender.view as! UILabel
+        
+        // label 색 변경 - 진하게
+        label.textColor = .init(hex: 0x636363)
+        // peopleFilterView의 텍스트를 label로 변경함
+        peopleFilterLabel.text = label.text
+        
+        for view in peopleOptionStackView.subviews {
+            let label = view as! UILabel
+            if label.text != peopleFilterLabel.text {
+                label.textColor = .init(hex: 0xD8D8D8)
+            }
+        }
+    }
+    
+    /* 시간 필터를 탭하면 mainColor로 색깔 바뀌도록 */
+    @objc private func tapTimeOption(sender: UIGestureRecognizer) {
+        let label = sender.view as! UILabel
+        
+        // label 색 변경 - mainColor로
+        if label.textColor != .mainColor {
+            label.textColor = .mainColor
+        } else {
+            // 원래 색깔로 되돌려 놓는다
+            label.textColor = .init(hex: 0xD8D8D8)
+        }
+    }
+    
     /* 광고 배너 자동 스크롤 기능 */
     /* 3초마다 실행되는 타이머를 세팅 */
     private func setAdCollectionViewTimer() {
@@ -564,61 +660,6 @@ class DeliveryViewController: UIViewController {
         adCollectionView.isPagingEnabled = false
         adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
         adCollectionView.isPagingEnabled = true
-    }
-    
-    /* 필터뷰에 탭 제스처 추가 */
-    private func setFilterViewTap() {
-        [peopleFilterView, timeFilterView].forEach { view in
-            let viewTapGesture = UITapGestureRecognizer(target: self,
-                                                        action: #selector(tapFilterView(sender:)))
-            view.isUserInteractionEnabled = true
-            view.addGestureRecognizer(viewTapGesture)
-        }
-    }
-    
-    /* 필터뷰 탭하면 실행되는 함수 */
-    @objc private func tapFilterView(sender: UIGestureRecognizer) {
-        print("DEBUG: filter view tap")
-        let filterView = sender.view
-        
-        if filterView == peopleFilterView {
-            // 필터뷰 확장
-            isDropDownPeople = !isDropDownPeople
-            peopleDropDownView.isHidden = !isDropDownPeople
-            peopleFilterContainerView.isHidden = !isDropDownPeople
-            
-            self.view.bringSubviewToFront(peopleDropDownView)   // 테이블뷰에 가리지 않도록 dropdown view를 앞으로 가져옴.
-            self.view.bringSubviewToFront(peopleFilterContainerView)    // 주위 테두리 보이게 하려고 view를 앞으로 가져옴.
-            self.view.bringSubviewToFront(peopleFilterView) // peopleFilterView의 탭 제스쳐를 감지해야 하므로 view를 앞으로 가져옴.
-            if isDropDownPeople {
-                peopleFilterView.layer.borderWidth = 0
-                peopleFilterLabel.textColor = .mainColor
-                peopleFilterToggleImageView.image =  UIImage(named: "ToggleDownMark")
-            } else {
-                peopleFilterView.layer.borderWidth = 1
-                peopleFilterLabel.textColor = .init(hex: 0xD8D8D8)
-                peopleFilterToggleImageView.image =  UIImage(named: "ToggleMark")
-            }
-            
-        } else {
-            isDropDownTime = !isDropDownTime
-            timeDropDownView.isHidden = !isDropDownTime
-            timeFilterContainerView.isHidden = !isDropDownTime
-            
-            self.view.bringSubviewToFront(timeDropDownView)
-            self.view.bringSubviewToFront(timeFilterContainerView)
-            self.view.bringSubviewToFront(timeFilterView)
-            
-            if isDropDownTime {
-                timeFilterView.layer.borderWidth = 0
-                timeFilterLabel.textColor = .mainColor
-                timeFilterToggleImageView.image =  UIImage(named: "ToggleDownMark")
-            } else {
-                timeFilterView.layer.borderWidth = 1
-                timeFilterLabel.textColor = .init(hex: 0xD8D8D8)
-                timeFilterToggleImageView.image =  UIImage(named: "ToggleMark")
-            }
-        }
     }
 }
 
