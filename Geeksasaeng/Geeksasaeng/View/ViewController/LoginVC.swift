@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        attemptAutoLogin()
+//        attemptAutoLogin()
         naverLoginVM.setInstanceDelegate(self)
         
         addSubViews()
@@ -244,17 +244,7 @@ class LoginViewController: UIViewController {
 }
 
 
-// MARK: - Extensions
-
-extension UIView {
-    
-    func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
-        let border = CALayer()
-        border.backgroundColor = color.cgColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width: self.frame.size.width, height: width)
-        self.layer.addSublayer(border)
-    }
-}
+// MARK: - LoginVC Extensions
 
 extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
     // 로그인 성공

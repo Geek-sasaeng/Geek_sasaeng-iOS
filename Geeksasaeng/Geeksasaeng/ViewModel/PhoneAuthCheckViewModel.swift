@@ -22,11 +22,11 @@ class PhoneAuthCheckViewModel {
                         viewController.showNextView()
                     } else {
                         print("DEBUG: 실패", result.message!)
-                        viewController.showToast(viewController: viewController, message: result.message ?? "인증번호 확인이 실패했습니다.", font: .customFont(.neoMedium, size: 15))
+                        viewController.showToast(viewController: viewController, message: result.message ?? "인증번호 확인이 실패했습니다.", font: .customFont(.neoMedium, size: 15), color: UIColor(hex: 0xA8A8A8))
                     }
                 case .failure(let error):
                     print("DEBUG:", error.localizedDescription)
-                    viewController.showToast(viewController: viewController, message: "인증번호를 다시 확인해 주세요.", font: .customFont(.neoMedium, size: 15))
+                    viewController.showToast(viewController: viewController, message: "인증번호를 다시 확인해 주세요.", font: .customFont(.neoMedium, size: 15), color: UIColor(hex: 0xA8A8A8))
                 }
             }
         

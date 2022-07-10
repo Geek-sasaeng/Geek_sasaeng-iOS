@@ -9,6 +9,21 @@
 /* Begin PBXBuildFile section */
 		100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99828745DDE008947DD /* NaverLoginModel.swift */; };
+		102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35CF2879BCD60042F691 /* UIView+Extension.swift */; };
+		102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35CF2879BCD60042F691 /* UIView+Extension.swift */; };
+		102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35CF2879BCD60042F691 /* UIView+Extension.swift */; };
+		102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35D32879BCF90042F691 /* UITextField+Extension.swift */; };
+		102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35D32879BCF90042F691 /* UITextField+Extension.swift */; };
+		102B35D62879BCF90042F691 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35D32879BCF90042F691 /* UITextField+Extension.swift */; };
+		102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35D72879BD050042F691 /* UIButton+Extension.swift */; };
+		102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35D72879BD050042F691 /* UIButton+Extension.swift */; };
+		102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35D72879BD050042F691 /* UIButton+Extension.swift */; };
+		102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DB2879BD670042F691 /* UIViewController+Extension.swift */; };
+		102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DB2879BD670042F691 /* UIViewController+Extension.swift */; };
+		102B35DE2879BD670042F691 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DB2879BD670042F691 /* UIViewController+Extension.swift */; };
+		102B35E02879BD980042F691 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DF2879BD980042F691 /* String+Extension.swift */; };
+		102B35E12879BD980042F691 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DF2879BD980042F691 /* String+Extension.swift */; };
+		102B35E22879BD980042F691 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DF2879BD980042F691 /* String+Extension.swift */; };
 		103F1454286ACA84004B637B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1453286ACA84004B637B /* AppDelegate.swift */; };
 		103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1455286ACA84004B637B /* SceneDelegate.swift */; };
 		103F145D286ACA86004B637B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
@@ -138,6 +153,11 @@
 /* Begin PBXFileReference section */
 		100FB99628745DA3008947DD /* NaverLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginViewModel.swift; sourceTree = "<group>"; };
 		100FB99828745DDE008947DD /* NaverLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginModel.swift; sourceTree = "<group>"; };
+		102B35CF2879BCD60042F691 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		102B35D32879BCF90042F691 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
+		102B35D72879BD050042F691 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
+		102B35DB2879BD670042F691 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		102B35DF2879BD980042F691 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		103F1450286ACA84004B637B /* Geeksasaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geeksasaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1453286ACA84004B637B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103F1455286ACA84004B637B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -387,6 +407,11 @@
 			children = (
 				A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */,
 				A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */,
+				102B35CF2879BCD60042F691 /* UIView+Extension.swift */,
+				102B35D32879BCF90042F691 /* UITextField+Extension.swift */,
+				102B35D72879BD050042F691 /* UIButton+Extension.swift */,
+				102B35DB2879BD670042F691 /* UIViewController+Extension.swift */,
+				102B35DF2879BD980042F691 /* String+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -667,8 +692,11 @@
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
+				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
+				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A2513F212878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
+				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
@@ -677,6 +705,7 @@
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
+				102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
@@ -691,6 +720,7 @@
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
+				102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				1040FB9A2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				1040FB982875C06E0060A3E4 /* AgreementVC.swift in Sources */,
@@ -710,15 +740,20 @@
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				A2513F1228785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
+				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
+				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
+				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
+				102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
+				102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
@@ -749,9 +784,12 @@
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
+				102B35DE2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
+				102B35D62879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
+				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
@@ -761,6 +799,8 @@
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
+				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
+				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,

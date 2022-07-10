@@ -44,14 +44,38 @@ class RegisterViewController: UIViewController {
     var nickNameLabel = UILabel()
     
     var idTextField = UITextField()
-    var pwTextField = UITextField()
-    var pwCheckTextField = UITextField()
+    var pwTextField: UITextField = {
+        let textField = UITextField()
+        textField.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
+        return textField
+    }()
+    var pwCheckTextField: UITextField = {
+        let textField = UITextField()
+        textField.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
+        return textField
+    }()
     var nickNameTextField = UITextField()
     
     var idAvailableLabel: UILabel = {
         let label = UILabel()
-        label.text = "사용 가능한 아이디입니다"
-        label.textColor = .mainColor
+        label.font = .customFont(.neoMedium, size: 13)
+        label.isHidden = true
+        return label
+    }()
+    
+    var passwordAvailableLabel: UILabel = {
+        let label = UILabel()
+        label.text = "문자, 숫자 및 특수문자 포함 8자 이상으로 입력해주세요"
+        label.textColor = .red
+        label.font = .customFont(.neoMedium, size: 13)
+        label.isHidden = true
+        return label
+    }()
+    
+    var passwordSameCheckLabel: UILabel = {
+        let label = UILabel()
+        label.text = "비밀번호를 다시 확인해주세요"
+        label.textColor = .red
         label.font = .customFont(.neoMedium, size: 13)
         label.isHidden = true
         return label
@@ -116,16 +140,17 @@ class RegisterViewController: UIViewController {
     
     private func setLayouts() {
         /* progress Bar */
-        view.addSubview(progressBar)
+        [progressBar, remainBar, progressIcon, remainIcon].forEach {
+            view.addSubview($0)
+        }
+        
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.width.equalTo((UIScreen.main.bounds.width - 50) / 5)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
-        
-        /* remain Bar */
-        view.addSubview(remainBar)
+
         remainBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -133,7 +158,6 @@ class RegisterViewController: UIViewController {
             make.right.equalToSuperview().inset(25)
         }
         
-        view.addSubview(progressIcon)
         progressIcon.snp.makeConstraints { make in
             make.width.equalTo(35)
             make.height.equalTo(22)
@@ -141,7 +165,6 @@ class RegisterViewController: UIViewController {
             make.left.equalTo(progressBar.snp.right).inset(15)
         }
         
-        view.addSubview(remainIcon)
         remainIcon.snp.makeConstraints { make in
             make.width.equalTo(22)
             make.height.equalTo(36)
@@ -149,111 +172,101 @@ class RegisterViewController: UIViewController {
             make.right.equalTo(remainBar.snp.right).offset(3)
         }
         
-        /* labels */
+        /* id, password, passwordCheck, nickname */
         [
-            idLabel,
-            passwordLabel,
-            passwordCheckLabel,
-            nickNameLabel
+            idLabel, passwordLabel, passwordCheckLabel, nickNameLabel,
+            idTextField, pwTextField, pwCheckTextField, nickNameTextField,
+            idAvailableLabel, nickNameAvailableLabel, passwordAvailableLabel, passwordSameCheckLabel,
+            idCheckButton, nickNameCheckButton,
+            nextButton
         ].forEach {
             view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(27)
-            }
         }
-        /* idLabel */
+        
+        /* id */
         idLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(27)
             make.top.equalTo(progressBar.snp.bottom).offset(50)
         }
         
-        /* passwordLabel */
-        passwordLabel.snp.makeConstraints { make in
-            make.top.equalTo(idLabel.snp.bottom).offset(108)
-        }
-        
-        /* passwordCheckLabel */
-        passwordCheckLabel.snp.makeConstraints { make in
-            make.top.equalTo(passwordLabel.snp.bottom).offset(81)
-        }
-        
-        /* nickNameLabel */
-        nickNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(81)
-        }
-        
-        /* text fields */
-        [
-            idTextField,
-            pwTextField,
-            pwCheckTextField,
-            nickNameTextField
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(36)
-            }
-        }
-        /* idTextField */
         idTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
             make.top.equalTo(idLabel.snp.bottom).offset(15)
-        }
-        /* pwTextField */
-        pwTextField.snp.makeConstraints { make in
-            make.top.equalTo(passwordLabel.snp.bottom).offset(15)
-        }
-        /* pwCheckTextField */
-        pwCheckTextField.snp.makeConstraints { make in
-            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(15)
-        }
-        /* nickNameTextField */
-        nickNameTextField.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
-        }
-        
-        /* AvailableLabel */
-        [idAvailableLabel, nickNameAvailableLabel].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(40)
-            }
         }
         
         idAvailableLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
             make.top.equalTo(idTextField.snp.bottom).offset(21)
         }
         
+        idCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(81)
+            make.height.equalTo(41)
+            make.top.equalTo(remainBar.snp.bottom).offset(82)
+        }
+        
+        /* password */
+        passwordLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(idAvailableLabel.snp.bottom).offset(31)
+        }
+        
+        pwTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
+            make.top.equalTo(passwordLabel.snp.bottom).offset(15)
+        }
+        
+        passwordAvailableLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.top.equalTo(pwTextField.snp.bottom).offset(21)
+        }
+        
+        /* password check */
+        passwordCheckLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(passwordAvailableLabel.snp.bottom).offset(31)
+        }
+        
+        pwCheckTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
+            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(15)
+        }
+        
+        passwordSameCheckLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.top.equalTo(pwCheckTextField.snp.bottom).offset(21)
+        }
+        
+        /* nickname */
+        nickNameLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(passwordSameCheckLabel.snp.bottom).offset(31)
+        }
+        
+        nickNameTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
+        }
+
         nickNameAvailableLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
             make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
         }
         
+        nickNameCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(81)
+            make.height.equalTo(41)
+            make.top.equalTo(pwCheckTextField.snp.bottom).offset(73)
+        }
+        
         /* nextButton */
-        view.addSubview(nextButton)
         nextButton.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
-        }
-        
-        /* 중복 확인 버튼 */
-        [
-            idCheckButton,
-            nickNameCheckButton
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.right.equalToSuperview().inset(26)
-                make.width.equalTo(81)
-                make.height.equalTo(41)
-            }
-        }
-        /* idCheckButton */
-        idCheckButton.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(82)
-        }
-        /* nickNameCheckButton */
-        nickNameCheckButton.snp.makeConstraints { make in
-            make.top.equalTo(pwCheckTextField.snp.bottom).offset(73)
         }
     }
     
@@ -265,10 +278,10 @@ class RegisterViewController: UIViewController {
         nickNameLabel = setMainLabelAttrs("닉네임")
         
         /* textFields attr */
-        idTextField = setTextFieldAttrs(width: 210)
-        pwTextField = setTextFieldAttrs(width: 307)
-        pwCheckTextField = setTextFieldAttrs(width: 307)
-        nickNameTextField = setTextFieldAttrs(width: 210)
+        setTextFieldAttrs(textField: idTextField, msg: "6-20자 영문+숫자로 입력", width: 210)
+        setTextFieldAttrs(textField: pwTextField,msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력",width: 307)
+        setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력",width: 307)
+        setTextFieldAttrs(textField: nickNameTextField,msg: "3-8자 영문 혹은 한글로 입력",width: 210)
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -280,20 +293,18 @@ class RegisterViewController: UIViewController {
         return label
     }
     
-    private func setTextFieldAttrs(width: CGFloat) -> UITextField {
-        let textField = UITextField()
+    private func setTextFieldAttrs(textField: UITextField, msg: String, width: CGFloat){
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
-            string: "3-15자 영문으로 입력",
+            string: msg,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
         textField.makeBottomLine(width)
-        return textField
     }
     
     private func setTextFieldTarget() {
         [idTextField, pwTextField, pwCheckTextField, nickNameTextField].forEach { textField in
-            textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
+            textField.addTarget(self, action: #selector(didChangeTextField), for: .editingChanged)
         }
     }
     
@@ -318,7 +329,7 @@ class RegisterViewController: UIViewController {
         present(emailAuthVC, animated: true)
     }
     
-    @objc func didChangeTextField(_ sender: UITextField) {
+    @objc func didChangeTextField() {
         if idTextField.text?.count ?? 0 >= 1 {
             idCheckButton.setActivatedButton()
         } else if idTextField.text?.count ?? 0 < 1 {
@@ -339,77 +350,47 @@ class RegisterViewController: UIViewController {
     }
     
     @objc func tapIdCheckButton() {
-        idAvailableLabel.isHidden = false
+        if idTextField.text?.isValidId() ?? false {
+            // 중복 확인 API 호출
+            idAvailableLabel.text = "사용 가능한 아이디입니다"
+            idAvailableLabel.textColor = .mainColor
+            idAvailableLabel.isHidden = false
+        } else {
+            idAvailableLabel.text = "6-20자 영문+숫자로 입력"
+            idAvailableLabel.textColor = .red
+            idAvailableLabel.isHidden = false
+        }
     }
     
     @objc func tapNickNameCheckButton() {
-        nickNameAvailableLabel.isHidden = false
-    }
-}
-
-// MARK: - UITextField extension
-
-extension UITextField {
-    
-    // UITextField의 아래 라인 만들어주는 함수
-    func makeBottomLine(_ width: CGFloat) {
-        let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.init(hex: 0xEFEFEF)
-        borderStyle = .none
-        
-        self.addSubview(bottomLine)
-        bottomLine.snp.makeConstraints { make in
-            make.top.equalTo(self.snp.bottom).offset(10)
-            make.left.equalTo(-8)
-            make.width.equalTo(width)
-            make.height.equalTo(1)
+        if nickNameTextField.text?.isValidNickname() ?? false {
+            // 중복 확인 API 호출
+            nickNameAvailableLabel.text = "사용 가능한 닉네임입니다"
+            nickNameAvailableLabel.textColor = .mainColor
+            nickNameAvailableLabel.isHidden = false
+        } else {
+            nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
+            nickNameAvailableLabel.textColor = .red
+            nickNameAvailableLabel.isHidden = false
         }
     }
     
-}
-
-extension UIButton {
+    // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
     
-    // UIButton의 아래 라인 만들어주는 함수
-    func makeBottomLine(_ width: CGFloat) {
-        let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.init(hex: 0x5B5B5B)
-        
-        self.addSubview(bottomLine)
-        bottomLine.snp.makeConstraints { make in
-            make.top.equalTo(self.snp.bottom).offset(-8)
-            make.width.equalTo(width)
-            make.height.equalTo(1)
+    @objc func isValidPwTextField() {
+        if !(pwTextField.text?.isValidPassword() ?? false) {
+            passwordAvailableLabel.isHidden = false
+        } else {
+            passwordAvailableLabel.isHidden = true
         }
     }
     
-    func setActivatedNextButton() {
-        self.isEnabled = true
-        self.setTitleColor(.white, for: .normal)
-        self.backgroundColor = .mainColor
+    @objc func isValidPwCheckTextField() {
+        if pwCheckTextField.text != pwTextField.text {
+            passwordSameCheckLabel.isHidden = false
+        } else {
+            passwordSameCheckLabel.isHidden = true
+        }
     }
-    
-    func setDeactivatedNextButton() {
-        self.isEnabled = false
-        self.tintColor = UIColor(hex: 0xA8A8A8)
-        self.backgroundColor = UIColor(hex: 0xEFEFEF)
-    }
-    
-    func setActivatedButton() {
-        self.isEnabled = true
-        self.setTitleColor(.mainColor, for: .normal)
-        self.backgroundColor = .white
-        self.layer.shadowRadius = 4
-        self.layer.shadowColor = UIColor.mainColor.cgColor
-        self.layer.shadowOpacity = 0.5
-        self.layer.shadowOffset = CGSize(width: 0, height: 0)
-        self.layer.masksToBounds = false
-    }
-    
-    func setDeactivatedButton() {
-        self.isEnabled = false
-        self.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        self.backgroundColor = UIColor(hex: 0xEFEFEF)
-        self.layer.shadowRadius = 0
-    }
+
 }

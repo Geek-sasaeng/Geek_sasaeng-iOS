@@ -276,7 +276,7 @@ class NaverRegisterViewController: UIViewController {
     
     @objc func tapAuthSendButton() {
         authSendButton.setDeactivatedButton()
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15))
+        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15), color: .mainColor)
     }
     
     // EmailAuthVC로 화면 전환.
