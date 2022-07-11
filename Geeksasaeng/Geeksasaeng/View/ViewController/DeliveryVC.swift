@@ -319,6 +319,15 @@ class DeliveryViewController: UIViewController {
         return button
     }()
     
+    /* 테이블뷰 셀 하단에 블러뷰 */
+    lazy var blurView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140))
+        // 그라데이션 적용
+        view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
+        view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
+        return view
+    }()
+    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -360,6 +369,7 @@ class DeliveryViewController: UIViewController {
             timeOptionStackView,
             peopleDropDownView, peopleFilterContainerView,
             partyTableView,
+            blurView,   // 적은 순서에 따라 view가 추가됨 = 순서에 따라앞뒤의 뷰가 달라짐
             createPartyButton
         ].forEach { view.addSubview($0) }
     }
@@ -446,6 +456,13 @@ class DeliveryViewController: UIViewController {
             make.width.height.equalTo(62)
             make.bottom.equalToSuperview().offset(-100)
             make.right.equalToSuperview().offset(-20)
+        }
+        
+        /* blur view */
+        blurView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(140)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -720,4 +737,18 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         }
     }
     
+}
+
+extension UIView{
+    
+    /* view에 그라데이션 적용 -> vertical style */
+    func setGradient(startColor: UIColor, endColor: UIColor){
+        let gradient = CAGradientLayer()
+        // startColor가 더 연한 색깔
+        gradient.colors = [startColor.cgColor, endColor.cgColor]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradient.endPoint = CGPoint(x: 0.0, y: 1.0)
+        gradient.frame = bounds
+        layer.addSublayer(gradient)
+    }
 }
