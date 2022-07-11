@@ -399,10 +399,10 @@ class EmailAuthViewController: UIViewController {
     
     @objc private func tapAuthSendButton() {
         if let email = emailTextField.text,
-           let emailAddress = emailAddressTextField.text {
-//           let univ = "Gachon University" {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+           let emailAddress = emailAddressTextField.text,
+           let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
             authSendButton.setDeactivatedButton()   // 비활성화
-            let univ = "Gachon University"
+            
             print("DEBUG: ", email+emailAddress, univ)
             let uuid = UUID()
             let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
