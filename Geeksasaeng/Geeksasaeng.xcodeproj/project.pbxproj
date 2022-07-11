@@ -38,6 +38,12 @@
 		1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */; };
 		1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
 		1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
+		105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105E60A8287C32710030C927 /* CreatePartyVC.swift */; };
+		105E60AA287C32710030C927 /* CreatePartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105E60A8287C32710030C927 /* CreatePartyVC.swift */; };
+		105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105E60A8287C32710030C927 /* CreatePartyVC.swift */; };
+		107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
+		107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
+		107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
 		1078711D286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */; };
 		1078711E286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */; };
 		1078711F286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */; };
@@ -172,6 +178,8 @@
 		103F1483286ACB95004B637B /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		1040FB972875C06D0060A3E4 /* AgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementVC.swift; sourceTree = "<group>"; };
 		1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthVC.swift; sourceTree = "<group>"; };
+		105E60A8287C32710030C927 /* CreatePartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyVC.swift; sourceTree = "<group>"; };
+		107123F8287B06D800D58FD1 /* RepetitionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepetitionAPI.swift; sourceTree = "<group>"; };
 		10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Bold.otf"; sourceTree = "<group>"; };
 		10787119286EBAC3008EDF78 /* SpoqaHanSansNeo-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Medium.otf"; sourceTree = "<group>"; };
 		1078711B286EBAC3008EDF78 /* SpoqaHanSansNeo-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Regular.otf"; sourceTree = "<group>"; };
@@ -368,6 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				A2085AD1287048A800D6CF79 /* RegisterAPI.swift */,
+				107123F8287B06D800D58FD1 /* RepetitionAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -397,6 +406,7 @@
 				1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */,
 				1040FB972875C06D0060A3E4 /* AgreementVC.swift */,
 				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
+				105E60A8287C32710030C927 /* CreatePartyVC.swift */,
 				A2B420A4286F370F00278F92 /* PartyVC.swift */,
 			);
 			path = ViewController;
@@ -707,6 +717,7 @@
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
 				102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
+				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
@@ -714,6 +725,7 @@
 				A2513F152878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
+				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
@@ -749,7 +761,9 @@
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
+				105E60AA287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */,
+				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
@@ -779,8 +793,10 @@
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
+				105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
+				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,

@@ -316,6 +316,7 @@ class DeliveryViewController: UIViewController {
         button.setImage(UIImage(named: "CreatePartyMark"), for: .normal)
         button.layer.cornerRadius = 31
         button.backgroundColor = .mainColor
+        button.addTarget(self, action: #selector(tapCreatePartyButton), for: .touchUpInside)
         return button
     }()
     
@@ -632,6 +633,12 @@ class DeliveryViewController: UIViewController {
             // 원래 색깔로 되돌려 놓는다
             label.textColor = .init(hex: 0xD8D8D8)
         }
+    }
+    
+    @objc func tapCreatePartyButton() {
+        let viewController = CreatePartyViewController()
+        
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     /* 광고 배너 자동 스크롤 기능 */
