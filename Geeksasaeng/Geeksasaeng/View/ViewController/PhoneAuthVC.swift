@@ -56,7 +56,7 @@ class PhoneAuthViewController: UIViewController {
     
     var authResendButton: UIButton = {
         var button = UIButton()
-        button.setTitle("재전송 하기", for: .normal)
+        button.setTitle("확인", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.layer.cornerRadius = 5
@@ -427,7 +427,9 @@ class PhoneAuthViewController: UIViewController {
         authSendButton.setDeactivatedButton()
         authResendButton.setActivatedButton()
         if let phoneNum = self.phoneNumTextField.text {
-            let input = PhoneAuthInput(recipientPhoneNumber: phoneNum)
+            let uuid = UUID()
+            let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
+            print("DEBUG:", uuid.uuidString)
             PhoneAuthViewModel.requestSendPhoneAuth(self, input)
         }   // API 호출
     }

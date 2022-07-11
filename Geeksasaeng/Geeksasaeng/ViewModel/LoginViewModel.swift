@@ -28,6 +28,8 @@ class LoginViewModel {
                     LoginModel.jwt = result.result?.jwt
                     // 홈 화면으로 이동
                     viewController.showHomeView()
+                    
+                    // TODO: 첫 로그인 시에는 기숙사 선택 화면으로 이동하도록 설정 필요!
                 } else {
                     print("DEBUG:", result.message!)
                 }

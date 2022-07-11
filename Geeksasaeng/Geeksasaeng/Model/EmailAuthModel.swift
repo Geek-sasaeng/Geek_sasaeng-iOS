@@ -12,6 +12,7 @@ import Foundation
 struct EmailAuthInput : Encodable {
     var email: String?
     var university: String?
+    var uuid: String?
 }
 
 // 이메일 인증번호 전송을 요청했을 때 받게 될 Response의 형태.

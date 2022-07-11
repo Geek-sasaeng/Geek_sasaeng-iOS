@@ -36,9 +36,9 @@ class AgreementViewController: UIViewController {
         return imageView
     }()
     
-    var startButton: UIButton = {
+    var completeButton: UIButton = {
         let button = UIButton()
-        button.setTitle("시작하기", for: .normal)
+        button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.layer.cornerRadius = 5
@@ -66,7 +66,7 @@ class AgreementViewController: UIViewController {
         view.addSubview(remainBar)
         view.addSubview(progressIcon)
         view.addSubview(remainIcon)
-        view.addSubview(startButton)
+        view.addSubview(completeButton)
     }
     
     func setLayouts() {
@@ -100,7 +100,7 @@ class AgreementViewController: UIViewController {
             make.right.equalTo(remainBar.snp.right).offset(3)
         }
         
-        startButton.snp.makeConstraints { make in
+        completeButton.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
