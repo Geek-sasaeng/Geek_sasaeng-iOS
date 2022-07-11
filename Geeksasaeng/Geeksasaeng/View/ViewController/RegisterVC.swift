@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Alamofire
 
 class RegisterViewController: UIViewController {
     
@@ -350,28 +351,28 @@ class RegisterViewController: UIViewController {
     }
     
     @objc func tapIdCheckButton() {
-        if idTextField.text?.isValidId() ?? false {
-            // 중복 확인 API 호출
-            idAvailableLabel.text = "사용 가능한 아이디입니다"
-            idAvailableLabel.textColor = .mainColor
-            idAvailableLabel.isHidden = false
-        } else {
+        if idTextField.text?.isValidId() ?? false == false {
             idAvailableLabel.text = "6-20자 영문+숫자로 입력"
             idAvailableLabel.textColor = .red
             idAvailableLabel.isHidden = false
+        } else {
+            if let id = idTextField.text {
+                let input = IdRepetitionInput(loginId: id)
+                RepetitionAPI.checkIdRepetition(self, parameters: input)
+            }
         }
     }
     
     @objc func tapNickNameCheckButton() {
-        if nickNameTextField.text?.isValidNickname() ?? false {
-            // 중복 확인 API 호출
-            nickNameAvailableLabel.text = "사용 가능한 닉네임입니다"
-            nickNameAvailableLabel.textColor = .mainColor
-            nickNameAvailableLabel.isHidden = false
-        } else {
+        if nickNameTextField.text?.isValidNickname() ?? false == false {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
             nickNameAvailableLabel.isHidden = false
+        } else {
+            if let nickname = nickNameTextField.text {
+                let input = NickNameRepetitionInput(nickName: nickname)
+                RepetitionAPI.checkNicknameRepetition(self, parameters: input)
+            }
         }
     }
     
@@ -392,5 +393,4 @@ class RegisterViewController: UIViewController {
             passwordSameCheckLabel.isHidden = true
         }
     }
-
 }

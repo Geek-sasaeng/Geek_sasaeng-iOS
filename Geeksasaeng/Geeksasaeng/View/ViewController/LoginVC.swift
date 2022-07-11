@@ -20,6 +20,7 @@ class LoginViewController: UIViewController {
     
     var idTextField: UITextField = {
         var textField = UITextField()
+        textField.autocapitalizationType = .none
         textField.font = .customFont(.neoLight, size: 14)
         textField.attributedPlaceholder = NSAttributedString(
             string: "아이디",
@@ -32,6 +33,7 @@ class LoginViewController: UIViewController {
     
     var passwordTextField: UITextField = {
         var textField = UITextField()
+        textField.autocapitalizationType = .none
         textField.font = .customFont(.neoLight, size: 14)
         textField.attributedPlaceholder = NSAttributedString(
             string: "비밀번호",
