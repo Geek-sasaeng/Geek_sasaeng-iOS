@@ -253,8 +253,8 @@
 				A219B272287575E4000F34A3 /* AdCarouselModel.swift */,
 				A2513F1C287872D70029C279 /* EmailAuthModel.swift */,
 				A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */,
-				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
 				A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */,
+				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 			);
 			path = Model;

@@ -404,7 +404,9 @@ class EmailAuthViewController: UIViewController {
             authSendButton.setDeactivatedButton()   // 비활성화
             let univ = "Gachon University"
             print("DEBUG: ", email+emailAddress, univ)
-            let input = EmailAuthInput(email: email+emailAddress, university: univ)
+            let uuid = UUID()
+            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
+            print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(self, input)
         }
