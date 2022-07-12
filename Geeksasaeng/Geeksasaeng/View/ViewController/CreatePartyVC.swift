@@ -238,7 +238,7 @@ class CreatePartyViewController: UIViewController {
                 }
                 
                 self.settedOptions = true
-                if self.titleTextField.text?.count ?? 0 >= 3 && self.contentsTextView.text.count >= 5 {
+                if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
                     self.navigationItem.rightBarButtonItem = self.activatedRightBarButtonItem
                     self.view.layoutSubviews()
                 }
@@ -384,12 +384,12 @@ class CreatePartyViewController: UIViewController {
         // settedOptions가 true인데 titleTextField가 지워진 경우
         if settedOptions
             && editedContentsTextView
-            && contentsTextView.text.count >= 5
-            && titleTextField.text?.count ?? 0 >= 3 {
+            && contentsTextView.text.count >= 1
+            && titleTextField.text?.count ?? 0 >= 1 {
             self.navigationItem.rightBarButtonItem = activatedRightBarButtonItem
             self.view.layoutSubviews()
-        } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 3)
-                    || (editedContentsTextView && settedOptions && contentsTextView.text.count < 5) {
+        } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1)
+                    || (editedContentsTextView && settedOptions && contentsTextView.text.count < 1) {
             self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             self.view.layoutSubviews()
         }
@@ -426,12 +426,12 @@ extension CreatePartyViewController: UITextViewDelegate {
         editedContentsTextView = true
         if settedOptions
             && editedContentsTextView
-            && contentsTextView.text.count >= 5
-            && titleTextField.text?.count ?? 0 >= 3 {
+            && contentsTextView.text.count >= 1
+            && titleTextField.text?.count ?? 0 >= 1 {
             navigationItem.rightBarButtonItem = activatedRightBarButtonItem
             view.layoutSubviews()
-        } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 5)
-                    || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 3) {
+        } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 1)
+                    || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1) {
             navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             view.layoutSubviews()
         }
@@ -444,3 +444,5 @@ extension CreatePartyViewController: UITextViewDelegate {
         return newLength <= 100
     }
 }
+
+
