@@ -155,9 +155,9 @@ class CreatePartyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        contentsTextView.delegate = self // set contentsTextView delegate
         
         addSubViews()
+        setDelegate()
         setNavigationBar()
         setLayouts()
         setDefaultDate()
@@ -178,6 +178,11 @@ class CreatePartyViewController: UIViewController {
 //            }
 //        }
 //    }
+    
+    private func setDelegate() {
+        contentsTextView.delegate = self
+        titleTextField.delegate = self
+    }
     private func setNavigationBar() {
         self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
         self.navigationItem.title = "파티 생성하기"
@@ -392,6 +397,15 @@ class CreatePartyViewController: UIViewController {
 
 }
 
+extension CreatePartyViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let str = textField.text else { return true }
+        let newLength = str.count + string.count - range.length
+        
+        return newLength <= 10
+    }
+}
+
 extension CreatePartyViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == "내용을 입력하세요" {
@@ -422,20 +436,11 @@ extension CreatePartyViewController: UITextViewDelegate {
             view.layoutSubviews()
         }
     }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard let str = textView.text else { return true }
+        let newLength = str.count + text.count - range.length
+        
+        return newLength <= 100
+    }
 }
-
-//extension CreatePartyViewController: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let text = textField.text else { return false }
-//
-//        if text.count <= 3 {
-//            self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
-//            self.view.layoutSubviews()
-//        } else {
-//            self.navigationItem.rightBarButtonItem = activatedRightBarButtonItem
-//            self.view.layoutSubviews()
-//        }
-//
-//        return true
-//    }
-//}
