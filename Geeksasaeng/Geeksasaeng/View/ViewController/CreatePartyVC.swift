@@ -143,6 +143,7 @@ class CreatePartyViewController: UIViewController {
         
         addSubViews()
         setLayouts()
+        setDate()
     }
     
     override func viewDidLayoutSubviews() {
@@ -246,6 +247,15 @@ class CreatePartyViewController: UIViewController {
             make.width.equalTo(188)
             make.height.equalTo(30)
         }
+    }
+    
+    /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
+    private func setDate() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM월 dd일        HH시 mm분"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
     }
     
     // 이전 화면으로 돌아가기
