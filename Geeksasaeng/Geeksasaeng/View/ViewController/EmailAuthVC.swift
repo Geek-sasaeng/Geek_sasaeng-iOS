@@ -185,7 +185,6 @@ class EmailAuthViewController: UIViewController {
     
     // 학교 선택 리스트가 열려있는지, 닫혀있는지 확인하기 위한 변수
     var isExpanded: Bool! = false
-    var tempUnivName = "Gachon University"
     let tempEmailAddress = "@gachon.ac.kr"
     
     // MARK: - Life Cycle
@@ -418,29 +417,25 @@ class EmailAuthViewController: UIViewController {
         authNumVC.modalTransitionStyle = .crossDissolve
         authNumVC.modalPresentationStyle = .fullScreen
         
-        // 학교 정보랑 학교 이메일 정보 넘겨줘야 한다 -> 재전송 하기 버튼 때문에
-        authNumVC.university = selectYourUnivLabel.text
-        authNumVC.email = emailTextField.text! + "@gachon.ac.kr"
+        // id, pw, nickName 데이터 전달 -> 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
+        if let idData = self.idData,
+           let pwData = self.pwData,
+           let pwCheckData = self.pwCheckData,
+           let nickNameData = self.nickNameData,
+           let univ = selectYourUnivLabel.text,
+           let email = emailTextField.text {
+            authNumVC.idData = idData
+            authNumVC.pwData = pwData
+            authNumVC.pwCheckData = pwCheckData
+            authNumVC.nickNameData = nickNameData
+            
+            // 학교 정보랑 학교 이메일 정보 넘겨줘야 한다 -> 재전송 하기 버튼 때문에
+            authNumVC.university = univ
+            // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함
+            authNumVC.email = email + tempEmailAddress
+        }
         
         present(authNumVC, animated: true)
     }
     
-    // TODO: 이거 마지막 화면으로 옮겨야 됨. 회원가입 완료하는 함수.
-//    func sendRegisterRequest() {
-//        // Request 생성.
-//        guard let school = self.schoolTextField.text,
-//              let email = self.emailTextField.text,
-//              let emailAddress = self.emailAddressTextField.text
-//        else { return }
-//
-//        let input = RegisterInput(checkPassword: pwCheckData,
-//                                  email: email+emailAddress,
-//                                  loginId: idData,
-//                                  nickname: nickNameData,
-//                                  password: pwData,
-//                                  phoneNumber: "01012341234",
-//                                  universityName: school)
-//
-//        RegisterAPI.registerUser(self, input)
-//    }
 }

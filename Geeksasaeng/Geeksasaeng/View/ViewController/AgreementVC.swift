@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 class AgreementViewController: UIViewController {
+    
     // MARK: - SubViews
+    
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
@@ -44,14 +46,25 @@ class AgreementViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = .mainColor
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(completeRegister), for: .touchUpInside)
+        button.addTarget(self, action: #selector(sendRegisterRequest), for: .touchUpInside)
         return button
     }()
     
-    // MARK: - Variables
-    var fromNaverRegister = false
+    // MARK: - Properties
+    
+    /* 이전 화면에서 받아온 데이터들 */
+    var pwCheckData: String? = nil
+    var email: String? = nil
+    var idData: String? = nil
+    var nickNameData: String? = nil
+    var pwData: String? = nil
+    var phoneNum: String? = nil
+    var university: String? = nil
+    
+    var isFromNaverRegister = false
     
     // MARK: - viewDidLoad()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -61,6 +74,7 @@ class AgreementViewController: UIViewController {
     }
     
     // MARK: - Setting Function
+    
     func addSubViews() {
         view.addSubview(progressBar)
         view.addSubview(remainBar)
@@ -108,11 +122,39 @@ class AgreementViewController: UIViewController {
         }
     }
     
-    // MARK: - Function
-    @objc func completeRegister() {
-        let loginVC = LoginViewController()
-        loginVC.modalTransitionStyle = .coverVertical
-        loginVC.modalPresentationStyle = .fullScreen
-        present(loginVC, animated: true)
+    // MARK: - Functions
+
+    /* 회원가입 Request 보내는 함수 */
+    @objc private func sendRegisterRequest() {
+        // Request 생성.
+        // 최종적으로 데이터 전달 (확인비번, 이메일, 동의여부, 아이디, 닉네임, pw, 폰번호, 학교이름) 총 8개
+        /// 순서가 이런 이유는 나도 모름... 회원가입 API Req 바디 모양대로 넣었어
+        if let idData = self.idData,
+           let pwData = self.pwData,
+           let pwCheckData = self.pwCheckData,
+           let nickNameData = self.nickNameData,
+           let univ = self.university,
+           let email = self.email,
+           let phoneNum = self.phoneNum
+//           let agreeStatus = self.isArgree   -> TODO: 나중에 이용약관 추가됐을 때 동의했느냐, 안 했느냐 판단해서 추가
+        {
+            let input = RegisterInput(checkPassword: pwCheckData,
+                                      email: email,
+                                      informationAgreeStatus: "Y",
+                                      loginId: idData,
+                                      nickname: nickNameData,
+                                      password: pwData,
+                                      phoneNumber: phoneNum,
+                                      universityName: univ)
+            
+            RegisterAPI.registerUser(self, input)
+        }
+    }
+    
+    public func showHomeView() {
+        let tabBarController = TabBarController()
+        tabBarController.modalTransitionStyle = .crossDissolve
+        tabBarController.modalPresentationStyle = .fullScreen
+        present(tabBarController, animated: true)
     }
 }

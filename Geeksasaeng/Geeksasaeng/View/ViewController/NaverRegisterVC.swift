@@ -279,13 +279,13 @@ class NaverRegisterViewController: UIViewController {
         self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15), color: .mainColor)
     }
     
-    // EmailAuthVC로 화면 전환.
+    // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
     @objc func showNextView() {
         let authNumVC = AuthNumViewController()
         
         authNumVC.modalTransitionStyle = .crossDissolve
         authNumVC.modalPresentationStyle = .fullScreen
-        authNumVC.fromNaverRegister = true
+        authNumVC.isFromNaverRegister = true
         
         present(authNumVC, animated: true)
     }

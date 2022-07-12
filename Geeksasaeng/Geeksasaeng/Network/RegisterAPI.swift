@@ -28,6 +28,7 @@ struct RegisterModelResult : Decodable {
 struct RegisterInput : Encodable {
     var checkPassword: String?
     var email: String?
+    var informationAgreeStatus: String?
     var loginId: String?
     var nickname: String?
     var password: String?
@@ -37,7 +38,7 @@ struct RegisterInput : Encodable {
 
 // 회원가입 API 연동
 class RegisterAPI {
-    public static func registerUser(_ viewController : EmailAuthViewController, _ parameter : RegisterInput) {
+    public static func registerUser(_ viewController : AgreementViewController, _ parameter : RegisterInput) {
         AF.request("https://geeksasaeng.shop/members", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -45,7 +46,9 @@ class RegisterAPI {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 성공")
+                    print("DEBUG: 회원가입 성공")
+                    
+                    viewController.showHomeView()
                 } else {
                     print("DEBUG:", result.message!)
                 }

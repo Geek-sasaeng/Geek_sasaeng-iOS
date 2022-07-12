@@ -11,6 +11,7 @@ import SnapKit
 class PhoneAuthViewController: UIViewController {
     
     // MARK: - Subviews
+    
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
@@ -54,7 +55,7 @@ class PhoneAuthViewController: UIViewController {
         return button
     }()
     
-    var authResendButton: UIButton = {
+    var authCheckButton: UIButton = {
         var button = UIButton()
         button.setTitle("확인", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -63,7 +64,7 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.isEnabled = false
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(checkPhoneAuthNum), for: .touchUpInside)
         return button
     }()
     
@@ -195,16 +196,20 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.isEnabled = false
-        button.addTarget(self, action: #selector(checkPhoneAuthNum), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
         return button
     }()
     
     // MARK: - Properties
     
-    var idData: String!
-    var pwData: String!
-    var pwCheckData: String!
-    var nickNameData: String!
+    /* 이전 화면에서 받아온 데이터들 */
+    var pwCheckData: String? = nil
+    var email: String? = nil
+    var idData: String? = nil
+    var nickNameData: String? = nil
+    var pwData: String? = nil
+    var university: String? = nil
+    
     var visualEffectView: UIVisualEffectView?
     
     // Timer
@@ -307,8 +312,9 @@ class PhoneAuthViewController: UIViewController {
             make.height.equalTo(41)
         }
         
-        view.addSubview(authResendButton)
-        authResendButton.snp.makeConstraints { make in
+        /* authCheckButton */
+        view.addSubview(authCheckButton)
+        authCheckButton.snp.makeConstraints { make in
             make.bottom.equalTo(authTextField.snp.bottom).offset(10)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
@@ -402,9 +408,9 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
+    // 인증번호 일치/불일치 확인
     @objc func checkPhoneAuthNum() {
-        /* 현재는 인증번호 입력한 게 맞는지도 다음 버튼을 눌렀을 때 확인함 -> 하지만 디자인 수정 가능성 있음. */
-        // 인증번호 일치/불일치 확인
+        /* 인증번호 입력한 게 맞는지 "확인" 버튼 눌렀을 확인하는 것으로 변경. */
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
             let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
@@ -415,34 +421,42 @@ class PhoneAuthViewController: UIViewController {
     @objc public func showNextView() {
         // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
-        
+
         agreementVC.modalTransitionStyle = .crossDissolve
         agreementVC.modalPresentationStyle = .fullScreen
+        
+        // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일, 폰번호) 총 7개
+        // 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
+        if let idData = self.idData,
+           let pwData = self.pwData,
+           let pwCheckData = self.pwCheckData,
+           let nickNameData = self.nickNameData,
+           let univ = self.university,
+           let email = self.email,
+           let phoneNum = self.phoneNumTextField.text {
+            agreementVC.idData = idData
+            agreementVC.pwData = pwData
+            agreementVC.pwCheckData = pwCheckData
+            agreementVC.nickNameData = nickNameData
+            agreementVC.university = univ
+            agreementVC.email = email
+            agreementVC.phoneNum = phoneNum
+        }
+        
         present(agreementVC, animated: true)
     }
     
     /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */
     @objc func tapAuthSendButton() {
         startTimer()
-        authSendButton.setDeactivatedButton()
-        authResendButton.setActivatedButton()
+        authCheckButton.setActivatedButton()
+        authSendButton.setTitle("재전송 하기", for: .normal)
         if let phoneNum = self.phoneNumTextField.text {
             let uuid = UUID()
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
             print("DEBUG:", uuid.uuidString)
             PhoneAuthViewModel.requestSendPhoneAuth(self, input)
         }   // API 호출
-    }
-    
-    // API를 통해 서버에 인증번호 전송을 요청하는 코드
-    @objc func tapAuthResendButton() {
-        timer?.cancel()
-        currentSeconds = 300
-        startTimer()
-        if let phoneNum = self.phoneNumTextField.text {
-            let input = PhoneAuthInput(recipientPhoneNumber: phoneNum)
-            PhoneAuthViewModel.requestSendPhoneAuth(self, input)
-        }
     }
     
     @objc func showPassView() {

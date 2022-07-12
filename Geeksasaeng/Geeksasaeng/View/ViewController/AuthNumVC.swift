@@ -11,11 +11,6 @@ import SnapKit
 /* 이메일 인증번호 입력하는 화면의 VC */
 class AuthNumViewController: UIViewController {
     
-    // MARK: - Properties
-    /* 이전 화면에서 받아온 데이터들 */
-    var university: String? = nil
-    var email: String? = nil
-    
     // MARK: - Subviews
     
     var progressBar: UIView = {
@@ -94,8 +89,17 @@ class AuthNumViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Variables
-    var fromNaverRegister = false
+    // MARK: - Properties
+    
+    /* 이전 화면에서 받아온 데이터들 */
+    var idData: String? = nil
+    var pwData: String? = nil
+    var pwCheckData: String? = nil
+    var nickNameData: String? = nil
+    var university: String? = nil
+    var email: String? = nil
+    
+    var isFromNaverRegister = false
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -128,7 +132,7 @@ class AuthNumViewController: UIViewController {
         
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            if fromNaverRegister {
+            if isFromNaverRegister {
                 make.width.equalTo((UIScreen.main.bounds.width - 50) / 3 * 2)
             } else {
                 make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 3)
@@ -223,14 +227,17 @@ class AuthNumViewController: UIViewController {
     /* 이메일 인증번호 입력 후 다음 버튼을 누르면
      -> 인증번호 일치하는지 API를 통해서 판단 */
     @objc private func checkEmailAuthNum() {
-        if let authNum = self.authNumTextField.text {
+        if let email = self.email,
+           let authNum = self.authNumTextField.text {
+            print("DEBUG: ", email, authNum)
             EmailAuthCheckViewModel.requestCheckEmailAuth(self, EmailAuthCheckInput(email: email, key: authNum))
         }
     }
     
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     @objc func showNextView() {
-        if fromNaverRegister {
+        // TODO: 네이버 로그인을 통해 등록한 사람들의 정보도 AgreementVC 까지 데이터 전달해 줘야 함.
+        if isFromNaverRegister {
             let agreementVC = AgreementViewController()
             agreementVC.modalTransitionStyle = .crossDissolve
             agreementVC.modalPresentationStyle = .fullScreen
@@ -241,6 +248,22 @@ class AuthNumViewController: UIViewController {
             let phoneAuthVC = PhoneAuthViewController()
             phoneAuthVC.modalTransitionStyle = .crossDissolve
             phoneAuthVC.modalPresentationStyle = .fullScreen
+            
+            // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일) 총 6개
+            // 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
+            if let idData = self.idData,
+               let pwData = self.pwData,
+               let pwCheckData = self.pwCheckData,
+               let nickNameData = self.nickNameData,
+               let univ = self.university,
+               let email = self.email {
+                phoneAuthVC.idData = idData
+                phoneAuthVC.pwData = pwData
+                phoneAuthVC.pwCheckData = pwCheckData
+                phoneAuthVC.nickNameData = nickNameData
+                phoneAuthVC.university = univ
+                phoneAuthVC.email = email
+            }
             
             present(phoneAuthVC, animated: true)
         }
