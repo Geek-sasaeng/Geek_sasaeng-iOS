@@ -10,12 +10,20 @@ import SnapKit
 
 class CreatePartyViewController: UIViewController {
     // MARK: - SubViews
-    var rightBarButtonItem: UIBarButtonItem = {
+    var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
         registerButton.setTitle("등록", for: .normal)
         registerButton.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
         let barButton = UIBarButtonItem(customView: registerButton)
         barButton.isEnabled = false
+        return barButton
+    }()
+    
+    var activatedRightBarButtonItem: UIBarButtonItem = {
+        let registerButton = UIButton()
+        registerButton.setTitle("등록", for: .normal)
+        registerButton.setTitleColor(.mainColor, for: .normal)
+        let barButton = UIBarButtonItem(customView: registerButton)
         return barButton
     }()
     
@@ -39,6 +47,7 @@ class CreatePartyViewController: UIViewController {
         textField.font = .customFont(.neoMedium, size: 20)
         textField.borderStyle = .roundedRect
         textField.layer.borderColor = UIColor(hex: 0xEFEFEF).cgColor
+        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
         return textField
     }()
     
@@ -87,11 +96,11 @@ class CreatePartyViewController: UIViewController {
     
     var orderForecastTimeButton: UIButton = {
         let button = UIButton()
-        button.setTitle("7월 1일          22시 17분", for: .normal)
         button.titleLabel?.font = .customFont(.neoRegular, size: 13)
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
         button.setActivatedButton()
+        button.addTarget(self, action: #selector(showOrderForecaseTimeVC), for: .touchUpInside)
         return button
     }()
     
@@ -136,27 +145,105 @@ class CreatePartyViewController: UIViewController {
         return label
     }()
     
+    var visualEffectView: UIVisualEffectView?
+    
+    // MARK: - Properties
+    var settedOptions = false
+    var editedContentsTextView = false
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
         addSubViews()
+        setDelegate()
+        setNavigationBar()
         setLayouts()
+        setDefaultDate()
+        setNotificationCenter()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        self.navigationItem.title = "파티 생성하기"
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
+    /* Blur View 터치 시 서브뷰 사라지게 구현해야 함 */
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        let touch = touches.first
+//        if touch?.view == self.view {
+//            let viewControllers = self.children
+//            viewControllers.forEach {
+//                $0.removeFromParent()
+//            }
+//        }
+//    }
+    
+    private func setDelegate() {
         contentsTextView.delegate = self
+        titleTextField.delegate = self
+    }
+    private func setNavigationBar() {
+        self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+        self.navigationItem.title = "파티 생성하기"
         
         // set barButtonItem
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
-        
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapConfirmButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                // 각 서브뷰에서 저장된 전역변수 데이터 출력
+                if let orderForecastTime = CreateParty.orderForecastTime {
+                    self.orderForecastTimeButton.layer.shadowRadius = 0
+                    self.orderForecastTimeButton.setTitle(orderForecastTime, for: .normal)
+                    self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
+                    self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
+                    self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
+                }
+                
+                if CreateParty.orderAsSoonAsMatch ?? false {
+                    self.orderAsSoonAsMatchLabel.textColor = .mainColor
+                } else {
+                    self.orderAsSoonAsMatchLabel.textColor = UIColor(hex: 0xD8D8D8)
+                }
+                
+                if let matchingPerson = CreateParty.matchingPerson {
+                    self.selectedPersonLabel.text = "      \(matchingPerson)"
+                    self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedPersonLabel.textColor = .black
+                    self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                
+                if let category = CreateParty.category {
+                    self.selectedCategoryLabel.text = "      \(category)"
+                    self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedCategoryLabel.textColor = .black
+                    self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                
+                
+                // Blur View 제거
+                self.visualEffectView?.removeFromSuperview()
+                
+                // subVC 제거
+                let viewControllers = self.children
+                viewControllers.forEach {
+                    $0.view.removeFromSuperview()
+                    $0.removeFromParent()
+                }
+                
+                self.settedOptions = true
+                if self.titleTextField.text?.count ?? 0 >= 3 && self.contentsTextView.text.count >= 5 {
+                    self.navigationItem.rightBarButtonItem = self.activatedRightBarButtonItem
+                    self.view.layoutSubviews()
+                }
+            }
+        }
     }
     
     private func addSubViews() {
@@ -248,7 +335,16 @@ class CreatePartyViewController: UIViewController {
         }
     }
     
-    // 이전 화면으로 돌아가기
+    /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
+    private func setDefaultDate() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM월 dd일        HH시 mm분"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
+    }
+    
+    /* 이전 화면으로 돌아가기 */
     @objc func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated:true)
     }
@@ -264,6 +360,50 @@ class CreatePartyViewController: UIViewController {
             eatTogetherButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         }
     }
+    
+    /* show 주문 예정 시간 VC */
+    @objc func showOrderForecaseTimeVC() {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
+        
+        // addSubview animation 처리
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let childView = OrderForecastTimeViewController()
+            self.addChild(childView)
+            self.view.addSubview(childView.view)
+            childView.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    @objc func changeValueTitleTextField() {
+        // settedOptions가 true인데 titleTextField가 지워진 경우
+        if settedOptions
+            && editedContentsTextView
+            && contentsTextView.text.count >= 5
+            && titleTextField.text?.count ?? 0 >= 3 {
+            self.navigationItem.rightBarButtonItem = activatedRightBarButtonItem
+            self.view.layoutSubviews()
+        } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 3)
+                    || (editedContentsTextView && settedOptions && contentsTextView.text.count < 5) {
+            self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+            self.view.layoutSubviews()
+        }
+    }
+
+}
+
+extension CreatePartyViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let str = textField.text else { return true }
+        let newLength = str.count + string.count - range.length
+        
+        return newLength <= 10
+    }
 }
 
 extension CreatePartyViewController: UITextViewDelegate {
@@ -278,6 +418,29 @@ extension CreatePartyViewController: UITextViewDelegate {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             textView.text = "내용을 입력하세요"
             textView.textColor = UIColor(hex: 0xD8D8D8)
+            editedContentsTextView = false
         }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        editedContentsTextView = true
+        if settedOptions
+            && editedContentsTextView
+            && contentsTextView.text.count >= 5
+            && titleTextField.text?.count ?? 0 >= 3 {
+            navigationItem.rightBarButtonItem = activatedRightBarButtonItem
+            view.layoutSubviews()
+        } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 5)
+                    || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 3) {
+            navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+            view.layoutSubviews()
+        }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard let str = textView.text else { return true }
+        let newLength = str.count + text.count - range.length
+        
+        return newLength <= 100
     }
 }

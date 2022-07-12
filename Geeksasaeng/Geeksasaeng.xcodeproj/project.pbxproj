@@ -41,6 +41,21 @@
 		105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105E60A8287C32710030C927 /* CreatePartyVC.swift */; };
 		105E60AA287C32710030C927 /* CreatePartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105E60A8287C32710030C927 /* CreatePartyVC.swift */; };
 		105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105E60A8287C32710030C927 /* CreatePartyVC.swift */; };
+		106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D974C287D7691005CFB85 /* OrderForecastTimeVC.swift */; };
+		106D974E287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D974C287D7691005CFB85 /* OrderForecastTimeVC.swift */; };
+		106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D974C287D7691005CFB85 /* OrderForecastTimeVC.swift */; };
+		106D9751287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */; };
+		106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */; };
+		106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */; };
+		106D9755287D7C32005CFB85 /* CategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9754287D7C32005CFB85 /* CategoryVC.swift */; };
+		106D9756287D7C32005CFB85 /* CategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9754287D7C32005CFB85 /* CategoryVC.swift */; };
+		106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9754287D7C32005CFB85 /* CategoryVC.swift */; };
+		106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */; };
+		106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */; };
+		106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */; };
+		106D975E287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D975D287D9A92005CFB85 /* CreatePartyAPI.swift */; };
+		106D975F287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D975D287D9A92005CFB85 /* CreatePartyAPI.swift */; };
+		106D9760287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D975D287D9A92005CFB85 /* CreatePartyAPI.swift */; };
 		107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
 		107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
 		107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
@@ -182,6 +197,11 @@
 		1040FB972875C06D0060A3E4 /* AgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementVC.swift; sourceTree = "<group>"; };
 		1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthVC.swift; sourceTree = "<group>"; };
 		105E60A8287C32710030C927 /* CreatePartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyVC.swift; sourceTree = "<group>"; };
+		106D974C287D7691005CFB85 /* OrderForecastTimeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderForecastTimeVC.swift; sourceTree = "<group>"; };
+		106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchingPersonVC.swift; sourceTree = "<group>"; };
+		106D9754287D7C32005CFB85 /* CategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; };
+		106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPlaceVC.swift; sourceTree = "<group>"; };
+		106D975D287D9A92005CFB85 /* CreatePartyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyAPI.swift; sourceTree = "<group>"; };
 		107123F8287B06D800D58FD1 /* RepetitionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepetitionAPI.swift; sourceTree = "<group>"; };
 		10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Bold.otf"; sourceTree = "<group>"; };
 		10787119286EBAC3008EDF78 /* SpoqaHanSansNeo-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Medium.otf"; sourceTree = "<group>"; };
@@ -347,6 +367,17 @@
 			path = GeeksasaengUITests;
 			sourceTree = "<group>";
 		};
+		106D975C287D8BC2005CFB85 /* CreatePartySubVC */ = {
+			isa = PBXGroup;
+			children = (
+				106D974C287D7691005CFB85 /* OrderForecastTimeVC.swift */,
+				106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */,
+				106D9754287D7C32005CFB85 /* CategoryVC.swift */,
+				106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */,
+			);
+			path = CreatePartySubVC;
+			sourceTree = "<group>";
+		};
 		10787102286EB848008EDF78 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,6 +412,7 @@
 			children = (
 				A2085AD1287048A800D6CF79 /* RegisterAPI.swift */,
 				107123F8287B06D800D58FD1 /* RepetitionAPI.swift */,
+				106D975D287D9A92005CFB85 /* CreatePartyAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -409,10 +441,11 @@
 				A2B42089286F151100278F92 /* AuthNumVC.swift */,
 				1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */,
 				1040FB972875C06D0060A3E4 /* AgreementVC.swift */,
-				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
-				105E60A8287C32710030C927 /* CreatePartyVC.swift */,
-				A2B420A4286F370F00278F92 /* PartyVC.swift */,
 				A26BD187287B0415003A0A48 /* DormitoryVC.swift */,
+				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
+				A2B420A4286F370F00278F92 /* PartyVC.swift */,
+				105E60A8287C32710030C927 /* CreatePartyVC.swift */,
+				106D975C287D8BC2005CFB85 /* CreatePartySubVC */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -704,9 +737,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */,
+				106D975E287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */,
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
+				106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
@@ -724,6 +759,7 @@
 				102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
 				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
+				106D9751287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
@@ -738,8 +774,10 @@
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
+				106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
+				106D9755287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				1040FB9A2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				1040FB982875C06E0060A3E4 /* AgreementVC.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
@@ -751,8 +789,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
+				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2513F1A287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
+				106D974E287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
@@ -771,16 +811,19 @@
 				102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
+				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
 				102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
+				106D975F287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2513F1E287872D70029C279 /* EmailAuthModel.swift in Sources */,
+				106D9756287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				1040FB9B2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
@@ -800,10 +843,13 @@
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
+				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
+				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
+				106D9760287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
@@ -816,10 +862,12 @@
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
+				106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2513F232878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2513F172878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
+				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
