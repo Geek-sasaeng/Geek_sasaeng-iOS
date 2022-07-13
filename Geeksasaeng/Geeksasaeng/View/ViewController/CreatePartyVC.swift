@@ -402,7 +402,7 @@ extension CreatePartyViewController: UITextFieldDelegate {
         guard let str = textField.text else { return true }
         let newLength = str.count + string.count - range.length
         
-        return newLength <= 10
+        return newLength <= 20
     }
 }
 
