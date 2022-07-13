@@ -5,6 +5,8 @@
 //  Created by 조동진 on 2022/07/11.
 //
 
+/* 등록버튼 누를 때 전역변수 모두 초기화 */
+
 import UIKit
 import SnapKit
 
@@ -166,23 +168,19 @@ class CreatePartyViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+        visualEffectView?.removeFromSuperview()
+        children.forEach {
+            $0.willMove(toParent: nil)
+            $0.view.removeFromSuperview()
+            $0.removeFromParent()
+        }
     }
-    
-    /* Blur View 터치 시 서브뷰 사라지게 구현해야 함 */
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        let touch = touches.first
-//        if touch?.view == self.view {
-//            let viewControllers = self.children
-//            viewControllers.forEach {
-//                $0.removeFromParent()
-//            }
-//        }
-//    }
     
     private func setDelegate() {
         contentsTextView.delegate = self
         titleTextField.delegate = self
     }
+    
     private func setNavigationBar() {
         self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
         self.navigationItem.title = "파티 생성하기"
@@ -366,6 +364,7 @@ class CreatePartyViewController: UIViewController {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
+        visualEffectView.isUserInteractionEnabled = false
         view.addSubview(visualEffectView)
         self.visualEffectView = visualEffectView
         
@@ -444,5 +443,4 @@ extension CreatePartyViewController: UITextViewDelegate {
         return newLength <= 100
     }
 }
-
 
