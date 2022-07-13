@@ -455,7 +455,7 @@ class DeliveryViewController: UIViewController {
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(500)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(20)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
         }
         
         /* Button */
@@ -477,7 +477,8 @@ class DeliveryViewController: UIViewController {
         partyTableView.dataSource = self
         partyTableView.delegate = self
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
-        partyTableView.rowHeight = 118
+        
+        partyTableView.rowHeight = 125
     }
     
     /* collection view 등록 */
