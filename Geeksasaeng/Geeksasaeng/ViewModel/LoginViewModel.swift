@@ -26,10 +26,16 @@ class LoginViewModel {
                     
                     // static property에 jwt 값 저장
                     LoginModel.jwt = result.result?.jwt
-                    // 홈 화면으로 이동
-                    viewController.showHomeView()
                     
-                    // TODO: 첫 로그인 시에는 기숙사 선택 화면으로 이동하도록 설정 필요!
+                    print("DEBUG: 로그인 성공", result.result)
+                    
+                    // 로그인 완료 후 경우에 따른 화면 전환
+                    if result.result?.loginStatus == "NEVER" {
+                        viewController.showNextView(isFirstLogin: true)
+                    } else {
+                        viewController.showNextView(isFirstLogin: false)
+                    }
+                    
                 } else {
                     print("DEBUG:", result.message!)
                 }

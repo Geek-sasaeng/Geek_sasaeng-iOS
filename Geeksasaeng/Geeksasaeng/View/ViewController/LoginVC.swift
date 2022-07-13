@@ -236,6 +236,21 @@ class LoginViewController: UIViewController {
         
     }
     
+    /* 로그인 완료 후 화면 전환 */
+    public func showNextView(isFirstLogin: Bool) {
+        // 첫 로그인 시에는 기숙사 선택 화면으로 이동
+        if isFirstLogin {
+            let dormitoryVC = DormitoryViewController()
+            dormitoryVC.modalTransitionStyle = .crossDissolve
+            dormitoryVC.modalPresentationStyle = .fullScreen
+            present(dormitoryVC, animated: true)
+        } else {
+            // 첫 로그인이 아니면 바로 홈 화면으로 이동
+            showHomeView()
+        }
+    }
+    
+    /* 홈 화면으로 이동 */
     public func showHomeView() {
         let tabBarController = TabBarController()
         tabBarController.modalTransitionStyle = .crossDissolve
