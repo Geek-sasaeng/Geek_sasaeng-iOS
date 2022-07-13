@@ -98,6 +98,7 @@ class AuthNumViewController: UIViewController {
     var nickNameData: String? = nil
     var university: String? = nil
     var email: String? = nil
+    var uuid: UUID? = nil
     
     var isFromNaverRegister = false
     
@@ -256,13 +257,15 @@ class AuthNumViewController: UIViewController {
                let pwCheckData = self.pwCheckData,
                let nickNameData = self.nickNameData,
                let univ = self.university,
-               let email = self.email {
+               let email = self.email,
+               let uuid = self.uuid {
                 phoneAuthVC.idData = idData
                 phoneAuthVC.pwData = pwData
                 phoneAuthVC.pwCheckData = pwCheckData
                 phoneAuthVC.nickNameData = nickNameData
                 phoneAuthVC.university = univ
                 phoneAuthVC.email = email
+                phoneAuthVC.uuid = uuid
             }
             
             present(phoneAuthVC, animated: true)

@@ -178,10 +178,11 @@ class EmailAuthViewController: UIViewController {
     
     // MARK: - Properties
     
-    var idData: String!
-    var pwData: String!
-    var pwCheckData: String!
-    var nickNameData: String!
+    var idData: String?
+    var pwData: String?
+    var pwCheckData: String?
+    var nickNameData: String?
+    var uuid: UUID! = UUID()
     
     // 학교 선택 리스트가 열려있는지, 닫혀있는지 확인하기 위한 변수
     var isExpanded: Bool! = false
@@ -403,7 +404,7 @@ class EmailAuthViewController: UIViewController {
             authSendButton.setDeactivatedButton()   // 비활성화
             
             print("DEBUG: ", email+emailAddress, univ)
-            let uuid = UUID()
+
             let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
@@ -423,7 +424,8 @@ class EmailAuthViewController: UIViewController {
            let pwCheckData = self.pwCheckData,
            let nickNameData = self.nickNameData,
            let univ = selectYourUnivLabel.text,
-           let email = emailTextField.text {
+           let email = emailTextField.text,
+           let uuid = uuid {
             authNumVC.idData = idData
             authNumVC.pwData = pwData
             authNumVC.pwCheckData = pwCheckData
@@ -433,6 +435,9 @@ class EmailAuthViewController: UIViewController {
             authNumVC.university = univ
             // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함
             authNumVC.email = email + tempEmailAddress
+            
+            // PhoneAuthVC까지 가지고 가야 한다.
+            authNumVC.uuid = uuid
         }
         
         present(authNumVC, animated: true)
