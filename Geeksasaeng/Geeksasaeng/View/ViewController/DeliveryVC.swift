@@ -313,7 +313,13 @@ class DeliveryViewController: UIViewController {
     
     var createPartyButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "CreatePartyMark"), for: .normal)
+        let image = UIImage(named: "CreatePartyMark")
+        button.setImage(image, for: .normal)
+        
+        // imageEdgeInsets 값을 줘서 버튼과 안의 이미지 사이 간격을 조정
+        let imageInset: CGFloat = 14
+        button.imageEdgeInsets = UIEdgeInsets(top: imageInset, left: imageInset, bottom: imageInset, right: imageInset)
+        
         button.layer.cornerRadius = 31
         button.backgroundColor = .mainColor
         button.addTarget(self, action: #selector(tapCreatePartyButton), for: .touchUpInside)
