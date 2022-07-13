@@ -86,6 +86,7 @@ class PartyTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        contentView.backgroundColor = .white
         
         addSubViews()
         configLayouts()

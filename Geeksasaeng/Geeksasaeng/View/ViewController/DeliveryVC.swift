@@ -101,6 +101,7 @@ class DeliveryViewController: UIViewController {
         
         // 위에서 만든 레이아웃을 따르는 collection view 생성
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
         // indicator 숨김
         collectionView.showsHorizontalScrollIndicator = false
         // 직접 페이징 가능하도록

@@ -17,7 +17,7 @@ class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .white
         
         setAttributes()
         setupVCs()
@@ -69,7 +69,14 @@ class TabBarController: UITabBarController {
                                          title: String,
                                          image: UIImage) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
+        
         navController.tabBarItem.title = title
+        // 네비게이션 타이틀 속성 설정.
+        navController.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 20),
+            NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0x2F2F2F)
+        ]
+        
         navController.tabBarItem.image = image
         
         // 선택되지 않은 tabbar item의 색상도 mainColor로 설정 -> 설정 안 해주면 default가 회색이라서

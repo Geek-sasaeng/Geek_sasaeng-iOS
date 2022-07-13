@@ -7,9 +7,12 @@
 
 import UIKit
 import SnapKit
+import QuartzCore
 
 class CreatePartyViewController: UIViewController {
+    
     // MARK: - SubViews
+    
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
         registerButton.setTitle("등록", for: .normal)
@@ -40,19 +43,28 @@ class CreatePartyViewController: UIViewController {
     
     var titleTextField: UITextField = {
         let textField = UITextField()
+        textField.backgroundColor = .white
         textField.attributedPlaceholder = NSAttributedString(
             string: "제목",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xA8A8A8)]
         )
         textField.font = .customFont(.neoMedium, size: 20)
-        textField.borderStyle = .roundedRect
+        
+        // backgroundColor를 설정해 줬더니 borderStyle의 roundRect이 적용되지 않아서 따로 layer를 custom함
+        textField.layer.cornerRadius = 5
+        textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor(hex: 0xEFEFEF).cgColor
+        
+        // placeholder와 layer 사이에 간격 설정
+        textField.layer.sublayerTransform = CATransform3DMakeTranslation(15, 0, 0)
+        
         textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
         return textField
     }()
     
     var contentsTextView: UITextView = {
         let textView = UITextView()
+        textView.backgroundColor = .white
         textView.font = .customFont(.neoRegular, size: 15)
         textView.refreshControl?.contentVerticalAlignment = .top
         textView.text = "내용을 입력하세요"
@@ -70,6 +82,7 @@ class CreatePartyViewController: UIViewController {
         let label = UILabel()
         label.font = .customFont(.neoMedium, size: 13)
         label.text = "주문 예정 시간"
+        label.textColor = .init(hex: 0x2F2F2F)
         return label
     }()
     
@@ -77,6 +90,7 @@ class CreatePartyViewController: UIViewController {
         let label = UILabel()
         label.font = .customFont(.neoMedium, size: 13)
         label.text = "매칭 인원 선택"
+        label.textColor = .init(hex: 0x2F2F2F)
         return label
     }()
     
@@ -84,6 +98,7 @@ class CreatePartyViewController: UIViewController {
         let label = UILabel()
         label.font = .customFont(.neoMedium, size: 13)
         label.text = "카테고리 선택"
+        label.textColor = .init(hex: 0x2F2F2F)
         return label
     }()
     
@@ -91,6 +106,7 @@ class CreatePartyViewController: UIViewController {
         let label = UILabel()
         label.font = .customFont(.neoMedium, size: 13)
         label.text = "수령 장소"
+        label.textColor = .init(hex: 0x2F2F2F)
         return label
     }()
     
@@ -186,6 +202,7 @@ class CreatePartyViewController: UIViewController {
     private func setNavigationBar() {
         self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
         self.navigationItem.title = "파티 생성하기"
+        self.navigationItem.titleView?.tintColor = .init(hex: 0x2F2F2F)
         
         // set barButtonItem
         navigationItem.hidesBackButton = true
