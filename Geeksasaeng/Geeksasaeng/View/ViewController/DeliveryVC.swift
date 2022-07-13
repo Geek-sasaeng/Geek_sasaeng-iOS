@@ -19,6 +19,13 @@ class DeliveryViewController: UIViewController {
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
     
+    var deliveryCellDataArray: [DeliveryListModelResult]? = nil {
+        didSet
+        {
+            partyTableView.reloadData()
+        }
+    }
+    
     // MARK: - Subviews
     
     /* Navigation Bar Buttons */
@@ -355,6 +362,9 @@ class DeliveryViewController: UIViewController {
         makeButtonShadow(createPartyButton)
         
         print("====\(LoginModel.jwt)====")
+        
+        /* 배달 목록 데이터 로딩 */
+        getDeliveryList()
     }
     
     // MARK: - viewDidLayoutSubviews()
@@ -480,6 +490,10 @@ class DeliveryViewController: UIViewController {
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
         
         partyTableView.rowHeight = 125
+    }
+    
+    private func getDeliveryList() {
+        DeliveryListViewModel.requestGetDeliveryList(self, cursor: 0, dormitoryId: 1)
     }
     
     /* collection view 등록 */
@@ -700,6 +714,9 @@ class DeliveryViewController: UIViewController {
 
 extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let deliveryCellDataArray = deliveryCellDataArray {
+            return deliveryCellDataArray.count
+        }
         return 10
     }
     

@@ -90,6 +90,12 @@
 		A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
 		A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
 		A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085ADE2870550200D6CF79 /* LoginModel.swift */; };
+		A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */; };
+		A20FC0EA287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */; };
+		A20FC0EB287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */; };
+		A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */; };
+		A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */; };
+		A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */; };
 		A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
 		A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
 		A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
@@ -217,6 +223,8 @@
 		A2085AD1287048A800D6CF79 /* RegisterAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAPI.swift; sourceTree = "<group>"; };
 		A2085AD6287054E900D6CF79 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085ADE2870550200D6CF79 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListViewModel.swift; sourceTree = "<group>"; };
+		A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListModel.swift; sourceTree = "<group>"; };
 		A219B272287575E4000F34A3 /* AdCarouselModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCarouselModel.swift; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
 		A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthViewModel.swift; sourceTree = "<group>"; };
@@ -284,6 +292,7 @@
 				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
 				A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
+				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -298,6 +307,7 @@
 				A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */,
 				A2513F142878612B0029C279 /* PhoneAuthCheckViewModel.swift */,
 				A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */,
+				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -744,6 +754,7 @@
 				106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
+				A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A2513F212878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
@@ -763,6 +774,7 @@
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
+				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				A2513F152878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
@@ -796,6 +808,7 @@
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
+				A20FC0EA287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2513F1228785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
@@ -818,6 +831,7 @@
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
 				106D975F287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
@@ -847,6 +861,7 @@
 				105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
+				A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				106D9760287D9A92005CFB85 /* CreatePartyAPI.swift in Sources */,
@@ -857,6 +872,7 @@
 				102B35D62879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
+				A20FC0EB287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,

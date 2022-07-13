@@ -22,6 +22,7 @@ class LoginViewController: UIViewController {
         var textField = UITextField()
         textField.autocapitalizationType = .none
         textField.font = .customFont(.neoLight, size: 14)
+        textField.textColor = .init(hex: 0x2F2F2F)
         textField.attributedPlaceholder = NSAttributedString(
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
@@ -35,6 +36,7 @@ class LoginViewController: UIViewController {
         var textField = UITextField()
         textField.autocapitalizationType = .none
         textField.font = .customFont(.neoLight, size: 14)
+        textField.textColor = .init(hex: 0x2F2F2F)
         textField.attributedPlaceholder = NSAttributedString(
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]

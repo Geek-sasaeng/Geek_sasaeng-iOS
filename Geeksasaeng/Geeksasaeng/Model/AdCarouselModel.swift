@@ -18,7 +18,7 @@ class AdCarouselModel {
     static let adCellDataArray: [AdCarouselData] = [
         AdCarouselData(cellImagePath: "BannerAd"),
         AdCarouselData(cellImagePath: "NaverLogo"),
-        AdCarouselData(cellImagePath: "Report"),
+        AdCarouselData(cellImagePath: "PeopleImage"),
         AdCarouselData(cellImagePath: "ProfileImage"),
         AdCarouselData(cellImagePath: "Community")
     ]
