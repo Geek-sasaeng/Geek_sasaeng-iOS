@@ -211,8 +211,11 @@ class EmailAuthViewController: UIViewController {
         universitySelectView.addGestureRecognizer(viewTapGesture)
     }
     
-    // MARK: - Functions
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
     
+    // MARK: - Functions
     private func setLayouts() {
         /* progress Bar */
         view.addSubview(progressBar)

@@ -235,6 +235,10 @@ class PartyViewController: UIViewController {
         setAttributes()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     // MARK: - Functions
     
     private func setLayouts() {

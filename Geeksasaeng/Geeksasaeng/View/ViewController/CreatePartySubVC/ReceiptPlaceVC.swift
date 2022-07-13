@@ -71,6 +71,10 @@ class ReceiptPlaceViewController: UIViewController {
         setLayouts()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     // MARK: - Functions
     private func setMapView() {
         // 지도 불러오기
@@ -87,6 +91,8 @@ class ReceiptPlaceViewController: UIViewController {
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
+            
+            mapSubView.addSubview(mapView)
         }
     }
     

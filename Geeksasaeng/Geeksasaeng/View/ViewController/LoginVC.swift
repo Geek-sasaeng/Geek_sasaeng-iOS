@@ -110,6 +110,10 @@ class LoginViewController: UIViewController {
         setLayouts()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     // MARK: - Set Function
     private func addSubViews() {
         [logoImageView, idTextField, passwordTextField, loginButton, naverLoginButton, automaticLoginButton, signUpButton].forEach { view.addSubview($0) }
