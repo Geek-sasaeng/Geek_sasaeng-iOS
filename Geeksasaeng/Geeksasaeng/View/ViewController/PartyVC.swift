@@ -12,9 +12,10 @@ class PartyViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var reportButton: UIButton = {
+    var ellipsisButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "Report"), for: .normal)
+        button.tintColor = .init(hex: 0x2F2F2F)
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         return button
     }()
     
@@ -249,7 +250,7 @@ class PartyViewController: UIViewController {
     
     private func setLayouts() {
         [
-            reportButton,
+            ellipsisButton,
             profileImageView,
             nickNameLabel,
             postingTime,
@@ -267,7 +268,7 @@ class PartyViewController: UIViewController {
             arrowImageView
         ].forEach { view.addSubview($0) }
         
-        reportButton.snp.makeConstraints { make in
+        ellipsisButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
             make.right.equalToSuperview().inset(24)
         }
