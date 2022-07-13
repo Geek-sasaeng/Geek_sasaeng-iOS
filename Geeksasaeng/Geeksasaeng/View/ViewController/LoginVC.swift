@@ -190,17 +190,16 @@ class LoginViewController: UIViewController {
         }
     }
     
-    // TODO: - 자동 로그인 o -> UserDefault에 id(naver email), password(1q2w3e4r!) 저장해뒀다가 attemptAutoLogin() 호출로 자동 로그인
-    // TODO: - 자동 로그인 x -> UserDefault에 저장하지 않고, 토큰 없애기 => 앱 재실행 시 네이버 아이디 비밀번호 재입력 하게
-    // TODO: - 긱사생 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 x)
-    // TODO: - 네이버 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 o)
+    // MARK: 네이버 아이디 로그아웃 -> 토큰 삭제 (아이디 비밀번호 재입력 하게) => 나중에 차례되면 구현
+    // MARK: 긱사생 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 x)
+    // MARK: 네이버 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 o)
     @objc func tapNaverloginButton() {
         naverLoginVM.requestLogin()
-        if naverLoginVM.isExistToken() {
-            showHomeView()
-        } else {
-            print("===Not exist token===")
-        }
+//        if naverLoginVM.isExistToken() {
+//            showHomeView()
+//        } else {
+//            print("===Not exist token===")
+//        } -> 네이버 회원가입 때 어차피 자동 로그인 자동 활성화 하니까 토큰 여부 확인할 필요 없을 듯 ?
     }
     
     @objc func tapAutomaticLoginButton() {

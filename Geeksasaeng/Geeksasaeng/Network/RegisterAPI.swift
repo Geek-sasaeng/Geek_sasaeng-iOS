@@ -67,6 +67,9 @@ class RegisterAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
+                    // 네이버 회원가입 시 자동 로그인 자동 활성화
+                    UserDefaults.standard.set(parameter.loginId, forKey: "id")
+                    UserDefaults.standard.set(parameter.password, forKey: "password")
                     
                     viewController.showHomeView()
                 } else {
