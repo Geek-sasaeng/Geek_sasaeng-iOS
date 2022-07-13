@@ -168,9 +168,38 @@ class CreatePartyViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+        
+        // 다음 버튼 누른 VC에 대한 데이터 저장, 표시
+        if let orderForecastTime = CreateParty.orderForecastTime {
+            self.orderForecastTimeButton.layer.shadowRadius = 0
+            self.orderForecastTimeButton.setTitle(orderForecastTime, for: .normal)
+            self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
+            self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
+        }
+        
+        if CreateParty.orderAsSoonAsMatch ?? false {
+            self.orderAsSoonAsMatchLabel.textColor = .mainColor
+        } else {
+            self.orderAsSoonAsMatchLabel.textColor = UIColor(hex: 0xD8D8D8)
+        }
+        
+        if let matchingPerson = CreateParty.matchingPerson {
+            self.selectedPersonLabel.text = "      \(matchingPerson)"
+            self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedPersonLabel.textColor = .black
+            self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        if let category = CreateParty.category {
+            self.selectedCategoryLabel.text = "      \(category)"
+            self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedCategoryLabel.textColor = .black
+            self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
         visualEffectView?.removeFromSuperview()
         children.forEach {
-            $0.willMove(toParent: nil)
             $0.view.removeFromSuperview()
             $0.removeFromParent()
         }
