@@ -139,6 +139,15 @@ class SeachViewController: UIViewController {
         setCollectionView(weeklyTopCollectionView)
     }
     
+    // MARK: - viewWillAppear()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Back 버튼 숨기기 & 상단에 위치한 텍스트 필드에 탭이 가능하게 하기 위해
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     // MARK: - Functions
     
     /* 공통 속성 설정 */

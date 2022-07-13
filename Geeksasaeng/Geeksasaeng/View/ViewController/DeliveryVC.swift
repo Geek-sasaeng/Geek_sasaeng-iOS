@@ -11,6 +11,7 @@ import SnapKit
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
+    
     // 광고 배너 이미지 데이터 배열
     let adCellDataArray = AdCarouselModel.adCellDataArray
     // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
@@ -47,13 +48,10 @@ class DeliveryViewController: UIViewController {
         let barButton = UIBarButtonItem(customView: stackView)
         return barButton
     }()
-    var rightBarButtonItem: UIBarButtonItem = {
-        let searchButton = UIButton()
-        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        searchButton.tintColor = .black
-        
-        let barButton = UIBarButtonItem(customView: searchButton)
-        return barButton
+    lazy var rightBarButtonItem: UIBarButtonItem = {
+        let searchButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(tapSearchButton))
+        searchButton.tintColor = .init(hex: 0x2F2F2F)
+        return searchButton
     }()
     
     /* Category Labels */
@@ -527,6 +525,12 @@ class DeliveryViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.masksToBounds = true
+    }
+    
+    /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
+    @objc func tapSearchButton() {
+        let searchVC = SeachViewController()
+        self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
     /* label에 탭 제스쳐 추가 */
