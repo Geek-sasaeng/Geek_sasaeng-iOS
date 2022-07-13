@@ -318,6 +318,8 @@ class EmailAuthViewController: UIViewController {
         
         /* textFields attr */
         emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
+        emailTextField.autocapitalizationType = .none
+        
         emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
         emailAddressTextField.isUserInteractionEnabled = false  // 유저가 입력하는 것이 아니라 학교에 따라 자동 설정되는 것.
         // TODO: emailAddress -> UILabel로 바뀌어야 할 듯

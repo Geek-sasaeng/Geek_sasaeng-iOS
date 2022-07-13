@@ -62,7 +62,10 @@ class naverLoginViewModel {
                     print("네이버 로그인 핸드폰 ",phone)
                     print("네이버 로그인 이메일 ",email)
                     
-                    viewController.showHomeView()
+                    /* 네이버 로그인 최초인지 확인 */
+                    let input = LoginInput(loginId: email, password: "1q2w3e4r!")
+                    LoginViewModel.loginNaver(viewController: viewController, input, id: email, phoneNumber: phone)
+                    
                 }
                 else { // 실패
                     print("ERROR!")

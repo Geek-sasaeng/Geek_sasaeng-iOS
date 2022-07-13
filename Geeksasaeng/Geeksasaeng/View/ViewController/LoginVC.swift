@@ -103,7 +103,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-//        attemptAutoLogin()
+        attemptAutoLogin()
         naverLoginVM.setInstanceDelegate(self)
         
         addSubViews()
@@ -190,12 +190,16 @@ class LoginViewController: UIViewController {
         }
     }
     
+    // TODO: - 자동 로그인 o -> UserDefault에 id(naver email), password(1q2w3e4r!) 저장해뒀다가 attemptAutoLogin() 호출로 자동 로그인
+    // TODO: - 자동 로그인 x -> UserDefault에 저장하지 않고, 토큰 없애기 => 앱 재실행 시 네이버 아이디 비밀번호 재입력 하게
+    // TODO: - 긱사생 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 x)
+    // TODO: - 네이버 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 o)
     @objc func tapNaverloginButton() {
         naverLoginVM.requestLogin()
         if naverLoginVM.isExistToken() {
             showHomeView()
         } else {
-            print("===Login Fail===")
+            print("===Not exist token===")
         }
     }
     
@@ -243,6 +247,14 @@ class LoginViewController: UIViewController {
         present(tabBarController, animated: true)
     }
     
+    public func showNaverRegisterView(id: String, phoneNum: String) {
+        let naverRegisterVC = NaverRegisterViewController()
+        naverRegisterVC.modalTransitionStyle = .crossDissolve
+        naverRegisterVC.modalPresentationStyle = .fullScreen
+        naverRegisterVC.phoneNumber = phoneNum
+        naverRegisterVC.idData = id
+        present(naverRegisterVC, animated: true)
+    }
 }
 
 

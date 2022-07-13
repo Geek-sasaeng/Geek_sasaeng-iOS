@@ -57,4 +57,24 @@ class RegisterAPI {
             }
         }
     }
+    
+    public static func registerUserFromNaver(_ viewController : AgreementViewController, _ parameter : RegisterInput) {
+        AF.request("https://geeksasaeng.shop/members/social", method: .post,
+                   parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
+        .validate()
+        .responseDecodable(of: RegisterModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 회원가입 성공")
+                    
+                    viewController.showHomeView()
+                } else {
+                    print("DEBUG:", result.message!)
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+            }
+        }
+    }
 }

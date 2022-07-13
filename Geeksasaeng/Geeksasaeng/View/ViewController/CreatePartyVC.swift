@@ -5,7 +5,8 @@
 //  Created by 조동진 on 2022/07/11.
 //
 
-/* 등록버튼 누를 때 전역변수 모두 초기화 */
+/* 파티 생성하기 API 구현 이후: 등록버튼 누를 때 전역변수 모두 초기화 */
+// TODO: - 각 서브뷰 띄우기
 
 import UIKit
 import SnapKit

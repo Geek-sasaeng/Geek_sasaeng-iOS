@@ -38,12 +38,117 @@ class NaverRegisterViewController: UIViewController {
         return imageView
     }()
     
+    let selectYourUnivLabel: UILabel = {
+        let label = UILabel()
+        label.text = "자신의 학교를 선택해주세요"
+        label.font = .customFont(.neoLight, size: 15)
+        label.textColor = .init(hex: 0xD8D8D8)
+        return label
+    }()
+    let toggleImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
+        imageView.tintColor = .init(hex: 0xD8D8D8)
+        return imageView
+    }()
+    
+    /* 자신의 학교를 선택해주세요 버튼 */
+    lazy var universitySelectView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
+        
+        view.addSubview(selectYourUnivLabel)
+        view.addSubview(toggleImageView)
+        selectYourUnivLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(12)
+            make.centerY.equalToSuperview()
+        }
+        toggleImageView.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(18)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(15)
+            make.height.equalTo(8)
+        }
+        
+        return view
+    }()
+    
+    // Label Tap Gesture 적용을 위해 따로 꺼내놓음
+    var univNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "가천대학교"
+        label.font = .customFont(.neoLight, size: 15)
+        label.textColor = .init(hex: 0x636363)
+        return label
+    }()
+    /* 자신의 학교를 선택해주세요 눌렀을 때 확장되는 뷰
+        -> 학교 리스트를 보여줌 */
+    lazy var universityListView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
+        
+        var selectYourUnivLabel: UILabel = {
+            let label = UILabel()
+            label.text = "자신의 학교를 선택해주세요"
+            label.font = .customFont(.neoLight, size: 15)
+            label.textColor = .init(hex: 0xD8D8D8)
+            return label
+        }()
+        var toggleImageView: UIImageView = {
+            let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
+            imageView.tintColor = .init(hex: 0xD8D8D8)
+            return imageView
+        }()
+        var markUnivLabel: UILabel = {
+            let label = UILabel()
+            label.text = "ㄱ"
+            label.font = .customFont(.neoLight, size: 12)
+            label.textColor = .init(hex: 0xA8A8A8)
+            return label
+        }()
+        
+        [
+            selectYourUnivLabel,
+            toggleImageView,
+            markUnivLabel,
+            univNameLabel
+        ].forEach {
+            view.addSubview($0)
+        }
+        selectYourUnivLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(10)
+            make.left.equalToSuperview().inset(12)
+        }
+        toggleImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(17)
+            make.right.equalToSuperview().inset(18)
+            make.width.equalTo(15)
+            make.height.equalTo(8)
+        }
+        markUnivLabel.snp.makeConstraints { make in
+            make.top.equalTo(selectYourUnivLabel.snp.bottom).offset(35)
+            make.left.equalToSuperview().inset(12)
+        }
+        univNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(markUnivLabel.snp.bottom).offset(11)
+            make.left.equalToSuperview().inset(12)
+        }
+        view.isHidden = true
+        return view
+    }()
+    
     var nickNameLabel = UILabel()
     var schoolLabel = UILabel()
     var emailLabel = UILabel()
     
     var nickNameTextField = UITextField()
-    var schoolTextField = UITextField()
     var emailTextField = UITextField()
     var emailAddressTextField = UITextField()
     
@@ -95,6 +200,19 @@ class NaverRegisterViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Properties
+    var isExpanded: Bool! = false
+    
+    /* 회원가입 정보 */
+    var idData: String? = nil // 네아로에서 email
+    var phoneNumber: String? = nil // 네아로에서 phone
+    // 밑에 건 이 화면에서 바로 생성하여 전달 -> 변수로 둘 필요 x
+    var pwData: String? = nil // 임의 비밀번호 -> 1q2w3e4r!로 전달
+    var pwCheckData: String? = nil // 임의 비밀번호
+    var nickNameData: String? = nil // nickNameTextField에서
+    var university: String? = nil // selectYourUnivLabel에서
+    var email: String? = nil // emailTextField에서
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -104,6 +222,27 @@ class NaverRegisterViewController: UIViewController {
         setAttributes()
         setLayouts()
         setTextFieldTarget()
+        setLabelTap()
+        
+        
+        view.addSubview(universityListView)
+        universityListView.snp.makeConstraints { make in
+            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(316)
+        }
+        
+        view.addSubview(universitySelectView)
+        universitySelectView.snp.makeConstraints { make in
+            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(41)
+        }
+        
+        let viewTapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(tapSelectUniv))
+        universitySelectView.isUserInteractionEnabled = true
+        universitySelectView.addGestureRecognizer(viewTapGesture)
     }
     
     // MARK: - Functions
@@ -163,13 +302,12 @@ class NaverRegisterViewController: UIViewController {
         }
         
         emailLabel.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(81)
+            make.top.equalTo(schoolLabel.snp.bottom).offset(82)
         }
         
         /* text fields */
         [
             nickNameTextField,
-            schoolTextField,
             emailTextField,
         ].forEach {
             view.addSubview($0)
@@ -180,10 +318,6 @@ class NaverRegisterViewController: UIViewController {
         
         nickNameTextField.snp.makeConstraints { make in
             make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
-        }
-        
-        schoolTextField.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(15)
         }
         
         emailTextField.snp.makeConstraints { make in
@@ -239,9 +373,14 @@ class NaverRegisterViewController: UIViewController {
         
         /* textFields attr */
         nickNameTextField = setTextFieldAttrs(msg: "3-8자 영문으로 입력", width: 210)
-        schoolTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
+        nickNameTextField.autocapitalizationType = .none
+        
         emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
-        emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
+        emailTextField.autocapitalizationType = .none
+        
+        emailAddressTextField = setTextFieldAttrs(msg: "@gachon.ac.kr", width: 187)
+        emailAddressTextField.isUserInteractionEnabled = false
+        emailAddressTextField.text = "@gachon.ac.kr"
     }
     
     private func setMainLabelAttrs(_ text: String) -> UILabel {
@@ -257,26 +396,37 @@ class NaverRegisterViewController: UIViewController {
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
             string: msg,
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
+                         NSAttributedString.Key.font: UIFont.customFont(.neoLight, size: 15)]
         )
         textField.makeBottomLine(width)
         return textField
     }
     
     private func setTextFieldTarget() {
-        [nickNameTextField, schoolTextField, emailTextField, emailAddressTextField].forEach { textField in
+        [nickNameTextField, emailTextField, emailAddressTextField].forEach { textField in
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
     
-    @objc func tapNickNameCheckButton() {
-        nickNameCheckButton.setDeactivatedButton()
-        nickNameAvailableLabel.isHidden = false
+    private func setLabelTap() {
+        let labelTapGesture = UITapGestureRecognizer(target: self,
+                                                     action: #selector(tapUnivName(_:)))
+        univNameLabel.isUserInteractionEnabled = true
+        univNameLabel.addGestureRecognizer(labelTapGesture)
     }
     
-    @objc func tapAuthSendButton() {
-        authSendButton.setDeactivatedButton()
-        self.showToast(viewController: self, message: "인증번호가 전송되었습니다.", font: .customFont(.neoMedium, size: 15), color: .mainColor)
+    @objc func tapNickNameCheckButton() {
+        if nickNameTextField.text?.isValidNickname() ?? false == false {
+            nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
+            nickNameAvailableLabel.textColor = .red
+            nickNameAvailableLabel.isHidden = false
+        } else {
+            if let nickname = nickNameTextField.text {
+                let input = NickNameRepetitionInput(nickName: nickname)
+                RepetitionAPI.checkNicknameRepetitionFromNaverRegister(self, parameters: input)
+            }
+        }
     }
     
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
@@ -285,7 +435,15 @@ class NaverRegisterViewController: UIViewController {
         
         authNumVC.modalTransitionStyle = .crossDissolve
         authNumVC.modalPresentationStyle = .fullScreen
+        
         authNumVC.isFromNaverRegister = true
+        authNumVC.phoneNumber = phoneNumber
+        authNumVC.idData = idData
+        authNumVC.nickNameData = nickNameTextField.text
+        authNumVC.university = selectYourUnivLabel.text
+        authNumVC.email = "\(emailTextField.text!)" + "\(emailAddressTextField.text!)"
+        authNumVC.pwData = "1q2w3e4r!"
+        authNumVC.pwCheckData = "1q2w3e4r!"
         
         present(authNumVC, animated: true)
     }
@@ -303,11 +461,48 @@ class NaverRegisterViewController: UIViewController {
             authSendButton.setDeactivatedButton()
         }
 
-        if nickNameTextField.text?.count ?? 0 >= 1 && schoolTextField.text?.count ?? 0 >= 1 &&
-            emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
+        if nickNameTextField.text?.count ?? 0 >= 1
+            && emailTextField.text?.count ?? 0 >= 1
+            && emailAddressTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
         } else {
             nextButton.setDeactivatedNextButton()
+        }
+    }
+    
+    @objc private func tapSelectUniv() {
+        // TODO: API 연결 필요
+//        UniversityListViewModel.requestGetUnivList(self)
+        isExpanded = !isExpanded
+        // 확장하는 거면 리스트 보여주기
+        if isExpanded {
+            universityListView.isHidden = false
+            toggleImageView.image = UIImage(systemName: "chevron.down")
+        } else {    // 접는 거면 리스트 닫기
+            universityListView.isHidden = true
+            toggleImageView.image = UIImage(named: "ToggleMark")
+        }
+        self.view.bringSubviewToFront(universitySelectView)
+    }
+    
+    @objc private func tapUnivName(_ sender: UITapGestureRecognizer) {
+        let univName = sender.view as! UILabel
+        selectYourUnivLabel.text = univName.text
+        selectYourUnivLabel.textColor = .init(hex: 0x636363)
+    }
+    
+    @objc private func tapAuthSendButton() {
+        if let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
+           let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            authSendButton.setDeactivatedButton()   // 비활성화
+            
+            print("DEBUG: ", email+emailAddress, univ)
+            let uuid = UUID()
+            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
+            print("DEBUG: ", uuid.uuidString)
+            // 이메일로 인증번호 전송하는 API 호출
+            EmailAuthViewModel.requestSendEmail(self, input)
         }
     }
 }

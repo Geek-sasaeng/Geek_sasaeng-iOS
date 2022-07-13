@@ -38,6 +38,36 @@ class LoginViewModel {
             }
         }
     }
+    
+    public static func loginNaver(viewController: LoginViewController, _ parameter : LoginInput, id: String, phoneNumber: String) {
+        AF.request("https://geeksasaeng.shop/login", method: .post,
+                   parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
+        .validate()
+        .responseDecodable(of: LoginOutput.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    // 네이버 아이디 비밀번호가 긱사생 DB에 등록되어 있으면
+                    print("DEBUG: 성공")
+                    print("DEBUG: \(result.code!)")
+                    viewController.showHomeView()
+                    
+                } else {
+                    // 네이버 아이디 비밀번호로 처음 로그인 한 경우
+                    print(result.code!)
+                    print("DEBUG:", result.message!)
+                    print("회원가입 화면으로 이동합니다")
+                    if result.code == 2400 {
+                        viewController.showNaverRegisterView(id: id, phoneNum: phoneNumber)
+                    } else {
+                        print("DEBUG:", result.message!)
+                    }
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+            }
+        }
+    }
 }
 
 // 첫 로그인이면 (DB에 정보 없으면) NaverRegisterVC로 이동

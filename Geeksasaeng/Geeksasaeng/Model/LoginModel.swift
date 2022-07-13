@@ -29,3 +29,7 @@ struct LoginInput : Encodable {
     var loginId: String?
     var password: String?
 }
+
+struct NaverLoginCheck {
+    static var firstLogin = false
+}
