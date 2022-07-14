@@ -23,6 +23,7 @@ class CategoryViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
         return button
     }()
     
@@ -253,5 +254,10 @@ class CategoryViewController: UIViewController {
         nextButton.setActivatedNextButton()
         
         data = sender.titleLabel?.text
+    }
+    
+    @objc func tapBackButton() {
+        view.removeFromSuperview()
+        removeFromParent()
     }
 }

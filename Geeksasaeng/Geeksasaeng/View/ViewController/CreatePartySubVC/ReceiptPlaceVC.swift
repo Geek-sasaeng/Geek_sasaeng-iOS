@@ -23,6 +23,7 @@ class ReceiptPlaceViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
         return button
     }()
     
@@ -179,6 +180,11 @@ class ReceiptPlaceViewController: UIViewController {
     
     @objc func removeAllSubVC() {
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
+    }
+    
+    @objc func tapBackButton() {
+        view.removeFromSuperview()
+        removeFromParent()
     }
 }
 
