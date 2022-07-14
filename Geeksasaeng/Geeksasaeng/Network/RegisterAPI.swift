@@ -48,7 +48,7 @@ class RegisterAPI {
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
                     
-                    viewController.showHomeView()
+                    viewController.showDomitoryView()
                 } else {
                     print("DEBUG:", result.message!)
                 }
@@ -71,7 +71,7 @@ class RegisterAPI {
                     UserDefaults.standard.set(parameter.loginId, forKey: "id")
                     UserDefaults.standard.set(parameter.password, forKey: "password")
                     
-                    viewController.showHomeView()
+                    viewController.showDomitoryView()
                 } else {
                     print("DEBUG:", result.message!)
                 }

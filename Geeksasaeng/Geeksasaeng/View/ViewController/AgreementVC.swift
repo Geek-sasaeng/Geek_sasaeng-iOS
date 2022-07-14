@@ -180,10 +180,10 @@ class AgreementViewController: UIViewController {
         }
     }
     
-    public func showHomeView() {
-        let tabBarController = TabBarController()
-        tabBarController.modalTransitionStyle = .crossDissolve
-        tabBarController.modalPresentationStyle = .fullScreen
-        present(tabBarController, animated: true)
+    public func showDomitoryView() {
+        let dormitoryVC = DormitoryViewController()
+        dormitoryVC.modalTransitionStyle = .crossDissolve
+        dormitoryVC.modalPresentationStyle = .fullScreen
+        present(dormitoryVC, animated: true)
     }
 }
