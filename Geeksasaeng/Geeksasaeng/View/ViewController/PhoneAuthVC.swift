@@ -203,12 +203,13 @@ class PhoneAuthViewController: UIViewController {
     // MARK: - Properties
     
     /* 이전 화면에서 받아온 데이터들 */
-    var pwCheckData: String? = nil
-    var email: String? = nil
     var idData: String? = nil
-    var nickNameData: String? = nil
     var pwData: String? = nil
+    var pwCheckData: String? = nil
+    var nickNameData: String? = nil
     var university: String? = nil
+    var email: String? = nil
+    var uuid: UUID? = nil
     
     var visualEffectView: UIVisualEffectView?
     
@@ -455,8 +456,9 @@ class PhoneAuthViewController: UIViewController {
         startTimer()
         authCheckButton.setActivatedButton()
         authSendButton.setTitle("재전송 하기", for: .normal)
-        if let phoneNum = self.phoneNumTextField.text {
-            let uuid = UUID()
+        
+        if let phoneNum = self.phoneNumTextField.text,
+           let uuid = uuid {
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
             print("DEBUG:", uuid.uuidString)
             PhoneAuthViewModel.requestSendPhoneAuth(self, input)

@@ -31,6 +31,7 @@ class AdCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        contentView.backgroundColor = .white
         // 레이아웃 설정.
         contentView.snp.makeConstraints { make in
             make.top.equalToSuperview()

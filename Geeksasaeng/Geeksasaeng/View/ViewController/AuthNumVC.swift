@@ -98,6 +98,7 @@ class AuthNumViewController: UIViewController {
     var nickNameData: String? = nil
     var university: String? = nil
     var email: String? = nil
+    var uuid: UUID? = nil
     
     /* 네이버 회원가입에서 받아온 데이터 */
     var phoneNumber: String? = nil // nil이 아니면 네이버 회원가입이란 말이니까 폰인증 화면 건너뛰고 이용약관 화면으로 바로 이동 -> 필요한 데이터도 전달
@@ -272,13 +273,15 @@ class AuthNumViewController: UIViewController {
                let pwCheckData = self.pwCheckData,
                let nickNameData = self.nickNameData,
                let univ = self.university,
-               let email = self.email {
+               let email = self.email,
+               let uuid = self.uuid {
                 phoneAuthVC.idData = idData
                 phoneAuthVC.pwData = pwData
                 phoneAuthVC.pwCheckData = pwCheckData
                 phoneAuthVC.nickNameData = nickNameData
                 phoneAuthVC.university = univ
                 phoneAuthVC.email = email
+                phoneAuthVC.uuid = uuid
             }
             
             present(phoneAuthVC, animated: true)

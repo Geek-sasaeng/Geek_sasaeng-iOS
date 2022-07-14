@@ -11,6 +11,7 @@ import SnapKit
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
+    
     // 광고 배너 이미지 데이터 배열
     let adCellDataArray = AdCarouselModel.adCellDataArray
     // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
@@ -18,6 +19,13 @@ class DeliveryViewController: UIViewController {
     
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
+    
+    var deliveryCellDataArray: [DeliveryListModelResult]? = nil {
+        didSet
+        {
+            partyTableView.reloadData()
+        }
+    }
     
     // MARK: - Subviews
     
@@ -40,13 +48,10 @@ class DeliveryViewController: UIViewController {
         let barButton = UIBarButtonItem(customView: stackView)
         return barButton
     }()
-    var rightBarButtonItem: UIBarButtonItem = {
-        let searchButton = UIButton()
-        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        searchButton.tintColor = .black
-        
-        let barButton = UIBarButtonItem(customView: searchButton)
-        return barButton
+    lazy var rightBarButtonItem: UIBarButtonItem = {
+        let searchButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(tapSearchButton))
+        searchButton.tintColor = .init(hex: 0x2F2F2F)
+        return searchButton
     }()
     
     /* Category Labels */
@@ -101,6 +106,7 @@ class DeliveryViewController: UIViewController {
         
         // 위에서 만든 레이아웃을 따르는 collection view 생성
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
         // indicator 숨김
         collectionView.showsHorizontalScrollIndicator = false
         // 직접 페이징 가능하도록
@@ -313,7 +319,13 @@ class DeliveryViewController: UIViewController {
     
     var createPartyButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "CreatePartyMark"), for: .normal)
+        let image = UIImage(named: "CreatePartyMark")
+        button.setImage(image, for: .normal)
+        
+        // imageEdgeInsets 값을 줘서 버튼과 안의 이미지 사이 간격을 조정
+        let imageInset: CGFloat = 14
+        button.imageEdgeInsets = UIEdgeInsets(top: imageInset, left: imageInset, bottom: imageInset, right: imageInset)
+        
         button.layer.cornerRadius = 31
         button.backgroundColor = .mainColor
         button.addTarget(self, action: #selector(tapCreatePartyButton), for: .touchUpInside)
@@ -348,6 +360,9 @@ class DeliveryViewController: UIViewController {
         makeButtonShadow(createPartyButton)
         
         print("====\(LoginModel.jwt)====")
+        
+        /* 배달 목록 데이터 로딩 */
+        getDeliveryList()
     }
     
     // MARK: - viewDidLayoutSubviews()
@@ -449,7 +464,7 @@ class DeliveryViewController: UIViewController {
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(500)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(20)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
         }
         
         /* Button */
@@ -471,7 +486,12 @@ class DeliveryViewController: UIViewController {
         partyTableView.dataSource = self
         partyTableView.delegate = self
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
-        partyTableView.rowHeight = 118
+        
+        partyTableView.rowHeight = 125
+    }
+    
+    private func getDeliveryList() {
+        DeliveryListViewModel.requestGetDeliveryList(self, cursor: 0, dormitoryId: 1)
     }
     
     /* collection view 등록 */
@@ -505,6 +525,12 @@ class DeliveryViewController: UIViewController {
         button.layer.shadowOpacity = 0.5
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.masksToBounds = true
+    }
+    
+    /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
+    @objc func tapSearchButton() {
+        let searchVC = SeachViewController()
+        self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
     /* label에 탭 제스쳐 추가 */
@@ -692,6 +718,9 @@ class DeliveryViewController: UIViewController {
 
 extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let deliveryCellDataArray = deliveryCellDataArray {
+            return deliveryCellDataArray.count
+        }
         return 10
     }
     

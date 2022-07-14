@@ -12,9 +12,10 @@ class PartyViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var reportButton: UIButton = {
+    var ellipsisButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "Report"), for: .normal)
+        button.tintColor = .init(hex: 0x2F2F2F)
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         return button
     }()
     
@@ -28,6 +29,7 @@ class PartyViewController: UIViewController {
     var nickNameLabel: UILabel = {
         let label = UILabel()
         label.text = "네오"
+        label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
@@ -77,18 +79,21 @@ class PartyViewController: UIViewController {
             var orderLabel: UILabel = {
                 let label = UILabel()
                 label.text = "주문 예정 시간"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
             var orderReserveDateLabel: UILabel = {
                 let label = UILabel()
                 label.text = "05월 15일"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
             var orderReserveTimeLabel: UILabel = {
                 let label = UILabel()
                 label.text = "23시 00분"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
@@ -101,12 +106,14 @@ class PartyViewController: UIViewController {
             var matchingLabel: UILabel = {
                 let label = UILabel()
                 label.text = "매칭 현황"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
             var matchingDataLabel: UILabel = {
                 let label = UILabel()
                 label.text = "2/4"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
@@ -119,12 +126,14 @@ class PartyViewController: UIViewController {
             var categoryLabel: UILabel = {
                 let label = UILabel()
                 label.text = "카테고리"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
             var categoryDataLabel: UILabel = {
                 let label = UILabel()
                 label.text = "중식"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
@@ -137,12 +146,14 @@ class PartyViewController: UIViewController {
             var pickupLocationLabel: UILabel = {
                 let label = UILabel()
                 label.text = "수령 장소"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
             var pickupLocationDataLabel: UILabel = {
                 let label = UILabel()
                 label.text = "제1기숙사 후문"
+                label.textColor = .init(hex: 0x2F2F2F)
                 label.font = .customFont(.neoMedium, size: 13)
                 return label
             }()
@@ -243,7 +254,7 @@ class PartyViewController: UIViewController {
     
     private func setLayouts() {
         [
-            reportButton,
+            ellipsisButton,
             profileImageView,
             nickNameLabel,
             postingTime,
@@ -261,7 +272,7 @@ class PartyViewController: UIViewController {
             arrowImageView
         ].forEach { view.addSubview($0) }
         
-        reportButton.snp.makeConstraints { make in
+        ellipsisButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
             make.right.equalToSuperview().inset(24)
         }
