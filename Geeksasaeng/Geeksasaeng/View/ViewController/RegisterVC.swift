@@ -137,6 +137,10 @@ class RegisterViewController: UIViewController {
         setTextFieldTarget()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     // MARK: - Functions
     
     private func setLayouts() {
@@ -280,9 +284,13 @@ class RegisterViewController: UIViewController {
         
         /* textFields attr */
         setTextFieldAttrs(textField: idTextField, msg: "6-20자 영문+숫자로 입력", width: 210)
+        idTextField.autocapitalizationType = .none
         setTextFieldAttrs(textField: pwTextField,msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력",width: 307)
+        pwTextField.autocapitalizationType = .none
         setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력",width: 307)
+        pwCheckTextField.autocapitalizationType = .none
         setTextFieldAttrs(textField: nickNameTextField,msg: "3-8자 영문 혹은 한글로 입력",width: 210)
+        nickNameTextField.autocapitalizationType = .none
     }
     
     // 공통 속성을 묶어놓은 함수

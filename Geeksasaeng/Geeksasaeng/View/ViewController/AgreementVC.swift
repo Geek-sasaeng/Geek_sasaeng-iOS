@@ -126,28 +126,57 @@ class AgreementViewController: UIViewController {
 
     /* 회원가입 Request 보내는 함수 */
     @objc private func sendRegisterRequest() {
-        // Request 생성.
-        // 최종적으로 데이터 전달 (확인비번, 이메일, 동의여부, 아이디, 닉네임, pw, 폰번호, 학교이름) 총 8개
-        /// 순서가 이런 이유는 나도 모름... 회원가입 API Req 바디 모양대로 넣었어
-        if let idData = self.idData,
-           let pwData = self.pwData,
-           let pwCheckData = self.pwCheckData,
-           let nickNameData = self.nickNameData,
-           let univ = self.university,
-           let email = self.email,
-           let phoneNum = self.phoneNum
-//           let agreeStatus = self.isArgree   -> TODO: 나중에 이용약관 추가됐을 때 동의했느냐, 안 했느냐 판단해서 추가
-        {
-            let input = RegisterInput(checkPassword: pwCheckData,
-                                      email: email,
-                                      informationAgreeStatus: "Y",
-                                      loginId: idData,
-                                      nickname: nickNameData,
-                                      password: pwData,
-                                      phoneNumber: phoneNum,
-                                      universityName: univ)
-            
-            RegisterAPI.registerUser(self, input)
+        if isFromNaverRegister { // naver 회원가입인 경우
+            phoneNum = phoneNum?.replacingOccurrences(of: "-", with: "")
+            if let checkPassword = self.pwCheckData,
+               let email = self.email,
+               let loginId = self.idData,
+               let nickname = self.nickNameData,
+               let password = self.pwData,
+               let phoneNumber = self.phoneNum,
+               let universityName = self.university {
+                print(checkPassword)
+                print(email)
+                print(loginId)
+                print(nickname)
+                print(password)
+                print(phoneNumber)
+                print(universityName)
+                let input = RegisterInput(checkPassword: checkPassword,
+                                          email: email,
+                                          informationAgreeStatus: "Y",
+                                          loginId: loginId,
+                                          nickname: nickname,
+                                          password: password,
+                                          phoneNumber: phoneNumber,
+                                          universityName: universityName)
+                
+                RegisterAPI.registerUserFromNaver(self, input)
+            }
+        } else { // naver 회원가입이 아닌 경우
+            // Request 생성.
+            // 최종적으로 데이터 전달 (확인비번, 이메일, 동의여부, 아이디, 닉네임, pw, 폰번호, 학교이름) 총 8개
+            /// 순서가 이런 이유는 나도 모름... 회원가입 API Req 바디 모양대로 넣었어
+            if let idData = self.idData,
+               let pwData = self.pwData,
+               let pwCheckData = self.pwCheckData,
+               let nickNameData = self.nickNameData,
+               let univ = self.university,
+               let email = self.email,
+               let phoneNum = self.phoneNum
+    //           let agreeStatus = self.isArgree   -> TODO: 나중에 이용약관 추가됐을 때 동의했느냐, 안 했느냐 판단해서 추가
+            {
+                let input = RegisterInput(checkPassword: pwCheckData,
+                                          email: email,
+                                          informationAgreeStatus: "Y",
+                                          loginId: idData,
+                                          nickname: nickNameData,
+                                          password: pwData,
+                                          phoneNumber: phoneNum,
+                                          universityName: univ)
+                
+                RegisterAPI.registerUser(self, input)
+            }
         }
     }
     

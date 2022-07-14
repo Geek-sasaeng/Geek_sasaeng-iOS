@@ -78,4 +78,27 @@ class RepetitionAPI {
                 }
             }
     }
+    
+    public static func checkNicknameRepetitionFromNaverRegister(_ viewController: NaverRegisterViewController, parameters: NickNameRepetitionInput) {
+        AF.request("https://geeksasaeng.shop/members/nickname-duplicated", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default, headers: nil)
+            .validate()
+            .responseDecodable(of: NickNameRepetitionModel.self) { response in
+                switch response.result {
+                case.success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 성공")
+                        viewController.nickNameAvailableLabel.text = result.message
+                        viewController.nickNameAvailableLabel.textColor = .mainColor
+                        viewController.nickNameAvailableLabel.isHidden = false
+                    } else {
+                        print("DEBUG: 실패", result.message!)
+                        viewController.nickNameAvailableLabel.text = result.message
+                        viewController.nickNameAvailableLabel.textColor = .red
+                        viewController.nickNameAvailableLabel.isHidden = false
+                    }
+                case .failure(let error):
+                    print("DEBUG: ", error.localizedDescription)
+                }
+            }
+    }
 }

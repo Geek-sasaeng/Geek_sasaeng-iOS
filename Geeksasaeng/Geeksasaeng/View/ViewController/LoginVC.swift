@@ -103,11 +103,15 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-//        attemptAutoLogin()
+        attemptAutoLogin()
         naverLoginVM.setInstanceDelegate(self)
         
         addSubViews()
         setLayouts()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
     
     // MARK: - Set Function
@@ -190,13 +194,16 @@ class LoginViewController: UIViewController {
         }
     }
     
+    // MARK: 네이버 아이디 로그아웃 -> 토큰 삭제 (아이디 비밀번호 재입력 하게) => 나중에 차례되면 구현
+    // MARK: 긱사생 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 x)
+    // MARK: 네이버 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 o)
     @objc func tapNaverloginButton() {
         naverLoginVM.requestLogin()
-        if naverLoginVM.isExistToken() {
-            showHomeView()
-        } else {
-            print("===Login Fail===")
-        }
+//        if naverLoginVM.isExistToken() {
+//            showHomeView()
+//        } else {
+//            print("===Not exist token===")
+//        } -> 네이버 회원가입 때 어차피 자동 로그인 자동 활성화 하니까 토큰 여부 확인할 필요 없을 듯 ?
     }
     
     @objc func tapAutomaticLoginButton() {
@@ -243,6 +250,14 @@ class LoginViewController: UIViewController {
         present(tabBarController, animated: true)
     }
     
+    public func showNaverRegisterView(id: String, phoneNum: String) {
+        let naverRegisterVC = NaverRegisterViewController()
+        naverRegisterVC.modalTransitionStyle = .crossDissolve
+        naverRegisterVC.modalPresentationStyle = .fullScreen
+        naverRegisterVC.phoneNumber = phoneNum
+        naverRegisterVC.idData = id
+        present(naverRegisterVC, animated: true)
+    }
 }
 
 

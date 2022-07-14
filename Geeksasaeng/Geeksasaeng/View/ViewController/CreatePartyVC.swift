@@ -5,6 +5,9 @@
 //  Created by 조동진 on 2022/07/11.
 //
 
+/* 파티 생성하기 API 구현 이후: 등록버튼 누를 때 전역변수 모두 초기화 */
+// TODO: - 각 서브뷰 띄우기
+
 import UIKit
 import SnapKit
 
@@ -166,23 +169,48 @@ class CreatePartyViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+        
+        // 다음 버튼 누른 VC에 대한 데이터 저장, 표시
+        if let orderForecastTime = CreateParty.orderForecastTime {
+            self.orderForecastTimeButton.layer.shadowRadius = 0
+            self.orderForecastTimeButton.setTitle(orderForecastTime, for: .normal)
+            self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
+            self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
+        }
+        
+        if CreateParty.orderAsSoonAsMatch ?? false {
+            self.orderAsSoonAsMatchLabel.textColor = .mainColor
+        } else {
+            self.orderAsSoonAsMatchLabel.textColor = UIColor(hex: 0xD8D8D8)
+        }
+        
+        if let matchingPerson = CreateParty.matchingPerson {
+            self.selectedPersonLabel.text = "      \(matchingPerson)"
+            self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedPersonLabel.textColor = .black
+            self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        if let category = CreateParty.category {
+            self.selectedCategoryLabel.text = "      \(category)"
+            self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedCategoryLabel.textColor = .black
+            self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        visualEffectView?.removeFromSuperview()
+        children.forEach {
+            $0.view.removeFromSuperview()
+            $0.removeFromParent()
+        }
     }
-    
-    /* Blur View 터치 시 서브뷰 사라지게 구현해야 함 */
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        let touch = touches.first
-//        if touch?.view == self.view {
-//            let viewControllers = self.children
-//            viewControllers.forEach {
-//                $0.removeFromParent()
-//            }
-//        }
-//    }
     
     private func setDelegate() {
         contentsTextView.delegate = self
         titleTextField.delegate = self
     }
+    
     private func setNavigationBar() {
         self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
         self.navigationItem.title = "파티 생성하기"
@@ -238,7 +266,7 @@ class CreatePartyViewController: UIViewController {
                 }
                 
                 self.settedOptions = true
-                if self.titleTextField.text?.count ?? 0 >= 3 && self.contentsTextView.text.count >= 5 {
+                if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
                     self.navigationItem.rightBarButtonItem = self.activatedRightBarButtonItem
                     self.view.layoutSubviews()
                 }
@@ -366,6 +394,7 @@ class CreatePartyViewController: UIViewController {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
+        visualEffectView.isUserInteractionEnabled = false
         view.addSubview(visualEffectView)
         self.visualEffectView = visualEffectView
         
@@ -384,12 +413,12 @@ class CreatePartyViewController: UIViewController {
         // settedOptions가 true인데 titleTextField가 지워진 경우
         if settedOptions
             && editedContentsTextView
-            && contentsTextView.text.count >= 5
-            && titleTextField.text?.count ?? 0 >= 3 {
+            && contentsTextView.text.count >= 1
+            && titleTextField.text?.count ?? 0 >= 1 {
             self.navigationItem.rightBarButtonItem = activatedRightBarButtonItem
             self.view.layoutSubviews()
-        } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 3)
-                    || (editedContentsTextView && settedOptions && contentsTextView.text.count < 5) {
+        } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1)
+                    || (editedContentsTextView && settedOptions && contentsTextView.text.count < 1) {
             self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             self.view.layoutSubviews()
         }
@@ -402,7 +431,7 @@ extension CreatePartyViewController: UITextFieldDelegate {
         guard let str = textField.text else { return true }
         let newLength = str.count + string.count - range.length
         
-        return newLength <= 10
+        return newLength <= 20
     }
 }
 
@@ -426,12 +455,12 @@ extension CreatePartyViewController: UITextViewDelegate {
         editedContentsTextView = true
         if settedOptions
             && editedContentsTextView
-            && contentsTextView.text.count >= 5
-            && titleTextField.text?.count ?? 0 >= 3 {
+            && contentsTextView.text.count >= 1
+            && titleTextField.text?.count ?? 0 >= 1 {
             navigationItem.rightBarButtonItem = activatedRightBarButtonItem
             view.layoutSubviews()
-        } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 5)
-                    || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 3) {
+        } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 1)
+                    || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1) {
             navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             view.layoutSubviews()
         }
@@ -444,3 +473,4 @@ extension CreatePartyViewController: UITextViewDelegate {
         return newLength <= 100
     }
 }
+
