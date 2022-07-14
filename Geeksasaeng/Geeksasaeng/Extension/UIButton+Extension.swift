@@ -10,15 +10,16 @@ import UIKit
 extension UIButton {
     
     // UIButton의 아래 라인 만들어주는 함수
-    func makeBottomLine(_ width: CGFloat) {
+    func makeBottomLine(color: UInt, width: CGFloat, height: CGFloat, offsetToTop: CGFloat) {
         let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.init(hex: 0x5B5B5B)
+        bottomLine.backgroundColor = UIColor.init(hex: color)
         
         self.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { make in
-            make.top.equalTo(self.snp.bottom).offset(-8)
+            make.top.equalTo(self.snp.bottom).offset(offsetToTop)
             make.width.equalTo(width)
-            make.height.equalTo(1)
+            make.height.equalTo(height)
+            make.centerX.equalTo(self)
         }
     }
     

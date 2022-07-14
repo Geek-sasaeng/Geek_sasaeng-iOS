@@ -89,7 +89,7 @@ class LoginViewController: UIViewController {
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
         button.titleLabel?.font = .customFont(.neoLight, size: 15)
-        button.makeBottomLine(55)
+        button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
         button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside)
         return button
     }()

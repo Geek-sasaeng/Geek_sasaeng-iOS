@@ -30,9 +30,7 @@ class DeliveryListViewModel {
                     print("DEBUG: 실패", result.message!)
                 }
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription,
-                      error.isCreateURLRequestError, error.isRequestRetryError, error.isRequestAdaptationError,
-                      error.isResponseValidationError, error.isResponseSerializationError, error.isInvalidURLError)
+                print("DEBUG:", error.localizedDescription)
             }
         }
     }
