@@ -126,6 +126,10 @@ class RegisterViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Properties
+    var idCheck = false
+    var nicknameCheck = false
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -313,7 +317,7 @@ class RegisterViewController: UIViewController {
     
     private func setTextFieldTarget() {
         [idTextField, pwTextField, pwCheckTextField, nickNameTextField].forEach { textField in
-            textField.addTarget(self, action: #selector(didChangeTextField), for: .editingChanged)
+            textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
     
@@ -338,7 +342,13 @@ class RegisterViewController: UIViewController {
         present(emailAuthVC, animated: true)
     }
     
-    @objc func didChangeTextField() {
+    @objc func didChangeTextField(_ sender: UITextField) {
+        if sender == idTextField {
+            idCheck = false
+        } else if sender == nickNameTextField {
+            nicknameCheck = false
+        }
+        
         if idTextField.text?.count ?? 0 >= 1 {
             idCheckButton.setActivatedButton()
         } else if idTextField.text?.count ?? 0 < 1 {
@@ -350,8 +360,9 @@ class RegisterViewController: UIViewController {
             nickNameCheckButton.setDeactivatedButton()
         }
         
-        if idTextField.text?.count ?? 0 >= 1 && pwTextField.text?.count ?? 0 >= 1 &&
-            pwCheckTextField.text?.count ?? 0 >= 1 && nickNameTextField.text?.count ?? 0 >= 1 {
+        if pwTextField.text?.isValidPassword() ?? false && pwCheckTextField.text == pwTextField.text
+            && idCheck && nicknameCheck
+        {
             nextButton.setActivatedNextButton()
         } else {
             nextButton.setDeactivatedNextButton()

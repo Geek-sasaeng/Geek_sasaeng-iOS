@@ -40,6 +40,13 @@ class RepetitionAPI {
                     case .success(let result):
                         if result.isSuccess! {
                             print("DEBUG: 성공")
+                            viewController.idCheck = true
+                            if viewController.idTextField.text?.isValidId() ?? false
+                                && viewController.pwTextField.text?.isValidPassword() ?? false
+                                && viewController.pwCheckTextField.text == viewController.pwTextField.text
+                                && viewController.nicknameCheck {
+                                viewController.nextButton.setActivatedNextButton()
+                            }
                             viewController.idAvailableLabel.text = result.message
                             viewController.idAvailableLabel.textColor = .mainColor
                             viewController.idAvailableLabel.isHidden = false
@@ -64,6 +71,13 @@ class RepetitionAPI {
                 case.success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 성공")
+                        viewController.nicknameCheck = true
+                        if viewController.idTextField.text?.isValidId() ?? false
+                            && viewController.pwTextField.text?.isValidPassword() ?? false
+                            && viewController.pwCheckTextField.text == viewController.pwTextField.text
+                            && viewController.idCheck {
+                            viewController.nextButton.setActivatedNextButton()
+                        }
                         viewController.nickNameAvailableLabel.text = result.message
                         viewController.nickNameAvailableLabel.textColor = .mainColor
                         viewController.nickNameAvailableLabel.isHidden = false
@@ -87,6 +101,11 @@ class RepetitionAPI {
                 case.success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 성공")
+                        viewController.nicknameCheck = true
+                        if viewController.selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
+                            && viewController.emailTextField.text?.count ?? 0 >= 1 {
+                            viewController.nextButton.setActivatedNextButton()
+                        }
                         viewController.nickNameAvailableLabel.text = result.message
                         viewController.nickNameAvailableLabel.textColor = .mainColor
                         viewController.nickNameAvailableLabel.isHidden = false
