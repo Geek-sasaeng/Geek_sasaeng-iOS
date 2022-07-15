@@ -492,6 +492,16 @@ class DeliveryViewController: UIViewController {
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
         
         partyTableView.rowHeight = 125
+        
+        /* 새로고침 기능 */
+        // refresh 기능을 위해 tableView의 UIRefreshControl 객체를 초기화
+        partyTableView.refreshControl = UIRefreshControl()
+        // refresh로 위에 생기는 부분 배경색 설정
+        partyTableView.refreshControl?.backgroundColor = .white
+        // refresh 모양 색깔 설정
+        partyTableView.refreshControl?.tintColor = .mainColor
+        // refresh 하면 실행될 함수 연결
+        partyTableView.refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
     }
     
     /* 배달 목록 정보 API로 불러오기 */
@@ -683,6 +693,7 @@ class DeliveryViewController: UIViewController {
         }
     }
     
+    /* CreatePartyButton을 누르면 파티 생성 화면으로 전환 */
     @objc func tapCreatePartyButton() {
         let viewController = CreatePartyViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
@@ -721,6 +732,16 @@ class DeliveryViewController: UIViewController {
         let _: Timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (Timer) in
             self.partyTableView.reloadData()
         }
+    }
+    
+    /* 새로고침 기능 */
+    @objc private func pullToRefresh() {
+        // API 호출
+        getDeliveryList()
+        // 테이블뷰 새로고침
+        partyTableView.reloadData()
+        // 당기는 게 끝나면 refresh도 끝나도록
+        partyTableView.refreshControl?.endRefreshing()
     }
 }
 
