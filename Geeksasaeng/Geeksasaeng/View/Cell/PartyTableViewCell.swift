@@ -15,35 +15,27 @@ class PartyTableViewCell: UITableViewCell {
     var peopleImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.image = UIImage(named: "PeopleMark")
-        
         return imageView
     }()
     
-    // TODO: - API 연동하면 서버에서 받아온 정보로 label.text의 값을 설정해줘야 함
     var peopleLabel: UILabel = {
         var label = UILabel()
-        label.text = "2/4"
         label.textColor = UIColor(hex: 0xA8A8A8)
         label.font = .customFont(.neoMedium, size: 14)
-        
         return label
     }()
     
     var timeLabel: UILabel = {
         var label = UILabel()
-        label.text = "3시간 48분 남았어요"
         label.textColor = .mainColor
         label.font = .customFont(.neoMedium, size: 14)
-        
         return label
     }()
     
     var titleLabel: UILabel = {
         var label = UILabel()
-        label.text = "중식 같이 먹어요"
         label.textColor = .black
         label.font = .customFont(.neoBold, size: 18)
-        
         return label
     }()
     
@@ -52,35 +44,15 @@ class PartyTableViewCell: UITableViewCell {
         label.text = "매칭 시 바로 주문"
         label.textColor = UIColor(hex: 0x636363)
         label.font = .customFont(.neoMedium, size: 12)
-        
         return label
     }()
     
     var hashtagLabel: UILabel = {
         var label = UILabel()
-        label.text = "#만나서 먹을 수 있어요"
         label.textColor = UIColor(hex: 0x636363)
         label.font = .customFont(.neoMedium, size: 12)
-        
         return label
     }()
-    
-//    var nameLabel: UILabel = {
-//        var label = UILabel()
-//        label.text = "네오"
-//        label.textColor = UIColor(hex: 0x636363)
-//        label.font = .customFont(.neoMedium, size: 12)
-//
-//        return label
-//    }()
-//
-//    var badgeImageView: UIImageView = {
-//        var imageView = UIImageView()
-//        imageView.image = UIImage(named: "ProfileImage")
-//
-//        return imageView
-//    }()
-    
     
     // MARK: - layoutSubviews()
     

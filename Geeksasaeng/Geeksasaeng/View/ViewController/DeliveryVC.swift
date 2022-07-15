@@ -24,6 +24,7 @@ class DeliveryViewController: UIViewController {
         didSet
         {
             partyTableView.reloadData()
+            print(deliveryCellDataArray)
         }
     }
     
@@ -314,6 +315,7 @@ class DeliveryViewController: UIViewController {
     /* Table View */
     var partyTableView: UITableView = {
         var tableView = UITableView()
+        tableView.backgroundColor = .white
         return tableView
     }()
     
@@ -721,11 +723,70 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
         if let deliveryCellDataArray = deliveryCellDataArray {
             return deliveryCellDataArray.count
         }
-        return 10
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PartyTableViewCell", for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
+        
+        // cellDataArray에 값이 있으면 괄호 안의 코드를 실행
+        if let cellDataArray = deliveryCellDataArray {
+            // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
+            let nowData = cellDataArray[indexPath.row]
+            
+            // TODO: - hashTags는 디자인 확정된 후에 추가
+            // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
+            if let currentMatching = nowData.currentMatching,
+               let maxMatching = nowData.maxMatching,
+               let orderTime = nowData.orderTime,
+               let title = nowData.title {
+                cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
+                cell.titleLabel.text = title
+                
+                // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
+                // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                formatter.locale = Locale(identifier: "ko_KR")
+                formatter.timeZone = TimeZone(abbreviation: "KST")
+                
+                let nowDate = Date()
+                let nowDateString = formatter.string(from: nowDate)
+                print("DEBUG: 현재 시간", nowDateString)
+                
+                let orderDate = formatter.date(from: orderTime)
+                if let orderDate = orderDate {
+                    let orderDateString = formatter.string(from: orderDate)
+                    print("DEBUG: 주문 예정 시간", orderDateString)
+                    
+                    // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                    let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
+                    
+                    // 각각 일, 시간, 분 단위로 변환
+                    let dayTime = intervalSecs / 60 / 60 / 24
+                    let hourTime = intervalSecs / 60 / 60 % 24
+                    let minuteTime = intervalSecs / 60 % 60
+//                    let secondTime = intervalSecs % 60
+                    
+                    // 각 값이 0이면 텍스트에서 제외한다
+                    var dayString: String? = nil
+                    var hourString: String? = nil
+                    var minuteString: String? = nil
+                    
+                    if dayTime != 0 {
+                        dayString = "\(dayTime)일 "
+                    }
+                    if hourTime != 0 {
+                        hourString = "\(hourTime)시간 "
+                    }
+                    if minuteTime != 0 {
+                        minuteString = "\(minuteTime)분 "
+                    }
+                    
+                    cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
+                }
+            }
+        }
         
         return cell
     }
