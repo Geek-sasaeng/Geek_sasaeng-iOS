@@ -365,6 +365,8 @@ class DeliveryViewController: UIViewController {
         
         /* 배달 목록 데이터 로딩 */
         getDeliveryList()
+        /* 1분마다 시간 재설정 */
+        changeOrderTimeByMinute()
     }
     
     // MARK: - viewDidLayoutSubviews()
@@ -492,6 +494,7 @@ class DeliveryViewController: UIViewController {
         partyTableView.rowHeight = 125
     }
     
+    /* 배달 목록 정보 API로 불러오기 */
     private func getDeliveryList() {
         DeliveryListViewModel.requestGetDeliveryList(self, cursor: 0, dormitoryId: 1)
     }
@@ -682,7 +685,6 @@ class DeliveryViewController: UIViewController {
     
     @objc func tapCreatePartyButton() {
         let viewController = CreatePartyViewController()
-        
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -712,6 +714,13 @@ class DeliveryViewController: UIViewController {
         adCollectionView.isPagingEnabled = false
         adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
         adCollectionView.isPagingEnabled = true
+    }
+    
+    /* 1분에 한번씩 테이블뷰 자동 리로드 -> 스크롤 하지 않아도 남은 시간이 바뀜 */
+    private func changeOrderTimeByMinute() {
+        let _: Timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (Timer) in
+            self.partyTableView.reloadData()
+        }
     }
 }
 
