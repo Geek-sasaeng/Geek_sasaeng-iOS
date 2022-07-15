@@ -48,7 +48,7 @@ class RegisterAPI {
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
                     
-                    viewController.showDomitoryView()
+                    viewController.showHomeView()
                 } else {
                     print("DEBUG:", result.message!)
                 }

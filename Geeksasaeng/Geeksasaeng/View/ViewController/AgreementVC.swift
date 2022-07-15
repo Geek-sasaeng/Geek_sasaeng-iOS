@@ -180,6 +180,13 @@ class AgreementViewController: UIViewController {
         }
     }
     
+    public func showHomeView() {
+        let deliveryVC = DeliveryViewController()
+        deliveryVC.modalTransitionStyle = .crossDissolve
+        deliveryVC.modalPresentationStyle = .fullScreen
+        present(deliveryVC, animated: true)
+    }
+    
     public func showDomitoryView() {
         let dormitoryVC = DormitoryViewController()
         dormitoryVC.modalTransitionStyle = .crossDissolve

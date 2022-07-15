@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import CoreLocation
 
 class ReceiptPlaceViewController: UIViewController {
     // MARK: - SubViews
@@ -49,9 +50,6 @@ class ReceiptPlaceViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Properties
-    var mapView: MTMapView?
-    
     /* pageLabel: 4/4 */
     let pageLabel: UILabel = {
         let label = UILabel()
@@ -61,12 +59,22 @@ class ReceiptPlaceViewController: UIViewController {
         return label
     }()
     
+    // MARK: - Properties
+    var mapView: MTMapView?
+    var locationManager: CLLocationManager!
+    var la: Double = 0 // 현재 위도
+    var lo: Double = 0 // 현재 경도
+    var isCurrentMark = false // 현재 위치 마크가 표시되어 있는가
+    var currentLocation: String? // 현재 위치 문자열
+    
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
         setMapView()
+        setLocationManager()
         setViewLayout()
         setSubViews()
         setLayouts()
@@ -80,6 +88,7 @@ class ReceiptPlaceViewController: UIViewController {
     private func setMapView() {
         // 지도 불러오기
         mapView = MTMapView(frame: mapSubView.frame)
+        
         if let mapView = mapView {
             // 델리게이트 연결
             mapView.delegate = self
@@ -90,11 +99,20 @@ class ReceiptPlaceViewController: UIViewController {
             mapView.currentLocationTrackingMode = .onWithoutHeading
             mapView.showCurrentLocationMarker = true
             
+            
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
             
             mapSubView.addSubview(mapView)
         }
+    }
+    
+    private func setLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
     }
     
     private func setViewLayout() {
@@ -150,33 +168,16 @@ class ReceiptPlaceViewController: UIViewController {
         }
     }
     
-    /*
-    // 마커 추가
-    private func makeMarker() {
-        /*
-        저는 서버 api를 통해 가져온 데이터를 resultList에 담았어요
-        이름, 좌표, 주소 등을 담은 구조체를 담은 배열이에요
-        */
-    
-        // cnt로 마커의 tag를 구분
-        var cnt = 0
-        for item in resultList {
-            self.mapPoint1 = MTMapPoint(geoCoord: MTMapPointGeo(latitude: item.x, longitude: item.y
-            ))
-            poiItem1 = MTMapPOIItem()
-            // 핀 색상 설정
-            poiItem1?.markerType = MTMapPOIItemMarkerType.redPin
-            poiItem1?.mapPoint = mapPoint1
-            // 핀 이름 설정
-            poiItem1?.itemName = item.placeName
-            // 태그 설정
-            poiItem1?.tag = cnt
-            // 맵뷰에 추가!
-            mapView!.add(poiItem1)
-            cnt += 1
-        }
+    /* 마커 추가 메서드 */
+    func createPin(itemName: String, mapPoint: MTMapPoint, markerType: MTMapPOIItemMarkerType) -> MTMapPOIItem {
+        let poiItem = MTMapPOIItem()
+        poiItem.itemName = itemName
+        poiItem.mapPoint = mapPoint
+        poiItem.markerType = markerType
+        mapView?.addPOIItems([poiItem])
+        
+        return poiItem
     }
-     */
     
     @objc func removeAllSubVC() {
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
@@ -195,4 +196,74 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
         let index = poiItem.tag
     }
     
+    func mapView(_ mapView: MTMapView!, updateCurrentLocation location: MTMapPoint!, withAccuracy accuracy: MTMapLocationAccuracy) {
+        let currentLocation = location.mapPointGeo()
+        print("MTMapView updateCurrentLocation (\(currentLocation.latitude), \(currentLocation.longitude)) accuracy (\(accuracy))")
+        
+    }
+    
+    func mapView(_ mapView: MTMapView!, updateDeviceHeading headingAngle: MTMapRotationAngle) {
+        print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
+    }
 }
+
+extension ReceiptPlaceViewController: CLLocationManagerDelegate {
+    // 위치 권한 요청
+    func getLocationUsagePermission() {
+        locationManager.requestWhenInUseAuthorization()
+    }
+    
+    // 권한 요청 답변 결과에 따라
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways:
+            print("GPS 권한 설정됨")
+        case .restricted:
+            print("GPS 권한 설정되지 않음")
+            getLocationUsagePermission()
+        case .denied:
+            print("GPS 권한 요청 거부됨")
+            getLocationUsagePermission()
+        default:
+            print("GPS: Default")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations[locations.count - 1]
+        la = location.coordinate.latitude
+        lo = location.coordinate.longitude
+        print("DEBUG(la):: \(location.coordinate.latitude)")
+        print("DEBUG(lo):: \(location.coordinate.longitude)")
+        
+        /* 현재 위치를 한글 데이터로 받아오기 */
+        let locationNow = CLLocation(latitude: la, longitude: lo) // 현재 위치
+        let geocoder = CLGeocoder()
+        let locale = Locale(identifier: "ko_kr")
+        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
+        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
+            if let address = placemarks {
+                if let administrativeArea = address.last?.administrativeArea,
+                   let locality = address.last?.locality,
+                   let name = address.last?.name {
+                    /* 현재 위치를 마커로 표시 */
+                    if self.isCurrentMark == false {
+                        let currentPoiItem = MTMapPOIItem()
+                        currentPoiItem.itemName = "\(administrativeArea) \(locality) \(name)"
+                        currentPoiItem.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: self.la, longitude: self.lo))
+                        currentPoiItem.markerType = .redPin
+                        
+                        self.mapView?.addPOIItems([currentPoiItem])
+                        
+                        self.isCurrentMark = true
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*
+ 현재 위치 마커까지 구현 완료
+ 검색해서 위도 경도로 변환하고 지도에 표시해야 할 듯 ,,,,,?
+ */
