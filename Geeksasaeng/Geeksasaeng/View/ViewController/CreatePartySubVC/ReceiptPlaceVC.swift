@@ -28,6 +28,39 @@ class ReceiptPlaceViewController: UIViewController {
         return button
     }()
     
+    let searchTextField: UITextField = {
+        let textField = UITextField()
+        textField.font = .customFont(.neoRegular, size: 15)
+        textField.placeholder = "입력하세요"
+        textField.makeBottomLine(210)
+        return textField
+    }()
+    
+    let searchButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        button.tintColor = UIColor(hex: 0x2F2F2F)
+        button.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
+        return button
+    }()
+    
+    let customView: UIView = {
+        let view = UIView()
+        view.snp.makeConstraints { make in
+            make.width.equalTo(150)
+            make.height.equalTo(30)
+        }
+        
+        let button = UIButton()
+        button.setTitle("이 위치로 지정", for: .normal)
+        view.addSubview(button)
+        button.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        return view
+    }()
+    
     let mapSubView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
@@ -59,13 +92,23 @@ class ReceiptPlaceViewController: UIViewController {
         return label
     }()
     
+//    /* 마커 좌표 테스트용 버튼 */
+//    let testButton: UIButton = {
+//        let button = UIButton()
+//        button.setTitle("Test!", for: .normal)
+//        button.setTitleColor(.black, for: .normal)
+//        button.addTarget(self, action: #selector(tapTestButton), for: .touchUpInside)
+//        return button
+//    }()
+    
     // MARK: - Properties
     var mapView: MTMapView?
     var locationManager: CLLocationManager!
     var la: Double = 0 // 현재 위도
     var lo: Double = 0 // 현재 경도
-    var isCurrentMark = false // 현재 위치 마크가 표시되어 있는가
-    var currentLocation: String? // 현재 위치 문자열
+    var markerLocation: MTMapPoint? // 마커 좌표
+    var marker = MTMapPOIItem()
+    var markerAddress: String? // 마커 좌표의 주소
     
     
     // MARK: - Life Cycle
@@ -132,7 +175,7 @@ class ReceiptPlaceViewController: UIViewController {
     }
     
     private func setSubViews() {
-        [titleLabel, backButton, mapSubView, confirmButton, pageLabel].forEach {
+        [titleLabel, backButton, searchTextField, searchButton, mapSubView, confirmButton, pageLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -146,6 +189,18 @@ class ReceiptPlaceViewController: UIViewController {
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
             make.left.equalToSuperview().inset(31)
+        }
+        
+        searchTextField.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(24)
+            make.left.equalToSuperview().inset(29)
+            make.width.equalTo(210)
+        }
+        
+        searchButton.snp.makeConstraints { make in
+            make.top.equalTo(searchTextField.snp.top)
+            make.left.equalTo(searchTextField.snp.right).offset(18)
+            make.width.height.equalTo(30)
         }
         
         mapSubView.snp.makeConstraints { make in
@@ -166,6 +221,12 @@ class ReceiptPlaceViewController: UIViewController {
             make.top.equalTo(confirmButton.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         }
+        
+//        testButton.snp.makeConstraints { make in
+//            make.top.equalTo(searchButton.snp.bottom).offset(10)
+//            make.right.equalTo(searchButton.snp.right)
+//            make.width.height.equalTo(30)
+//        }
     }
     
     /* 마커 추가 메서드 */
@@ -180,6 +241,7 @@ class ReceiptPlaceViewController: UIViewController {
     }
     
     @objc func removeAllSubVC() {
+        CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
     
@@ -187,6 +249,39 @@ class ReceiptPlaceViewController: UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
+    
+    @objc func tapSearchButton() {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(searchTextField.text ?? "") { placemark, error in
+            // 검색된 위치로 맵의 중심을 이동
+            self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0)), zoomLevel: 5, animated: true)
+            
+            // 검색된 위치에 마커 생성
+            self.marker.showAnimationType = .dropFromHeaven
+            self.marker.markerType = .redPin
+            self.marker.itemName = "요기?"
+            self.marker.showDisclosureButtonOnCalloutBalloon = false
+            self.marker.draggable = true
+            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0))
+            
+            // 주소 추출
+            if let administrativeArea = placemark?.first?.administrativeArea,
+               let locality = placemark?.first?.locality,
+               let name = placemark?.first?.name {
+                self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+            }
+            
+            // 지도에 마커 추가
+            self.mapView?.addPOIItems([self.marker])
+        }
+    }
+    
+    // TODO: - marker 이동 시 위치 갱신이 안 됨 (marker.mapPoint)
+//    @objc func tapTestButton() {
+//        print("========================")
+//        print(marker.mapPoint.mapPointGeo().latitude)
+//        print(marker.mapPoint.mapPointGeo().longitude)
+//    }
 }
 
 extension ReceiptPlaceViewController: MTMapViewDelegate {
@@ -236,30 +331,34 @@ extension ReceiptPlaceViewController: CLLocationManagerDelegate {
         print("DEBUG(la):: \(location.coordinate.latitude)")
         print("DEBUG(lo):: \(location.coordinate.longitude)")
         
-        /* 현재 위치를 한글 데이터로 받아오기 */
-        let locationNow = CLLocation(latitude: la, longitude: lo) // 현재 위치
-        let geocoder = CLGeocoder()
-        let locale = Locale(identifier: "ko_kr")
-        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
-        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
-            if let address = placemarks {
-                if let administrativeArea = address.last?.administrativeArea,
-                   let locality = address.last?.locality,
-                   let name = address.last?.name {
-                    /* 현재 위치를 마커로 표시 */
-                    if self.isCurrentMark == false {
-                        let currentPoiItem = MTMapPOIItem()
-                        currentPoiItem.itemName = "\(administrativeArea) \(locality) \(name)"
-                        currentPoiItem.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: self.la, longitude: self.lo))
-                        currentPoiItem.markerType = .redPin
-                        
-                        self.mapView?.addPOIItems([currentPoiItem])
-                        
-                        self.isCurrentMark = true
-                    }
-                }
-            }
-        }
+        
+//        /* 현재 위치를 한글 데이터로 받아오기 */
+//        let locationNow = CLLocation(latitude: la, longitude: lo) // 현재 위치
+//        let geocoder = CLGeocoder()
+//        let locale = Locale(identifier: "ko_kr")
+//        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
+//        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
+//            if let address = placemarks {
+//                if let administrativeArea = address.last?.administrativeArea,
+//                   let locality = address.last?.locality,
+//                   let name = address.last?.name {
+//                    /* 현재 위치를 마커로 표시 */
+//                    if self.isCurrentMark == false { // 마커 초기 위치 = 현재 위치
+//                        let currentPoiItem = MTMapPOIItem()
+//                        currentPoiItem.itemName = "\(administrativeArea) \(locality) \(name)"
+//                        currentPoiItem.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: self.la, longitude: self.lo))
+//                        currentPoiItem.markerType = .redPin
+//                        currentPoiItem.draggable = true
+//
+//                        self.markerLocation = currentPoiItem.mapPoint
+//
+//                        self.mapView?.addPOIItems([currentPoiItem])
+//
+//                        self.isCurrentMark = true
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

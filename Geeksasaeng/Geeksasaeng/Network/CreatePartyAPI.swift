@@ -17,4 +17,5 @@ struct CreateParty {
     static var category: String?
     static var receiptPlace: String?
     static var orderAsSoonAsMatch: Bool?
+    static var address: String?
 }

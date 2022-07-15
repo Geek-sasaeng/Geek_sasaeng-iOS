@@ -271,6 +271,13 @@ class CreatePartyViewController: UIViewController {
                     self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
+                if let address = CreateParty.address {
+                    self.selectedPlaceLabel.text = "      \(address)"
+                    self.selectedPlaceLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedPlaceLabel.textColor = .black
+                    self.selectedPlaceLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                
                 
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
