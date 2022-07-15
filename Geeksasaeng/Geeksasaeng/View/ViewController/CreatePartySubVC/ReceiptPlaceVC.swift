@@ -268,6 +268,7 @@ class ReceiptPlaceViewController: UIViewController {
             if let administrativeArea = placemark?.first?.administrativeArea,
                let locality = placemark?.first?.locality,
                let name = placemark?.first?.name {
+                // 일단 검색 결과 주소를 넣고 마커 이동하면 갱신된 주소를 대입
                 self.markerAddress = "\(administrativeArea) \(locality) \(name)"
             }
             
@@ -299,6 +300,28 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
     
     func mapView(_ mapView: MTMapView!, updateDeviceHeading headingAngle: MTMapRotationAngle) {
         print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
+    }
+    
+    func mapView(_ mapView: MTMapView!, draggablePOIItem poiItem: MTMapPOIItem!, movedToNewMapPoint newMapPoint: MTMapPoint!) {
+        print("==============")
+        print("\(newMapPoint.mapPointGeo().latitude)")
+        print("\(newMapPoint.mapPointGeo().longitude)")
+        
+        /* 현재 위치를 한글 데이터로 받아오기 */
+        let locationNow = CLLocation(latitude: newMapPoint.mapPointGeo().latitude, longitude: newMapPoint.mapPointGeo().longitude) // 마커 위치
+        let geocoder = CLGeocoder()
+        let locale = Locale(identifier: "ko_kr")
+        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
+        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
+            if let address = placemarks {
+                if let administrativeArea = address.last?.administrativeArea,
+                   let locality = address.last?.locality,
+                   let name = address.last?.name {
+                    /* 마커의 주소를 저장 */
+                    self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+                }
+            }
+        }
     }
 }
 
