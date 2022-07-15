@@ -12,6 +12,15 @@ class PartyViewController: UIViewController {
     
     // MARK: - Subviews
     
+    // 외부 참조가 필요해서 이 버튼만 밖에 빼놓음!
+    lazy var reportButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("신고하기", for: .normal)
+        // MARK: - 신고하기 뷰 연결 필요
+//        button.addTarget(self, action: #selector(showReportView), for: .touchUpInside)
+        return button
+    }()
+    
     /* 오른쪽 상단의 옵션 탭 눌렀을 때 나오는 옵션 뷰 */
     lazy var optionView: UIView = {
         // 등장 애니메이션을 위해 뷰의 생성 때부터 원점과 크기를 정해놓음
@@ -54,13 +63,6 @@ class PartyViewController: UIViewController {
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
             // MARK: - 삭제하기 뷰 연결 필요
     //        button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
-            return button
-        }()
-        var reportButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("신고하기", for: .normal)
-            // MARK: - 신고하기 뷰 연결 필요
-    //        button.addTarget(self, action: #selector(showReportView), for: .touchUpInside)
             return button
         }()
         
@@ -448,7 +450,7 @@ class PartyViewController: UIViewController {
         optionView.snp.makeConstraints { make in
             make.top.right.equalToSuperview()
             make.left.equalToSuperview().inset(150)
-            make.bottom.equalToSuperview().inset(563)
+            make.bottom.equalTo(reportButton.snp.bottom).offset(25)
         }
         
         // 오른쪽 위에서부터 대각선 아래로 내려오는 애니메이션을 설정
