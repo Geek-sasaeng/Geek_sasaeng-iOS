@@ -23,6 +23,7 @@ class AdCollectionViewCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 5
         imageView.backgroundColor = .mainColor  // test. 배포 때는 없앨 것
         imageView.contentMode = .scaleToFill
+        imageView.image = UIImage()
         return imageView
     }()
     

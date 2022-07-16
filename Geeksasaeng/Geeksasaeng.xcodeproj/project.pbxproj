@@ -907,6 +907,12 @@
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
+		A2035EA128833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
+		A2035EA228833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
+		A2035EA328833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
+		A2035EA5288341B00051498A /* AdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA4288341B00051498A /* AdModel.swift */; };
+		A2035EA6288341B00051498A /* AdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA4288341B00051498A /* AdModel.swift */; };
+		A2035EA7288341B00051498A /* AdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA4288341B00051498A /* AdModel.swift */; };
 		A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterAPI.swift */; };
 		A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterAPI.swift */; };
 		A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085AD1287048A800D6CF79 /* RegisterAPI.swift */; };
@@ -928,9 +934,6 @@
 		A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
 		A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
 		A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
-		A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
-		A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
-		A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219B272287575E4000F34A3 /* AdCarouselModel.swift */; };
 		A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
@@ -1344,6 +1347,8 @@
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
 		724884CEEFB929FF25B554A0 /* Pods-Geeksasaeng.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.debug.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.debug.xcconfig"; sourceTree = "<group>"; };
 		8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2035EA028833ED60051498A /* AdViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdViewModel.swift; sourceTree = "<group>"; };
+		A2035EA4288341B00051498A /* AdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdModel.swift; sourceTree = "<group>"; };
 		A2085AD1287048A800D6CF79 /* RegisterAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAPI.swift; sourceTree = "<group>"; };
 		A2085AD6287054E900D6CF79 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085ADE2870550200D6CF79 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
@@ -1351,7 +1356,6 @@
 		A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListModel.swift; sourceTree = "<group>"; };
 		A20FC0F0287F30C40095224C /* SeachVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeachVC.swift; sourceTree = "<group>"; };
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
-		A219B272287575E4000F34A3 /* AdCarouselModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCarouselModel.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
 		A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthViewModel.swift; sourceTree = "<group>"; };
@@ -1423,13 +1427,13 @@
 			children = (
 				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
 				100FB99828745DDE008947DD /* NaverLoginModel.swift */,
-				A219B272287575E4000F34A3 /* AdCarouselModel.swift */,
 				A2513F1C287872D70029C279 /* EmailAuthModel.swift */,
 				A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */,
 				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
 				A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
+				A2035EA4288341B00051498A /* AdModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1445,6 +1449,7 @@
 				A2513F142878612B0029C279 /* PhoneAuthCheckViewModel.swift */,
 				A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */,
 				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
+				A2035EA028833ED60051498A /* AdViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -3062,7 +3067,6 @@
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
-				A219B273287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
@@ -3092,7 +3096,9 @@
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				A2035EA128833ED60051498A /* AdViewModel.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
+				A2035EA5288341B00051498A /* AdModel.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A20FC0F1287F30C40095224C /* SeachVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
@@ -3119,13 +3125,13 @@
 				106D974E287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
+				A2035EA6288341B00051498A /* AdModel.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				A20FC0EA287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2513F1228785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
-				A219B274287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
@@ -3156,6 +3162,7 @@
 				1040FB9B2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
+				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 			);
@@ -3173,11 +3180,13 @@
 				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
+				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
+				A2035EA7288341B00051498A /* AdModel.swift in Sources */,
 				A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
@@ -3207,7 +3216,6 @@
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
-				A219B275287575E4000F34A3 /* AdCarouselModel.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A20FC0F3287F30C40095224C /* SeachVC.swift in Sources */,

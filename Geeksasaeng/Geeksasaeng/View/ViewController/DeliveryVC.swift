@@ -7,13 +7,18 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
     
     // 광고 배너 이미지 데이터 배열
-    let adCellDataArray = AdCarouselModel.adCellDataArray
+    var adCellDataArray: [AdModelResult] = [] {
+        didSet {
+            print("광고!", adCellDataArray)
+        }
+    }
     // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
     var nowPage: Int = 0
     
@@ -362,6 +367,9 @@ class DeliveryViewController: UIViewController {
         
         print("====\(LoginModel.jwt)====")
         
+        /* 광고 목록 데이터 로딩 */
+        getAdList()
+        
         /* 배달 목록 데이터 로딩 */
         getDeliveryList()
         /* 1분마다 시간 재설정 */
@@ -502,6 +510,11 @@ class DeliveryViewController: UIViewController {
         partyTableView.refreshControl?.tintColor = .mainColor
         // refresh 하면 실행될 함수 연결
         partyTableView.refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+    }
+    
+    /* 광고 목록 데이터 API로 불러오기 */
+    private func getAdList() {
+        AdViewModel.requestAd(self)
     }
     
     /* 배달 목록 정보 API로 불러오기 */
@@ -752,21 +765,23 @@ class DeliveryViewController: UIViewController {
     /* 다음 광고로 자동 스크롤 */
     private func moveToNextAd() {
 //        print("DEBUG: ", nowPage)
-        // 현재 페이지가 마지막 페이지일 경우,
-        if nowPage == adCellDataArray.count - 1 {
-            // 맨 처음 페이지로 돌아가도록
-            adCollectionView.isPagingEnabled = false    // 자동 스크롤을 위해서 잠시 수동 스크롤 기능을 끈 것.
-            adCollectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
+        if adCellDataArray.count > 1 {
+            // 현재 페이지가 마지막 페이지일 경우,
+            if nowPage == adCellDataArray.count - 1 {
+                // 맨 처음 페이지로 돌아가도록
+                adCollectionView.isPagingEnabled = false    // 자동 스크롤을 위해서 잠시 수동 스크롤 기능을 끈 것.
+                adCollectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
+                adCollectionView.isPagingEnabled = true
+                nowPage = 0
+                return
+            }
+            
+            // 다음 페이지로 전환
+            nowPage += 1
+            adCollectionView.isPagingEnabled = false
+            adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
             adCollectionView.isPagingEnabled = true
-            nowPage = 0
-            return
         }
-        
-        // 다음 페이지로 전환
-        nowPage += 1
-        adCollectionView.isPagingEnabled = false
-        adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
-        adCollectionView.isPagingEnabled = true
     }
     
     /* 1분에 한번씩 테이블뷰 자동 리로드 -> 스크롤 하지 않아도 남은 시간이 바뀜 */
@@ -906,7 +921,11 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdCollectionViewCell.identifier, for: indexPath) as? AdCollectionViewCell else { return UICollectionViewCell() }
         
         // cell의 이미지(광고 이미지) 설정
-        cell.cellImageView.image = UIImage(named: adCellDataArray[indexPath.item].cellImagePath)
+        // url에 정확한 이미지 url 주소를 넣는다
+        if let imgString = adCellDataArray[indexPath.item].imgUrl {
+            let url = URL(string: imgString)
+            cell.cellImageView.kf.setImage(with: url)
+        }
 //        print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
         
         return cell
