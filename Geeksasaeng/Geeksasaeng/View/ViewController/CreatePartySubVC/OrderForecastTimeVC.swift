@@ -5,6 +5,8 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
+// TODO: - datePicker에서 year 지우기
+
 import UIKit
 import SnapKit
 
@@ -90,6 +92,7 @@ class OrderForecastTimeViewController: UIViewController {
         setLayouts()
         setDatePicker()
         setTimePicker()
+        setDefaultValueOfPicker()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -159,6 +162,37 @@ class OrderForecastTimeViewController: UIViewController {
         pageLabel.snp.makeConstraints { make in
             make.top.equalTo(nextButton.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
+        }
+    }
+    
+    private func setDefaultValueOfPicker() {
+        if let orderForecastTime = CreateParty.orderForecastTime {
+            if let str = CreateParty.orderForecastTime?.replacingOccurrences(of: " ", with: "") {
+                let startIdx = str.index(str.startIndex, offsetBy: 6)
+                let dateRange = ..<startIdx // 월, 일
+                let timeRange = startIdx... // 시, 분
+                // TextField 초기값 설정
+                dateTextField.text = "\(str[dateRange])"
+                timeTextField.text = "\(str[timeRange])"
+                
+                // PickerView 초기값 설정
+                let dateStr = str[dateRange].replacingOccurrences(of: "월", with: "-").replacingOccurrences(of: "일", with: "")
+                let timeStr = str[timeRange].replacingOccurrences(of: "시", with: ":").replacingOccurrences(of: "분", with: "")
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy"
+                let currentYears = formatter.string(from: Date())
+                // 최종 문자열
+                let formattedDate = "\(currentYears)-\(dateStr)"
+                let formattedTime = "\(timeStr)"
+                formatter.dateFormat = "yyyy-MM-dd"
+                if let formattedDate = formatter.date(from: formattedDate) {
+                    datePicker.setDate(formattedDate, animated: true)
+                }
+                formatter.dateFormat = "HH:mm"
+                if let formattedTime = formatter.date(from: formattedTime) {
+                    timePicker.setDate(formattedTime, animated: true)
+                }
+            }
         }
     }
     

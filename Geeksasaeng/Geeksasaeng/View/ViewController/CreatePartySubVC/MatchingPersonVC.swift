@@ -65,6 +65,7 @@ class MatchingPersonViewController: UIViewController {
         personPickerView.delegate = self
         personPickerView.dataSource = self
         
+        setDefaultValueOfPicker()
         setViewLayout()
         setSubViews()
         setLayouts()
@@ -131,6 +132,13 @@ class MatchingPersonViewController: UIViewController {
                 make.center.equalToSuperview()
             }
         }, completion: nil)
+    }
+    
+    private func setDefaultValueOfPicker() {
+        if let matchingPerson = CreateParty.matchingPerson {
+            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
+            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
+        }
     }
     
     @objc func tapBackButton() {

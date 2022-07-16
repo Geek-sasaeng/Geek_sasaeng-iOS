@@ -92,15 +92,6 @@ class ReceiptPlaceViewController: UIViewController {
         return label
     }()
     
-//    /* 마커 좌표 테스트용 버튼 */
-//    let testButton: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("Test!", for: .normal)
-//        button.setTitleColor(.black, for: .normal)
-//        button.addTarget(self, action: #selector(tapTestButton), for: .touchUpInside)
-//        return button
-//    }()
-    
     // MARK: - Properties
     var mapView: MTMapView?
     var locationManager: CLLocationManager!
@@ -221,12 +212,6 @@ class ReceiptPlaceViewController: UIViewController {
             make.top.equalTo(confirmButton.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         }
-        
-//        testButton.snp.makeConstraints { make in
-//            make.top.equalTo(searchButton.snp.bottom).offset(10)
-//            make.right.equalTo(searchButton.snp.right)
-//            make.width.height.equalTo(30)
-//        }
     }
     
     /* 마커 추가 메서드 */
@@ -276,13 +261,6 @@ class ReceiptPlaceViewController: UIViewController {
             self.mapView?.addPOIItems([self.marker])
         }
     }
-    
-    // TODO: - marker 이동 시 위치 갱신이 안 됨 (marker.mapPoint)
-//    @objc func tapTestButton() {
-//        print("========================")
-//        print(marker.mapPoint.mapPointGeo().latitude)
-//        print(marker.mapPoint.mapPointGeo().longitude)
-//    }
 }
 
 extension ReceiptPlaceViewController: MTMapViewDelegate {

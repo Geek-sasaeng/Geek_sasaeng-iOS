@@ -2,6 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=swift,xcode
 
 ### Swift ###
+Info.plist
+APIKEY.swift
+
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore

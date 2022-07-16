@@ -5,6 +5,8 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
+// TODO: - 선택된 버튼 미리 띄우기
+
 import UIKit
 import SnapKit
 
@@ -122,6 +124,7 @@ class CategoryViewController: UIViewController {
         setCategoryButtons()
         setSubViews()
         setLayouts()
+        setDefaultValueOfButton()
     }
     
     private func setViewLayout() {
@@ -222,6 +225,19 @@ class CategoryViewController: UIViewController {
         [dessert, etc].forEach {
             $0.snp.makeConstraints { make in
                 make.top.equalTo(rawfish.snp.bottom).offset(7)
+            }
+        }
+    }
+    
+    private func setDefaultValueOfButton() {
+        if let category = CreateParty.category {
+            [korean, western, chinese, japanese, snack, chicken, rawfish, fastfood, dessert, etc].forEach {
+                if category == $0.titleLabel?.text {
+                    $0.setTitleColor(.white, for: .normal)
+                    $0.backgroundColor = .mainColor
+                    selectedCategory = $0
+                    nextButton.setActivatedNextButton()
+                }
             }
         }
     }

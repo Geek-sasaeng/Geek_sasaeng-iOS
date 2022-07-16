@@ -6,7 +6,6 @@
 //
 
 /* 파티 생성하기 API 구현 이후: 등록버튼 누를 때 전역변수 모두 초기화 */
-// TODO: - 각 서브뷰 띄우기
 
 import UIKit
 import SnapKit
@@ -181,6 +180,21 @@ class CreatePartyViewController: UIViewController {
         setLayouts()
         setDefaultDate()
         setNotificationCenter()
+        setTapGestureToLabels()
+    }
+    
+    private func setTapGestureToLabels() {
+        let personTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPersonLabel))
+        selectedPersonLabel.isUserInteractionEnabled = true
+        selectedPersonLabel.addGestureRecognizer(personTapGesture)
+        
+        let categoryTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedCategoryLabel))
+        selectedCategoryLabel.isUserInteractionEnabled = true
+        selectedCategoryLabel.addGestureRecognizer(categoryTapGesture)
+        
+        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPlaceLabel))
+        selectedPlaceLabel.isUserInteractionEnabled = true
+        selectedPlaceLabel.addGestureRecognizer(placeTapGesture)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -396,6 +410,15 @@ class CreatePartyViewController: UIViewController {
         orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
     }
     
+    private func createBlueView() {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        visualEffectView.isUserInteractionEnabled = false
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
+    }
+    
     /* 이전 화면으로 돌아가기 */
     @objc func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated:true)
@@ -415,12 +438,7 @@ class CreatePartyViewController: UIViewController {
     
     /* show 주문 예정 시간 VC */
     @objc func showOrderForecaseTimeVC() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        visualEffectView.isUserInteractionEnabled = false
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+        createBlueView()
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -447,7 +465,100 @@ class CreatePartyViewController: UIViewController {
             self.view.layoutSubviews()
         }
     }
+    
+    @objc func tapSelectedPersonLabel() {
+        print("tap works!!")
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
 
+    @objc func tapSelectedCategoryLabel() {
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let categoryVC = CategoryViewController()
+            self.addChild(categoryVC)
+            self.view.addSubview(categoryVC.view)
+            categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    @objc func tapSelectedPlaceLabel() {
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, receiptPlaceVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let categoryVC = CategoryViewController()
+            self.addChild(categoryVC)
+            self.view.addSubview(categoryVC.view)
+            categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let receiptPlaceVC = ReceiptPlaceViewController()
+            self.addChild(receiptPlaceVC)
+            self.view.addSubview(receiptPlaceVC.view)
+            receiptPlaceVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
 }
 
 extension CreatePartyViewController: UITextFieldDelegate {
