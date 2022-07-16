@@ -491,6 +491,7 @@ class DeliveryViewController: UIViewController {
         partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
         
         partyTableView.rowHeight = 125
+        partyTableView.separatorInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
         
         /* 새로고침 기능 */
         // refresh 기능을 위해 tableView의 UIRefreshControl 객체를 초기화
