@@ -227,6 +227,14 @@ class ReceiptPlaceViewController: UIViewController {
     
     @objc func removeAllSubVC() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
+        
+        // API Input에 저장
+        if let markerAddress = markerAddress {
+            CreateParty.location = markerAddress
+        } else {
+            CreateParty.location = "주소를 찾지 못했습니다"
+        }
+        
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
     

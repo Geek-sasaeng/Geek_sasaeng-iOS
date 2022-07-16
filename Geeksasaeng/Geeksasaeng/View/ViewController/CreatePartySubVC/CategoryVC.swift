@@ -245,6 +245,18 @@ class CategoryViewController: UIViewController {
     @objc func showReceiptPlaceVC() {
         CreateParty.category = data
         
+        // API Input에 저장
+        switch data {
+        case "한식":
+            CreateParty.foodCategory = 1
+        case "중식":
+            CreateParty.foodCategory = 2
+        case "일식":
+            CreateParty.foodCategory = 3
+        default:
+            CreateParty.foodCategory = 1 // 나머지는 일단 한식으로 저장
+        }
+        
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = ReceiptPlaceViewController()
             self.addChild(childView)

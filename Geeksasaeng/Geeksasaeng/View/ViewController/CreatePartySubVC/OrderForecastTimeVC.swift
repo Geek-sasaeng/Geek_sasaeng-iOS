@@ -227,8 +227,19 @@ class OrderForecastTimeViewController: UIViewController {
     }
     
     @objc func showMatchingPersonVC() {
-        // 날짜, 시간 정보 전역변수에 저장
+        // 날짜, 시간 정보, 매칭 시 바로 주문 해시태그 값 전역변수에 저장
         CreateParty.orderForecastTime = "\(dateTextField.text!)        \(timeTextField.text!)"
+        if orderAsSoonAsMatchButton.tintColor == .mainColor {
+            CreateParty.hashTagOrderAsSoonAsMatch = 1
+        }
+        
+        // API Input에 저장
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let date = formatter.string(from: datePicker.date)
+        formatter.dateFormat = "HH:mm:ss"
+        let time = formatter.string(from: timePicker.date)
+        CreateParty.orderTime = "\(date) \(time)"
         
         if orderAsSoonAsMatchButton.currentImage == UIImage(systemName: "checkmark.circle.fill") {
             CreateParty.orderAsSoonAsMatch = true

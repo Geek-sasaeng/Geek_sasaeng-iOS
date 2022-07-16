@@ -24,14 +24,6 @@ class CreatePartyViewController: UIViewController {
         return barButton
     }()
     
-    var activatedRightBarButtonItem: UIBarButtonItem = {
-        let registerButton = UIButton()
-        registerButton.setTitle("등록", for: .normal)
-        registerButton.setTitleColor(.mainColor, for: .normal)
-        let barButton = UIBarButtonItem(customView: registerButton)
-        return barButton
-    }()
-    
     var eatTogetherButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
@@ -305,7 +297,8 @@ class CreatePartyViewController: UIViewController {
                 
                 self.settedOptions = true
                 if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
-                    self.navigationItem.rightBarButtonItem = self.activatedRightBarButtonItem
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+                    self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
                     self.view.layoutSubviews()
                 }
             }
@@ -429,10 +422,12 @@ class CreatePartyViewController: UIViewController {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             eatTogetherButton.tintColor = .mainColor
             eatTogetherButton.setTitleColor(.mainColor, for: .normal)
+            CreateParty.hashTagEatTogether = 2
         } else {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
             eatTogetherButton.tintColor = UIColor(hex: 0xD8D8D8)
             eatTogetherButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+            CreateParty.hashTagEatTogether = nil
         }
     }
     
@@ -457,7 +452,8 @@ class CreatePartyViewController: UIViewController {
             && editedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            self.navigationItem.rightBarButtonItem = activatedRightBarButtonItem
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+            self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
             self.view.layoutSubviews()
         } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1)
                     || (editedContentsTextView && settedOptions && contentsTextView.text.count < 1) {
@@ -559,6 +555,36 @@ class CreatePartyViewController: UIViewController {
             }
         }, completion: nil)
     }
+    
+    @objc func tapRegisterButton() {
+        // api 호출
+        if let title = titleTextField.text,
+           let content = contentsTextView.text,
+           let orderTime = CreateParty.orderTime,
+           let maxMatching = CreateParty.maxMatching,
+           let foodCategory = CreateParty.foodCategory,
+           let location = CreateParty.location {
+            var hashTag: [Int] = []
+            if let hashTahAsSoonAsMatch = CreateParty.hashTagOrderAsSoonAsMatch {
+                hashTag.append(hashTahAsSoonAsMatch)
+            }
+            if let hashTagEatTogether = CreateParty.hashTagEatTogether {
+                hashTag.append(hashTagEatTogether)
+            }
+            
+            let input = CreatePartyInput(
+                dormitory: 1,
+                title: title,
+                content: content,
+                orderTime: orderTime,
+                maxMatching: maxMatching,
+                foodCategory: foodCategory,
+                location: location,
+                hashTag: hashTag)
+            
+            CreatePartyAPI.registerParty(input)
+        }
+    }
 }
 
 extension CreatePartyViewController: UITextFieldDelegate {
@@ -592,7 +618,8 @@ extension CreatePartyViewController: UITextViewDelegate {
             && editedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            navigationItem.rightBarButtonItem = activatedRightBarButtonItem
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(tapRegisterButton))
+            navigationItem.rightBarButtonItem?.tintColor = .mainColor
             view.layoutSubviews()
         } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 1)
                     || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1) {
