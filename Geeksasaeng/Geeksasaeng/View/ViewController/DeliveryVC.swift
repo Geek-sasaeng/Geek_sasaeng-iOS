@@ -20,13 +20,12 @@ class DeliveryViewController: UIViewController {
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
     
-    var deliveryCellDataArray: [DeliveryListModelResult]? = nil {
-        didSet
-        {
-            partyTableView.reloadData()
-            print(deliveryCellDataArray)
-        }
-    }
+    // 배달 목록 화면 처음 킨 건지 여부 확인
+    var isInitial = true
+    // 목록에서 현재 커서 위치
+    var cursor = 0
+    // 배달 목록 데이터가 저장되는 배열
+    var deliveryCellDataArray: [DeliveryListModelResult] = []
     
     // MARK: - Subviews
     
@@ -506,7 +505,49 @@ class DeliveryViewController: UIViewController {
     
     /* 배달 목록 정보 API로 불러오기 */
     private func getDeliveryList() {
-        DeliveryListViewModel.requestGetDeliveryList(self, cursor: 0, dormitoryId: 1)
+        self.partyTableView.tableFooterView = createSpinnerFooter()
+        
+        DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, dormitoryId: 1) { [weak self] result in
+            self?.isInitial = false
+            
+            // 데이터 로딩 표시 제거
+            DispatchQueue.main.async {
+                self?.partyTableView.tableFooterView = nil
+            }
+            
+            switch result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 배달 목록 데이터 받아오기 성공")
+                    result.result?.forEach {
+                        // 데이터를 배열에 추가
+                        self?.deliveryCellDataArray.append($0)
+                        print("DEBUG: 받아온 배달 데이터", $0)
+                    }
+                    // 테이블뷰 리로드
+                    DispatchQueue.main.async {
+                        self?.partyTableView.reloadData()
+                    }
+                } else {
+                    print("DEBUG: 실패", result.message!)
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+            }
+        }
+    }
+    
+    /* 무한 스크롤로 마지막 데이터까지 가면 나오는(= FooterView) 데이터 로딩 표시 생성 */
+    private func createSpinnerFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
+        
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.center = footerView.center
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        spinner.color = .mainColor
+        
+        return footerView
     }
     
     /* collection view 등록 */
@@ -709,7 +750,7 @@ class DeliveryViewController: UIViewController {
     
     /* 다음 광고로 자동 스크롤 */
     private func moveToNextAd() {
-        print("DEBUG: ", nowPage)
+//        print("DEBUG: ", nowPage)
         // 현재 페이지가 마지막 페이지일 경우,
         if nowPage == adCellDataArray.count - 1 {
             // 맨 처음 페이지로 돌아가도록
@@ -736,12 +777,37 @@ class DeliveryViewController: UIViewController {
     
     /* 새로고침 기능 */
     @objc private func pullToRefresh() {
+        // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
+        if deliveryCellDataArray.count > 10 {
+            print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
+            deliveryCellDataArray.removeAll()
+            cursor = 0
+        }
+        
         // API 호출
         getDeliveryList()
         // 테이블뷰 새로고침
         partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
         partyTableView.refreshControl?.endRefreshing()
+    }
+    
+    /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
+        if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
+            let position = scrollView.contentOffset.y
+            print("pos", position)
+            // 마지막 데이터에 도달했을 때
+            print(partyTableView.contentSize.height)
+                  print(scrollView.frame.size.height)
+            if position > (partyTableView.contentSize.height - scrollView.frame.size.height) {
+                // 다음 커서의 배달 목록을 불러온다
+                cursor += 1
+                print("DEBUG: cursor", cursor)
+                self.getDeliveryList()
+            }
+        }
     }
 }
 
@@ -750,74 +816,69 @@ class DeliveryViewController: UIViewController {
 
 extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let deliveryCellDataArray = deliveryCellDataArray {
-            return deliveryCellDataArray.count
-        }
-        return 0
+        return deliveryCellDataArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PartyTableViewCell", for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
         
-        // cellDataArray에 값이 있으면 괄호 안의 코드를 실행
-        if let cellDataArray = deliveryCellDataArray {
-            // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
-            let nowData = cellDataArray[indexPath.row]
-            
-            // TODO: - hashTags는 디자인 확정된 후에 추가
-            // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
-            if let currentMatching = nowData.currentMatching,
-               let maxMatching = nowData.maxMatching,
-               let orderTime = nowData.orderTime,
-               let title = nowData.title {
-                cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
-                cell.titleLabel.text = title
-                
-                // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
-                // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-                formatter.locale = Locale(identifier: "ko_KR")
-                formatter.timeZone = TimeZone(abbreviation: "KST")
-                
-                let nowDate = Date()
-                let nowDateString = formatter.string(from: nowDate)
-                print("DEBUG: 현재 시간", nowDateString)
-                
-                let orderDate = formatter.date(from: orderTime)
-                if let orderDate = orderDate {
-                    let orderDateString = formatter.string(from: orderDate)
-                    print("DEBUG: 주문 예정 시간", orderDateString)
-                    
-                    // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
-                    let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
-                    
-                    // 각각 일, 시간, 분 단위로 변환
-                    let dayTime = intervalSecs / 60 / 60 / 24
-                    let hourTime = intervalSecs / 60 / 60 % 24
-                    let minuteTime = intervalSecs / 60 % 60
-//                    let secondTime = intervalSecs % 60
-                    
-                    // 각 값이 0이면 텍스트에서 제외한다
-                    var dayString: String? = nil
-                    var hourString: String? = nil
-                    var minuteString: String? = nil
-                    
-                    if dayTime != 0 {
-                        dayString = "\(dayTime)일 "
-                    }
-                    if hourTime != 0 {
-                        hourString = "\(hourTime)시간 "
-                    }
-                    if minuteTime != 0 {
-                        minuteString = "\(minuteTime)분 "
-                    }
-                    
-                    cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
-                }
-            }
-        }
+        // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
+        let nowData = deliveryCellDataArray[indexPath.row]
         
+        // TODO: - hashTags는 디자인 확정된 후에 추가
+        // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
+        if let currentMatching = nowData.currentMatching,
+           let maxMatching = nowData.maxMatching,
+           let orderTime = nowData.orderTime,
+           let title = nowData.title,
+           let id = nowData.id {    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+            cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
+            cell.titleLabel.text = title + String(id)
+            
+            // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
+            // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            formatter.locale = Locale(identifier: "ko_KR")
+            formatter.timeZone = TimeZone(abbreviation: "KST")
+            
+            let nowDate = Date()
+            let nowDateString = formatter.string(from: nowDate)
+//            print("DEBUG: 현재 시간", nowDateString)
+            
+            let orderDate = formatter.date(from: orderTime)
+            if let orderDate = orderDate {
+                let orderDateString = formatter.string(from: orderDate)
+//                print("DEBUG: 주문 예정 시간", orderDateString)
+                
+                // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
+                
+                // 각각 일, 시간, 분 단위로 변환
+                let dayTime = intervalSecs / 60 / 60 / 24
+                let hourTime = intervalSecs / 60 / 60 % 24
+                let minuteTime = intervalSecs / 60 % 60
+                //                    let secondTime = intervalSecs % 60
+                
+                // 각 값이 0이면 텍스트에서 제외한다
+                var dayString: String? = nil
+                var hourString: String? = nil
+                var minuteString: String? = nil
+                
+                if dayTime != 0 {
+                    dayString = "\(dayTime)일 "
+                }
+                if hourTime != 0 {
+                    hourString = "\(hourTime)시간 "
+                }
+                if minuteTime != 0 {
+                    minuteString = "\(minuteTime)분 "
+                }
+                
+                cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
+            }
+            
+        }
         return cell
     }
     
@@ -845,14 +906,14 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         
         // cell의 이미지(광고 이미지) 설정
         cell.cellImageView.image = UIImage(named: adCellDataArray[indexPath.item].cellImagePath)
-        print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
+//        print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
         
         return cell
     }
     
     /* 수동 스크롤이 끝났을 때 실행되는 함수 */
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if adCollectionView == scrollView {
+        if scrollView == adCollectionView {
             // 현재 보이는 셀(광고)의 row로 nowPage 값을 변경한다
             for cell in adCollectionView.visibleCells {
                 /* 원래 collection view면 한번에 여러 개의 셀이 보일 수도 있으므로 visibleCells은 배열의 형태를 가지고 있지만,
