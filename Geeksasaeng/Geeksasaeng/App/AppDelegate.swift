@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         instance?.serviceUrlScheme = "naverlogin"
         instance?.consumerKey = APIKEY().naverAPIKey
-        instance?.consumerSecret = "VID6insDOM"
+        instance?.consumerSecret = APIKEY().naverSecret
         instance?.appName = "긱사생"
         
         return true

@@ -43,6 +43,7 @@ class CreatePartyViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xA8A8A8)]
         )
         textField.font = .customFont(.neoMedium, size: 20)
+        textField.textColor = .black
         
         // backgroundColor를 설정해 줬더니 borderStyle의 roundRect이 적용되지 않아서 따로 layer를 custom함
         textField.layer.cornerRadius = 5

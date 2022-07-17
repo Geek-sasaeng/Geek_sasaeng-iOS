@@ -29,6 +29,7 @@ class OrderForecastTimeViewController: UIViewController {
         textField.text = formatter.string(from: Date())
         textField.font = .customFont(.neoMedium, size: 32)
         textField.tintColor = .clear
+        textField.textColor = .black
         return textField
     }()
     
@@ -41,6 +42,7 @@ class OrderForecastTimeViewController: UIViewController {
         textField.text = formatter.string(from: Date())
         textField.font = .customFont(.neoMedium, size: 20)
         textField.tintColor = .clear
+        textField.textColor = .black
         return textField
     }()
     

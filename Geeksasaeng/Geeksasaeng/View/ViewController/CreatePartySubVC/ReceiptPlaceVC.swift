@@ -33,6 +33,7 @@ class ReceiptPlaceViewController: UIViewController {
         textField.font = .customFont(.neoRegular, size: 15)
         textField.placeholder = "입력하세요"
         textField.makeBottomLine(210)
+        textField.textColor = .black
         return textField
     }()
     
