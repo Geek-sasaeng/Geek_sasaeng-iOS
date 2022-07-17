@@ -12,12 +12,86 @@ class PartyViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var ellipsisButton: UIButton = {
+    // 외부 참조가 필요해서 이 버튼만 밖에 빼놓음!
+    lazy var reportButton: UIButton = {
         let button = UIButton()
-        button.tintColor = .init(hex: 0x2F2F2F)
-        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        button.setTitle("신고하기", for: .normal)
+        // MARK: - 신고하기 뷰 연결 필요
+//        button.addTarget(self, action: #selector(showReportView), for: .touchUpInside)
         return button
     }()
+    
+    /* 오른쪽 상단의 옵션 탭 눌렀을 때 나오는 옵션 뷰 */
+    lazy var optionView: UIView = {
+        // 등장 애니메이션을 위해 뷰의 생성 때부터 원점과 크기를 정해놓음
+        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height - 563)))
+        view.backgroundColor = .white
+        
+        // 왼쪽 하단의 코너에만 cornerRadius를 적용
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner]
+        
+        /* 옵션뷰에 있는 ellipsis 버튼
+         -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
+        lazy var ellipsisButton: UIButton = {
+            let button = UIButton()
+            button.setImage(UIImage(named: "EllipsisOption"), for: .normal)
+            button.tintColor = .init(hex: 0x2F2F2F)
+            // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
+            button.addTarget(self, action: #selector(showPartyPost), for: .touchUpInside)
+            return button
+        }()
+        view.addSubview(ellipsisButton)
+        ellipsisButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(49)
+            make.right.equalToSuperview().inset(30)
+            make.width.height.equalTo(23)
+        }
+        
+        /* 옵션뷰에 있는 버튼 */
+        var editButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("수정하기", for: .normal)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
+            // TODO: - 수정하기 뷰 연결 필요
+    //        button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
+            return button
+        }()
+        var deleteButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("삭제하기", for: .normal)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
+            // MARK: - 삭제하기 뷰 연결 필요
+    //        button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
+            return button
+        }()
+        
+        [editButton, deleteButton, reportButton].forEach {
+            // attributes
+            $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
+            $0.titleLabel?.font =  .customFont(.neoMedium, size: 18)
+            
+            // layouts
+            view.addSubview($0)
+        }
+        editButton.snp.makeConstraints { make in
+            make.top.equalTo(ellipsisButton.snp.bottom).offset(27)
+            make.centerX.equalToSuperview()
+        }
+        deleteButton.snp.makeConstraints { make in
+            make.top.equalTo(editButton.snp.bottom).offset(27)
+            make.centerX.equalToSuperview()
+        }
+        reportButton.snp.makeConstraints { make in
+            make.top.equalTo(deleteButton.snp.bottom).offset(27)
+            make.centerX.equalToSuperview()
+        }
+        
+        return view
+    }()
+    
+    /* 배경 블러 처리를 위해 추가한 visualEffectView */
+    var visualEffectView: UIVisualEffectView?
     
     var profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -246,15 +320,10 @@ class PartyViewController: UIViewController {
         setAttributes()
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-    
     // MARK: - Functions
     
     private func setLayouts() {
         [
-            ellipsisButton,
             profileImageView,
             nickNameLabel,
             postingTime,
@@ -270,12 +339,7 @@ class PartyViewController: UIViewController {
             remainTimeLabel,
             signUpButton,
             arrowImageView
-        ].forEach { view.addSubview($0) }
-        
-        ellipsisButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(49)
-            make.right.equalToSuperview().inset(24)
-        }
+        ].forEach { self.view.addSubview($0) }
         
         profileImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(105)
@@ -368,10 +432,76 @@ class PartyViewController: UIViewController {
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
+        
+        // rightBarButton을 옵션 버튼으로 설정
+        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(named: "EllipsisOption"), style: .plain, target: self, action: #selector(showOptionView)), animated: true)
+        navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
+        // rightBarButtonItem의 default 위치에다가 inset을 줘서 위치를 맞춤
+        navigationItem.rightBarButtonItem?.imageInsets = .init(top: -3, left: 0, bottom: 0, right: 20)
     }
     
-    // 이전 화면으로 돌아가기
+    /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
+    @objc private func showOptionView() {
+        // 네비게이션 바보다 앞쪽에 위치하도록 설정
+        UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.addSubview(optionView)
+        print("DEBUG: 옵션뷰의 위치", optionView.frame)
+        
+        // 레이아웃 설정
+        optionView.snp.makeConstraints { make in
+            make.top.right.equalToSuperview()
+            make.left.equalToSuperview().inset(150)
+            make.bottom.equalTo(reportButton.snp.bottom).offset(25)
+        }
+        
+        // 오른쪽 위에서부터 대각선 아래로 내려오는 애니메이션을 설정
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.1,
+            options: .curveEaseOut,
+            animations: { () -> Void in
+                self.optionView.center.y += self.optionView.bounds.height
+                self.optionView.center.x -= self.optionView.bounds.width
+                self.optionView.layoutIfNeeded()
+            },
+            completion: nil
+        )
+
+        // 배경을 흐리게, 블러뷰로 설정
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
+    }
+    
+    /* 옵션뷰가 나타난 후에, 배경의 블러뷰를 터치하면 옵션뷰와 블러뷰가 같이 사라지도록 */
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+        showPartyPost()
+    }
+    
+    /* 이전 화면으로 돌아가기 */
     @objc func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated:true)
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    /* 파티 보기 화면으로 돌아가기 */
+    @objc func showPartyPost() {
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.1,
+            options: .curveEaseOut,
+            animations: { () -> Void in
+                // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
+                self.optionView.center.y -= self.optionView.bounds.height
+                self.optionView.center.x += self.optionView.bounds.width
+                self.optionView.layoutIfNeeded()
+                self.visualEffectView?.layer.opacity -= 0.6
+            },
+            completion: { _ in ()
+                self.optionView.removeFromSuperview()
+                self.visualEffectView?.removeFromSuperview()
+            }
+        )
     }
 }

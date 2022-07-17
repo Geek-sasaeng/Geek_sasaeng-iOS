@@ -16,15 +16,15 @@ struct DeliveryListModel: Decodable {
 }
 
 struct DeliveryListModelResult: Decodable {
-    var category: String?
-    var chief: String?
-    var content: String?
-    var currentMatching: Int?
-    var hashTags: [String]?
     var id: Int?
+    var chief: String?
+    var foodCategory: String?
+    var hashTags: [String]?
+    var title: String?
+    var content: String?
+    var orderTime: String?
+    var currentMatching: Int?
+    var maxMatching: Int?
     var location: String?
     var matchingStatus: String?
-    var maxMatching: Int?
-    var orderTime: String?
-    var title: String?
 }

@@ -11,29 +11,22 @@ import Alamofire
 /* 홈 화면 배달 목록 정보 받아오는 API 호출 */
 class DeliveryListViewModel {
     
-    public static func requestGetDeliveryList(_ viewController: DeliveryViewController, cursor: Int, dormitoryId: Int) {
+    // escaping을 통해 이 함수를 호출한 부분의 클로저로 결과 값을 넘겨줌 -> 호출한 VC에서 처리 가능해짐
+    public static func requestGetDeliveryList(isInitial: Bool, cursor: Int, dormitoryId: Int, completion: @escaping (Result<DeliveryListModel, AFError>) -> Void) {
         let url = "https://geeksasaeng.shop/\(dormitoryId)/delivery-parties"
         let parameters: Parameters = [
             "cursor": cursor
         ]
-
-        AF.request(url, method: .get, parameters: parameters,
-                   encoding: URLEncoding(destination: .queryString))
-        .validate()
-        .responseDecodable(of: DeliveryListModel.self) { response in
-            switch response.result {
-            case .success(let result):
-                if result.isSuccess! {
-                    print("DEBUG: 배달 목록 데이터 받아오기 성공")
-                    viewController.deliveryCellDataArray = result.result
-                } else {
-                    print("DEBUG: 실패", result.message!)
-                }
-            case .failure(let error):
-                print("DEBUG:", error.localizedDescription,
-                      error.isCreateURLRequestError, error.isRequestRetryError, error.isRequestAdaptationError,
-                      error.isResponseValidationError, error.isResponseSerializationError, error.isInvalidURLError)
+        
+        // 배달 목록 부분을 처음 킨 거면 딜레이 없이 바로 보여주고, 아니면 1.5초의 딜레이 시간을 줌
+        DispatchQueue.global().asyncAfter(deadline: .now() + (isInitial ? 0 : 1.5) , execute: {
+            AF.request(url, method: .get, parameters: parameters,
+                       encoding: URLEncoding(destination: .queryString))
+            .validate()
+            .responseDecodable(of: DeliveryListModel.self) { response in
+                // completion으로 result 넘겨줌
+                completion(response.result)
             }
-        }
+        })
     }
 }
