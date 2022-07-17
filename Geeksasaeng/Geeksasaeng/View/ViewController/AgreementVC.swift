@@ -181,9 +181,16 @@ class AgreementViewController: UIViewController {
     }
     
     public func showHomeView() {
-        let tabBarController = TabBarController()
-        tabBarController.modalTransitionStyle = .crossDissolve
-        tabBarController.modalPresentationStyle = .fullScreen
-        present(tabBarController, animated: true)
+        let deliveryVC = DeliveryViewController()
+        deliveryVC.modalTransitionStyle = .crossDissolve
+        deliveryVC.modalPresentationStyle = .fullScreen
+        present(deliveryVC, animated: true)
+    }
+    
+    public func showDomitoryView() {
+        let dormitoryVC = DormitoryViewController()
+        dormitoryVC.modalTransitionStyle = .crossDissolve
+        dormitoryVC.modalPresentationStyle = .fullScreen
+        present(dormitoryVC, animated: true)
     }
 }

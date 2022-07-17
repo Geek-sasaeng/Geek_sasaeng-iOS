@@ -71,7 +71,7 @@ class RegisterAPI {
                     UserDefaults.standard.set(parameter.loginId, forKey: "id")
                     UserDefaults.standard.set(parameter.password, forKey: "password")
                     
-                    viewController.showHomeView()
+                    viewController.showDomitoryView()
                 } else {
                     print("DEBUG:", result.message!)
                 }

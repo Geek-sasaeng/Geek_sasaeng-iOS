@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         instance?.isInAppOauthEnable = true
         
         instance?.serviceUrlScheme = "naverlogin"
-        instance?.consumerKey = "Dh4Y6xfM_mbltrjzEKwF"
+        instance?.consumerKey = APIKEY().naverAPIKey
         instance?.consumerSecret = "VID6insDOM"
         instance?.appName = "긱사생"
         

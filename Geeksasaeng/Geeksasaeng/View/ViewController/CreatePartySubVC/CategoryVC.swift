@@ -5,6 +5,8 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
+// TODO: - 선택된 버튼 미리 띄우기
+
 import UIKit
 import SnapKit
 
@@ -23,6 +25,7 @@ class CategoryViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
         return button
     }()
     
@@ -121,6 +124,7 @@ class CategoryViewController: UIViewController {
         setCategoryButtons()
         setSubViews()
         setLayouts()
+        setDefaultValueOfButton()
     }
     
     private func setViewLayout() {
@@ -225,8 +229,33 @@ class CategoryViewController: UIViewController {
         }
     }
     
+    private func setDefaultValueOfButton() {
+        if let category = CreateParty.category {
+            [korean, western, chinese, japanese, snack, chicken, rawfish, fastfood, dessert, etc].forEach {
+                if category == $0.titleLabel?.text {
+                    $0.setTitleColor(.white, for: .normal)
+                    $0.backgroundColor = .mainColor
+                    selectedCategory = $0
+                    nextButton.setActivatedNextButton()
+                }
+            }
+        }
+    }
+    
     @objc func showReceiptPlaceVC() {
         CreateParty.category = data
+        
+        // API Input에 저장
+        switch data {
+        case "한식":
+            CreateParty.foodCategory = 1
+        case "중식":
+            CreateParty.foodCategory = 2
+        case "일식":
+            CreateParty.foodCategory = 3
+        default:
+            CreateParty.foodCategory = 1 // 나머지는 일단 한식으로 저장
+        }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = ReceiptPlaceViewController()
@@ -253,5 +282,10 @@ class CategoryViewController: UIViewController {
         nextButton.setActivatedNextButton()
         
         data = sender.titleLabel?.text
+    }
+    
+    @objc func tapBackButton() {
+        view.removeFromSuperview()
+        removeFromParent()
     }
 }
