@@ -17,6 +17,8 @@ class DeliveryViewController: UIViewController {
     var adCellDataArray: [AdModelResult] = [] {
         didSet {
             print("광고!", adCellDataArray)
+            // 새 값을 받으면 컬렉션뷰 리로드!
+            adCollectionView.reloadData()
         }
     }
     // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
@@ -925,6 +927,9 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         if let imgString = adCellDataArray[indexPath.item].imgUrl {
             let url = URL(string: imgString)
             cell.cellImageView.kf.setImage(with: url)
+            if cell.cellImageView.image == nil {
+                print("이미지가 없어요")
+            }
         }
 //        print("DEBUG: ", adCellDataArray[indexPath.item].cellImagePath)
         
