@@ -5,16 +5,85 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
-/* 나중에 파티 생성 API 개발되면 Input Model 추가 예정 */
-import Foundation
+import UIKit
+import Alamofire
 
-/* CreatePartyVC의 각 서브뷰에서 다음 화면으로 넘어가기 직전에 해당되는 데이터 저장,
- - 중간에 블러뷰 터치로 서브뷰가 닫히면 진행된 곳까지 출력
- - 마지막 서브뷰까지 설정하고 완료 버튼을 누르면 모든 정보 출력 */
+// 저장 후 사용자에게 보여줄 데이터
 struct CreateParty {
     static var orderForecastTime: String?
     static var matchingPerson: String?
     static var category: String?
-    static var receiptPlace: String?
+//    static var receiptPlace: String?
     static var orderAsSoonAsMatch: Bool?
+    static var address: String?
+    
+    // API Input에 넣기 위한 값 (CreateVC, OrderAsSoonAsMatchVC에서 초기화)
+    static var orderTime: String?
+    static var maxMatching: Int?
+    static var foodCategory: Int?
+    static var hashTagEatTogether: Int?
+    static var hashTagOrderAsSoonAsMatch: Int?
+    static var location: String?
+}
+
+// delivery-parties API Request Input
+struct CreatePartyInput: Encodable {
+    var dormitory: Int?
+    var title: String?
+    var content: String?
+    var orderTime: String?
+    var maxMatching: Int?
+    var foodCategory: Int?
+    var location: String?
+    var hashTag: [Int]?
+}
+
+struct CreatePartyModel: Decodable {
+    var isSuccess : Bool?
+    var code : Int?
+    var message : String?
+    var result : CreatePartyModelResult?
+}
+
+struct CreatePartyModelResult : Decodable {
+    var chief: String?
+    var dormitory: String?
+    var foodCategory: String?
+    var title: String?
+    var content: String?
+    var orderTime: String?
+    var hashTag: [String]?
+    var createdAt: String?
+    var orderTimeCategoryType: String?
+    var currentMatching: Int?
+    var maxMatching: Int?
+    var location: String?
+    var matchingStatus: String
+}
+
+class CreatePartyAPI {
+    public static func registerParty(_ parameter : CreatePartyInput) {
+        AF.request("https://geeksasaeng.shop/delivery-parties", method: .post,
+                   parameters: parameter, encoder: JSONParameterEncoder.default,
+                   headers: [
+                    "Accept": "*/*",
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Connection": "Keep-alive",
+                    "Authorization": "Bearer eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJqd3RJbmZvIjp7InVuaXZlcnNpdHlJZCI6MSwidXNlcklkIjoyNn0sImlhdCI6MTY1Nzk0MTQ4NiwiZXhwIjoxNjU4ODMwNTE5fQ.n9HFrLuc97GeWOcKo-ffAj-k5XAvcd7IH0iEuOVzPaQ"
+                   ])
+        .validate()
+        .responseDecodable(of: CreatePartyModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 파티생성 성공")
+                    
+                } else {
+                    print("DEBUG:", result.message!)
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+            }
+        }
+    }
 }

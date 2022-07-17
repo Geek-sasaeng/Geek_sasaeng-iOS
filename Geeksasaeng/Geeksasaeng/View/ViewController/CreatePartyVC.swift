@@ -6,7 +6,6 @@
 //
 
 /* 파티 생성하기 API 구현 이후: 등록버튼 누를 때 전역변수 모두 초기화 */
-// TODO: - 각 서브뷰 띄우기
 
 import UIKit
 import SnapKit
@@ -22,14 +21,6 @@ class CreatePartyViewController: UIViewController {
         registerButton.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
         let barButton = UIBarButtonItem(customView: registerButton)
         barButton.isEnabled = false
-        return barButton
-    }()
-    
-    var activatedRightBarButtonItem: UIBarButtonItem = {
-        let registerButton = UIButton()
-        registerButton.setTitle("등록", for: .normal)
-        registerButton.setTitleColor(.mainColor, for: .normal)
-        let barButton = UIBarButtonItem(customView: registerButton)
         return barButton
     }()
     
@@ -181,6 +172,21 @@ class CreatePartyViewController: UIViewController {
         setLayouts()
         setDefaultDate()
         setNotificationCenter()
+        setTapGestureToLabels()
+    }
+    
+    private func setTapGestureToLabels() {
+        let personTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPersonLabel))
+        selectedPersonLabel.isUserInteractionEnabled = true
+        selectedPersonLabel.addGestureRecognizer(personTapGesture)
+        
+        let categoryTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedCategoryLabel))
+        selectedCategoryLabel.isUserInteractionEnabled = true
+        selectedCategoryLabel.addGestureRecognizer(categoryTapGesture)
+        
+        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPlaceLabel))
+        selectedPlaceLabel.isUserInteractionEnabled = true
+        selectedPlaceLabel.addGestureRecognizer(placeTapGesture)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -271,6 +277,13 @@ class CreatePartyViewController: UIViewController {
                     self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
+                if let address = CreateParty.address {
+                    self.selectedPlaceLabel.text = "      \(address)"
+                    self.selectedPlaceLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedPlaceLabel.textColor = .black
+                    self.selectedPlaceLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                
                 
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
@@ -284,7 +297,8 @@ class CreatePartyViewController: UIViewController {
                 
                 self.settedOptions = true
                 if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
-                    self.navigationItem.rightBarButtonItem = self.activatedRightBarButtonItem
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+                    self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
                     self.view.layoutSubviews()
                 }
             }
@@ -389,6 +403,15 @@ class CreatePartyViewController: UIViewController {
         orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
     }
     
+    private func createBlueView() {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        visualEffectView.isUserInteractionEnabled = false
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
+    }
+    
     /* 이전 화면으로 돌아가기 */
     @objc func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated:true)
@@ -399,21 +422,18 @@ class CreatePartyViewController: UIViewController {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             eatTogetherButton.tintColor = .mainColor
             eatTogetherButton.setTitleColor(.mainColor, for: .normal)
+            CreateParty.hashTagEatTogether = 2
         } else {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
             eatTogetherButton.tintColor = UIColor(hex: 0xD8D8D8)
             eatTogetherButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+            CreateParty.hashTagEatTogether = nil
         }
     }
     
     /* show 주문 예정 시간 VC */
     @objc func showOrderForecaseTimeVC() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        visualEffectView.isUserInteractionEnabled = false
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+        createBlueView()
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -432,7 +452,8 @@ class CreatePartyViewController: UIViewController {
             && editedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            self.navigationItem.rightBarButtonItem = activatedRightBarButtonItem
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+            self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
             self.view.layoutSubviews()
         } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1)
                     || (editedContentsTextView && settedOptions && contentsTextView.text.count < 1) {
@@ -440,7 +461,130 @@ class CreatePartyViewController: UIViewController {
             self.view.layoutSubviews()
         }
     }
+    
+    @objc func tapSelectedPersonLabel() {
+        print("tap works!!")
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
 
+    @objc func tapSelectedCategoryLabel() {
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let categoryVC = CategoryViewController()
+            self.addChild(categoryVC)
+            self.view.addSubview(categoryVC.view)
+            categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    @objc func tapSelectedPlaceLabel() {
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, receiptPlaceVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let categoryVC = CategoryViewController()
+            self.addChild(categoryVC)
+            self.view.addSubview(categoryVC.view)
+            categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let receiptPlaceVC = ReceiptPlaceViewController()
+            self.addChild(receiptPlaceVC)
+            self.view.addSubview(receiptPlaceVC.view)
+            receiptPlaceVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    @objc func tapRegisterButton() {
+        // api 호출
+        if let title = titleTextField.text,
+           let content = contentsTextView.text,
+           let orderTime = CreateParty.orderTime,
+           let maxMatching = CreateParty.maxMatching,
+           let foodCategory = CreateParty.foodCategory,
+           let location = CreateParty.location {
+            var hashTag: [Int] = []
+            if let hashTahAsSoonAsMatch = CreateParty.hashTagOrderAsSoonAsMatch {
+                hashTag.append(hashTahAsSoonAsMatch)
+            }
+            if let hashTagEatTogether = CreateParty.hashTagEatTogether {
+                hashTag.append(hashTagEatTogether)
+            }
+            
+            let input = CreatePartyInput(
+                dormitory: 1,
+                title: title,
+                content: content,
+                orderTime: orderTime,
+                maxMatching: maxMatching,
+                foodCategory: foodCategory,
+                location: location,
+                hashTag: hashTag)
+            
+            CreatePartyAPI.registerParty(input)
+        }
+    }
 }
 
 extension CreatePartyViewController: UITextFieldDelegate {
@@ -474,7 +618,8 @@ extension CreatePartyViewController: UITextViewDelegate {
             && editedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            navigationItem.rightBarButtonItem = activatedRightBarButtonItem
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(tapRegisterButton))
+            navigationItem.rightBarButtonItem?.tintColor = .mainColor
             view.layoutSubviews()
         } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 1)
                     || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1) {

@@ -5,6 +5,8 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
+// TODO: - datePicker에서 year 지우기
+
 import UIKit
 import SnapKit
 
@@ -90,6 +92,7 @@ class OrderForecastTimeViewController: UIViewController {
         setLayouts()
         setDatePicker()
         setTimePicker()
+        setDefaultValueOfPicker()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -162,6 +165,37 @@ class OrderForecastTimeViewController: UIViewController {
         }
     }
     
+    private func setDefaultValueOfPicker() {
+        if let orderForecastTime = CreateParty.orderForecastTime {
+            if let str = CreateParty.orderForecastTime?.replacingOccurrences(of: " ", with: "") {
+                let startIdx = str.index(str.startIndex, offsetBy: 6)
+                let dateRange = ..<startIdx // 월, 일
+                let timeRange = startIdx... // 시, 분
+                // TextField 초기값 설정
+                dateTextField.text = "\(str[dateRange])"
+                timeTextField.text = "\(str[timeRange])"
+                
+                // PickerView 초기값 설정
+                let dateStr = str[dateRange].replacingOccurrences(of: "월", with: "-").replacingOccurrences(of: "일", with: "")
+                let timeStr = str[timeRange].replacingOccurrences(of: "시", with: ":").replacingOccurrences(of: "분", with: "")
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy"
+                let currentYears = formatter.string(from: Date())
+                // 최종 문자열
+                let formattedDate = "\(currentYears)-\(dateStr)"
+                let formattedTime = "\(timeStr)"
+                formatter.dateFormat = "yyyy-MM-dd"
+                if let formattedDate = formatter.date(from: formattedDate) {
+                    datePicker.setDate(formattedDate, animated: true)
+                }
+                formatter.dateFormat = "HH:mm"
+                if let formattedTime = formatter.date(from: formattedTime) {
+                    timePicker.setDate(formattedTime, animated: true)
+                }
+            }
+        }
+    }
+    
     @objc func changedDatePickerValue() {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM월 dd일"
@@ -193,8 +227,19 @@ class OrderForecastTimeViewController: UIViewController {
     }
     
     @objc func showMatchingPersonVC() {
-        // 날짜, 시간 정보 전역변수에 저장
+        // 날짜, 시간 정보, 매칭 시 바로 주문 해시태그 값 전역변수에 저장
         CreateParty.orderForecastTime = "\(dateTextField.text!)        \(timeTextField.text!)"
+        if orderAsSoonAsMatchButton.tintColor == .mainColor {
+            CreateParty.hashTagOrderAsSoonAsMatch = 1
+        }
+        
+        // API Input에 저장
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let date = formatter.string(from: datePicker.date)
+        formatter.dateFormat = "HH:mm:ss"
+        let time = formatter.string(from: timePicker.date)
+        CreateParty.orderTime = "\(date) \(time)"
         
         if orderAsSoonAsMatchButton.currentImage == UIImage(systemName: "checkmark.circle.fill") {
             CreateParty.orderAsSoonAsMatch = true

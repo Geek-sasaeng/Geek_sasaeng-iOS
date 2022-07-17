@@ -23,6 +23,7 @@ class MatchingPersonViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
         return button
     }()
     
@@ -64,6 +65,7 @@ class MatchingPersonViewController: UIViewController {
         personPickerView.delegate = self
         personPickerView.dataSource = self
         
+        setDefaultValueOfPicker()
         setViewLayout()
         setSubViews()
         setLayouts()
@@ -117,9 +119,17 @@ class MatchingPersonViewController: UIViewController {
     @objc func showCategoryVC() {
         // PickerView를 안 돌리고 화면 전환 했을 때, default 값 2명
         if data == nil {
+            data = "2명"
             CreateParty.matchingPerson = "2명"
         } else {
             CreateParty.matchingPerson = data
+        }
+        
+        // API Input에 저장
+        if let data = data {
+            if let intData = Int(data.replacingOccurrences(of: "명", with: "")) {
+                CreateParty.maxMatching = intData
+            }
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -130,6 +140,18 @@ class MatchingPersonViewController: UIViewController {
                 make.center.equalToSuperview()
             }
         }, completion: nil)
+    }
+    
+    private func setDefaultValueOfPicker() {
+        if let matchingPerson = CreateParty.matchingPerson {
+            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
+            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
+        }
+    }
+    
+    @objc func tapBackButton() {
+        view.removeFromSuperview()
+        removeFromParent()
     }
 }
 

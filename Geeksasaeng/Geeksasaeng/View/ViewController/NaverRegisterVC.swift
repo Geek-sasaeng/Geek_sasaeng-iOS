@@ -201,6 +201,7 @@ class NaverRegisterViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    var nicknameCheck = false
     var isExpanded: Bool! = false
     
     /* 회원가입 정보 */
@@ -452,6 +453,10 @@ class NaverRegisterViewController: UIViewController {
     }
     
     @objc func didChangeTextField(_ sender: UITextField) {
+        if sender == nickNameTextField {
+            nicknameCheck = false
+        }
+        
         if nickNameTextField.text?.count ?? 0 >= 1 {
             nickNameCheckButton.setActivatedButton()
         } else if nickNameTextField.text?.count ?? 0 < 1 {
@@ -464,9 +469,10 @@ class NaverRegisterViewController: UIViewController {
             authSendButton.setDeactivatedButton()
         }
 
-        if nickNameTextField.text?.count ?? 0 >= 1
+        if nicknameCheck
+            && selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
             && emailTextField.text?.count ?? 0 >= 1
-            && emailAddressTextField.text?.count ?? 0 >= 1 {
+        {
             nextButton.setActivatedNextButton()
         } else {
             nextButton.setDeactivatedNextButton()

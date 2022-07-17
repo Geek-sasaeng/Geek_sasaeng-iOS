@@ -75,5 +75,3 @@ class LoginViewModel {
         }
     }
 }
-
-// 첫 로그인이면 (DB에 정보 없으면) NaverRegisterVC로 이동
