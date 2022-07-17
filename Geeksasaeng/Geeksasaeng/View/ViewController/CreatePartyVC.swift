@@ -434,6 +434,7 @@ class CreatePartyViewController: UIViewController {
     
     /* show 주문 예정 시간 VC */
     @objc func showOrderForecaseTimeVC() {
+        view.endEditing(true)
         createBlueView()
         
         // addSubview animation 처리
@@ -585,7 +586,10 @@ class CreatePartyViewController: UIViewController {
             
             CreatePartyViewModel.registerParty(input)
         }
+        
+        navigationController?.popViewController(animated: true)
     }
+    
 }
 
 extension CreatePartyViewController: UITextFieldDelegate {
