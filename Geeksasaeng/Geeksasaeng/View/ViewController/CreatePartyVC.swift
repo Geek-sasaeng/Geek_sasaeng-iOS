@@ -582,7 +582,7 @@ class CreatePartyViewController: UIViewController {
                 location: location,
                 hashTag: hashTag)
             
-            CreatePartyAPI.registerParty(input)
+            CreatePartyViewModel.registerParty(input)
         }
     }
 }

@@ -1,8 +1,8 @@
 //
-//  CreatePartyAPI.swift
+//  CreatePartyViewModel.swift
 //  Geeksasaeng
 //
-//  Created by 조동진 on 2022/07/12.
+//  Created by 조동진 on 2022/07/17.
 //
 
 import UIKit
@@ -61,7 +61,7 @@ struct CreatePartyModelResult : Decodable {
     var matchingStatus: String
 }
 
-class CreatePartyAPI {
+class CreatePartyViewModel {
     public static func registerParty(_ parameter : CreatePartyInput) {
         AF.request("https://geeksasaeng.shop/delivery-parties", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
