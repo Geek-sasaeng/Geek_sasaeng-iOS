@@ -61,9 +61,12 @@ class MatchingPersonViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+//        personPickerView.setValue(UIColor.black, forKey: "textColor")
         // set pickerView
         personPickerView.delegate = self
         personPickerView.dataSource = self
+        
+        personPickerView.setValue(UIColor.black, forKey: "textColor")
         
         setDefaultValueOfPicker()
         setViewLayout()
@@ -169,6 +172,7 @@ extension MatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDataSo
         label.text = pickerViewData[row]
         label.font = .customFont(.neoMedium, size: 20)
         label.textAlignment = .center
+        label.textColor = .black
         
         return label
     }
@@ -180,4 +184,9 @@ extension MatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDataSo
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         data = pickerViewData[row]
     }
+    
+//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+//        return NSAttributedString(string: pickerViewData[row], attributes: [.foregroundColor: UIColor.black])
+//    }
+    
 }

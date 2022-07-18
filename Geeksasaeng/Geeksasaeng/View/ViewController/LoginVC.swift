@@ -170,8 +170,8 @@ class LoginViewController: UIViewController {
     
     // MARK: - Functions
     private func attemptAutoLogin() {
-        if let id = UserDefaults.standard.string(forKey: "id") {
-            let password = UserDefaults.standard.string(forKey: "password")
+        if let id = UserDefaults.standard.string(forKey: "id"),
+           let password = UserDefaults.standard.string(forKey: "password") {
             let input = LoginInput(loginId: id, password: password)
             loginVM.login(self, input)
         }

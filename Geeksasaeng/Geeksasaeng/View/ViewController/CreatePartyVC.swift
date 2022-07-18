@@ -43,6 +43,7 @@ class CreatePartyViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xA8A8A8)]
         )
         textField.font = .customFont(.neoMedium, size: 20)
+        textField.textColor = .black
         
         // backgroundColor를 설정해 줬더니 borderStyle의 roundRect이 적용되지 않아서 따로 layer를 custom함
         textField.layer.cornerRadius = 5
@@ -433,6 +434,7 @@ class CreatePartyViewController: UIViewController {
     
     /* show 주문 예정 시간 VC */
     @objc func showOrderForecaseTimeVC() {
+        view.endEditing(true)
         createBlueView()
         
         // addSubview animation 처리
@@ -582,9 +584,12 @@ class CreatePartyViewController: UIViewController {
                 location: location,
                 hashTag: hashTag)
             
-            CreatePartyAPI.registerParty(input)
+            CreatePartyViewModel.registerParty(input)
         }
+        
+        navigationController?.popViewController(animated: true)
     }
+    
 }
 
 extension CreatePartyViewController: UITextFieldDelegate {
