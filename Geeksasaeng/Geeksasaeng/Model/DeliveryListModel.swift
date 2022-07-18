@@ -7,7 +7,7 @@
 
 import Foundation
 
-// Response
+// 배달 목록 불러오기 Response
 struct DeliveryListModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
@@ -17,14 +17,9 @@ struct DeliveryListModel: Decodable {
 
 struct DeliveryListModelResult: Decodable {
     var id: Int?
-    var chief: String?
-    var foodCategory: String?
-    var hashTags: [String]?
     var title: String?
-    var content: String?
     var orderTime: String?
     var currentMatching: Int?
     var maxMatching: Int?
-    var location: String?
-    var matchingStatus: String?
+    var hashTags: [String]?
 }
