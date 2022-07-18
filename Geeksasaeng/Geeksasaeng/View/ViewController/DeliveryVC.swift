@@ -17,6 +17,8 @@ class DeliveryViewController: UIViewController {
     var adCellDataArray: [AdModelResult] = [] {
         didSet {
             print("광고!", adCellDataArray)
+            // 새 값을 받으면 컬렉션뷰 리로드!
+            adCollectionView.reloadData()
         }
     }
     // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
@@ -27,6 +29,11 @@ class DeliveryViewController: UIViewController {
     
     // 배달 목록 화면 처음 킨 건지 여부 확인
     var isInitial = true
+    
+    // 필터링이 설정되어 있는지/아닌지 여부 확인
+//    var isPeopleFilterOn = false
+//    var isTimeFilterOn = false
+
     // 목록에서 현재 커서 위치
     var cursor = 0
     // 배달 목록 데이터가 저장되는 배열
@@ -188,7 +195,7 @@ class DeliveryViewController: UIViewController {
         return view
     }()
     // 점심
-    var launchFilterView: UIView = {
+    var lunchFilterView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         view.layer.cornerRadius = 3
@@ -259,7 +266,7 @@ class DeliveryViewController: UIViewController {
     
     /* 시간 관련 필터뷰들을 묶어놓는 스택뷰 */
     lazy var timeOptionStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [breakfastFilterView, launchFilterView, dinnerFilterView, midnightSnackFilterView])
+        let stackView = UIStackView(arrangedSubviews: [breakfastFilterView, lunchFilterView, dinnerFilterView, midnightSnackFilterView])
         stackView.spacing = 10
         return stackView
     }()
@@ -551,6 +558,104 @@ class DeliveryViewController: UIViewController {
         }
     }
     
+//    private func getPeopleFilterList(text: String?) {
+//        isPeopleFilterOn = true
+//
+//        print("TEST: ", text)
+//        var num: Int? = nil
+//        switch text {
+//        case "2명 이하":
+//            num = 2
+//        case "4명 이하":
+//            num = 4
+//        case "6명 이하":
+//            num = 6
+//        case "8명 이하":
+//            num = 8
+//        case "10명 이하":
+//            num = 10
+//        default:
+//            num = nil
+//        }
+//        print("TEST: ", num)
+//
+//        if let num = num {
+//            cursor = 0
+//            // TODO: - 추후에 기숙사 정보 불러와서 dormitoryId로 넣기
+//            FilteringViewModel.requestGetPeopleFilter(cursor: cursor, dormitoryId: 1, maxMatching: num) { [weak self] result in
+//                switch result {
+//                case .success(let result):
+//                    if result.isSuccess! {
+//                        print("DEBUG: 인원수 필터링 배달 목록 받아오기 성공")
+//                        self?.deliveryCellDataArray.removeAll()
+//                        result.result?.forEach {
+//                            // 데이터를 배열에 추가
+//                            self?.deliveryCellDataArray.append($0)
+//                            print("DEBUG: 받아온 배달 데이터(인원수 필터링)", $0)
+//                        }
+//                        // 테이블뷰 리로드
+//                        DispatchQueue.main.async {
+//                            self?.partyTableView.reloadData()
+//                        }
+//                    } else {
+//                        print("DEBUG: 실패", result.message!)
+//                    }
+//                case .failure(let error):
+//                    print("DEBUG:", error.localizedDescription)
+//                }
+//            }
+//        }
+//    }
+//
+//    private func getTimeFilterList(text: String?) {
+//        isTimeFilterOn = true
+//
+//        // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
+//        enum TimeOption: String {
+//            case breakfast = "BREAKFAST"
+//            case lunch = "LUNCH"
+//            case dinner = "DINNER"
+//            case midnightSnacks = "MIDNIGHT_SNACKS"
+//        }
+//        var category: String = ""
+//
+//        switch text {
+//        case "아침" :
+//            category = TimeOption.breakfast.rawValue
+//        case "점심" :
+//            category = TimeOption.lunch.rawValue
+//        case "저녁" :
+//            category = TimeOption.dinner.rawValue
+//        case "야식" :
+//            category = TimeOption.midnightSnacks.rawValue
+//        default :
+//            category = ""
+//        }
+//
+//        FilteringViewModel.requestGetTimeFilter(cursor: cursor, dormitoryId: 1, orderTimeCategory: category) { [weak self] result in
+//            switch result {
+//            case .success(let result):
+//                if result.isSuccess! {
+//                    print("DEBUG: 시간 필터링 배달 목록 받아오기 성공")
+//                    self?.deliveryCellDataArray.removeAll()
+//                    result.result?.forEach {
+//                        // 데이터를 배열에 추가
+//                        self?.deliveryCellDataArray.append($0)
+//                        print("DEBUG: 받아온 배달 데이터(시간 필터링)", $0)
+//                        self?.partyTableView.reloadData()
+//                    }
+////                        // 테이블뷰 리로드
+////                        DispatchQueue.main.async {
+////                        }
+//                } else {
+//                    print("DEBUG: 실패", result.message!)
+//                }
+//            case .failure(let error):
+//                print("DEBUG:", error.localizedDescription)
+//            }
+//        }
+//    }
+    
     /* 무한 스크롤로 마지막 데이터까지 가면 나오는(= FooterView) 데이터 로딩 표시 생성 */
     private func createSpinnerFooter() -> UIView {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
@@ -727,6 +832,9 @@ class DeliveryViewController: UIViewController {
         // peopleFilterView의 텍스트를 label로 변경함
         peopleFilterLabel.text = label.text
         
+        // TODO: - 인원수 필터링 호출 -> 서버에 (필터링 API 두개 + 전체 목록 불러오는 API)를 하나로 합치는 거 제안. 추후에 API 완성되면 수정 예정.
+//        self.getPeopleFilterList(text: label.text)
+        
         for view in peopleOptionStackView.subviews {
             let label = view as! UILabel
             if label.text != peopleFilterLabel.text {
@@ -739,12 +847,17 @@ class DeliveryViewController: UIViewController {
     @objc private func tapTimeOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
-        // label 색 변경 - mainColor로
+//        cursor = 0
+        
+        // label 색 변경 - mainColor로 -> 필터가 선택된 것
         if label.textColor != .mainColor {
             label.textColor = .mainColor
+            // TODO: - 시간 필터링 호출
+//            getTimeFilterList(text: label.text)
         } else {
             // 원래 색깔로 되돌려 놓는다
             label.textColor = .init(hex: 0xD8D8D8)
+//            getDeliveryList()
         }
     }
     
@@ -815,8 +928,8 @@ class DeliveryViewController: UIViewController {
             let position = scrollView.contentOffset.y
             print("pos", position)
             // 마지막 데이터에 도달했을 때
-            print(partyTableView.contentSize.height)
-                  print(scrollView.frame.size.height)
+//            print(partyTableView.contentSize.height)
+//            print(scrollView.frame.size.height)
             if position > (partyTableView.contentSize.height - scrollView.frame.size.height) {
                 // 다음 커서의 배달 목록을 불러온다
                 cursor += 1
@@ -854,7 +967,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
             // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
             // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             formatter.locale = Locale(identifier: "ko_KR")
             formatter.timeZone = TimeZone(abbreviation: "KST")
             
