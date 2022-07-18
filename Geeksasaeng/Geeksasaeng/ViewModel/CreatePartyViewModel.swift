@@ -63,12 +63,9 @@ struct CreatePartyModelResult : Decodable {
 
 class CreatePartyViewModel {
     public static func registerParty(_ parameter : CreatePartyInput) {
-        AF.request("https://geeksasaeng.shop/delivery-parties", method: .post,
+        AF.request("https://geeksasaeng.shop/delivery-party", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: [
-                    "Accept": "*/*",
-                    "Accept-Encoding": "gzip, deflate, br",
-                    "Connection": "Keep-alive",
                     "Authorization": "Bearer eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJqd3RJbmZvIjp7InVuaXZlcnNpdHlJZCI6MSwidXNlcklkIjoyNn0sImlhdCI6MTY1Nzk0MTQ4NiwiZXhwIjoxNjU4ODMwNTE5fQ.n9HFrLuc97GeWOcKo-ffAj-k5XAvcd7IH0iEuOVzPaQ"
                    ])
         .validate()
