@@ -132,7 +132,7 @@ class ReceiptPlaceViewController: UIViewController {
             
             // 현재 위치 트래킹
             mapView.currentLocationTrackingMode = .onWithoutHeading
-//            mapView.showCurrentLocationMarker = true
+            mapView.showCurrentLocationMarker = true
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
@@ -280,13 +280,13 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
     }
     
     func mapView(_ mapView: MTMapView!, updateCurrentLocation location: MTMapPoint!, withAccuracy accuracy: MTMapLocationAccuracy) {
-        let _ = location.mapPointGeo()
-//        print("MTMapView updateCurrentLocation (\(currentLocation.latitude), \(currentLocation.longitude)) accuracy (\(accuracy))")
+        let currentLocation = location.mapPointGeo()
+        print("MTMapView updateCurrentLocation (\(currentLocation.latitude), \(currentLocation.longitude)) accuracy (\(accuracy))")
         
     }
     
     func mapView(_ mapView: MTMapView!, updateDeviceHeading headingAngle: MTMapRotationAngle) {
-//        print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
+        print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
     }
     
     func mapView(_ mapView: MTMapView!, draggablePOIItem poiItem: MTMapPOIItem!, movedToNewMapPoint newMapPoint: MTMapPoint!) {
@@ -337,9 +337,6 @@ extension ReceiptPlaceViewController: CLLocationManagerDelegate {
         let location = locations[locations.count - 1]
         la = location.coordinate.latitude
         lo = location.coordinate.longitude
-//        print("DEBUG(la):: \(location.coordinate.latitude)")
-//        print("DEBUG(lo):: \(location.coordinate.longitude)")
-        
         
 //        /* 현재 위치를 한글 데이터로 받아오기 */
 //        let locationNow = CLLocation(latitude: la, longitude: lo) // 현재 위치
@@ -370,8 +367,3 @@ extension ReceiptPlaceViewController: CLLocationManagerDelegate {
 //        }
     }
 }
-
-/*
- 현재 위치 마커까지 구현 완료
- 검색해서 위도 경도로 변환하고 지도에 표시해야 할 듯 ,,,,,?
- */

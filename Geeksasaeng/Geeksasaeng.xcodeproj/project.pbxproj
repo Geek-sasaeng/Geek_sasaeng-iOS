@@ -1932,6 +1932,23 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		10D7EC972886E85600D9E0FD /* CreateParty */ = {
+			isa = PBXGroup;
+			children = (
+				105E60A8287C32710030C927 /* CreatePartyVC.swift */,
+				106D975C287D8BC2005CFB85 /* CreatePartySubVC */,
+			);
+			path = CreateParty;
+			sourceTree = "<group>";
+		};
+		10D7EC982886E89F00D9E0FD /* PartyDetail */ = {
+			isa = PBXGroup;
+			children = (
+				A2B420A4286F370F00278F92 /* PartyVC.swift */,
+			);
+			path = PartyDetail;
+			sourceTree = "<group>";
+		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1959,9 +1976,8 @@
 				A26BD187287B0415003A0A48 /* DormitoryVC.swift */,
 				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
 				A20FC0F0287F30C40095224C /* SeachVC.swift */,
-				A2B420A4286F370F00278F92 /* PartyVC.swift */,
-				105E60A8287C32710030C927 /* CreatePartyVC.swift */,
-				106D975C287D8BC2005CFB85 /* CreatePartySubVC */,
+				10D7EC982886E89F00D9E0FD /* PartyDetail */,
+				10D7EC972886E85600D9E0FD /* CreateParty */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";

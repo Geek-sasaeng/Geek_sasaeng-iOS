@@ -393,7 +393,7 @@ class CreatePartyViewController: UIViewController {
         
         orderForecastTimeButton.snp.makeConstraints { make in
             make.top.equalTo(separateView.snp.bottom).offset(20)
-            make.left.equalTo(orderForecastTimeLabel.snp.right).offset(35)
+            make.left.equalTo(orderForecastTimeLabel.snp.right).offset(45)
             make.width.equalTo(188)
             make.height.equalTo(38)
         }
@@ -428,7 +428,7 @@ class CreatePartyViewController: UIViewController {
         
         mapSubView.snp.makeConstraints { make in
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.left.equalTo(locationLabel.snp.left)
+            make.left.equalToSuperview().offset(28)
             make.width.equalTo(314)
             make.height.equalTo(144)
         }
