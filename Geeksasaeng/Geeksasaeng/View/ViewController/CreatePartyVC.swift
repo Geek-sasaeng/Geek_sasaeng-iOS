@@ -14,7 +14,7 @@ import QuartzCore
 class CreatePartyViewController: UIViewController {
     
     // MARK: - SubViews
-    
+    /* 우측 상단 등록 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
         registerButton.setTitle("등록", for: .normal)
@@ -24,6 +24,7 @@ class CreatePartyViewController: UIViewController {
         return barButton
     }()
     
+    /* 타이틀 위 같이 먹고 싶고 싶어요 버튼 */
     var eatTogetherButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
@@ -35,6 +36,7 @@ class CreatePartyViewController: UIViewController {
         return button
     }()
     
+    /* 타이틀 텍스트 필드 */
     var titleTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .white
@@ -57,6 +59,7 @@ class CreatePartyViewController: UIViewController {
         return textField
     }()
     
+    /* 내용 텍스트 필드 */
     var contentsTextView: UITextView = {
         let textView = UITextView()
         textView.backgroundColor = .white
@@ -67,44 +70,20 @@ class CreatePartyViewController: UIViewController {
         return textView
     }()
     
+    /* 구분선 */
     var separateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
     
-    var orderForecastTimeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 13)
-        label.text = "주문 예정 시간"
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    /* Option labels */
+    var orderForecastTimeLabel = UILabel()
+    var matchingPersonLabel = UILabel()
+    var categoryLabel = UILabel()
+    var locationLabel = UILabel()
     
-    var matchingPersonLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 13)
-        label.text = "매칭 인원 선택"
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    
-    var categoryLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 13)
-        label.text = "카테고리 선택"
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    
-    var receiptPlace: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 13)
-        label.text = "수령 장소"
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    
+    /* selected Button & labels */
     var orderForecastTimeButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .customFont(.neoRegular, size: 13)
@@ -114,7 +93,6 @@ class CreatePartyViewController: UIViewController {
         button.addTarget(self, action: #selector(showOrderForecaseTimeVC), for: .touchUpInside)
         return button
     }()
-    
     var orderAsSoonAsMatchLabel: UILabel = {
         let label = UILabel()
         label.font = .customFont(.neoMedium, size: 12)
@@ -122,45 +100,25 @@ class CreatePartyViewController: UIViewController {
         label.text = "매칭 시 바로 주문"
         return label
     }()
+    var selectedPersonLabel = UILabel()
+    var selectedCategoryLabel = UILabel()
+    var selectedLocationLabel = UILabel()
     
-    var selectedPersonLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoRegular, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        label.backgroundColor = UIColor(hex: 0xEFEFEF)
-        label.text = "      0/0"
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 3
-        return label
+    let mapSubView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 5
+        return view
     }()
     
-    var selectedCategoryLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoRegular, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        label.backgroundColor = UIColor(hex: 0xEFEFEF)
-        label.text = "      한식"
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 3
-        return label
-    }()
-    
-    var selectedPlaceLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoRegular, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        label.backgroundColor = UIColor(hex: 0xEFEFEF)
-        label.text = "      제1기숙사 후문"
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 3
-        return label
-    }()
-    
+    /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
-    var settedOptions = false
-    var editedContentsTextView = false
+    var settedOptions = false // 옵션이 모두 설정되었는지
+    var editedContentsTextView = false // 내용이 수정되었는지
+    var mapView: MTMapView? // 카카오맵
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -168,12 +126,40 @@ class CreatePartyViewController: UIViewController {
         view.backgroundColor = .white
         
         addSubViews()
+        setLayouts()
+        setMapView()
+        setAttributeOfOptionLabel()
+        setAttributeOfSelectedLabel()
         setDelegate()
         setNavigationBar()
-        setLayouts()
         setDefaultDate()
         setNotificationCenter()
         setTapGestureToLabels()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        // mapView의 모든 poiItem 제거
+        for item in mapView!.poiItems {
+            mapView?.remove(item as? MTMapPOIItem)
+        }
+    }
+    
+    private func setMapView() {
+        // 지도 불러오기
+        mapView = MTMapView(frame: mapSubView.frame)
+        
+        if let mapView = mapView {
+            // 델리게이트 연결
+            mapView.delegate = self
+            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
+            mapView.baseMapType = .standard
+            mapView.isUserInteractionEnabled = false
+            
+            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
+            
+            mapSubView.addSubview(mapView)
+        }
     }
     
     private func setTapGestureToLabels() {
@@ -185,9 +171,9 @@ class CreatePartyViewController: UIViewController {
         selectedCategoryLabel.isUserInteractionEnabled = true
         selectedCategoryLabel.addGestureRecognizer(categoryTapGesture)
         
-        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPlaceLabel))
-        selectedPlaceLabel.isUserInteractionEnabled = true
-        selectedPlaceLabel.addGestureRecognizer(placeTapGesture)
+        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapselectedLocationLabel))
+        selectedLocationLabel.isUserInteractionEnabled = true
+        selectedLocationLabel.addGestureRecognizer(placeTapGesture)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -227,6 +213,30 @@ class CreatePartyViewController: UIViewController {
             $0.view.removeFromSuperview()
             $0.removeFromParent()
         }
+    }
+    
+    private func setAttributeOfOptionLabel() {
+        [orderForecastTimeLabel, matchingPersonLabel, categoryLabel, locationLabel].forEach {
+            $0.font = .customFont(.neoMedium, size: 13)
+            $0.textColor = .init(hex: 0x2F2F2F)
+        }
+        orderForecastTimeLabel.text = "주문 예정 시간"
+        matchingPersonLabel.text = "매칭 인원 선택"
+        categoryLabel.text = "카테고리 선택"
+        locationLabel.text = "수령장소"
+    }
+    
+    private func setAttributeOfSelectedLabel() {
+        [selectedPersonLabel, selectedCategoryLabel, selectedLocationLabel].forEach {
+            $0.font = .customFont(.neoRegular, size: 13)
+            $0.textColor = UIColor(hex: 0xD8D8D8)
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+            $0.layer.masksToBounds = true
+            $0.layer.cornerRadius = 3
+        }
+        selectedPersonLabel.text = "      0/0"
+        selectedCategoryLabel.text = "      한식"
+        selectedLocationLabel.text = "      제1기숙사 정문"
     }
     
     private func setDelegate() {
@@ -279,12 +289,23 @@ class CreatePartyViewController: UIViewController {
                 }
                 
                 if let address = CreateParty.address {
-                    self.selectedPlaceLabel.text = "      \(address)"
-                    self.selectedPlaceLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedPlaceLabel.textColor = .black
-                    self.selectedPlaceLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                    self.selectedLocationLabel.text = "      \(address)"
+                    self.selectedLocationLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedLocationLabel.textColor = .black
+                    self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
+                if let latitude = CreateParty.latitude,
+                   let longitude = CreateParty.longitude {
+                    // 지도의 중심을 설정한 위치로 이동
+                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude)), zoomLevel: 5, animated: true)
+                    
+                    // 설정한 위치에 핀 표시
+                    let poiItem = MTMapPOIItem()
+                    poiItem.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
+                    poiItem.markerType = .redPin
+                    self.mapView?.addPOIItems([poiItem])
+                }
                 
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
@@ -308,9 +329,10 @@ class CreatePartyViewController: UIViewController {
     
     private func addSubViews() {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
-         orderForecastTimeLabel, matchingPersonLabel, categoryLabel, receiptPlace,
+         orderForecastTimeLabel, matchingPersonLabel, categoryLabel, locationLabel,
          orderForecastTimeButton, orderAsSoonAsMatchLabel,
-         selectedPersonLabel, selectedCategoryLabel, selectedPlaceLabel].forEach {
+         selectedPersonLabel, selectedCategoryLabel, selectedLocationLabel,
+        mapSubView].forEach {
             view.addSubview($0)
         }
     }
@@ -356,7 +378,7 @@ class CreatePartyViewController: UIViewController {
             make.left.equalToSuperview().inset(28)
         }
         
-        receiptPlace.snp.makeConstraints { make in
+        locationLabel.snp.makeConstraints { make in
             make.top.equalTo(categoryLabel.snp.bottom).offset(24)
             make.left.equalToSuperview().inset(28)
         }
@@ -387,11 +409,18 @@ class CreatePartyViewController: UIViewController {
             make.height.equalTo(30)
         }
         
-        selectedPlaceLabel.snp.makeConstraints { make in
+        selectedLocationLabel.snp.makeConstraints { make in
             make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(10)
             make.left.equalTo(selectedCategoryLabel.snp.left)
             make.width.equalTo(188)
             make.height.equalTo(30)
+        }
+        
+        mapSubView.snp.makeConstraints { make in
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(262)
+            make.height.equalTo(144)
         }
     }
     
@@ -518,7 +547,7 @@ class CreatePartyViewController: UIViewController {
         }, completion: nil)
     }
     
-    @objc func tapSelectedPlaceLabel() {
+    @objc func tapselectedLocationLabel() {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, receiptPlaceVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -641,3 +670,6 @@ extension CreatePartyViewController: UITextViewDelegate {
     }
 }
 
+extension CreatePartyViewController: MTMapViewDelegate {
+    
+}

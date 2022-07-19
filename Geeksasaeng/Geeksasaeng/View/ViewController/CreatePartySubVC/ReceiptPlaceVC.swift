@@ -132,8 +132,7 @@ class ReceiptPlaceViewController: UIViewController {
             
             // 현재 위치 트래킹
             mapView.currentLocationTrackingMode = .onWithoutHeading
-            mapView.showCurrentLocationMarker = true
-            
+//            mapView.showCurrentLocationMarker = true
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
@@ -162,7 +161,7 @@ class ReceiptPlaceViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         // mapView의 모든 poiItem 제거
         for item in mapView!.poiItems {
-            mapView?.remove(item as! MTMapPOIItem)
+            mapView?.remove(item as? MTMapPOIItem)
         }
     }
     
@@ -245,6 +244,7 @@ class ReceiptPlaceViewController: UIViewController {
     }
     
     @objc func tapSearchButton() {
+        mapView?.currentLocationTrackingMode = .off
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(searchTextField.text ?? "") { placemark, error in
             // 검색된 위치로 맵의 중심을 이동
@@ -276,7 +276,7 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
     // poiItem 클릭 이벤트
     func mapView(_ mapView: MTMapView!, touchedCalloutBalloonOf poiItem: MTMapPOIItem!) {
         // 인덱스는 poiItem의 태그로 접근
-        let index = poiItem.tag
+        let _ = poiItem.tag
     }
     
     func mapView(_ mapView: MTMapView!, updateCurrentLocation location: MTMapPoint!, withAccuracy accuracy: MTMapLocationAccuracy) {
@@ -290,9 +290,8 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
     }
     
     func mapView(_ mapView: MTMapView!, draggablePOIItem poiItem: MTMapPOIItem!, movedToNewMapPoint newMapPoint: MTMapPoint!) {
-        print("==============")
-        print("\(newMapPoint.mapPointGeo().latitude)")
-        print("\(newMapPoint.mapPointGeo().longitude)")
+        CreateParty.latitude = newMapPoint.mapPointGeo().latitude
+        CreateParty.longitude = newMapPoint.mapPointGeo().longitude
         
         /* 현재 위치를 한글 데이터로 받아오기 */
         let locationNow = CLLocation(latitude: newMapPoint.mapPointGeo().latitude, longitude: newMapPoint.mapPointGeo().longitude) // 마커 위치
@@ -338,8 +337,8 @@ extension ReceiptPlaceViewController: CLLocationManagerDelegate {
         let location = locations[locations.count - 1]
         la = location.coordinate.latitude
         lo = location.coordinate.longitude
-        print("DEBUG(la):: \(location.coordinate.latitude)")
-        print("DEBUG(lo):: \(location.coordinate.longitude)")
+//        print("DEBUG(la):: \(location.coordinate.latitude)")
+//        print("DEBUG(lo):: \(location.coordinate.longitude)")
         
         
 //        /* 현재 위치를 한글 데이터로 받아오기 */
