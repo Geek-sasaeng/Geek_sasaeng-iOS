@@ -102,10 +102,10 @@ class CategoryViewController: UIViewController {
         return button
     }()
     
-    /* pageLabel: 3/4 */
+    /* pageLabel: 3/5 */
     let pageLabel: UILabel = {
         let label = UILabel()
-        label.text = "3/4"
+        label.text = "3/5"
         label.font = .customFont(.neoMedium, size: 13)
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label
@@ -258,7 +258,7 @@ class CategoryViewController: UIViewController {
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = ReceiptPlaceViewController()
+            let childView = UrlViewController()
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in

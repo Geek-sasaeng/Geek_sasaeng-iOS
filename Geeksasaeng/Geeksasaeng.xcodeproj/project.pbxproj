@@ -906,6 +906,9 @@
 		10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
+		10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
+		10D7EC952886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
+		10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1349,6 +1352,7 @@
 		1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyTableViewCell.swift; sourceTree = "<group>"; };
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
+		10D7EC932886AFC500D9E0FD /* UrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlVC.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1459,7 +1463,7 @@
 				A2035EA028833ED60051498A /* AdViewModel.swift */,
 				10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */,
 				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
-				A234E2A62884443A0056AA36 /* FilteringViewModel.swift */
+				A234E2A62884443A0056AA36 /* FilteringViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1881,6 +1885,7 @@
 				106D974C287D7691005CFB85 /* OrderForecastTimeVC.swift */,
 				106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */,
 				106D9754287D7C32005CFB85 /* CategoryVC.swift */,
+				10D7EC932886AFC500D9E0FD /* UrlVC.swift */,
 				106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */,
 			);
 			path = CreatePartySubVC;
@@ -3094,6 +3099,7 @@
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
 				10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
+				10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				106D9751287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
@@ -3142,6 +3148,7 @@
 				A20FC0EA287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2513F1228785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
+				10D7EC952886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
@@ -3186,6 +3193,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,

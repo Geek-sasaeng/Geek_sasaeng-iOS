@@ -13,7 +13,7 @@ struct CreateParty {
     static var orderForecastTime: String?
     static var matchingPerson: String?
     static var category: String?
-    static var orderAsSoonAsMatch: Bool?
+    static var url: String?
     static var address: String?
     static var latitude: Double?
     static var longitude: Double?

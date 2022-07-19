@@ -1,19 +1,19 @@
 //
-//  MatchingPersonVC.swift
+//  UrlVC.swift
 //  Geeksasaeng
 //
-//  Created by 조동진 on 2022/07/12.
+//  Created by 조동진 on 2022/07/19.
 //
 
 import UIKit
 import SnapKit
 
-class MatchingPersonViewController: UIViewController {
+class UrlViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "매칭 인원 선택"
+        label.text = "식당 링크"
         label.font = .customFont(.neoMedium, size: 18)
         return label
     }()
@@ -27,6 +27,27 @@ class MatchingPersonViewController: UIViewController {
         return button
     }()
     
+    /* url 입력 텍스트 필드 */
+    let urlTextField: UITextField = {
+        let textField = UITextField()
+        textField.font = .customFont(.neoRegular, size: 15)
+        textField.placeholder = "입력하세요"
+        textField.makeBottomLine(210)
+        textField.textColor = .black
+        return textField
+    }()
+    
+    /* 건너뛰기 버튼 */
+    var passButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("건너뛰기", for: .normal)
+        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+        button.titleLabel?.font = .customFont(.neoLight, size: 15)
+        button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
+        button.addTarget(self, action: #selector(tapPassButton), for: .touchUpInside)
+        return button
+    }()
+    
     /* nextButton: 다음 버튼 */
     let nextButton: UIButton = {
         let button = UIButton()
@@ -37,38 +58,26 @@ class MatchingPersonViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(showCategoryVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showReceiptPlaceVC), for: .touchUpInside)
         return button
     }()
     
-    /* pageLabel: 2/5 */
+    /* pageLabel: 4/5 */
     let pageLabel: UILabel = {
         let label = UILabel()
-        label.text = "2/5"
+        label.text = "4/5"
         label.font = .customFont(.neoMedium, size: 13)
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label
     }()
     
-    let personPickerView = UIPickerView()
-    
     // MARK: - Properties
-    var pickerViewData = ["2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명"]
-    var data: String? // CreateParty 전역 변수에 저장할 데이터
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-//        personPickerView.setValue(UIColor.black, forKey: "textColor")
-        // set pickerView
-        personPickerView.delegate = self
-        personPickerView.dataSource = self
-        
-        personPickerView.setValue(UIColor.black, forKey: "textColor")
-        
-        setDefaultValueOfPicker()
         setViewLayout()
         setSubViews()
         setLayouts()
@@ -85,7 +94,7 @@ class MatchingPersonViewController: UIViewController {
     }
     
     private func setSubViews() {
-        [titleLabel, backButton, personPickerView, nextButton, pageLabel].forEach {
+        [titleLabel, backButton, urlTextField, passButton, nextButton, pageLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -101,9 +110,15 @@ class MatchingPersonViewController: UIViewController {
             make.left.equalToSuperview().inset(31)
         }
         
-        personPickerView.snp.makeConstraints { make in
-            make.width.height.equalTo(180)
-            make.center.equalToSuperview()
+        urlTextField.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(24)
+            make.left.equalToSuperview().inset(48)
+            make.width.equalTo(210)
+        }
+        
+        passButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(nextButton.snp.top).offset(-33)
         }
         
         nextButton.snp.makeConstraints { make in
@@ -119,24 +134,14 @@ class MatchingPersonViewController: UIViewController {
         }
     }
     
-    @objc func showCategoryVC() {
-        // PickerView를 안 돌리고 화면 전환 했을 때, default 값 2명
-        if data == nil {
-            data = "2명"
-            CreateParty.matchingPerson = "2명"
-        } else {
-            CreateParty.matchingPerson = data
-        }
-        
-        // API Input에 저장
-        if let data = data {
-            if let intData = Int(data.replacingOccurrences(of: "명", with: "")) {
-                CreateParty.maxMatching = intData
-            }
+    @objc func showReceiptPlaceVC() {
+        if let url = urlTextField.text {
+            print("=======", url)
+            CreateParty.url = url
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = CategoryViewController()
+            let childView = ReceiptPlaceViewController()
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in
@@ -145,48 +150,19 @@ class MatchingPersonViewController: UIViewController {
         }, completion: nil)
     }
     
-    private func setDefaultValueOfPicker() {
-        if let matchingPerson = CreateParty.matchingPerson {
-            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
-            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
-        }
+    @objc func tapPassButton() {
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let childView = ReceiptPlaceViewController()
+            self.addChild(childView)
+            self.view.addSubview(childView.view)
+            childView.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
     }
     
     @objc func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
     }
-}
-
-extension MatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerViewData.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = UILabel()
-        label.text = pickerViewData[row]
-        label.font = .customFont(.neoMedium, size: 20)
-        label.textAlignment = .center
-        label.textColor = .black
-        
-        return label
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 47
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        data = pickerViewData[row]
-    }
-    
-//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-//        return NSAttributedString(string: pickerViewData[row], attributes: [.foregroundColor: UIColor.black])
-//    }
-    
 }

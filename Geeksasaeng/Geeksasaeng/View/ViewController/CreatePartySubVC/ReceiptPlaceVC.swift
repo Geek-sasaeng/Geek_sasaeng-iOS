@@ -84,10 +84,10 @@ class ReceiptPlaceViewController: UIViewController {
         return button
     }()
     
-    /* pageLabel: 4/4 */
+    /* pageLabel: 5/5 */
     let pageLabel: UILabel = {
         let label = UILabel()
-        label.text = "4/4"
+        label.text = "5/5"
         label.font = .customFont(.neoMedium, size: 13)
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label

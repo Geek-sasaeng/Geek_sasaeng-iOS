@@ -81,6 +81,7 @@ class CreatePartyViewController: UIViewController {
     var orderForecastTimeLabel = UILabel()
     var matchingPersonLabel = UILabel()
     var categoryLabel = UILabel()
+    var urlLabel = UILabel()
     var locationLabel = UILabel()
     
     /* selected Button & labels */
@@ -93,15 +94,9 @@ class CreatePartyViewController: UIViewController {
         button.addTarget(self, action: #selector(showOrderForecaseTimeVC), for: .touchUpInside)
         return button
     }()
-    var orderAsSoonAsMatchLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        label.text = "매칭 시 바로 주문"
-        return label
-    }()
     var selectedPersonLabel = UILabel()
     var selectedCategoryLabel = UILabel()
+    var selectedUrlLabel = UILabel()
     var selectedLocationLabel = UILabel()
     
     let mapSubView: UIView = {
@@ -171,6 +166,10 @@ class CreatePartyViewController: UIViewController {
         selectedCategoryLabel.isUserInteractionEnabled = true
         selectedCategoryLabel.addGestureRecognizer(categoryTapGesture)
         
+        let urlTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedUrlLabel))
+        selectedUrlLabel.isUserInteractionEnabled = true
+        selectedUrlLabel.addGestureRecognizer(urlTapGesture)
+        
         let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapselectedLocationLabel))
         selectedLocationLabel.isUserInteractionEnabled = true
         selectedLocationLabel.addGestureRecognizer(placeTapGesture)
@@ -188,17 +187,18 @@ class CreatePartyViewController: UIViewController {
             self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
         }
         
-        if CreateParty.orderAsSoonAsMatch ?? false {
-            self.orderAsSoonAsMatchLabel.textColor = .mainColor
-        } else {
-            self.orderAsSoonAsMatchLabel.textColor = UIColor(hex: 0xD8D8D8)
-        }
-        
         if let matchingPerson = CreateParty.matchingPerson {
             self.selectedPersonLabel.text = "      \(matchingPerson)"
             self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
             self.selectedPersonLabel.textColor = .black
             self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        if let url = CreateParty.url {
+            self.selectedUrlLabel.text = "      \(url)"
+            self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedUrlLabel.textColor = .black
+            self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
         }
         
         if let category = CreateParty.category {
@@ -216,18 +216,19 @@ class CreatePartyViewController: UIViewController {
     }
     
     private func setAttributeOfOptionLabel() {
-        [orderForecastTimeLabel, matchingPersonLabel, categoryLabel, locationLabel].forEach {
+        [orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel].forEach {
             $0.font = .customFont(.neoMedium, size: 13)
             $0.textColor = .init(hex: 0x2F2F2F)
         }
         orderForecastTimeLabel.text = "주문 예정 시간"
         matchingPersonLabel.text = "매칭 인원 선택"
         categoryLabel.text = "카테고리 선택"
+        urlLabel.text = "식당 링크"
         locationLabel.text = "수령장소"
     }
     
     private func setAttributeOfSelectedLabel() {
-        [selectedPersonLabel, selectedCategoryLabel, selectedLocationLabel].forEach {
+        [selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel].forEach {
             $0.font = .customFont(.neoRegular, size: 13)
             $0.textColor = UIColor(hex: 0xD8D8D8)
             $0.backgroundColor = UIColor(hex: 0xEFEFEF)
@@ -236,6 +237,7 @@ class CreatePartyViewController: UIViewController {
         }
         selectedPersonLabel.text = "      0/0"
         selectedCategoryLabel.text = "      한식"
+        selectedUrlLabel.text = "      url"
         selectedLocationLabel.text = "      제1기숙사 정문"
     }
     
@@ -268,12 +270,6 @@ class CreatePartyViewController: UIViewController {
                     self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
                 }
                 
-                if CreateParty.orderAsSoonAsMatch ?? false {
-                    self.orderAsSoonAsMatchLabel.textColor = .mainColor
-                } else {
-                    self.orderAsSoonAsMatchLabel.textColor = UIColor(hex: 0xD8D8D8)
-                }
-                
                 if let matchingPerson = CreateParty.matchingPerson {
                     self.selectedPersonLabel.text = "      \(matchingPerson)"
                     self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
@@ -286,6 +282,13 @@ class CreatePartyViewController: UIViewController {
                     self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
                     self.selectedCategoryLabel.textColor = .black
                     self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                
+                if let url = CreateParty.url {
+                    self.selectedUrlLabel.text = "      \(url)"
+                    self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedUrlLabel.textColor = .black
+                    self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
                 if let address = CreateParty.address {
@@ -329,9 +332,8 @@ class CreatePartyViewController: UIViewController {
     
     private func addSubViews() {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
-         orderForecastTimeLabel, matchingPersonLabel, categoryLabel, locationLabel,
-         orderForecastTimeButton, orderAsSoonAsMatchLabel,
-         selectedPersonLabel, selectedCategoryLabel, selectedLocationLabel,
+         orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
+         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
         mapSubView].forEach {
             view.addSubview($0)
         }
@@ -369,55 +371,62 @@ class CreatePartyViewController: UIViewController {
         }
         
         matchingPersonLabel.snp.makeConstraints { make in
-            make.top.equalTo(orderForecastTimeLabel.snp.bottom).offset(60)
+            make.top.equalTo(orderForecastTimeLabel.snp.bottom).offset(38)
             make.left.equalToSuperview().inset(28)
         }
         
         categoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(matchingPersonLabel.snp.bottom).offset(24)
+            make.top.equalTo(matchingPersonLabel.snp.bottom).offset(38)
+            make.left.equalToSuperview().inset(28)
+        }
+        
+        urlLabel.snp.makeConstraints { make in
+            make.top.equalTo(categoryLabel.snp.bottom).offset(38)
             make.left.equalToSuperview().inset(28)
         }
         
         locationLabel.snp.makeConstraints { make in
-            make.top.equalTo(categoryLabel.snp.bottom).offset(24)
+            make.top.equalTo(urlLabel.snp.bottom).offset(38)
             make.left.equalToSuperview().inset(28)
         }
         
         orderForecastTimeButton.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(24)
+            make.top.equalTo(separateView.snp.bottom).offset(20)
             make.left.equalTo(orderForecastTimeLabel.snp.right).offset(35)
             make.width.equalTo(188)
-            make.height.equalTo(30)
-        }
-        
-        orderAsSoonAsMatchLabel.snp.makeConstraints { make in
-            make.top.equalTo(orderForecastTimeButton.snp.bottom).offset(12)
-            make.left.equalToSuperview().inset(159)
+            make.height.equalTo(38)
         }
         
         selectedPersonLabel.snp.makeConstraints { make in
-            make.top.equalTo(orderAsSoonAsMatchLabel.snp.bottom).offset(19)
-            make.left.equalTo(matchingPersonLabel.snp.right).offset(38)
+            make.top.equalTo(orderForecastTimeButton.snp.bottom).offset(16)
+            make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(188)
-            make.height.equalTo(30)
+            make.height.equalTo(38)
         }
         
         selectedCategoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedPersonLabel.snp.bottom).offset(10)
-            make.left.equalTo(selectedPersonLabel.snp.left)
+            make.top.equalTo(selectedPersonLabel.snp.bottom).offset(16)
+            make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(188)
-            make.height.equalTo(30)
+            make.height.equalTo(38)
+        }
+        
+        selectedUrlLabel.snp.makeConstraints { make in
+            make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(16)
+            make.left.equalTo(orderForecastTimeButton.snp.left)
+            make.width.equalTo(188)
+            make.height.equalTo(38)
         }
         
         selectedLocationLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(10)
-            make.left.equalTo(selectedCategoryLabel.snp.left)
+            make.top.equalTo(selectedUrlLabel.snp.bottom).offset(16)
+            make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(188)
-            make.height.equalTo(30)
+            make.height.equalTo(38)
         }
         
         mapSubView.snp.makeConstraints { make in
-            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(10)
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
             make.width.equalTo(262)
             make.height.equalTo(144)
@@ -547,9 +556,9 @@ class CreatePartyViewController: UIViewController {
         }, completion: nil)
     }
     
-    @objc func tapselectedLocationLabel() {
+    @objc func tapSelectedUrlLabel() {
         createBlueView()
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, receiptPlaceVC 띄우기
+        // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = OrderForecastTimeViewController()
             self.addChild(orderForecastTimeVC)
@@ -573,6 +582,55 @@ class CreatePartyViewController: UIViewController {
             self.addChild(categoryVC)
             self.view.addSubview(categoryVC.view)
             categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let urlVC = UrlViewController()
+            self.addChild(urlVC)
+            self.view.addSubview(urlVC.view)
+            urlVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    @objc func tapselectedLocationLabel() {
+        createBlueView()
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let orderForecastTimeVC = OrderForecastTimeViewController()
+            self.addChild(orderForecastTimeVC)
+            self.view.addSubview(orderForecastTimeVC.view)
+            orderForecastTimeVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let categoryVC = CategoryViewController()
+            self.addChild(categoryVC)
+            self.view.addSubview(categoryVC.view)
+            categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let urlVC = UrlViewController()
+            self.addChild(urlVC)
+            self.view.addSubview(urlVC.view)
+            urlVC.view.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
         }, completion: nil)
