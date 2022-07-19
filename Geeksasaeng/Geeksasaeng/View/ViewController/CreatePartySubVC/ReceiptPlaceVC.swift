@@ -280,13 +280,13 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
     }
     
     func mapView(_ mapView: MTMapView!, updateCurrentLocation location: MTMapPoint!, withAccuracy accuracy: MTMapLocationAccuracy) {
-        let currentLocation = location.mapPointGeo()
-        print("MTMapView updateCurrentLocation (\(currentLocation.latitude), \(currentLocation.longitude)) accuracy (\(accuracy))")
+        let _ = location.mapPointGeo()
+//        print("MTMapView updateCurrentLocation (\(currentLocation.latitude), \(currentLocation.longitude)) accuracy (\(accuracy))")
         
     }
     
     func mapView(_ mapView: MTMapView!, updateDeviceHeading headingAngle: MTMapRotationAngle) {
-        print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
+//        print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
     }
     
     func mapView(_ mapView: MTMapView!, draggablePOIItem poiItem: MTMapPOIItem!, movedToNewMapPoint newMapPoint: MTMapPoint!) {

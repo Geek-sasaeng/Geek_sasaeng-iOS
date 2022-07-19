@@ -88,6 +88,7 @@ class CreatePartyViewController: UIViewController {
     var orderForecastTimeButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .customFont(.neoRegular, size: 13)
+        button.contentHorizontalAlignment = .left
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
         button.setActivatedButton()
@@ -120,8 +121,6 @@ class CreatePartyViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        addSubViews()
-        setLayouts()
         setMapView()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
@@ -130,6 +129,8 @@ class CreatePartyViewController: UIViewController {
         setDefaultDate()
         setNotificationCenter()
         setTapGestureToLabels()
+        addSubViews()
+        setLayouts()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -181,7 +182,7 @@ class CreatePartyViewController: UIViewController {
         // 다음 버튼 누른 VC에 대한 데이터 저장, 표시
         if let orderForecastTime = CreateParty.orderForecastTime {
             self.orderForecastTimeButton.layer.shadowRadius = 0
-            self.orderForecastTimeButton.setTitle(orderForecastTime, for: .normal)
+            self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
             self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
             self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
             self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
@@ -264,7 +265,7 @@ class CreatePartyViewController: UIViewController {
                 // 각 서브뷰에서 저장된 전역변수 데이터 출력
                 if let orderForecastTime = CreateParty.orderForecastTime {
                     self.orderForecastTimeButton.layer.shadowRadius = 0
-                    self.orderForecastTimeButton.setTitle(orderForecastTime, for: .normal)
+                    self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
                     self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
                     self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
                     self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
@@ -427,8 +428,8 @@ class CreatePartyViewController: UIViewController {
         
         mapSubView.snp.makeConstraints { make in
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(262)
+            make.left.equalTo(locationLabel.snp.left)
+            make.width.equalTo(314)
             make.height.equalTo(144)
         }
     }
@@ -436,7 +437,7 @@ class CreatePartyViewController: UIViewController {
     /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
     private func setDefaultDate() {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM월 dd일        HH시 mm분"
+        formatter.dateFormat = "      MM월 dd일        HH시 mm분"
         formatter.locale = Locale(identifier: "ko_KR")
         
         orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
@@ -503,7 +504,6 @@ class CreatePartyViewController: UIViewController {
     }
     
     @objc func tapSelectedPersonLabel() {
-        print("tap works!!")
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
