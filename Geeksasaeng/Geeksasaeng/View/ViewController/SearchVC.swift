@@ -1,5 +1,5 @@
 //
-//  SeachVC.swift
+//  SearchVC.swift
 //  Geeksasaeng
 //
 //  Created by 서은수 on 2022/07/14.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class SeachViewController: UIViewController {
+class SearchViewController: UIViewController {
     
     // MARK: - Properties
     // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
@@ -56,12 +56,6 @@ class SeachViewController: UIViewController {
         return label
     }()
     
-    var tagGuideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "이런 태그는 어때요?"
-        return label
-    }()
-    
     /* 최근 검색어 기록 Collection View */
     var recentSearchCollectionView: UICollectionView = {
         // 레이아웃 설정
@@ -88,7 +82,7 @@ class SeachViewController: UIViewController {
 
         // 셀 사이 좌우 간격 설정
         layout.minimumLineSpacing = 70
-        layout.minimumInteritemSpacing = 4
+        layout.minimumInteritemSpacing = 3
         
         // 컬렉션뷰 생성
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -106,11 +100,6 @@ class SeachViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
-    var secondSeparateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
     
     /* 배경에 있는 로고 이미지 */
     var logoImageView: UIImageView = {
@@ -120,18 +109,13 @@ class SeachViewController: UIViewController {
         return imageView
     }()
     
-    /* 해시태그 예시 View */
-    lazy var hashTagEx1View = createHashTagView(text: "#같이 먹고 싶어요")
-    lazy var hashTagEx2View = createHashTagView(text: "#따로 또 같이")
-    lazy var hashTagEx3View = createHashTagView(text: "#음식에 진심인 사람들과 함께 해요")
-    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        [recentSearchLabel, dormitoryWeeklyTopLabel, tagGuideLabel].forEach {
+        [recentSearchLabel, dormitoryWeeklyTopLabel].forEach {
             setMainTextAttributes($0)
         }
         setLayouts()
@@ -160,49 +144,44 @@ class SeachViewController: UIViewController {
         [
             searchTextField,
             searchButton,
-            recentSearchLabel, dormitoryWeeklyTopLabel, tagGuideLabel,
+            recentSearchLabel, dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
             weeklyTopCollectionView,
-            firstSeparateView, secondSeparateView,
-            hashTagEx1View, hashTagEx2View, hashTagEx3View,
+            firstSeparateView,
             logoImageView
         ].forEach { view.addSubview($0) }
         
         searchTextField.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(53)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.left.equalToSuperview().inset(30)
         }
         
         searchButton.snp.makeConstraints { make in
             make.centerY.equalTo(searchTextField)
             make.right.equalToSuperview().inset(33)
-            make.width.height.equalTo(24)
+            make.width.height.equalTo(30)
         }
         
         recentSearchLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(23)
-            make.top.equalToSuperview().inset(122)
+            make.top.equalTo(searchTextField.snp.bottom).offset(45)
         }
         dormitoryWeeklyTopLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(23)
             make.top.equalTo(firstSeparateView.snp.bottom).offset(21)
         }
-        tagGuideLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
-            make.top.equalTo(secondSeparateView.snp.bottom).offset(22)
-        }
         
         recentSearchCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchLabel.snp.bottom).offset(10)
+            make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
             make.left.right.equalToSuperview().inset(28)
-            make.bottom.equalTo(firstSeparateView.snp.top).offset(-18)
+            make.bottom.equalTo(firstSeparateView.snp.top).offset(-17)
         }
         
         weeklyTopCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(10)
+            make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(15)
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(70)
-            make.bottom.equalTo(secondSeparateView.snp.top).offset(-15)
+            make.height.equalTo(170)
         }
         
         firstSeparateView.snp.makeConstraints { make in
@@ -210,35 +189,11 @@ class SeachViewController: UIViewController {
             make.width.equalToSuperview()
             make.height.equalTo(8)
         }
-        secondSeparateView.snp.makeConstraints { make in
-            make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(187)
-            make.width.equalToSuperview()
-            make.height.equalTo(8)
-        }
-        
-        hashTagEx1View.snp.makeConstraints { make in
-            make.top.equalTo(tagGuideLabel.snp.bottom).offset(17)
-            make.left.equalToSuperview().inset(28)
-            make.width.equalTo(138)
-            make.height.equalTo(34)
-        }
-        hashTagEx2View.snp.makeConstraints { make in
-            make.centerY.equalTo(hashTagEx1View)
-            make.left.equalTo(hashTagEx1View.snp.right).offset(19)
-            make.width.equalTo(111)
-            make.height.equalTo(34)
-        }
-        hashTagEx3View.snp.makeConstraints { make in
-            make.top.equalTo(hashTagEx1View.snp.bottom).offset(15)
-            make.left.equalToSuperview().inset(28)
-            make.width.equalTo(242)
-            make.height.equalTo(34)
-        }
         
         logoImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(110)
             make.left.right.equalToSuperview().inset(143)
-            make.top.equalTo(hashTagEx3View.snp.bottom).offset(30)
+            make.height.equalTo(80)
         }
     }
     
@@ -284,7 +239,7 @@ class SeachViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 
-extension SeachViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // cell 갯수 설정
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
