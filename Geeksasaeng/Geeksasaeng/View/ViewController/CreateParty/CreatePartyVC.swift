@@ -380,11 +380,11 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         // 컨텐츠뷰
         contentView.snp.makeConstraints { (make) in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height + 50)
+            make.height.equalTo(UIScreen.main.bounds.height)
         }
         
         eatTogetherButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(105)
+            make.top.equalToSuperview().inset(37)
             make.left.equalToSuperview().inset(28)
         }
         
