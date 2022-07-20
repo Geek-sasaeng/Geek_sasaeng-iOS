@@ -11,9 +11,24 @@ import UIKit
 import SnapKit
 import QuartzCore
 
-class CreatePartyViewController: UIViewController {
-    
+class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
+
     // MARK: - SubViews
+    
+    // 스크롤뷰
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        return scrollView
+    }()
+    
+    // 콘텐츠뷰
+    let contentView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
     /* 우측 상단 등록 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
@@ -106,6 +121,12 @@ class CreatePartyViewController: UIViewController {
         view.backgroundColor = .gray
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 5
+        return view
+    }()
+    
+    let testView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
         return view
     }()
     
@@ -249,6 +270,7 @@ class CreatePartyViewController: UIViewController {
     }
     
     private func setDelegate() {
+        scrollView.delegate = self
         contentsTextView.delegate = self
         titleTextField.delegate = self
     }
@@ -338,14 +360,29 @@ class CreatePartyViewController: UIViewController {
     }
     
     private func addSubViews() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
-         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel].forEach {
-            view.addSubview($0)
+         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
+         testView].forEach {
+            contentView.addSubview($0)
         }
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(UIScreen.main.bounds.width)
+        }
+        
+        // 컨텐츠뷰
+        contentView.snp.makeConstraints { (make) in
+            make.edges.width.equalToSuperview()
+            make.height.equalTo(UIScreen.main.bounds.height + 50)
+        }
+        
         eatTogetherButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(105)
             make.left.equalToSuperview().inset(28)
@@ -429,6 +466,13 @@ class CreatePartyViewController: UIViewController {
             make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(188)
             make.height.equalTo(38)
+        }
+        
+        testView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+            make.width.equalTo(314)
+            make.height.equalTo(144)
         }
         
 //        mapSubView.snp.makeConstraints { make in
@@ -678,6 +722,11 @@ class CreatePartyViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("scrolled!!")
+        
+    }
+    
 }
 
 extension CreatePartyViewController: UITextFieldDelegate {
@@ -730,5 +779,5 @@ extension CreatePartyViewController: UITextViewDelegate {
 }
 
 extension CreatePartyViewController: MTMapViewDelegate {
-    
+
 }
