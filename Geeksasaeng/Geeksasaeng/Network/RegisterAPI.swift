@@ -17,22 +17,22 @@ struct RegisterModel : Decodable {
 }
 
 struct RegisterModelResult : Decodable {
+    var emailId: Int?
     var loginId: String?
     var nickname: String?
+    var phoneNumberId: Int?
     var universityName: String?
-    var email: String?
-    var phoneNumber: String?
 }
 
-// 회원가입을 완료했을 때 보낼 Request body의 형태.
+// 회원가입을 완료할 때 보낼 Request body의 형태.
 struct RegisterInput : Encodable {
     var checkPassword: String?
-    var email: String?
+    var emailId: Int?
     var informationAgreeStatus: String?
     var loginId: String?
     var nickname: String?
     var password: String?
-    var phoneNumber: String?
+    var phoneNumberId: Int?
     var universityName: String?
 }
 
@@ -48,7 +48,8 @@ class RegisterAPI {
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
                     
-                    viewController.showHomeView()
+                    // 일반 회원가입은 완료한 이후 로그인 화면으로 이동.
+                    viewController.showLoginView()
                 } else {
                     print("DEBUG:", result.message!)
                 }

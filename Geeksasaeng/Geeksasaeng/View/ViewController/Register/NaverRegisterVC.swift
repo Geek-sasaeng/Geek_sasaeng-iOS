@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+// MARK: - 수정된 회원가입 Res에 맞게 수정 필요
 class NaverRegisterViewController: UIViewController {
     
     // MARK: - SubViews
@@ -221,12 +222,12 @@ class NaverRegisterViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        addSubViews()
+        setLayouts()
         setUniversitySelectView()
         setAttributes()
         setTextFieldTarget()
         setLabelTap()
-        addSubViews()
-        setLayouts()
     }
     
     // MARK: - Functions
@@ -428,7 +429,7 @@ class NaverRegisterViewController: UIViewController {
         authNumVC.modalPresentationStyle = .fullScreen
         
         authNumVC.isFromNaverRegister = true
-        authNumVC.phoneNumber = phoneNumber
+//        authNumVC.phoneNumber = phoneNumber -> 수정 필요
         authNumVC.idData = idData
         authNumVC.nickNameData = nickNameTextField.text
         authNumVC.university = selectYourUnivLabel.text

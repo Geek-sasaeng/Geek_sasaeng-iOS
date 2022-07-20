@@ -184,9 +184,9 @@ class EmailAuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setAttributes() // 호출 순서 바꾸면 에러남
         addSubViews()
         setLayouts()
-        setAttributes()
         setTextFieldTarget()
         setLabelTap()
         

@@ -18,5 +18,8 @@ struct EmailAuthCheckModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
     var message: String?
-    var result: String?
+    var result: EmailAuthCheckModelResult?
+}
+struct EmailAuthCheckModelResult: Decodable {
+    var emailId: Int?
 }

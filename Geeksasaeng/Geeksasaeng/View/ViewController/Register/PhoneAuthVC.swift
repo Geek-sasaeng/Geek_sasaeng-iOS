@@ -210,8 +210,9 @@ class PhoneAuthViewController: UIViewController {
     var pwCheckData: String? = nil
     var nickNameData: String? = nil
     var university: String? = nil
-    var email: String? = nil
+    var emailId: Int? = nil
     var uuid: UUID? = nil
+    var phoneNumberId: Int? = nil
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -404,7 +405,7 @@ class PhoneAuthViewController: UIViewController {
     
     // 인증번호 일치/불일치 확인
     @objc func tapAuthCheckButton() {
-        /* 인증번호 입력한 게 맞는지 "확인" 버튼 눌렀을 확인하는 것으로 변경. */
+        /* 인증번호 입력한 게 맞는지 "확인" 버튼 눌렀을 때 확인하는 것으로 변경. */
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
             let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
@@ -426,15 +427,15 @@ class PhoneAuthViewController: UIViewController {
            let pwCheckData = self.pwCheckData,
            let nickNameData = self.nickNameData,
            let univ = self.university,
-           let email = self.email,
-           let phoneNum = self.phoneNumTextField.text {
+           let emailId = self.emailId,
+           let phoneNumberId = self.phoneNumberId {
             agreementVC.idData = idData
             agreementVC.pwData = pwData
             agreementVC.pwCheckData = pwCheckData
             agreementVC.nickNameData = nickNameData
             agreementVC.university = univ
-            agreementVC.email = email
-            agreementVC.phoneNum = phoneNum
+            agreementVC.emailId = emailId
+            agreementVC.phoneNumberId = phoneNumberId
         }
         
         present(agreementVC, animated: true)
@@ -442,12 +443,11 @@ class PhoneAuthViewController: UIViewController {
     
     /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */
     @objc func tapAuthSendButton() {
-        startTimer()
-        authCheckButton.setActivatedButton()
-        authSendButton.setTitle("재전송 하기", for: .normal)
-        
         if let phoneNum = self.phoneNumTextField.text,
            let uuid = uuid {
+            startTimer()
+            authCheckButton.setActivatedButton()
+            authSendButton.setTitle("재전송 하기", for: .normal)
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
             print("DEBUG:", uuid.uuidString)
             PhoneAuthViewModel.requestSendPhoneAuth(self, input)

@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import Alamofire
 
+// TODO: - 회원가입 과정의 모든 뷰에 화면을 오른쪽으로 스와이프하면 이전 화면으로 돌아가는 기능 추가 필요
 class RegisterViewController: UIViewController {
     
     // MARK: - Subviews
@@ -128,6 +129,7 @@ class RegisterViewController: UIViewController {
         view.backgroundColor = .white
         
         setAttributes()
+        addSubViews()
         setLayouts()
         setTextFieldTarget()
     }
@@ -143,7 +145,7 @@ class RegisterViewController: UIViewController {
             progressBar, remainBar, progressIcon, remainIcon,
             idLabel, passwordLabel, passwordCheckLabel, nickNameLabel,
             idTextField, pwTextField, pwCheckTextField, nickNameTextField,
-            idAvailableLabel, nickNameAvailableLabel, passwordAvailableLabel, passwordSameCheckLabel,
+            idAvailableLabel, passwordAvailableLabel, passwordSameCheckLabel, nickNameAvailableLabel,
             idCheckButton, nickNameCheckButton,
             nextButton
         ].forEach { view.addSubview($0) }
