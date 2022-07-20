@@ -101,7 +101,7 @@ class RepetitionAPI {
                 case.success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 성공")
-                        viewController.nicknameCheck = true
+                        viewController.isNicknameChecked = true
                         if viewController.selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
                             && viewController.emailTextField.text?.count ?? 0 >= 1 {
                             viewController.nextButton.setActivatedNextButton()

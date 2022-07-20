@@ -12,7 +12,7 @@ class PartyViewController: UIViewController {
     
     // MARK: - Subviews
     
-    // 외부 참조가 필요해서 이 버튼만 밖에 빼놓음!
+    // 외부 참조가 필요해서 이 버r튼만 밖에 빼놓음!
     lazy var reportButton: UIButton = {
         let button = UIButton()
         button.setTitle("신고하기", for: .normal)
@@ -62,7 +62,7 @@ class PartyViewController: UIViewController {
             button.setTitle("삭제하기", for: .normal)
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
             // MARK: - 삭제하기 뷰 연결 필요
-    //        button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
+            button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
             return button
         }()
         
@@ -310,6 +310,108 @@ class PartyViewController: UIViewController {
         return imageView
     }()
     
+    var deleteView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 5
+        view.snp.makeConstraints { make in
+            make.width.equalTo(256)
+            make.height.equalTo(298)
+        }
+        
+        /* top View: 건너뛰기 */
+        let topSubView = UIView()
+        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        view.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+            make.top.equalToSuperview()
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel()
+        titleLabel.text = "건너뛰기"
+        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
+        titleLabel.font = .customFont(.neoRegular, size: 14)
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        let cancelButton = UIButton()
+        cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
+        cancelButton.titleLabel?.font = .customFont(.neoRegular, size: 15)
+        cancelButton.addTarget(self, action: #selector(removeDeleteView), for: .touchUpInside)
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView()
+        bottomSubView.backgroundColor = UIColor.white
+        view.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(206)
+            make.top.equalTo(topSubView.snp.bottom)
+        }
+        
+        let contentLabel = UILabel()
+        let lineView = UIView()
+        let confirmButton = UIButton()
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        
+        /* set contentLabel */
+        contentLabel.text = "파티글 삭제하기를 누를 시\n해당 글을 영구적으로\n지워집니다.\n삭제하시겠습니까?"
+        contentLabel.numberOfLines = 0
+        contentLabel.textColor = .black
+        contentLabel.font = .customFont(.neoRegular, size: 14)
+        let attrString = NSMutableAttributedString(string: contentLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        paragraphStyle.alignment = .center
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        contentLabel.attributedText = attrString
+        contentLabel.snp.makeConstraints { make in
+            make.width.equalTo(193)
+            make.height.equalTo(144)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(15)
+        }
+        
+        /* set lineView */
+        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(15)
+            make.width.equalTo(230)
+            make.height.equalTo(1)
+            make.centerX.equalToSuperview()
+        }
+        
+        /* set confirmButton */
+        confirmButton.setTitleColor(.mainColor, for: .normal)
+        confirmButton.setTitle("확인", for: .normal)
+        confirmButton.titleLabel?.font = .customFont(.neoRegular, size: 18)
+        confirmButton.addTarget(self, action: #selector(removeDeleteView), for: .touchUpInside)
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(15)
+            make.width.equalTo(60)
+            make.height.equalTo(30)
+        }
+        
+        return view
+    }()
+    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -503,5 +605,23 @@ class PartyViewController: UIViewController {
                 self.visualEffectView?.removeFromSuperview()
             }
         )
+    }
+    
+    @objc func showDeleteView() {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
+        
+        view.addSubview(deleteView)
+        deleteView.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
+    }
+    
+    @objc func removeDeleteView() {
+        deleteView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
     }
 }

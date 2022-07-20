@@ -10,7 +10,7 @@ import SnapKit
 
 class PartyTableViewCell: UITableViewCell {
     
-    // MARK: - Subviews
+    // MARK: - SubViews
     
     var peopleImageView: UIImageView = {
         var imageView = UIImageView()

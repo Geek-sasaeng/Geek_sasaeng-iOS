@@ -46,18 +46,6 @@ class OrderForecastTimeViewController: UIViewController {
         return textField
     }()
     
-    /* orderAsSoonAsMatchButton: 매칭 시 바로 주문 토글 버튼 */
-    lazy var orderAsSoonAsMatchButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
-        button.tintColor = UIColor(hex: 0xD8D8D8)
-        button.setTitle("  매칭 시 바로 주문", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoLight, size: 13)
-        button.addTarget(self, action: #selector(tapOrderAsSoonAsMatchButton), for: .touchUpInside)
-        return button
-    }()
-    
     /* nextButton: 다음 버튼 */
     lazy var nextButton: UIButton = {
         let button = UIButton()
@@ -68,14 +56,14 @@ class OrderForecastTimeViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(showMatchingPersonVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
-    /* pageLabel: 1/4 */
+    /* pageLabel: 1/5 */
     let pageLabel: UILabel = {
         let label = UILabel()
-        label.text = "1/4"
+        label.text = "1/5"
         label.font = .customFont(.neoMedium, size: 13)
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label
@@ -90,7 +78,7 @@ class OrderForecastTimeViewController: UIViewController {
         view.backgroundColor = .white
         
         setViewLayout()
-        setSubViews()
+        addSubViews()
         setLayouts()
         setDatePicker()
         setTimePicker()
@@ -127,8 +115,8 @@ class OrderForecastTimeViewController: UIViewController {
         timeTextField.inputView = timePicker
     }
     
-    private func setSubViews() {
-        [titleLabel, dateTextField, timeTextField, orderAsSoonAsMatchButton, nextButton, pageLabel].forEach {
+    private func addSubViews() {
+        [titleLabel, dateTextField, timeTextField, nextButton, pageLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -146,11 +134,6 @@ class OrderForecastTimeViewController: UIViewController {
         
         timeTextField.snp.makeConstraints { make in
             make.top.equalTo(dateTextField.snp.bottom).offset(17)
-            make.centerX.equalToSuperview()
-        }
-        
-        orderAsSoonAsMatchButton.snp.makeConstraints { make in
-            make.top.equalTo(timeTextField.snp.bottom).offset(60)
             make.centerX.equalToSuperview()
         }
         
@@ -215,24 +198,9 @@ class OrderForecastTimeViewController: UIViewController {
         timeTextField.sendActions(for: .editingChanged)
     }
     
-    @objc func tapOrderAsSoonAsMatchButton() {
-        if orderAsSoonAsMatchButton.currentImage == UIImage(systemName: "checkmark.circle") {
-            orderAsSoonAsMatchButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-            orderAsSoonAsMatchButton.setTitleColor(.mainColor, for: .normal)
-            orderAsSoonAsMatchButton.tintColor = .mainColor
-        } else {
-            orderAsSoonAsMatchButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
-            orderAsSoonAsMatchButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-            orderAsSoonAsMatchButton.tintColor = UIColor(hex: 0xD8D8D8)
-        }
-    }
-    
-    @objc func showMatchingPersonVC() {
-        // 날짜, 시간 정보, 매칭 시 바로 주문 해시태그 값 전역변수에 저장
+    @objc func tapNextButton() {
+        // 날짜, 시간 정보 전역변수에 저장
         CreateParty.orderForecastTime = "\(dateTextField.text!)        \(timeTextField.text!)"
-        if orderAsSoonAsMatchButton.tintColor == .mainColor {
-            CreateParty.hashTagOrderAsSoonAsMatch = 1
-        }
         
         // API Input에 저장
         let formatter = DateFormatter()
@@ -241,12 +209,6 @@ class OrderForecastTimeViewController: UIViewController {
         formatter.dateFormat = "HH:mm:ss"
         let time = formatter.string(from: timePicker.date)
         CreateParty.orderTime = "\(date) \(time)"
-        
-        if orderAsSoonAsMatchButton.currentImage == UIImage(systemName: "checkmark.circle.fill") {
-            CreateParty.orderAsSoonAsMatch = true
-        } else {
-            CreateParty.orderAsSoonAsMatch = false
-        }
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {

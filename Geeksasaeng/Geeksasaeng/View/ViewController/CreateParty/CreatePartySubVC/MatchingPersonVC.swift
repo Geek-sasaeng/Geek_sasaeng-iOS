@@ -37,14 +37,14 @@ class MatchingPersonViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(showCategoryVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
-    /* pageLabel: 2/4 */
+    /* pageLabel: 2/5 */
     let pageLabel: UILabel = {
         let label = UILabel()
-        label.text = "2/4"
+        label.text = "2/5"
         label.font = .customFont(.neoMedium, size: 13)
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label
@@ -61,16 +61,10 @@ class MatchingPersonViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-//        personPickerView.setValue(UIColor.black, forKey: "textColor")
-        // set pickerView
-        personPickerView.delegate = self
-        personPickerView.dataSource = self
-        
-        personPickerView.setValue(UIColor.black, forKey: "textColor")
-        
+        setPickerView()
         setDefaultValueOfPicker()
         setViewLayout()
-        setSubViews()
+        addSubViews()
         setLayouts()
     }
     
@@ -84,7 +78,7 @@ class MatchingPersonViewController: UIViewController {
         }
     }
     
-    private func setSubViews() {
+    private func addSubViews() {
         [titleLabel, backButton, personPickerView, nextButton, pageLabel].forEach {
             view.addSubview($0)
         }
@@ -119,7 +113,7 @@ class MatchingPersonViewController: UIViewController {
         }
     }
     
-    @objc func showCategoryVC() {
+    @objc func tapNextButton() {
         // PickerView를 안 돌리고 화면 전환 했을 때, default 값 2명
         if data == nil {
             data = "2명"
@@ -143,6 +137,11 @@ class MatchingPersonViewController: UIViewController {
                 make.center.equalToSuperview()
             }
         }, completion: nil)
+    }
+    
+    private func setPickerView() {
+        personPickerView.delegate = self
+        personPickerView.dataSource = self
     }
     
     private func setDefaultValueOfPicker() {
@@ -184,9 +183,5 @@ extension MatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDataSo
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         data = pickerViewData[row]
     }
-    
-//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-//        return NSAttributedString(string: pickerViewData[row], attributes: [.foregroundColor: UIColor.black])
-//    }
     
 }
