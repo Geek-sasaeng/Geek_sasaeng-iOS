@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+// TODO: - 디자인 수정된 거에 맞춰서 다시 해야 됨
 /* 회원가입 후, 첫 로그인 성공 시에 나오게 되는 기숙사 선택 화면 */
 class DormitoryViewController: UIViewController {
     
@@ -57,7 +58,7 @@ class DormitoryViewController: UIViewController {
         return pickerView
     }()
     
-    var startButton: UIButton = {
+    lazy var startButton: UIButton = {
         let button = UIButton()
         button.setTitle("시작하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -65,7 +66,7 @@ class DormitoryViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = .mainColor
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(showHomeView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapStartButton), for: .touchUpInside)
         return button
     }()
     
@@ -75,14 +76,14 @@ class DormitoryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        addSubViews()
         setLayouts()
         setPickerView()
     }
     
     // MARK: - Functions
     
-    private func setLayouts() {
-        // addSubview
+    private func addSubViews() {
         [
             welcomeLabel,
             questionLabel,
@@ -91,7 +92,9 @@ class DormitoryViewController: UIViewController {
             dormitoryPickerView,
             startButton
         ].forEach { view.addSubview($0) }
-        
+    }
+    
+    private func setLayouts() {
         welcomeLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.left.equalToSuperview().inset(23)
@@ -121,8 +124,7 @@ class DormitoryViewController: UIViewController {
         }
         
         startButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(28)
+            make.left.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }
@@ -135,7 +137,7 @@ class DormitoryViewController: UIViewController {
     }
     
     /* 홈 화면으로 전환 */
-    @objc private func showHomeView() {
+    @objc private func tapStartButton() {
         let tabBarController = TabBarController()
         tabBarController.modalTransitionStyle = .crossDissolve
         tabBarController.modalPresentationStyle = .fullScreen

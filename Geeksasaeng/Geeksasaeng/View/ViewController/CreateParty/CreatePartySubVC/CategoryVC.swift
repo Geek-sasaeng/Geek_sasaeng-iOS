@@ -21,7 +21,7 @@ class CategoryViewController: UIViewController {
     }()
     
     /* backbutton */
-    let backButton: UIButton = {
+    lazy var backButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = UIColor(hex: 0x5B5B5B)
@@ -91,7 +91,7 @@ class CategoryViewController: UIViewController {
     }()
     
     /* nextButton: 다음 버튼 */
-    let nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)

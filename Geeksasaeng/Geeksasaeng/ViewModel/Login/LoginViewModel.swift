@@ -27,7 +27,7 @@ class LoginViewModel {
                     // static property에 jwt 값 저장
                     LoginModel.jwt = result.result?.jwt
                     
-                    print("DEBUG: 로그인 성공", result.result)
+                    print("DEBUG: 로그인 성공", result.result ?? "")
                     
                     // 로그인 완료 후 경우에 따른 화면 전환
                     if result.result?.loginStatus == "NEVER" {

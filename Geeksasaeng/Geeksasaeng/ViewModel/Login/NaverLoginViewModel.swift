@@ -12,7 +12,7 @@ class naverLoginViewModel {
     let naverLoginModel = NaverLoginModel()
     
     func setInstanceDelegate(_ viewController: UIViewController) {
-        naverLoginModel.naverLoginInstance?.delegate = viewController as! NaverThirdPartyLoginConnectionDelegate
+        naverLoginModel.naverLoginInstance?.delegate = viewController as? NaverThirdPartyLoginConnectionDelegate
     }
     
     func requestLogin() {

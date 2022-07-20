@@ -47,7 +47,7 @@ class OrderForecastTimeViewController: UIViewController {
     }()
     
     /* nextButton: 다음 버튼 */
-    let nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -152,31 +152,30 @@ class OrderForecastTimeViewController: UIViewController {
     
     private func setDefaultValueOfPicker() {
         if let orderForecastTime = CreateParty.orderForecastTime {
-            if let str = CreateParty.orderForecastTime?.replacingOccurrences(of: " ", with: "") {
-                let startIdx = str.index(str.startIndex, offsetBy: 6)
-                let dateRange = ..<startIdx // 월, 일
-                let timeRange = startIdx... // 시, 분
-                // TextField 초기값 설정
-                dateTextField.text = "\(str[dateRange])"
-                timeTextField.text = "\(str[timeRange])"
-                
-                // PickerView 초기값 설정
-                let dateStr = str[dateRange].replacingOccurrences(of: "월", with: "-").replacingOccurrences(of: "일", with: "")
-                let timeStr = str[timeRange].replacingOccurrences(of: "시", with: ":").replacingOccurrences(of: "분", with: "")
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy"
-                let currentYears = formatter.string(from: Date())
-                // 최종 문자열
-                let formattedDate = "\(currentYears)-\(dateStr)"
-                let formattedTime = "\(timeStr)"
-                formatter.dateFormat = "yyyy-MM-dd"
-                if let formattedDate = formatter.date(from: formattedDate) {
-                    datePicker.setDate(formattedDate, animated: true)
-                }
-                formatter.dateFormat = "HH:mm"
-                if let formattedTime = formatter.date(from: formattedTime) {
-                    timePicker.setDate(formattedTime, animated: true)
-                }
+            let str = orderForecastTime.replacingOccurrences(of: " ", with: "")
+            let startIdx = str.index(str.startIndex, offsetBy: 6)
+            let dateRange = ..<startIdx // 월, 일
+            let timeRange = startIdx... // 시, 분
+            // TextField 초기값 설정
+            dateTextField.text = "\(str[dateRange])"
+            timeTextField.text = "\(str[timeRange])"
+            
+            // PickerView 초기값 설정
+            let dateStr = str[dateRange].replacingOccurrences(of: "월", with: "-").replacingOccurrences(of: "일", with: "")
+            let timeStr = str[timeRange].replacingOccurrences(of: "시", with: ":").replacingOccurrences(of: "분", with: "")
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy"
+            let currentYears = formatter.string(from: Date())
+            // 최종 문자열
+            let formattedDate = "\(currentYears)-\(dateStr)"
+            let formattedTime = "\(timeStr)"
+            formatter.dateFormat = "yyyy-MM-dd"
+            if let formattedDate = formatter.date(from: formattedDate) {
+                datePicker.setDate(formattedDate, animated: true)
+            }
+            formatter.dateFormat = "HH:mm"
+            if let formattedTime = formatter.date(from: formattedTime) {
+                timePicker.setDate(formattedTime, animated: true)
             }
         }
     }

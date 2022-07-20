@@ -19,7 +19,7 @@ class UniversityListViewModel {
                     if result.isSuccess! {
                         print("DEBUG: 성공")
                         // TODO: 테스트 필요... 명세서대로 했는데 지금 에러남
-                        print(result.result?.name)
+//                        print(result.result?.name)
                     } else {
                         print("DEBUG: 실패", result.message!)
                     }

@@ -25,7 +25,7 @@ class CreatePartyViewController: UIViewController {
     }()
     
     /* 타이틀 위 같이 먹고 싶고 싶어요 버튼 */
-    var eatTogetherButton: UIButton = {
+    lazy var eatTogetherButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
         button.tintColor = UIColor(hex: 0xD8D8D8)
@@ -37,7 +37,7 @@ class CreatePartyViewController: UIViewController {
     }()
     
     /* 타이틀 텍스트 필드 */
-    var titleTextField: UITextField = {
+    lazy var titleTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .white
         textField.attributedPlaceholder = NSAttributedString(
@@ -85,7 +85,7 @@ class CreatePartyViewController: UIViewController {
     var locationLabel = UILabel()
     
     /* selected Button & labels */
-    var orderForecastTimeButton: UIButton = {
+    lazy var orderForecastTimeButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .customFont(.neoRegular, size: 13)
         button.contentHorizontalAlignment = .left
@@ -95,6 +95,7 @@ class CreatePartyViewController: UIViewController {
         button.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
         return button
     }()
+        
     var selectedPersonLabel = UILabel()
     var selectedCategoryLabel = UILabel()
     var selectedUrlLabel = UILabel()

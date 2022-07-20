@@ -39,9 +39,10 @@ class PartyTableViewCell: UITableViewCell {
         return label
     }()
     
-    var optionLabel: UILabel = {
+    var categoryLabel: UILabel = {
         var label = UILabel()
-        label.text = "매칭 시 바로 주문"
+        // TODO: - 서버 수정되면 카테고리 데이터 받아오기
+        label.text = "중식"
         label.textColor = UIColor(hex: 0x636363)
         label.font = .customFont(.neoMedium, size: 12)
         return label
@@ -67,14 +68,14 @@ class PartyTableViewCell: UITableViewCell {
     // MARK: - Set Functions
     
     func addSubViews() {
-        contentView.addSubview(timeLabel)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(optionLabel)
-        contentView.addSubview(hashtagLabel)
-//        contentView.addSubview(nameLabel)
-        contentView.addSubview(peopleLabel)
-        contentView.addSubview(peopleImageView)
-//        contentView.addSubview(badgeImageView)
+        [
+            peopleImageView,
+            peopleLabel,
+            timeLabel,
+            titleLabel,
+            categoryLabel,
+            hashtagLabel
+        ].forEach { contentView.addSubview($0) }
     }
     
     func setLayouts() {
@@ -100,14 +101,14 @@ class PartyTableViewCell: UITableViewCell {
             make.left.equalToSuperview().offset(22)
         }
         
-        optionLabel.snp.makeConstraints { make in
+        categoryLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.left.equalToSuperview().offset(29)
         }
         
         hashtagLabel.snp.makeConstraints { make in
-            make.top.equalTo(optionLabel.snp.top)
-            make.left.equalTo(optionLabel.snp.right).offset(45)
+            make.top.equalTo(categoryLabel.snp.top)
+            make.left.equalTo(categoryLabel.snp.right).offset(45)
         }
         
 //        badgeImageView.snp.makeConstraints { make in

@@ -38,7 +38,7 @@ class AgreementViewController: UIViewController {
         return imageView
     }()
     
-    var completeButton: UIButton = {
+    lazy var completeButton: UIButton = {
         let button = UIButton()
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)

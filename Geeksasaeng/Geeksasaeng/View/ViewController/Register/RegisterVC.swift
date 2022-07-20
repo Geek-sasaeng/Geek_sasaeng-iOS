@@ -45,12 +45,12 @@ class RegisterViewController: UIViewController {
     var nickNameLabel = UILabel()
     
     var idTextField = UITextField()
-    var pwTextField: UITextField = {
+    lazy var pwTextField: UITextField = {
         let textField = UITextField()
         textField.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
         return textField
     }()
-    var pwCheckTextField: UITextField = {
+    lazy var pwCheckTextField: UITextField = {
         let textField = UITextField()
         textField.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
         return textField
@@ -91,7 +91,7 @@ class RegisterViewController: UIViewController {
         return label
     }()
     
-    var nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -104,29 +104,20 @@ class RegisterViewController: UIViewController {
         return button
     }()
     
-    var idCheckButton:  UIButton = {
+    lazy var idCheckButton:  UIButton = {
         let button = UIButton()
-        button.setTitle("중복 확인", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-        button.setDeactivatedButton()
         button.addTarget(self, action: #selector(tapIdCheckButton), for: .touchUpInside)
         return button
     }()
     
-    var nickNameCheckButton: UIButton = {
+    lazy var nickNameCheckButton: UIButton = {
         let button = UIButton()
-        button.setTitle("중복 확인", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-        button.setDeactivatedButton()
         button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
         return button
     }()
     
     // MARK: - Properties
+    
     var idCheck = false
     var nicknameCheck = false
     
@@ -147,12 +138,19 @@ class RegisterViewController: UIViewController {
     
     // MARK: - Functions
     
+    private func addSubViews() {
+        [
+            progressBar, remainBar, progressIcon, remainIcon,
+            idLabel, passwordLabel, passwordCheckLabel, nickNameLabel,
+            idTextField, pwTextField, pwCheckTextField, nickNameTextField,
+            idAvailableLabel, nickNameAvailableLabel, passwordAvailableLabel, passwordSameCheckLabel,
+            idCheckButton, nickNameCheckButton,
+            nextButton
+        ].forEach { view.addSubview($0) }
+    }
+    
     private func setLayouts() {
         /* progress Bar */
-        [progressBar, remainBar, progressIcon, remainIcon].forEach {
-            view.addSubview($0)
-        }
-        
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.width.equalTo((UIScreen.main.bounds.width - 50) / 5)
@@ -179,17 +177,6 @@ class RegisterViewController: UIViewController {
             make.height.equalTo(36)
             make.top.equalTo(progressBar.snp.top).offset(-8)
             make.right.equalTo(remainBar.snp.right).offset(3)
-        }
-        
-        /* id, password, passwordCheck, nickname */
-        [
-            idLabel, passwordLabel, passwordCheckLabel, nickNameLabel,
-            idTextField, pwTextField, pwCheckTextField, nickNameTextField,
-            idAvailableLabel, nickNameAvailableLabel, passwordAvailableLabel, passwordSameCheckLabel,
-            idCheckButton, nickNameCheckButton,
-            nextButton
-        ].forEach {
-            view.addSubview($0)
         }
         
         /* id */
@@ -272,8 +259,7 @@ class RegisterViewController: UIViewController {
         
         /* nextButton */
         nextButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(28)
+            make.left.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }
@@ -288,13 +274,18 @@ class RegisterViewController: UIViewController {
         
         /* textFields attr */
         setTextFieldAttrs(textField: idTextField, msg: "6-20자 영문+숫자로 입력", width: 210)
-        idTextField.autocapitalizationType = .none
-        setTextFieldAttrs(textField: pwTextField,msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력",width: 307)
-        pwTextField.autocapitalizationType = .none
-        setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력",width: 307)
-        pwCheckTextField.autocapitalizationType = .none
-        setTextFieldAttrs(textField: nickNameTextField,msg: "3-8자 영문 혹은 한글로 입력",width: 210)
-        nickNameTextField.autocapitalizationType = .none
+        setTextFieldAttrs(textField: pwTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
+        setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
+        setTextFieldAttrs(textField: nickNameTextField, msg: "3-8자 영문 혹은 한글로 입력", width: 210)
+    
+        /* 중복확인 buttons attr */
+        [idCheckButton, nickNameCheckButton].forEach {
+            $0.setTitle("중복 확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            $0.layer.cornerRadius = 5
+            $0.clipsToBounds = true
+            $0.setDeactivatedButton()
+        }
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -307,12 +298,16 @@ class RegisterViewController: UIViewController {
     }
     
     private func setTextFieldAttrs(textField: UITextField, msg: String, width: CGFloat){
+        // 색깔 설정
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
             string: msg,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        // 하단에 줄 생성
         textField.makeBottomLine(width)
+        // 자동 대문자 해제
+        textField.autocapitalizationType = .none
     }
     
     private func setTextFieldTarget() {
@@ -396,7 +391,6 @@ class RegisterViewController: UIViewController {
     }
     
     // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
-    
     @objc func isValidPwTextField() {
         if !(pwTextField.text?.isValidPassword() ?? false) {
             passwordAvailableLabel.isHidden = false
@@ -405,6 +399,7 @@ class RegisterViewController: UIViewController {
         }
     }
     
+    // pw validation 검사
     @objc func isValidPwCheckTextField() {
         if pwCheckTextField.text != pwTextField.text {
             passwordSameCheckLabel.isHidden = false

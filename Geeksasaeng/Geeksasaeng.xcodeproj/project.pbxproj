@@ -943,9 +943,6 @@
 		A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
-		A234E2A72884443A0056AA36 /* FilteringViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A234E2A62884443A0056AA36 /* FilteringViewModel.swift */; };
-		A234E2A82884443A0056AA36 /* FilteringViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A234E2A62884443A0056AA36 /* FilteringViewModel.swift */; };
-		A234E2A92884443A0056AA36 /* FilteringViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A234E2A62884443A0056AA36 /* FilteringViewModel.swift */; };
 		A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
 		A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
 		A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
@@ -973,6 +970,8 @@
 		A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
+		A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
+		A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
 		A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
@@ -1368,7 +1367,6 @@
 		A20FC0F0287F30C40095224C /* SeachVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeachVC.swift; sourceTree = "<group>"; };
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
-		A234E2A62884443A0056AA36 /* FilteringViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringViewModel.swift; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
 		A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthViewModel.swift; sourceTree = "<group>"; };
 		A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthCheckModel.swift; sourceTree = "<group>"; };
@@ -1437,12 +1435,9 @@
 		100FB99328745AA6008947DD /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
-				100FB99828745DDE008947DD /* NaverLoginModel.swift */,
-				A2513F1C287872D70029C279 /* EmailAuthModel.swift */,
-				A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */,
-				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
-				A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */,
+				A29F6F842885454200350744 /* Login */,
+				A29F6F852885455700350744 /* EmailAuth */,
+				A29F6F862885456700350744 /* PhoneAuth */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
 				A2035EA4288341B00051498A /* AdModel.swift */,
@@ -1453,17 +1448,12 @@
 		100FB99428745AAC008947DD /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				A2085AD6287054E900D6CF79 /* LoginViewModel.swift */,
-				100FB99628745DA3008947DD /* NaverLoginViewModel.swift */,
-				A2513F18287868070029C279 /* EmailAuthViewModel.swift */,
-				A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */,
-				A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */,
-				A2513F142878612B0029C279 /* PhoneAuthCheckViewModel.swift */,
+				A29F6F8C2885470700350744 /* Login */,
+				A29F6F8D2885476F00350744 /* Register */,
 				A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */,
 				A2035EA028833ED60051498A /* AdViewModel.swift */,
-				10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */,
 				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
-				A234E2A62884443A0056AA36 /* FilteringViewModel.swift */,
+				10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1916,8 +1906,7 @@
 			children = (
 				A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */,
 				1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */,
-				A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */,
-				A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */,
+				A29F6F872885461000350744 /* Search */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -1962,17 +1951,81 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		A2B4208D286F1EE000278F92 /* ViewController */ = {
+		A29F6F842885454200350744 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				A2B42098286F249800278F92 /* TabBarController.swift */,
-				103F1483286ACB95004B637B /* LoginVC.swift */,
+				A2085ADE2870550200D6CF79 /* LoginModel.swift */,
+				100FB99828745DDE008947DD /* NaverLoginModel.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A29F6F852885455700350744 /* EmailAuth */ = {
+			isa = PBXGroup;
+			children = (
+				A2513F1C287872D70029C279 /* EmailAuthModel.swift */,
+				A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */,
+			);
+			path = EmailAuth;
+			sourceTree = "<group>";
+		};
+		A29F6F862885456700350744 /* PhoneAuth */ = {
+			isa = PBXGroup;
+			children = (
+				A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */,
+				A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */,
+			);
+			path = PhoneAuth;
+			sourceTree = "<group>";
+		};
+		A29F6F872885461000350744 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */,
+				A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		A29F6F882885464900350744 /* Register */ = {
+			isa = PBXGroup;
+			children = (
 				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
 				10C8D26728770D310044552A /* NaverRegisterVC.swift */,
 				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
 				A2B42089286F151100278F92 /* AuthNumVC.swift */,
 				1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */,
 				1040FB972875C06D0060A3E4 /* AgreementVC.swift */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		A29F6F8C2885470700350744 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A2085AD6287054E900D6CF79 /* LoginViewModel.swift */,
+				100FB99628745DA3008947DD /* NaverLoginViewModel.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A29F6F8D2885476F00350744 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				A2513F18287868070029C279 /* EmailAuthViewModel.swift */,
+				A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */,
+				A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */,
+				A2513F142878612B0029C279 /* PhoneAuthCheckViewModel.swift */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		A2B4208D286F1EE000278F92 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A2B42098286F249800278F92 /* TabBarController.swift */,
+				103F1483286ACB95004B637B /* LoginVC.swift */,
+				A29F6F882885464900350744 /* Register */,
 				A26BD187287B0415003A0A48 /* DormitoryVC.swift */,
 				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
 				A20FC0F0287F30C40095224C /* SeachVC.swift */,
@@ -3142,7 +3195,6 @@
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				106D9755287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				1040FB9A2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
-				A234E2A72884443A0056AA36 /* FilteringViewModel.swift in Sources */,
 				1040FB982875C06E0060A3E4 /* AgreementVC.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
 			);
@@ -3168,6 +3220,7 @@
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
+				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
 				A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
@@ -3184,7 +3237,6 @@
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
 				102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
-				A234E2A82884443A0056AA36 /* FilteringViewModel.swift in Sources */,
 				10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SeachVC.swift in Sources */,
@@ -3220,7 +3272,7 @@
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
-				A234E2A92884443A0056AA36 /* FilteringViewModel.swift in Sources */,
+				A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */,
 				105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
@@ -3436,7 +3488,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3475,7 +3527,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;

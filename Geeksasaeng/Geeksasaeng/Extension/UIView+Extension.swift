@@ -9,6 +9,7 @@ import UIKit
 
 extension UIView {
     
+    // ?? 얜 어디에 쓰는 거지
     func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
         let border = CALayer()
         border.backgroundColor = color.cgColor
