@@ -10,7 +10,7 @@ import Alamofire
 
 class EmailAuthCheckViewModel {
     public static func requestCheckEmailAuth(_ viewController: AuthNumViewController, _ parameter: EmailAuthCheckInput) {
-        AF.request("https://geeksasaeng.shop/members/email/check", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
+        AF.request("https://geeksasaeng.shop/email/check", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
             .validate()
             .responseDecodable(of: EmailAuthCheckModel.self) {
                 response in
@@ -19,6 +19,7 @@ class EmailAuthCheckViewModel {
                     if result.isSuccess! {
                         print("DEBUG: 성공")
                         // 성공하면 휴대폰 인증 화면으로 넘어간다.
+                        viewController.emailId = result.result?.emailId
                         viewController.showNextView()
                     } else {
                         print("DEBUG: 실패", result.message!)

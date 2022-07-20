@@ -98,10 +98,11 @@ class AuthNumViewController: UIViewController {
     var nickNameData: String? = nil
     var university: String? = nil
     var email: String? = nil
+    var emailId: Int? = nil
     var uuid: UUID? = nil
     
     /* 네이버 회원가입에서 받아온 데이터 */
-    var phoneNumber: String? = nil // nil이 아니면 네이버 회원가입이란 말이니까 폰인증 화면 건너뛰고 이용약관 화면으로 바로 이동 -> 필요한 데이터도 전달
+    var phoneNumberId: Int? = nil // nil이 아니면 네이버 회원가입이란 말이니까 폰인증 화면 건너뛰고 이용약관 화면으로 바로 이동 -> 필요한 데이터도 전달
     
     var isFromNaverRegister = false
     
@@ -275,9 +276,9 @@ class AuthNumViewController: UIViewController {
             agreementVC.pwData = pwData
             agreementVC.pwCheckData = pwCheckData
             agreementVC.nickNameData = nickNameData
-            agreementVC.email = email
+            agreementVC.emailId = emailId
             agreementVC.university = university
-            agreementVC.phoneNum = phoneNumber
+            agreementVC.phoneNumberId = phoneNumberId
             agreementVC.isFromNaverRegister = true
             
             present(agreementVC, animated: true)
@@ -287,21 +288,21 @@ class AuthNumViewController: UIViewController {
             phoneAuthVC.modalTransitionStyle = .crossDissolve
             phoneAuthVC.modalPresentationStyle = .fullScreen
             
-            // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일) 총 6개
+            // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일id) 총 6개
             // 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
             if let idData = self.idData,
                let pwData = self.pwData,
                let pwCheckData = self.pwCheckData,
                let nickNameData = self.nickNameData,
                let univ = self.university,
-               let email = self.email,
+               let emailId = self.emailId,
                let uuid = self.uuid {
                 phoneAuthVC.idData = idData
                 phoneAuthVC.pwData = pwData
                 phoneAuthVC.pwCheckData = pwCheckData
                 phoneAuthVC.nickNameData = nickNameData
                 phoneAuthVC.university = univ
-                phoneAuthVC.email = email
+                phoneAuthVC.emailId = emailId
                 phoneAuthVC.uuid = uuid
             }
             

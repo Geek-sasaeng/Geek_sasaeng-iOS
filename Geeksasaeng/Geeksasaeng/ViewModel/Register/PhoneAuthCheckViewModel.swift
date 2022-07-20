@@ -18,6 +18,7 @@ class PhoneAuthCheckViewModel {
                 case .success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 성공")
+                        viewController.phoneNumberId = result.result?.phoneNumberId
                         // 성공하면 이용 약관 화면으로 넘어간다.
                         viewController.showNextView()
                     } else {

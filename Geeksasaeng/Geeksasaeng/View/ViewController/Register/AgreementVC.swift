@@ -54,11 +54,11 @@ class AgreementViewController: UIViewController {
     
     /* 이전 화면에서 받아온 데이터들 */
     var pwCheckData: String? = nil
-    var email: String? = nil
+    var emailId: Int? = nil
     var idData: String? = nil
     var nickNameData: String? = nil
     var pwData: String? = nil
-    var phoneNum: String? = nil
+    var phoneNumberId: Int? = nil
     var university: String? = nil
     
     var isFromNaverRegister = false
@@ -123,29 +123,30 @@ class AgreementViewController: UIViewController {
 
     /* 회원가입 Request 보내는 함수 */
     @objc private func tapCompleteButton() {
+        // TODO: - 네이버 회원가입 수정 필요
         if isFromNaverRegister { // naver 회원가입인 경우
-            phoneNum = phoneNum?.replacingOccurrences(of: "-", with: "")
+//            phoneNum = phoneNum?.replacingOccurrences(of: "-", with: "")
             if let checkPassword = self.pwCheckData,
-               let email = self.email,
+               let emailId = self.emailId,
                let loginId = self.idData,
                let nickname = self.nickNameData,
                let password = self.pwData,
-               let phoneNumber = self.phoneNum,
+               let phoneNumberId = self.phoneNumberId,
                let universityName = self.university {
                 print(checkPassword)
-                print(email)
+                print(emailId)
                 print(loginId)
                 print(nickname)
                 print(password)
-                print(phoneNumber)
+                print(phoneNumberId)
                 print(universityName)
                 let input = RegisterInput(checkPassword: checkPassword,
-                                          email: email,
+                                          emailId: emailId,
                                           informationAgreeStatus: "Y",
                                           loginId: loginId,
                                           nickname: nickname,
                                           password: password,
-                                          phoneNumber: phoneNumber,
+                                          phoneNumberId: phoneNumberId,
                                           universityName: universityName)
                 
                 RegisterAPI.registerUserFromNaver(self, input)
@@ -159,17 +160,17 @@ class AgreementViewController: UIViewController {
                let pwCheckData = self.pwCheckData,
                let nickNameData = self.nickNameData,
                let univ = self.university,
-               let email = self.email,
-               let phoneNum = self.phoneNum
+               let emailId = self.emailId,
+               let phoneNumberId = self.phoneNumberId
     //           let agreeStatus = self.isArgree   -> TODO: 나중에 이용약관 추가됐을 때 동의했느냐, 안 했느냐 판단해서 추가
             {
                 let input = RegisterInput(checkPassword: pwCheckData,
-                                          email: email,
+                                          emailId: emailId,
                                           informationAgreeStatus: "Y",
                                           loginId: idData,
                                           nickname: nickNameData,
                                           password: pwData,
-                                          phoneNumber: phoneNum,
+                                          phoneNumberId: phoneNumberId,
                                           universityName: univ)
                 
                 RegisterAPI.registerUser(self, input)
@@ -177,13 +178,15 @@ class AgreementViewController: UIViewController {
         }
     }
     
-    public func showHomeView() {
-        let homeVC = TabBarController()
-        homeVC.modalTransitionStyle = .crossDissolve
-        homeVC.modalPresentationStyle = .fullScreen
-        present(homeVC, animated: true)
+    /* 일반 회원가입 끝났으면 로그인 화면으로 돌아가도록 */
+    @objc public func showLoginView() {
+        let loginVC = LoginViewController()
+        loginVC.modalTransitionStyle = .crossDissolve
+        loginVC.modalPresentationStyle = .fullScreen
+        present(loginVC, animated: true)
     }
     
+    /* 네이버 회원가입 시 사용 */
     public func showDomitoryView() {
         let dormitoryVC = DormitoryViewController()
         dormitoryVC.modalTransitionStyle = .crossDissolve

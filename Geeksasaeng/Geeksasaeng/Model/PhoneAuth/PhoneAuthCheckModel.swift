@@ -16,7 +16,7 @@ struct PhoneAuthCheckModel: Decodable {
 }
 
 struct PhoneAuthCheckResult: Decodable {
-    var statusName: String?
+    var phoneNumberId: Int?
 }
 
 // Request

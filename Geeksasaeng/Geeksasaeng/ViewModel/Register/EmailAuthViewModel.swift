@@ -12,10 +12,10 @@ import Alamofire
 class EmailAuthViewModel {
     
     public static func requestSendEmail(_ viewController : UIViewController, _ parameter : EmailAuthInput) {
-        AF.request("https://geeksasaeng.shop/members/email", method: .post,
+        AF.request("https://geeksasaeng.shop/email", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
-        .responseDecodable(of: PhoneAuthModel.self) { response in
+        .responseDecodable(of: EmailAuthModel.self) { response in
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
