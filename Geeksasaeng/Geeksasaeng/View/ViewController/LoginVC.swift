@@ -18,7 +18,7 @@ class LoginViewController: UIViewController {
         return imageView
     }()
     
-    var idTextField: UITextField = {
+    lazy var idTextField: UITextField = {
         var textField = UITextField()
         textField.autocapitalizationType = .none
         textField.font = .customFont(.neoLight, size: 14)
@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
         return textField
     }()
     
-    var passwordTextField: UITextField = {
+    lazy var passwordTextField: UITextField = {
         var textField = UITextField()
         textField.autocapitalizationType = .none
         textField.font = .customFont(.neoLight, size: 14)
@@ -46,7 +46,7 @@ class LoginViewController: UIViewController {
         return textField
     }()
     
-    let loginButton: UIButton = {
+    lazy var loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
@@ -58,7 +58,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    let naverLoginButton: UIButton = {
+    lazy var naverLoginButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "NaverLogo"), for: .normal)
         button.adjustsImageWhenHighlighted = false
@@ -73,7 +73,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    var automaticLoginButton: UIButton = {
+    lazy var automaticLoginButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "rectangle"), for: .normal)
         button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
@@ -84,7 +84,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    var signUpButton: UIButton = {
+    lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)

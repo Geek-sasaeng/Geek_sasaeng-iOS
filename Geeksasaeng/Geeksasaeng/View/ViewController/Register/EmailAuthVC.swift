@@ -150,29 +150,19 @@ class EmailAuthViewController: UIViewController {
     var emailTextField = UITextField()
     var emailAddressTextField = UITextField()
     
-    var authSendButton: UIButton = {
+    lazy var authSendButton: UIButton = {
         var button = UIButton()
         button.setTitle("인증번호 전송", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.isEnabled = false
-        button.clipsToBounds = true
         button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
         return button
     }()
     
-    var nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.isEnabled = false
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
@@ -194,8 +184,9 @@ class EmailAuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        setAttributes()
+        addSubViews()
         setLayouts()
+        setAttributes()
         setTextFieldTarget()
         setLabelTap()
         
@@ -217,26 +208,27 @@ class EmailAuthViewController: UIViewController {
     }
     
     // MARK: - Functions
+    
+    private func addSubViews() {
+        [
+            progressBar, remainBar,
+            progressIcon, remainIcon,
+            schoolLabel, emailLabel,
+            universitySelectView,
+            emailTextField, emailAddressTextField,
+            authSendButton,
+            nextButton
+        ].forEach { view.addSubview($0) }
+    }
+    
     private func setLayouts() {
         /* progress Bar */
-        view.addSubview(progressBar)
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 2)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
-        
-        /* remain Bar */
-        view.addSubview(remainBar)
-        remainBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
-        }
-        
-        view.addSubview(progressIcon)
         progressIcon.snp.makeConstraints { make in
             make.width.equalTo(35)
             make.height.equalTo(22)
@@ -244,7 +236,13 @@ class EmailAuthViewController: UIViewController {
             make.left.equalTo(progressBar.snp.right).inset(15)
         }
         
-        view.addSubview(remainIcon)
+        /* remain Bar */
+        remainBar.snp.makeConstraints { make in
+            make.height.equalTo(3)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.left.equalTo(progressBar.snp.right)
+            make.right.equalToSuperview().inset(25)
+        }
         remainIcon.snp.makeConstraints { make in
             make.width.equalTo(22)
             make.height.equalTo(36)
@@ -252,53 +250,35 @@ class EmailAuthViewController: UIViewController {
             make.right.equalTo(remainBar.snp.right).offset(3)
         }
         
-        /* labels */
-        [
-            schoolLabel,
-            emailLabel
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(27)
-            }
-        }
         /* schoolLabel */
         schoolLabel.snp.makeConstraints { make in
             make.top.equalTo(progressBar.snp.bottom).offset(50)
+            make.left.equalToSuperview().inset(27)
         }
         /* emailLabel */
         emailLabel.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(81)
+            make.left.equalToSuperview().inset(27)
         }
         
-        view.addSubview(universitySelectView)
         universitySelectView.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(41)
         }
         
-        /* text fields */
-        [
-            emailTextField,
-            emailAddressTextField
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(36)
-            }
-        }
         /* emailTextField */
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(emailLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().inset(36)
         }
         /* emailAddressTextField */
         emailAddressTextField.snp.makeConstraints { make in
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
+            make.left.equalToSuperview().inset(36)
         }
         
         /* authSendButton */
-        view.addSubview(authSendButton)
         authSendButton.snp.makeConstraints { make in
             make.top.equalTo(remainBar.snp.bottom).offset(243)
             make.right.equalToSuperview().inset(26)
@@ -307,7 +287,6 @@ class EmailAuthViewController: UIViewController {
         }
         
         /* nextButton */
-        view.addSubview(nextButton)
         nextButton.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
@@ -329,9 +308,14 @@ class EmailAuthViewController: UIViewController {
         // TODO: emailAddress -> UILabel로 바뀌어야 할 듯
         emailAddressTextField.text = "@gachon.ac.kr"   //test
         
-        /* authSendButton attr */
-        //        authSendButton = setAuthSendButtonAttrs()
-        //        makeButtonShadow(authSendButton)
+        /* buttons attr */
+        [authSendButton, nextButton].forEach {
+            $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+            $0.layer.cornerRadius = 5
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+            $0.isEnabled = false
+            $0.clipsToBounds = true
+        }
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -356,7 +340,7 @@ class EmailAuthViewController: UIViewController {
     }
     
     private func setTextFieldTarget() {
-        [ emailTextField, emailAddressTextField].forEach { textField in
+        [ emailTextField, emailAddressTextField ].forEach { textField in
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
@@ -417,7 +401,7 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    @objc func showNextView() {
+    @objc func tapNextButton() {
         let authNumVC = AuthNumViewController()
         
         authNumVC.modalTransitionStyle = .crossDissolve

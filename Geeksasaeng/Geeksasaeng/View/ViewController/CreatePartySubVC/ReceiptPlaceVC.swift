@@ -20,7 +20,7 @@ class ReceiptPlaceViewController: UIViewController {
     }()
     
     /* backbutton */
-    let backButton: UIButton = {
+    lazy var backButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         button.tintColor = UIColor(hex: 0x5B5B5B)
@@ -37,7 +37,7 @@ class ReceiptPlaceViewController: UIViewController {
         return textField
     }()
     
-    let searchButton: UIButton = {
+    lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         button.tintColor = UIColor(hex: 0x2F2F2F)
@@ -71,7 +71,7 @@ class ReceiptPlaceViewController: UIViewController {
     }()
     
     /* confirmButton: 완료 버튼 */
-    let confirmButton: UIButton = {
+    lazy var confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("완료", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -162,7 +162,7 @@ class ReceiptPlaceViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         // mapView의 모든 poiItem 제거
         for item in mapView!.poiItems {
-            mapView?.remove(item as! MTMapPOIItem)
+            mapView?.remove(item as? MTMapPOIItem)
         }
     }
     

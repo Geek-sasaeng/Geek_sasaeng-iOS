@@ -12,7 +12,7 @@ class NaverRegisterViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var progressBar: UIView = {
+    lazy var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
         view.clipsToBounds = true
@@ -20,7 +20,7 @@ class NaverRegisterViewController: UIViewController {
         return view
     }()
     
-    var remainBar: UIView = {
+    lazy var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
         view.clipsToBounds = true
@@ -28,12 +28,12 @@ class NaverRegisterViewController: UIViewController {
         return view
     }()
     
-    var progressIcon: UIImageView = {
+    lazy var progressIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoTop"))
         return imageView
     }()
     
-    var remainIcon: UIImageView = {
+    lazy var remainIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
         return imageView
     }()
@@ -77,7 +77,7 @@ class NaverRegisterViewController: UIViewController {
     }()
     
     // Label Tap Gesture 적용을 위해 따로 꺼내놓음
-    var univNameLabel: UILabel = {
+    lazy var univNameLabel: UILabel = {
         let label = UILabel()
         label.text = "가천대학교"
         label.font = .customFont(.neoLight, size: 15)
@@ -152,7 +152,7 @@ class NaverRegisterViewController: UIViewController {
     var emailTextField = UITextField()
     var emailAddressTextField = UITextField()
     
-    var nickNameCheckButton: UIButton = {
+    lazy var nickNameCheckButton: UIButton = {
         let button = UIButton()
         button.setTitle("중복 확인", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -174,7 +174,7 @@ class NaverRegisterViewController: UIViewController {
         return label
     }()
     
-    var authSendButton: UIButton = {
+    lazy var authSendButton: UIButton = {
         var button = UIButton()
         button.setTitle("인증번호 전송", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -187,7 +187,7 @@ class NaverRegisterViewController: UIViewController {
         return button
     }()
     
-    var nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
