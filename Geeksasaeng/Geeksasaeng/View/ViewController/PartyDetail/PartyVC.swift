@@ -8,15 +8,32 @@
 import UIKit
 import SnapKit
 
-class PartyViewController: UIViewController {
+class PartyViewController: UIViewController, UIScrollViewDelegate {
+    
+    // MARK: - Properties
+    
+    let maxHeight = 55
+    let minHeight = 0
     
     // MARK: - Subviews
     
-    // 외부 참조가 필요해서 이 버r튼만 밖에 빼놓음!
+    // 스크롤뷰
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        return scrollView
+    }()
+    let contentView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    // 외부 참조가 필요해서 이 버튼만 밖에 빼놓음!
     lazy var reportButton: UIButton = {
         let button = UIButton()
         button.setTitle("신고하기", for: .normal)
-        // MARK: - 신고하기 뷰 연결 필요
+        // TODO: - 신고하기 뷰 연결 필요
 //        button.addTarget(self, action: #selector(showReportView), for: .touchUpInside)
         return button
     }()
@@ -173,6 +190,7 @@ class PartyViewController: UIViewController {
             }()
             
             let stackView = UIStackView(arrangedSubviews: [orderLabel, orderReserveDateLabel, orderReserveTimeLabel])
+            stackView.spacing = 36
             return stackView
         }()
         
@@ -193,6 +211,7 @@ class PartyViewController: UIViewController {
             }()
             
             let stackView = UIStackView(arrangedSubviews: [matchingLabel, matchingDataLabel])
+            stackView.spacing = 63
             return stackView
         }()
         
@@ -213,6 +232,30 @@ class PartyViewController: UIViewController {
             }()
             
             let stackView = UIStackView(arrangedSubviews: [categoryLabel, categoryDataLabel])
+            stackView.spacing = 66
+            return stackView
+        }()
+        
+        var storeLinkStackView: UIStackView = {
+            var storeLinkLabel: UILabel = {
+                let label = UILabel()
+                label.text = "식당 링크"
+                label.textColor = .init(hex: 0x2F2F2F)
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            var storeLinkDataLabel: UILabel = {
+                let label = UILabel()
+                label.text = "???"
+                label.numberOfLines = 1
+                label.lineBreakMode = .byCharWrapping
+                label.textColor = .init(hex: 0x2F2F2F)
+                label.font = .customFont(.neoMedium, size: 13)
+                return label
+            }()
+            
+            let stackView = UIStackView(arrangedSubviews: [storeLinkLabel, storeLinkDataLabel])
+            stackView.spacing = 63
             return stackView
         }()
         
@@ -233,6 +276,7 @@ class PartyViewController: UIViewController {
             }()
             
             let stackView = UIStackView(arrangedSubviews: [pickupLocationLabel, pickupLocationDataLabel])
+            stackView.spacing = 63
             return stackView
         }()
         
@@ -240,12 +284,12 @@ class PartyViewController: UIViewController {
             timeStackView,
             matchingStackView,
             categoryStackView,
+            storeLinkStackView,
             locationStackView
         ].forEach {
             $0.axis = .horizontal
             $0.alignment = .fill
             $0.distribution = .fill
-            $0.spacing = 20
         }
         
         /* Vertical StackView */
@@ -253,11 +297,12 @@ class PartyViewController: UIViewController {
             timeStackView,
             matchingStackView,
             categoryStackView,
+            storeLinkStackView,
             locationStackView
         ])
         
         stackView.axis = .vertical
-        stackView.alignment = .fill
+        stackView.alignment = .leading  // vertical stackview의 좌우 정렬 기준!
         stackView.distribution = .fill
         stackView.spacing = 24
         
@@ -276,15 +321,10 @@ class PartyViewController: UIViewController {
         return view
     }()
     
-    var peopleImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "People")
-        return imageView
-    }()
-    
     var matchingDataWhiteLabel: UILabel = {
         let label = UILabel()
-        label.text = "2/4"
+        label.text = "2/4 명"
+        label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
         return label
     }()
@@ -292,6 +332,7 @@ class PartyViewController: UIViewController {
     var remainTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00:00"
+        label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
         return label
     }()
@@ -418,13 +459,19 @@ class PartyViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        addSubViews()
         setLayouts()
         setAttributes()
+        scrollView.delegate = self
     }
     
     // MARK: - Functions
     
-    private func setLayouts() {
+    private func addSubViews() {
+        self.view.addSubview(scrollView)
+        self.scrollView.addSubview(contentView)
+        self.scrollView.addSubview(matchingStatusView)
+        
         [
             profileImageView,
             nickNameLabel,
@@ -433,18 +480,31 @@ class PartyViewController: UIViewController {
             titleLabel,
             contentLabel,
             separateView,
-            matchingStatusView,
-            peopleImage,
             verticalStackView,
-            mapView,
+            mapView
+        ].forEach { contentView.addSubview($0) }
+        [
             matchingDataWhiteLabel,
             remainTimeLabel,
             signUpButton,
             arrowImageView
-        ].forEach { self.view.addSubview($0) }
+        ].forEach { matchingStatusView.addSubview($0) }
+    }
+    
+    private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(UIScreen.main.bounds.width)
+        }
+        // 스크롤뷰 안에 들어갈 컨텐츠뷰
+        contentView.snp.makeConstraints { (make) in
+            make.edges.width.equalToSuperview()
+            make.height.equalTo(UIScreen.main.bounds.height)
+        }
         
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(105)
+            make.top.equalToSuperview().inset(20)
             make.left.equalToSuperview().inset(23)
             make.width.height.equalTo(26)
         }
@@ -487,38 +547,32 @@ class PartyViewController: UIViewController {
         }
         
         mapView.snp.makeConstraints { make in
-            make.top.equalTo(verticalStackView.snp.bottom).offset(13)
+            make.top.equalTo(verticalStackView.snp.bottom).offset(14)
             make.left.right.equalToSuperview().inset(23)
             make.height.equalTo(122)
         }
         
         matchingStatusView.snp.makeConstraints { make in
-            let constant = tabBarController?.tabBar.frame.size.height
-            make.bottom.equalToSuperview().inset(constant!)
+            make.bottom.equalToSuperview().inset(170)
             make.height.equalTo(55)
             make.width.equalToSuperview()
         }
         
-        peopleImage.snp.makeConstraints { make in
-            make.centerY.equalTo(matchingStatusView.snp.centerY)
-            make.left.equalToSuperview().inset(29)
-        }
-        
         matchingDataWhiteLabel.snp.makeConstraints { make in
-            make.left.equalTo(peopleImage.snp.right).offset(12)
-            make.centerY.equalTo(peopleImage.snp.centerY)
+            make.left.equalToSuperview().inset(29)
+            make.centerY.equalTo(matchingStatusView.snp.centerY)
         }
         remainTimeLabel.snp.makeConstraints { make in
-            make.left.equalTo(matchingDataWhiteLabel.snp.right).offset(33)
-            make.centerY.equalTo(peopleImage.snp.centerY)
+            make.left.equalTo(matchingDataWhiteLabel.snp.right).offset(45)
+            make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
         }
         signUpButton.snp.makeConstraints { make in
-            make.left.equalTo(remainTimeLabel.snp.right).offset(62)
-            make.centerY.equalTo(peopleImage.snp.centerY)
+            make.right.equalTo(arrowImageView.snp.left).offset(-11)
+            make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
         }
         arrowImageView.snp.makeConstraints { make in
-            make.left.equalTo(signUpButton.snp.right).offset(11)
-            make.centerY.equalTo(peopleImage.snp.centerY)
+            make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
+            make.right.equalToSuperview().inset(29)
         }
         
     }
@@ -580,6 +634,11 @@ class PartyViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
         showPartyPost()
+    }
+    
+    // TODO: - 신청하기 View 탭바에 달라붙도록 구현해야 함............ 자료가 진짜 없다
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
     }
     
     /* 이전 화면으로 돌아가기 */
