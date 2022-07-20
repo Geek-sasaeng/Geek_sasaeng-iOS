@@ -128,7 +128,7 @@ class OrderForecastTimeViewController: UIViewController {
         }
         
         dateTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(58)
+            make.top.equalTo(titleLabel.snp.bottom).offset(94)
             make.centerX.equalToSuperview()
         }
         

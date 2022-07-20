@@ -95,9 +95,9 @@ class ReceiptPlaceViewController: UIViewController {
     
     // MARK: - Properties
     var mapView: MTMapView?
-    var locationManager: CLLocationManager!
-    var la: Double = 0 // 현재 위도
-    var lo: Double = 0 // 현재 경도
+//    var locationManager: CLLocationManager!
+    var latitude: Double? // 현재 위도
+    var longitude: Double? // 현재 경도
     var markerLocation: MTMapPoint? // 마커 좌표
     var marker = MTMapPOIItem()
     var markerAddress: String? // 마커 좌표의 주소
@@ -109,7 +109,7 @@ class ReceiptPlaceViewController: UIViewController {
         view.backgroundColor = .white
         
         setMapView()
-        setLocationManager()
+//        setLocationManager()
         setViewLayout()
         addSubViews()
         setLayouts()
@@ -138,10 +138,6 @@ class ReceiptPlaceViewController: UIViewController {
             // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
             mapView.baseMapType = .standard
             
-            // 현재 위치 트래킹
-            mapView.currentLocationTrackingMode = .onWithoutHeading
-            mapView.showCurrentLocationMarker = true
-            
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
             
@@ -149,13 +145,13 @@ class ReceiptPlaceViewController: UIViewController {
         }
     }
     
-    private func setLocationManager() {
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
-    }
+//    private func setLocationManager() {
+//        locationManager = CLLocationManager()
+//        locationManager.delegate = self
+//        locationManager.requestWhenInUseAuthorization()
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.startUpdatingLocation()
+//    }
     
     private func setViewLayout() {
         view.layer.masksToBounds = true
@@ -217,13 +213,8 @@ class ReceiptPlaceViewController: UIViewController {
     
     @objc func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
-        
-        // API Input에 저장
-        if let markerAddress = markerAddress {
-            CreateParty.location = markerAddress
-        } else {
-            CreateParty.location = "주소를 찾지 못했습니다"
-        }
+        CreateParty.latitude = latitude ?? 0
+        CreateParty.longitude = longitude ?? 0
         
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
@@ -239,6 +230,10 @@ class ReceiptPlaceViewController: UIViewController {
         geocoder.geocodeAddressString(searchTextField.text ?? "") { placemark, error in
             // 검색된 위치로 맵의 중심을 이동
             self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0)), zoomLevel: 5, animated: true)
+            
+            // API Request를 위해 전역에 좌표 저장
+            self.latitude = placemark?.first?.location?.coordinate.latitude ?? 0
+            self.longitude = placemark?.first?.location?.coordinate.longitude ?? 0
             
             // 검색된 위치에 마커 생성
             self.marker.showAnimationType = .dropFromHeaven
@@ -301,31 +296,31 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
     }
 }
 
-extension ReceiptPlaceViewController: CLLocationManagerDelegate {
-    // 위치 권한 요청
-    func getLocationUsagePermission() {
-        locationManager.requestWhenInUseAuthorization()
-    }
-    
-    // 권한 요청 답변 결과에 따라
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .authorizedAlways:
-            print("GPS 권한 설정됨")
-        case .restricted:
-            print("GPS 권한 설정되지 않음")
-            getLocationUsagePermission()
-        case .denied:
-            print("GPS 권한 요청 거부됨")
-            getLocationUsagePermission()
-        default:
-            print("GPS: Default")
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations[locations.count - 1]
-        la = location.coordinate.latitude
-        lo = location.coordinate.longitude
-    }
-}
+//extension ReceiptPlaceViewController: CLLocationManagerDelegate {
+//    // 위치 권한 요청
+//    func getLocationUsagePermission() {
+//        locationManager.requestWhenInUseAuthorization()
+//    }
+//
+//    // 권한 요청 답변 결과에 따라
+//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+//        switch status {
+//        case .authorizedAlways:
+//            print("GPS 권한 설정됨")
+//        case .restricted:
+//            print("GPS 권한 설정되지 않음")
+//            getLocationUsagePermission()
+//        case .denied:
+//            print("GPS 권한 요청 거부됨")
+//            getLocationUsagePermission()
+//        default:
+//            print("GPS: Default")
+//        }
+//    }
+//
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        let location = locations[locations.count - 1]
+//        latitude = location.coordinate.latitude
+//        longitude = location.coordinate.longitude
+//    }
+//}

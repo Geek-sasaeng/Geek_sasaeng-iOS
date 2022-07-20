@@ -337,8 +337,7 @@ class CreatePartyViewController: UIViewController {
     private func addSubViews() {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
-         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
-        mapSubView].forEach {
+         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -429,12 +428,12 @@ class CreatePartyViewController: UIViewController {
             make.height.equalTo(38)
         }
         
-        mapSubView.snp.makeConstraints { make in
-            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.left.equalToSuperview().offset(28)
-            make.width.equalTo(314)
-            make.height.equalTo(144)
-        }
+//        mapSubView.snp.makeConstraints { make in
+//            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+//            make.left.equalToSuperview().offset(28)
+//            make.width.equalTo(314)
+//            make.height.equalTo(144)
+//        }
     }
     
     /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
@@ -465,12 +464,12 @@ class CreatePartyViewController: UIViewController {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             eatTogetherButton.tintColor = .mainColor
             eatTogetherButton.setTitleColor(.mainColor, for: .normal)
-            CreateParty.hashTagEatTogether = 2
+            CreateParty.hashTag = true
         } else {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
             eatTogetherButton.tintColor = UIColor(hex: 0xD8D8D8)
             eatTogetherButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-            CreateParty.hashTagEatTogether = nil
+            CreateParty.hashTag = false
         }
     }
     
@@ -655,15 +654,9 @@ class CreatePartyViewController: UIViewController {
            let orderTime = CreateParty.orderTime,
            let maxMatching = CreateParty.maxMatching,
            let foodCategory = CreateParty.foodCategory,
-           let location = CreateParty.location {
-            var hashTag: [Int] = []
-            if let hashTahAsSoonAsMatch = CreateParty.hashTagOrderAsSoonAsMatch {
-                hashTag.append(hashTahAsSoonAsMatch)
-            }
-            if let hashTagEatTogether = CreateParty.hashTagEatTogether {
-                hashTag.append(hashTagEatTogether)
-            }
-            
+           let latitude = CreateParty.latitude,
+           let longitude = CreateParty.longitude,
+           let url = CreateParty.url {
             let input = CreatePartyInput(
                 dormitory: 1,
                 title: title,
@@ -671,8 +664,10 @@ class CreatePartyViewController: UIViewController {
                 orderTime: orderTime,
                 maxMatching: maxMatching,
                 foodCategory: foodCategory,
-                location: location,
-                hashTag: hashTag)
+                latitude: latitude,
+                longitude: longitude,
+                storeUrl: url,
+                hashTag: CreateParty.hashTag ?? false)
             
             CreatePartyViewModel.registerParty(input)
         }
