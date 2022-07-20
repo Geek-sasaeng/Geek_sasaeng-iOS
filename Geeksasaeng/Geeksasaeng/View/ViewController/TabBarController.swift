@@ -10,6 +10,7 @@ import UIKit
 class TabBarController: UITabBarController {
     
     // MARK: - Properties
+    
     // TabBarItem의 title로 쓸 데이터들을 모아둔 리스트
     let titleArray = ["홈", "커뮤니티", "채팅", "프로필"]
     

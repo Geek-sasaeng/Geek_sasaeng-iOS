@@ -24,7 +24,7 @@ class CreatePartyViewController: UIViewController {
         return barButton
     }()
     
-    var eatTogetherButton: UIButton = {
+    lazy var eatTogetherButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
         button.tintColor = UIColor(hex: 0xD8D8D8)
@@ -35,7 +35,7 @@ class CreatePartyViewController: UIViewController {
         return button
     }()
     
-    var titleTextField: UITextField = {
+    lazy var titleTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .white
         textField.attributedPlaceholder = NSAttributedString(
@@ -105,7 +105,7 @@ class CreatePartyViewController: UIViewController {
         return label
     }()
     
-    var orderForecastTimeButton: UIButton = {
+    lazy var orderForecastTimeButton: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = .customFont(.neoRegular, size: 13)
         button.layer.cornerRadius = 3

@@ -44,7 +44,7 @@ class PhoneAuthViewController: UIViewController {
     var phoneNumTextField = UITextField()
     var authTextField = UITextField()
     
-    var authSendButton: UIButton = {
+    lazy var authSendButton: UIButton = {
         var button = UIButton()
         button.setTitle("인증번호 전송", for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
@@ -55,7 +55,7 @@ class PhoneAuthViewController: UIViewController {
         return button
     }()
     
-    var authCheckButton: UIButton = {
+    lazy var authCheckButton: UIButton = {
         var button = UIButton()
         button.setTitle("확인", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -68,7 +68,7 @@ class PhoneAuthViewController: UIViewController {
         return button
     }()
     
-    var passButton: UIButton = {
+    lazy var passButton: UIButton = {
         let button = UIButton()
         button.setTitle("건너뛰기", for: .normal)
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
@@ -78,7 +78,7 @@ class PhoneAuthViewController: UIViewController {
         return button
     }()
     
-    var passView: UIView = {
+    lazy var passView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.clipsToBounds = true
@@ -109,7 +109,7 @@ class PhoneAuthViewController: UIViewController {
         }
         
         /* set cancelButton */
-        let cancelButton = UIButton()
+        lazy var cancelButton = UIButton()
         cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
         cancelButton.titleLabel?.font = .customFont(.neoRegular, size: 15)
@@ -132,7 +132,7 @@ class PhoneAuthViewController: UIViewController {
         
         let contentLabel = UILabel()
         let lineView = UIView()
-        let confirmButton = UIButton()
+        lazy var confirmButton = UIButton()
         
         [contentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)
@@ -187,7 +187,7 @@ class PhoneAuthViewController: UIViewController {
         return label
     }()
     
-    var nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)

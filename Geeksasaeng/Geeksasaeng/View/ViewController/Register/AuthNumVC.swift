@@ -47,7 +47,7 @@ class AuthNumViewController: UIViewController {
         return label
     }()
     
-    var authNumTextField: UITextField = {
+    lazy var authNumTextField: UITextField = {
         let textField = UITextField()
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
@@ -59,7 +59,7 @@ class AuthNumViewController: UIViewController {
         return textField
     }()
     
-    var authResendButton: UIButton = {
+    lazy var authResendButton: UIButton = {
         let button = UIButton()
         button.setTitle("재전송 하기", for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
@@ -76,7 +76,7 @@ class AuthNumViewController: UIViewController {
         return label
     }()
     
-    var nextButton: UIButton = {
+    lazy var nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -85,7 +85,7 @@ class AuthNumViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.isEnabled = false
-        button.addTarget(self, action: #selector(checkEmailAuthNum), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
@@ -115,6 +115,7 @@ class AuthNumViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        addSubViews()
         setLayouts()
         authResendButton.setActivatedButton()
         startTimer()
@@ -126,12 +127,18 @@ class AuthNumViewController: UIViewController {
     
     // MARK: - Functions
     
-    private func setLayouts() {
+    private func addSubViews() {
         [
-            progressBar,
-            remainBar
-        ].forEach {
-            view.addSubview($0)
+            progressBar, remainBar,
+            progressIcon, remainIcon,
+            authNumLabel, authNumTextField,
+            remainTimeLabel, authResendButton,
+            nextButton
+        ].forEach { view.addSubview($0) }
+    }
+    
+    private func setLayouts() {
+        [ progressBar, remainBar ].forEach {
             $0.snp.makeConstraints { make in
                 make.height.equalTo(3)
                 make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -147,14 +154,6 @@ class AuthNumViewController: UIViewController {
             }
             make.left.equalToSuperview().inset(25)
         }
-        
-        /* remain Bar */
-        remainBar.snp.makeConstraints { make in
-            make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
-        }
-        
-        view.addSubview(progressIcon)
         progressIcon.snp.makeConstraints { make in
             make.width.equalTo(35)
             make.height.equalTo(22)
@@ -162,21 +161,17 @@ class AuthNumViewController: UIViewController {
             make.left.equalTo(progressBar.snp.right).inset(15)
         }
         
-        view.addSubview(remainIcon)
+        /* remain Bar */
+        remainBar.snp.makeConstraints { make in
+            make.left.equalTo(progressBar.snp.right)
+            make.right.equalToSuperview().inset(25)
+        }
         remainIcon.snp.makeConstraints { make in
             make.width.equalTo(22)
             make.height.equalTo(36)
             make.top.equalTo(progressBar.snp.top).offset(-8)
             make.right.equalTo(remainBar.snp.right).offset(3)
         }
-        
-        [
-            authNumLabel,
-            authNumTextField,
-            remainTimeLabel,
-            authResendButton,
-            nextButton
-        ].forEach { view.addSubview($0) }
         
         /* authNumLabel */
         authNumLabel.snp.makeConstraints { make in
@@ -216,6 +211,7 @@ class AuthNumViewController: UIViewController {
     private func startTimer() {
         timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
         timer?.schedule(deadline: .now(), repeating: 1)
+        
         timer?.setEventHandler(handler: { [weak self] in
             guard let self = self else { return }
             self.currentSeconds -= 1
@@ -234,7 +230,7 @@ class AuthNumViewController: UIViewController {
     
     /* 이메일 인증번호 입력 후 다음 버튼을 누르면
      -> 인증번호 일치하는지 API를 통해서 판단 */
-    @objc private func checkEmailAuthNum() {
+    @objc private func tapNextButton() {
         if let email = self.email,
            let authNum = self.authNumTextField.text {
             print("DEBUG: ", email, authNum)
@@ -242,8 +238,33 @@ class AuthNumViewController: UIViewController {
         }
     }
     
+    @objc func didChangeTextField(_ sender: UITextField) {
+        if authNumTextField.text?.count ?? 0 >= 1 {
+            nextButton.setActivatedNextButton()
+        } else {
+            nextButton.setDeactivatedNextButton()
+        }
+    }
+    
+    // 이메일 재전송 하기 버튼 눌렀을 때 실행되는 함수
+    @objc func tapAuthResendButton() {
+        timer?.cancel()
+        currentSeconds = 300
+        startTimer()
+        
+        if let email = email,
+           let univ = university {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            print("DEBUG: ", email, univ)
+            
+            let input = EmailAuthInput(email: email, university: univ)
+            // 이메일로 인증번호 전송하는 API 호출
+            EmailAuthViewModel.requestSendEmail(self, input)
+        }
+    }
+    
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
-    @objc func showNextView() {
+    // VM에서 호출하는 함수이다
+    public func showNextView() {
         // TODO: 네이버 로그인을 통해 등록한 사람들의 정보도 AgreementVC 까지 데이터 전달해 줘야 함.
         if isFromNaverRegister {
             let agreementVC = AgreementViewController()
@@ -287,29 +308,5 @@ class AuthNumViewController: UIViewController {
             present(phoneAuthVC, animated: true)
         }
     }
-    
-    @objc func didChangeTextField(_ sender: UITextField) {
-        if authNumTextField.text?.count ?? 0 >= 1 {
-            nextButton.setActivatedNextButton()
-        } else {
-            nextButton.setDeactivatedNextButton()
-        }
-    }
-    
-    // 이메일 재전송 하기 버튼 눌렀을 때 실행되는 함수
-    @objc func tapAuthResendButton() {
-        timer?.cancel()
-        currentSeconds = 300
-        startTimer()
-        if let email = email,
-           let univ = university {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
-            
-            print("DEBUG: ", email, univ)
-            let input = EmailAuthInput(email: email, university: univ)
-            // 이메일로 인증번호 전송하는 API 호출
-            EmailAuthViewModel.requestSendEmail(self, input)
-        }
-    }
-    
 }
 
