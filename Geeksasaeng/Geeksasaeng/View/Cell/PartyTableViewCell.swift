@@ -10,7 +10,7 @@ import SnapKit
 
 class PartyTableViewCell: UITableViewCell {
     
-    // MARK: - Subviews
+    // MARK: - SubViews
     
     var peopleImageView: UIImageView = {
         var imageView = UIImageView()
@@ -61,7 +61,7 @@ class PartyTableViewCell: UITableViewCell {
         contentView.backgroundColor = .white
         
         addSubViews()
-        configLayouts()
+        setLayouts()
     }
     
     // MARK: - Set Functions
@@ -77,7 +77,7 @@ class PartyTableViewCell: UITableViewCell {
 //        contentView.addSubview(badgeImageView)
     }
     
-    func configLayouts() {
+    func setLayouts() {
         peopleImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(25)
             make.left.equalToSuperview().inset(24)

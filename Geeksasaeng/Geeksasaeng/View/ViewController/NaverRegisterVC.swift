@@ -10,7 +10,7 @@ import SnapKit
 
 class NaverRegisterViewController: UIViewController {
     
-    // MARK: - Subviews
+    // MARK: - SubViews
     
     var progressBar: UIView = {
         let view = UIView()
@@ -54,6 +54,7 @@ class NaverRegisterViewController: UIViewController {
     /* 자신의 학교를 선택해주세요 버튼 */
     lazy var universitySelectView: UIView = {
         let view = UIView()
+        view.isUserInteractionEnabled = true
         view.backgroundColor = .white
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
@@ -201,7 +202,7 @@ class NaverRegisterViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    var nicknameCheck = false
+    var isNicknameChecked = false
     var isExpanded: Bool! = false
     
     /* 회원가입 정보 */
@@ -220,43 +221,32 @@ class NaverRegisterViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setUniversitySelectView()
         setAttributes()
-        setLayouts()
         setTextFieldTarget()
         setLabelTap()
-        
-        
-        view.addSubview(universityListView)
-        universityListView.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(316)
-        }
-        
-        view.addSubview(universitySelectView)
-        universitySelectView.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(41)
-        }
-        
-        let viewTapGesture = UITapGestureRecognizer(target: self,
-                                                    action: #selector(tapSelectUniv))
-        universitySelectView.isUserInteractionEnabled = true
-        universitySelectView.addGestureRecognizer(viewTapGesture)
+        addSubViews()
+        setLayouts()
     }
     
+    // MARK: - Functions
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
     
-    // MARK: - Functions
-    private func setLayouts() {
-        /* progress Bar */
-        [progressBar, remainBar, progressIcon, remainIcon].forEach {
+    private func addSubViews() {
+        [progressBar, remainBar, progressIcon, remainIcon,
+        nickNameLabel, schoolLabel, emailLabel,
+        nickNameTextField, emailTextField, emailAddressTextField,
+        universityListView, universitySelectView,
+        nickNameAvailableLabel,
+         nickNameCheckButton, authSendButton, nextButton].forEach {
             view.addSubview($0)
         }
-        
+    }
+    
+    private func setLayouts() {
+        /* progress Bar */
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.width.equalTo((UIScreen.main.bounds.width - 50) / 3)
@@ -286,63 +276,56 @@ class NaverRegisterViewController: UIViewController {
         }
         
         /* labels */
-        [
-            nickNameLabel,
-            schoolLabel,
-            emailLabel,
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(27)
-            }
-        }
-        
         nickNameLabel.snp.makeConstraints { make in
             make.top.equalTo(progressBar.snp.bottom).offset(50)
+            make.left.equalToSuperview().inset(27)
         }
         
         schoolLabel.snp.makeConstraints { make in
             make.top.equalTo(nickNameLabel.snp.bottom).offset(108)
+            make.left.equalToSuperview().inset(27)
         }
         
         emailLabel.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(82)
+            make.left.equalToSuperview().inset(27)
         }
         
         /* text fields */
-        [
-            nickNameTextField,
-            emailTextField,
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(36)
-            }
-        }
-        
         nickNameTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
             make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
         }
         
         emailTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
             make.top.equalTo(emailLabel.snp.bottom).offset(15)
         }
         
-        view.addSubview(emailAddressTextField)
         emailAddressTextField.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(36)
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
         }
         
+        universityListView.snp.makeConstraints { make in
+            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(316)
+        }
+        
+        universitySelectView.snp.makeConstraints { make in
+            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(41)
+        }
+        
         /* nickNameAvailableLabel */
-        view.addSubview(nickNameAvailableLabel)
         nickNameAvailableLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(40)
             make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
         }
         
         /* nextButton */
-        view.addSubview(nextButton)
         nextButton.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(28)
@@ -351,7 +334,6 @@ class NaverRegisterViewController: UIViewController {
         }
         
         /* nickNameCheckButton */
-        view.addSubview(nickNameCheckButton)
         nickNameCheckButton.snp.makeConstraints { make in
             make.top.equalTo(remainBar.snp.bottom).offset(82)
             make.right.equalToSuperview().inset(26)
@@ -360,13 +342,18 @@ class NaverRegisterViewController: UIViewController {
         }
         
         /* authSendButton */
-        view.addSubview(authSendButton)
         authSendButton.snp.makeConstraints { make in
             make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(10)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
             make.height.equalTo(41)
         }
+    }
+    
+    private func setUniversitySelectView() {
+        let viewTapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(tapSelectUniv))
+        universitySelectView.addGestureRecognizer(viewTapGesture)
     }
     
     private func setAttributes() {
@@ -454,7 +441,7 @@ class NaverRegisterViewController: UIViewController {
     
     @objc func didChangeTextField(_ sender: UITextField) {
         if sender == nickNameTextField {
-            nicknameCheck = false
+            isNicknameChecked = false
         }
         
         if nickNameTextField.text?.count ?? 0 >= 1 {
@@ -469,7 +456,7 @@ class NaverRegisterViewController: UIViewController {
             authSendButton.setDeactivatedButton()
         }
 
-        if nicknameCheck
+        if isNicknameChecked
             && selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
             && emailTextField.text?.count ?? 0 >= 1
         {

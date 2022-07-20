@@ -11,7 +11,7 @@ import NaverThirdPartyLogin
 
 class LoginViewController: UIViewController {
     
-    // MARK: - Subviews
+    // MARK: - SubViews
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "AppLogo"))
@@ -90,14 +90,13 @@ class LoginViewController: UIViewController {
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
         button.titleLabel?.font = .customFont(.neoLight, size: 15)
         button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
-        button.addTarget(self, action: #selector(showRegisterView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
         return button
     }()
     
-    // MARK: - Variables
+    // MARK: - Properties
     let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
-    
     
     // MARK: - viewDidLoad()
     
@@ -105,18 +104,17 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setNaverLoginVM()
         attemptAutoLogin()
-        naverLoginVM.setInstanceDelegate(self)
-        
         addSubViews()
         setLayouts()
     }
     
+    // MARK: - Function
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
     
-    // MARK: - Set Function
     private func addSubViews() {
         [logoImageView, idTextField, passwordTextField, loginButton, naverLoginButton, automaticLoginButton, signUpButton].forEach { view.addSubview($0) }
     }
@@ -167,8 +165,10 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func setNaverLoginVM() {
+        naverLoginVM.setInstanceDelegate(self)
+    }
     
-    // MARK: - Functions
     private func attemptAutoLogin() {
         if let id = UserDefaults.standard.string(forKey: "id"),
            let password = UserDefaults.standard.string(forKey: "password") {
@@ -177,7 +177,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func showRegisterView() {
+    @objc func tapSignUpButton() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
         

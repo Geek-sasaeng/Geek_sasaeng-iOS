@@ -58,7 +58,7 @@ class UrlViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(showReceiptPlaceVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
@@ -79,7 +79,7 @@ class UrlViewController: UIViewController {
         view.backgroundColor = .white
         
         setViewLayout()
-        setSubViews()
+        addSubViews()
         setLayouts()
     }
     
@@ -93,7 +93,7 @@ class UrlViewController: UIViewController {
         }
     }
     
-    private func setSubViews() {
+    private func addSubViews() {
         [titleLabel, backButton, urlTextField, passButton, nextButton, pageLabel].forEach {
             view.addSubview($0)
         }
@@ -134,7 +134,7 @@ class UrlViewController: UIViewController {
         }
     }
     
-    @objc func showReceiptPlaceVC() {
+    @objc func tapNextButton() {
         if let url = urlTextField.text {
             print("=======", url)
             CreateParty.url = url

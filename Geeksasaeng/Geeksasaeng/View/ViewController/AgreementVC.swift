@@ -46,7 +46,7 @@ class AgreementViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = .mainColor
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(sendRegisterRequest), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapCompleteButton), for: .touchUpInside)
         return button
     }()
     
@@ -73,14 +73,13 @@ class AgreementViewController: UIViewController {
         setLayouts()
     }
     
-    // MARK: - Setting Function
+    // MARK: - Function
     
     func addSubViews() {
-        view.addSubview(progressBar)
-        view.addSubview(remainBar)
-        view.addSubview(progressIcon)
-        view.addSubview(remainIcon)
-        view.addSubview(completeButton)
+        [progressBar, remainBar, progressIcon, remainIcon,
+         completeButton].forEach {
+            view.addSubview($0)
+        }
     }
     
     func setLayouts() {
@@ -121,11 +120,9 @@ class AgreementViewController: UIViewController {
             make.height.equalTo(51)
         }
     }
-    
-    // MARK: - Functions
 
     /* 회원가입 Request 보내는 함수 */
-    @objc private func sendRegisterRequest() {
+    @objc private func tapCompleteButton() {
         if isFromNaverRegister { // naver 회원가입인 경우
             phoneNum = phoneNum?.replacingOccurrences(of: "-", with: "")
             if let checkPassword = self.pwCheckData,

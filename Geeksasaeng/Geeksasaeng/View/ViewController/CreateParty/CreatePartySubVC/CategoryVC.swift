@@ -98,7 +98,7 @@ class CategoryViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
         button.setDeactivatedNextButton()
-        button.addTarget(self, action: #selector(showReceiptPlaceVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
@@ -122,10 +122,12 @@ class CategoryViewController: UIViewController {
         
         setViewLayout()
         setCategoryButtons()
-        setSubViews()
+        addSubViews()
         setLayouts()
         setDefaultValueOfButton()
     }
+    
+    // MARK: - Functions
     
     private func setViewLayout() {
         view.layer.masksToBounds = true
@@ -147,7 +149,7 @@ class CategoryViewController: UIViewController {
         }
     }
     
-    private func setSubViews() {
+    private func addSubViews() {
         [
             titleLabel, backButton, nextButton, pageLabel,
             korean, western, chinese, japanese, snack, chicken, rawfish, fastfood, dessert, etc
@@ -242,7 +244,7 @@ class CategoryViewController: UIViewController {
         }
     }
     
-    @objc func showReceiptPlaceVC() {
+    @objc func tapNextButton() {
         CreateParty.category = data
         
         // API Input에 저장

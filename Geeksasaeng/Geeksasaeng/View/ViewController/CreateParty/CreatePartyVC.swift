@@ -92,7 +92,7 @@ class CreatePartyViewController: UIViewController {
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
         button.setActivatedButton()
-        button.addTarget(self, action: #selector(showOrderForecaseTimeVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
         return button
     }()
     var selectedPersonLabel = UILabel()
@@ -112,8 +112,8 @@ class CreatePartyViewController: UIViewController {
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
-    var settedOptions = false // 옵션이 모두 설정되었는지
-    var editedContentsTextView = false // 내용이 수정되었는지
+    var isSettedOptions = false // 옵션이 모두 설정되었는지
+    var isEditedContentsTextView = false // 내용이 수정되었는지
     var mapView: MTMapView? // 카카오맵
     
     // MARK: - Life Cycle
@@ -139,6 +139,8 @@ class CreatePartyViewController: UIViewController {
             mapView?.remove(item as? MTMapPOIItem)
         }
     }
+    
+    // MARK: - Functions
     
     private func setMapView() {
         // 지도 불러오기
@@ -171,7 +173,7 @@ class CreatePartyViewController: UIViewController {
         selectedUrlLabel.isUserInteractionEnabled = true
         selectedUrlLabel.addGestureRecognizer(urlTapGesture)
         
-        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapselectedLocationLabel))
+        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedLocationLabel))
         selectedLocationLabel.isUserInteractionEnabled = true
         selectedLocationLabel.addGestureRecognizer(placeTapGesture)
     }
@@ -254,7 +256,7 @@ class CreatePartyViewController: UIViewController {
         
         // set barButtonItem
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(tapBackButton(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
@@ -321,7 +323,7 @@ class CreatePartyViewController: UIViewController {
                     $0.removeFromParent()
                 }
                 
-                self.settedOptions = true
+                self.isSettedOptions = true
                 if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
                     self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
@@ -453,7 +455,7 @@ class CreatePartyViewController: UIViewController {
     }
     
     /* 이전 화면으로 돌아가기 */
-    @objc func back(sender: UIBarButtonItem) {
+    @objc func tapBackButton(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated:true)
     }
     
@@ -472,7 +474,7 @@ class CreatePartyViewController: UIViewController {
     }
     
     /* show 주문 예정 시간 VC */
-    @objc func showOrderForecaseTimeVC() {
+    @objc func tapOrderForecastTimeButton() {
         view.endEditing(true)
         createBlueView()
         
@@ -488,16 +490,16 @@ class CreatePartyViewController: UIViewController {
     }
     
     @objc func changeValueTitleTextField() {
-        // settedOptions가 true인데 titleTextField가 지워진 경우
-        if settedOptions
-            && editedContentsTextView
+        // isSettedOptions가 true인데 titleTextField가 지워진 경우
+        if isSettedOptions
+            && isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
             self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
             self.view.layoutSubviews()
-        } else if (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1)
-                    || (editedContentsTextView && settedOptions && contentsTextView.text.count < 1) {
+        } else if (isEditedContentsTextView && isSettedOptions && titleTextField.text?.count ?? 0 < 1)
+                    || (isEditedContentsTextView && isSettedOptions && contentsTextView.text.count < 1) {
             self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             self.view.layoutSubviews()
         }
@@ -596,7 +598,7 @@ class CreatePartyViewController: UIViewController {
         }, completion: nil)
     }
     
-    @objc func tapselectedLocationLabel() {
+    @objc func tapSelectedLocationLabel() {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -700,21 +702,21 @@ extension CreatePartyViewController: UITextViewDelegate {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             textView.text = "내용을 입력하세요"
             textView.textColor = UIColor(hex: 0xD8D8D8)
-            editedContentsTextView = false
+            isEditedContentsTextView = false
         }
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        editedContentsTextView = true
-        if settedOptions
-            && editedContentsTextView
+        isEditedContentsTextView = true
+        if isSettedOptions
+            && isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(tapRegisterButton))
             navigationItem.rightBarButtonItem?.tintColor = .mainColor
             view.layoutSubviews()
-        } else if (editedContentsTextView && settedOptions && contentsTextView.text.count < 1)
-                    || (editedContentsTextView && settedOptions && titleTextField.text?.count ?? 0 < 1) {
+        } else if (isEditedContentsTextView && isSettedOptions && contentsTextView.text.count < 1)
+                    || (isEditedContentsTextView && isSettedOptions && titleTextField.text?.count ?? 0 < 1) {
             navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             view.layoutSubviews()
         }

@@ -56,7 +56,7 @@ class OrderForecastTimeViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(showMatchingPersonVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
@@ -78,7 +78,7 @@ class OrderForecastTimeViewController: UIViewController {
         view.backgroundColor = .white
         
         setViewLayout()
-        setSubViews()
+        addSubViews()
         setLayouts()
         setDatePicker()
         setTimePicker()
@@ -115,7 +115,7 @@ class OrderForecastTimeViewController: UIViewController {
         timeTextField.inputView = timePicker
     }
     
-    private func setSubViews() {
+    private func addSubViews() {
         [titleLabel, dateTextField, timeTextField, nextButton, pageLabel].forEach {
             view.addSubview($0)
         }
@@ -199,7 +199,7 @@ class OrderForecastTimeViewController: UIViewController {
         timeTextField.sendActions(for: .editingChanged)
     }
     
-    @objc func showMatchingPersonVC() {
+    @objc func tapNextButton() {
         // 날짜, 시간 정보 전역변수에 저장
         CreateParty.orderForecastTime = "\(dateTextField.text!)        \(timeTextField.text!)"
         

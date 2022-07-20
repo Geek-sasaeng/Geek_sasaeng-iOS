@@ -10,7 +10,7 @@ import SnapKit
 
 class PhoneAuthViewController: UIViewController {
     
-    // MARK: - Subviews
+    // MARK: - SubViews
     
     var progressBar: UIView = {
         let view = UIView()
@@ -64,7 +64,7 @@ class PhoneAuthViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.isEnabled = false
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(checkPhoneAuthNum), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapAuthCheckButton), for: .touchUpInside)
         return button
     }()
     
@@ -74,7 +74,7 @@ class PhoneAuthViewController: UIViewController {
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
         button.titleLabel?.font = .customFont(.neoLight, size: 15)
         button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
-        button.addTarget(self, action: #selector(showPassView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapPassButton), for: .touchUpInside)
         return button
     }()
     
@@ -113,7 +113,7 @@ class PhoneAuthViewController: UIViewController {
         cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
         cancelButton.titleLabel?.font = .customFont(.neoRegular, size: 15)
-        cancelButton.addTarget(self, action: #selector(removePassView), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(tapCancelButton), for: .touchUpInside)
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -200,6 +200,8 @@ class PhoneAuthViewController: UIViewController {
         return button
     }()
     
+    var visualEffectView: UIVisualEffectView?
+    
     // MARK: - Properties
     
     /* 이전 화면에서 받아온 데이터들 */
@@ -210,8 +212,6 @@ class PhoneAuthViewController: UIViewController {
     var university: String? = nil
     var email: String? = nil
     var uuid: UUID? = nil
-    
-    var visualEffectView: UIVisualEffectView?
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -225,19 +225,30 @@ class PhoneAuthViewController: UIViewController {
         view.backgroundColor = .white
         
         setAttributes()
-        setLayouts()
         setTextFieldTarget()
+        addSubViews()
+        setLayouts()
     }
+    
+    // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
     
-    // MARK: - Functions
+    private func addSubViews() {
+        [progressBar, remainBar, progressIcon, remainIcon,
+         phoneNumLabel, authLabel,
+         phoneNumTextField, authTextField,
+         authSendButton, authCheckButton,
+         nextButton, passButton,
+         remainTimeLabel].forEach {
+            view.addSubview($0)
+        }
+    }
     
     private func setLayouts() {
         /* progress Bar */
-        view.addSubview(progressBar)
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 4)
@@ -246,7 +257,6 @@ class PhoneAuthViewController: UIViewController {
         }
         
         /* remain Bar */
-        view.addSubview(remainBar)
         remainBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -254,7 +264,6 @@ class PhoneAuthViewController: UIViewController {
             make.right.equalToSuperview().inset(25)
         }
         
-        view.addSubview(progressIcon)
         progressIcon.snp.makeConstraints { make in
             make.width.equalTo(35)
             make.height.equalTo(22)
@@ -262,7 +271,6 @@ class PhoneAuthViewController: UIViewController {
             make.left.equalTo(progressBar.snp.right).inset(15)
         }
         
-        view.addSubview(remainIcon)
         remainIcon.snp.makeConstraints { make in
             make.width.equalTo(22)
             make.height.equalTo(36)
@@ -270,46 +278,30 @@ class PhoneAuthViewController: UIViewController {
             make.right.equalTo(remainBar.snp.right).offset(3)
         }
         
-        /* labels */
-        [
-            phoneNumLabel,
-            authLabel
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(27)
-            }
-        }
         /* phoneNumLabel */
         phoneNumLabel.snp.makeConstraints { make in
             make.top.equalTo(progressBar.snp.bottom).offset(50)
+            make.left.equalToSuperview().inset(27)
         }
+        
         /* authLabel */
         authLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(27)
             make.top.equalTo(phoneNumLabel.snp.bottom).offset(81)
         }
         
-        /* text fields */
-        [
-            phoneNumTextField,
-            authTextField,
-        ].forEach {
-            view.addSubview($0)
-            $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(36)
-            }
-        }
         /* phoneNumTextField */
         phoneNumTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
             make.top.equalTo(phoneNumLabel.snp.bottom).offset(15)
         }
         /* authTextField */
         authTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(36)
             make.top.equalTo(authLabel.snp.bottom).offset(15)
         }
         
         /* authSendButton */
-        view.addSubview(authSendButton)
         authSendButton.snp.makeConstraints { make in
             make.bottom.equalTo(phoneNumTextField.snp.bottom).offset(10)
             make.right.equalToSuperview().inset(26)
@@ -318,7 +310,6 @@ class PhoneAuthViewController: UIViewController {
         }
         
         /* authCheckButton */
-        view.addSubview(authCheckButton)
         authCheckButton.snp.makeConstraints { make in
             make.bottom.equalTo(authTextField.snp.bottom).offset(10)
             make.right.equalToSuperview().inset(26)
@@ -327,7 +318,6 @@ class PhoneAuthViewController: UIViewController {
         }
         
         /* nextButton */
-        view.addSubview(nextButton)
         nextButton.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(28)
@@ -335,14 +325,12 @@ class PhoneAuthViewController: UIViewController {
             make.height.equalTo(51)
         }
         
-        view.addSubview(passButton)
         passButton.snp.makeConstraints { make in
             make.centerX.equalTo(view.center)
             make.bottom.equalTo(nextButton.snp.top).offset(-40)
         }
         
         /* remainTimeLabel */
-        view.addSubview(remainTimeLabel)
         remainTimeLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(40)
             make.top.equalTo(authTextField.snp.bottom).offset(21)
@@ -405,16 +393,17 @@ class PhoneAuthViewController: UIViewController {
     }
     
     @objc func didChangeTextField() {
-        print("it works")
         if phoneNumTextField.text?.count ?? 0 >= 1 && authTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
+            authCheckButton.setActivatedButton()
         } else {
             nextButton.setDeactivatedNextButton()
+            authCheckButton.setDeactivatedButton()
         }
     }
     
     // 인증번호 일치/불일치 확인
-    @objc func checkPhoneAuthNum() {
+    @objc func tapAuthCheckButton() {
         /* 인증번호 입력한 게 맞는지 "확인" 버튼 눌렀을 확인하는 것으로 변경. */
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
@@ -465,7 +454,7 @@ class PhoneAuthViewController: UIViewController {
         }   // API 호출
     }
     
-    @objc func showPassView() {
+    @objc func tapPassButton() {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
@@ -478,7 +467,7 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    @objc func removePassView() {
+    @objc func tapCancelButton() {
         passView.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
     }

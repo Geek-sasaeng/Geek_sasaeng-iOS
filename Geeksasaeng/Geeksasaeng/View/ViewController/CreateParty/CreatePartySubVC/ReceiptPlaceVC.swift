@@ -80,7 +80,7 @@ class ReceiptPlaceViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(removeAllSubVC), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
         return button
     }()
     
@@ -111,15 +111,23 @@ class ReceiptPlaceViewController: UIViewController {
         setMapView()
         setLocationManager()
         setViewLayout()
-        setSubViews()
+        addSubViews()
         setLayouts()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        // mapView의 모든 poiItem 제거
+        for item in mapView!.poiItems {
+            mapView?.remove(item as? MTMapPOIItem)
+        }
+    }
+    
+    // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
     
-    // MARK: - Functions
     private func setMapView() {
         // 지도 불러오기
         mapView = MTMapView(frame: mapSubView.frame)
@@ -158,14 +166,7 @@ class ReceiptPlaceViewController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        // mapView의 모든 poiItem 제거
-        for item in mapView!.poiItems {
-            mapView?.remove(item as? MTMapPOIItem)
-        }
-    }
-    
-    private func setSubViews() {
+    private func addSubViews() {
         [titleLabel, backButton, searchTextField, searchButton, mapSubView, confirmButton, pageLabel].forEach {
             view.addSubview($0)
         }
@@ -214,18 +215,7 @@ class ReceiptPlaceViewController: UIViewController {
         }
     }
     
-    /* 마커 추가 메서드 */
-    func createPin(itemName: String, mapPoint: MTMapPoint, markerType: MTMapPOIItemMarkerType) -> MTMapPOIItem {
-        let poiItem = MTMapPOIItem()
-        poiItem.itemName = itemName
-        poiItem.mapPoint = mapPoint
-        poiItem.markerType = markerType
-        mapView?.addPOIItems([poiItem])
-        
-        return poiItem
-    }
-    
-    @objc func removeAllSubVC() {
+    @objc func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
         
         // API Input에 저장
@@ -337,33 +327,5 @@ extension ReceiptPlaceViewController: CLLocationManagerDelegate {
         let location = locations[locations.count - 1]
         la = location.coordinate.latitude
         lo = location.coordinate.longitude
-        
-//        /* 현재 위치를 한글 데이터로 받아오기 */
-//        let locationNow = CLLocation(latitude: la, longitude: lo) // 현재 위치
-//        let geocoder = CLGeocoder()
-//        let locale = Locale(identifier: "ko_kr")
-//        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
-//        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
-//            if let address = placemarks {
-//                if let administrativeArea = address.last?.administrativeArea,
-//                   let locality = address.last?.locality,
-//                   let name = address.last?.name {
-//                    /* 현재 위치를 마커로 표시 */
-//                    if self.isCurrentMark == false { // 마커 초기 위치 = 현재 위치
-//                        let currentPoiItem = MTMapPOIItem()
-//                        currentPoiItem.itemName = "\(administrativeArea) \(locality) \(name)"
-//                        currentPoiItem.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: self.la, longitude: self.lo))
-//                        currentPoiItem.markerType = .redPin
-//                        currentPoiItem.draggable = true
-//
-//                        self.markerLocation = currentPoiItem.mapPoint
-//
-//                        self.mapView?.addPOIItems([currentPoiItem])
-//
-//                        self.isCurrentMark = true
-//                    }
-//                }
-//            }
-//        }
     }
 }
