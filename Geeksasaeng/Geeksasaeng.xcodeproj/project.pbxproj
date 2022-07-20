@@ -909,6 +909,9 @@
 		10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
 		10D7EC952886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
 		10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
+		10E6956528885589000B7309 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E6956428885589000B7309 /* LocationAPI.swift */; };
+		10E6956628885589000B7309 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E6956428885589000B7309 /* LocationAPI.swift */; };
+		10E6956728885589000B7309 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E6956428885589000B7309 /* LocationAPI.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1352,6 +1355,7 @@
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
 		10D7EC932886AFC500D9E0FD /* UrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlVC.swift; sourceTree = "<group>"; };
+		10E6956428885589000B7309 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1917,6 +1921,7 @@
 				A2085AD1287048A800D6CF79 /* RegisterAPI.swift */,
 				107123F8287B06D800D58FD1 /* RepetitionAPI.swift */,
 				10A53C722882FA6D00DDCE87 /* APIKEY.swift */,
+				10E6956428885589000B7309 /* LocationAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3169,6 +3174,7 @@
 				10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */,
+				10E6956528885589000B7309 /* LocationAPI.swift in Sources */,
 				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				106D9751287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
@@ -3232,6 +3238,7 @@
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
+				10E6956628885589000B7309 /* LocationAPI.swift in Sources */,
 				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
@@ -3312,6 +3319,7 @@
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A20FC0F3287F30C40095224C /* SeachVC.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
+				10E6956728885589000B7309 /* LocationAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

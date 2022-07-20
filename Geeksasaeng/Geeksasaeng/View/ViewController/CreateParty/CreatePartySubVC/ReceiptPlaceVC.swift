@@ -95,11 +95,19 @@ class ReceiptPlaceViewController: UIViewController {
     
     // MARK: - Properties
     var mapView: MTMapView?
-//    var locationManager: CLLocationManager!
+    let geocoder = CLGeocoder()
     var latitude: Double? // 현재 위도
     var longitude: Double? // 현재 경도
     var markerLocation: MTMapPoint? // 마커 좌표
-    var marker = MTMapPOIItem()
+    var marker: MTMapPOIItem = {
+        let marker = MTMapPOIItem()
+        marker.showAnimationType = .dropFromHeaven
+        marker.markerType = .redPin
+        marker.itemName = "요기?"
+        marker.showDisclosureButtonOnCalloutBalloon = false
+        marker.draggable = true
+        return marker
+    }()
     var markerAddress: String? // 마커 좌표의 주소
     
     
@@ -108,8 +116,8 @@ class ReceiptPlaceViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setLocation()
         setMapView()
-//        setLocationManager()
         setViewLayout()
         addSubViews()
         setLayouts()
@@ -128,6 +136,30 @@ class ReceiptPlaceViewController: UIViewController {
         view.endEditing(true)
     }
     
+    private func setLocation() {
+        if let latitude = CreateParty.latitude,
+           let longitude = CreateParty.longitude {
+            self.latitude = latitude
+            self.longitude = longitude
+        }
+        
+        // 기숙사 좌표를 한글로 저장 (검색 안 하고 바로 완료 누를 경우, API에서 불러온 기본 기숙사 주소로)
+        if let latitude = latitude,
+           let longitude = longitude {
+            let locationNow = CLLocation(latitude: latitude, longitude: longitude)
+            let locale = Locale(identifier: "ko_kr")
+            geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { placemarks, error in
+                if let address = placemarks {
+                    if let administrativeArea = address.last?.administrativeArea,
+                       let locality = address.last?.locality,
+                       let name = address.last?.name {
+                        self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+                    }
+                }
+            }
+        }
+    }
+    
     private func setMapView() {
         // 지도 불러오기
         mapView = MTMapView(frame: mapSubView.frame)
@@ -139,19 +171,16 @@ class ReceiptPlaceViewController: UIViewController {
             mapView.baseMapType = .standard
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.456518177069526,
+                                                                    longitude: longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
+            
+            // 마커의 좌표 설정
+            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.456518177069526, longitude: longitude ?? 126.70531256589555))
             
             mapSubView.addSubview(mapView)
         }
+        mapView?.addPOIItems([marker])
     }
-    
-//    private func setLocationManager() {
-//        locationManager = CLLocationManager()
-//        locationManager.delegate = self
-//        locationManager.requestWhenInUseAuthorization()
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.startUpdatingLocation()
-//    }
     
     private func setViewLayout() {
         view.layer.masksToBounds = true
@@ -213,8 +242,6 @@ class ReceiptPlaceViewController: UIViewController {
     
     @objc func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
-        CreateParty.latitude = latitude ?? 0
-        CreateParty.longitude = longitude ?? 0
         
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
@@ -225,8 +252,6 @@ class ReceiptPlaceViewController: UIViewController {
     }
     
     @objc func tapSearchButton() {
-        mapView?.currentLocationTrackingMode = .off
-        let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(searchTextField.text ?? "") { placemark, error in
             // 검색된 위치로 맵의 중심을 이동
             self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0)), zoomLevel: 5, animated: true)
@@ -235,12 +260,7 @@ class ReceiptPlaceViewController: UIViewController {
             self.latitude = placemark?.first?.location?.coordinate.latitude ?? 0
             self.longitude = placemark?.first?.location?.coordinate.longitude ?? 0
             
-            // 검색된 위치에 마커 생성
-            self.marker.showAnimationType = .dropFromHeaven
-            self.marker.markerType = .redPin
-            self.marker.itemName = "요기?"
-            self.marker.showDisclosureButtonOnCalloutBalloon = false
-            self.marker.draggable = true
+            // 검색된 위치로 마커 이동
             self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0))
             
             // 주소 추출
@@ -250,9 +270,6 @@ class ReceiptPlaceViewController: UIViewController {
                 // 일단 검색 결과 주소를 넣고 마커 이동하면 갱신된 주소를 대입
                 self.markerAddress = "\(administrativeArea) \(locality) \(name)"
             }
-            
-            // 지도에 마커 추가
-            self.mapView?.addPOIItems([self.marker])
         }
     }
 }
@@ -295,32 +312,3 @@ extension ReceiptPlaceViewController: MTMapViewDelegate {
         }
     }
 }
-
-//extension ReceiptPlaceViewController: CLLocationManagerDelegate {
-//    // 위치 권한 요청
-//    func getLocationUsagePermission() {
-//        locationManager.requestWhenInUseAuthorization()
-//    }
-//
-//    // 권한 요청 답변 결과에 따라
-//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-//        switch status {
-//        case .authorizedAlways:
-//            print("GPS 권한 설정됨")
-//        case .restricted:
-//            print("GPS 권한 설정되지 않음")
-//            getLocationUsagePermission()
-//        case .denied:
-//            print("GPS 권한 요청 거부됨")
-//            getLocationUsagePermission()
-//        default:
-//            print("GPS: Default")
-//        }
-//    }
-//
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        let location = locations[locations.count - 1]
-//        latitude = location.coordinate.latitude
-//        longitude = location.coordinate.longitude
-//    }
-//}

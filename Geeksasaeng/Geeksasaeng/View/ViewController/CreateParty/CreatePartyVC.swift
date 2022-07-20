@@ -122,6 +122,9 @@ class CreatePartyViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        /* 기숙사 좌표 불러오기 -> 나중에 스크롤 뷰 구현되면 맵뷰 추가해서 넣기 */
+        LocationAPI.getLocation(1)
+        
         setMapView()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
