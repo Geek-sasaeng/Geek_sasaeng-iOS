@@ -75,7 +75,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             button.setTitle("수정하기", for: .normal)
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
             // TODO: - 수정하기 뷰 연결 필요
-    //        button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
+            button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
             return button
         }()
         var deleteButton: UIButton = {
@@ -697,6 +697,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.removeFromSuperview()
             }
         )
+    }
+    
+    @objc func showEditView() {
+        optionView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+        
+        let editPartyVC = EditPartyViewController()
+        navigationController?.pushViewController(editPartyVC, animated: true)
     }
     
     @objc func showDeleteView() {

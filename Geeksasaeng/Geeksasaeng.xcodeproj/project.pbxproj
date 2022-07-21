@@ -903,6 +903,9 @@
 		10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A53C722882FA6D00DDCE87 /* APIKEY.swift */; };
 		10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A53C722882FA6D00DDCE87 /* APIKEY.swift */; };
 		10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A53C722882FA6D00DDCE87 /* APIKEY.swift */; };
+		10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
+		10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
+		10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
@@ -1353,6 +1356,7 @@
 		1078712C286EBB8A008EDF78 /* GmarketSansMedium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansMedium.otf; sourceTree = "<group>"; };
 		1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyTableViewCell.swift; sourceTree = "<group>"; };
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
+		10AC5CA82889269000C8086A /* EditPartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyVC.swift; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
 		10D7EC932886AFC500D9E0FD /* UrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlVC.swift; sourceTree = "<group>"; };
 		10E6956428885589000B7309 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
@@ -1939,6 +1943,7 @@
 			isa = PBXGroup;
 			children = (
 				A2B420A4286F370F00278F92 /* PartyVC.swift */,
+				10AC5CA82889269000C8086A /* EditPartyVC.swift */,
 			);
 			path = PartyDetail;
 			sourceTree = "<group>";
@@ -3183,6 +3188,7 @@
 				A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
+				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
 				A2513F152878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
@@ -3213,6 +3219,7 @@
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2513F1A287868070029C279 /* EmailAuthViewModel.swift in Sources */,
+				10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */,
 				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				106D974E287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
@@ -3268,6 +3275,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */,
 				10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
