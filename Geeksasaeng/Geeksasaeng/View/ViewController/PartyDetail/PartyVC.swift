@@ -638,6 +638,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
         showPartyPost()
+        
+        deleteView.removeFromSuperview()
     }
     
     // TODO: - 신청하기 View 탭바에 달라붙도록 구현해야 함............ 자료가 진짜 없다

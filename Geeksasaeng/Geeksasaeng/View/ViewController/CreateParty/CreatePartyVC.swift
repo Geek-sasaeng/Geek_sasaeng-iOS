@@ -127,11 +127,11 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-//    let testView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .gray
-//        return view
-//    }()
+    let testView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        return view
+    }()
     
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
@@ -155,7 +155,10 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        setMapView()
+        /* 기숙사 좌표 불러오기 */
+        LocationAPI.getLocation(1)
+        // MARK: - 여기서 맵뷰 객체 생성하면 서브뷰에서 런타임 에러
+//        setMapView()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
         setDelegate()
@@ -170,9 +173,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Functions
     
     private func setMapView() {
-        /* 기숙사 좌표 불러오기 -> 나중에 스크롤 뷰 구현되면 맵뷰 추가해서 넣기 */
-        LocationAPI.getLocation(1)
-        
         // 지도 불러오기
         mapView = MTMapView(frame: mapSubView.frame)
         
@@ -337,14 +337,14 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
-                if let latitude = CreateParty.latitude,
-                   let longitude = CreateParty.longitude {
-                    // 지도의 중심을 설정한 위치로 이동
-                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude)), zoomLevel: 5, animated: true)
-                    
-                    // 설정한 위치로 마커 좌표 이동
-                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
-                }
+//                if let latitude = CreateParty.latitude,
+//                   let longitude = CreateParty.longitude {
+//                    // 지도의 중심을 설정한 위치로 이동
+//                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude)), zoomLevel: 5, animated: true)
+//
+//                    // 설정한 위치로 마커 좌표 이동
+//                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
+//                }
                 
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
@@ -371,7 +371,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         scrollView.addSubview(contentView)
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
-         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel].forEach {
+         orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
+         testView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -474,12 +475,12 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(38)
         }
         
-//        testView.snp.makeConstraints { make in
-//            make.left.equalToSuperview().inset(28)
-//            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-//            make.width.equalTo(314)
-//            make.height.equalTo(144)
-//        }
+        testView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+            make.width.equalTo(314)
+            make.height.equalTo(144)
+        }
         
 //        mapSubView.snp.makeConstraints { make in
 //            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
