@@ -501,7 +501,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalTo(UIScreen.main.bounds.width)
         }
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
-        contentView.snp.makeConstraints { (make) in
+        contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
             make.height.equalTo(UIScreen.main.bounds.height)
         }

@@ -991,9 +991,9 @@
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
-		A2D2047928885A65002350C8 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportViewController.swift */; };
-		A2D2047A28885A65002350C8 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportViewController.swift */; };
-		A2D2047B28885A65002350C8 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportViewController.swift */; };
+		A2D2047928885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
+		A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
+		A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
 		A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
 		A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
@@ -1388,7 +1388,7 @@
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
-		A2D2047828885A65002350C8 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
+		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2071,7 +2071,7 @@
 		A2D2047728885A14002350C8 /* Report */ = {
 			isa = PBXGroup;
 			children = (
-				A2D2047828885A65002350C8 /* ReportViewController.swift */,
+				A2D2047828885A65002350C8 /* ReportVC.swift */,
 			);
 			path = Report;
 			sourceTree = "<group>";
@@ -3176,7 +3176,7 @@
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
-				A2D2047928885A65002350C8 /* ReportViewController.swift in Sources */,
+				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
@@ -3266,7 +3266,7 @@
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
-				A2D2047A28885A65002350C8 /* ReportViewController.swift in Sources */,
+				A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */,
 				A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2513F1E287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				106D9756287D7C32005CFB85 /* CategoryVC.swift in Sources */,
@@ -3323,7 +3323,7 @@
 				A2513F172878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
-				A2D2047B28885A65002350C8 /* ReportViewController.swift in Sources */,
+				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
@@ -3489,7 +3489,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3512,7 +3512,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3528,7 +3528,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3551,7 +3551,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
