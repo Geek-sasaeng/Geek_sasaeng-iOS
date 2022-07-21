@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 
 class EmailAuthCheckViewModel {
+    // TODO: - VM은 VC를 몰라야 함 / VC -> VM / 결합력
     public static func requestCheckEmailAuth(_ viewController: AuthNumViewController, _ parameter: EmailAuthCheckInput) {
         AF.request("https://geeksasaeng.shop/email/check", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
             .validate()

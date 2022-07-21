@@ -71,7 +71,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.hidesBackButton = true   // 원래 백버튼은 숨기고,
         
         // 커스텀한 새 백버튼으로 구성
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
         
         // 파티 게시글 신고 항목 labels를 스택뷰로 설정
@@ -181,10 +181,8 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         for _ in 0..<num {
             /* Buttons */
             let arrowButton = UIButton()
-            arrowButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-            arrowButton.tintColor = .init(hex: 0xA8A8A8)
-            arrowButton.imageView?.layer.transform = CATransform3DMakeScale(0.7, 0.7, 0)
-            
+            arrowButton.setImage(UIImage(named: "ReportArrow"), for: .normal)
+            arrowButton.addTarget(self, action: #selector(tapReportArrowButton(_:)), for: .touchUpInside)
             /* Stack View */
             stackView.addArrangedSubview(arrowButton)
         }
@@ -193,7 +191,16 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Objc Functions
     
      /* 이전 화면으로 돌아가기 */
-    @objc func back(sender: UIBarButtonItem) {
+    @objc
+    private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc
+    private func tapReportArrowButton(_ sender: UIButton) {
+        // TODO: - 신고하기 뷰 2로 이동
+        // 데이터 전달 텍스트 하나만 주면 됨
+        let reportDetailVC = ReportDetailViewController()
+        self.navigationController?.pushViewController(reportDetailVC, animated: true)
     }
 }
