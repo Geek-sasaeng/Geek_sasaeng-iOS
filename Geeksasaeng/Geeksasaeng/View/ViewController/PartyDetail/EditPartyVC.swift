@@ -127,6 +127,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
     var isEditedContentsTextView = false // 내용이 수정되었는지
+    var detailData: getDetailInfoResult?
+    // TODO: - detailData로 기본값 설정하기
     
     
     // MARK: - Life Cycle

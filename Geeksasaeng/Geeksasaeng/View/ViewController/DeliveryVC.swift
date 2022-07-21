@@ -1020,7 +1020,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewController = PartyViewController()
-        print("DEBUG: 셀 선택 화면 전환 성공")
+        viewController.deliveryData = deliveryCellDataArray[indexPath.row]
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
