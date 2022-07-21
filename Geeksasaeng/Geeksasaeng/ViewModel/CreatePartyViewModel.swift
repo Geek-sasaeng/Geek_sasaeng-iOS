@@ -22,9 +22,7 @@ struct CreateParty {
     static var orderTime: String?
     static var maxMatching: Int?
     static var foodCategory: Int?
-    static var hashTagEatTogether: Int?
-    static var hashTagOrderAsSoonAsMatch: Int?
-    static var location: String?
+    static var hashTag: Bool?
 }
 
 // delivery-parties API Request Input
@@ -35,8 +33,10 @@ struct CreatePartyInput: Encodable {
     var orderTime: String?
     var maxMatching: Int?
     var foodCategory: Int?
-    var location: String?
-    var hashTag: [Int]?
+    var latitude: Double?
+    var longitude: Double?
+    var storeUrl: String?
+    var hashTag: Bool?
 }
 
 struct CreatePartyModel: Decodable {
@@ -53,13 +53,15 @@ struct CreatePartyModelResult : Decodable {
     var title: String?
     var content: String?
     var orderTime: String?
-    var hashTag: [String]?
     var createdAt: String?
     var orderTimeCategoryType: String?
     var currentMatching: Int?
     var maxMatching: Int?
-    var location: String?
-    var matchingStatus: String
+    var matchingStatus: String?
+    var storeUrl: String?
+    var latitude: Double?
+    var longitude: Double?
+    var hashTag: Bool?
 }
 
 class CreatePartyViewModel {

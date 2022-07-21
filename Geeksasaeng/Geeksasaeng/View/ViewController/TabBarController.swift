@@ -50,6 +50,7 @@ class TabBarController: UITabBarController {
     private func setAttributes() {
         tabBar.backgroundColor = .init(hex: 0xF8F8F8)
         tabBar.tintColor = .mainColor
+        tabBar.barTintColor = .white
         
         tabBar.layer.borderWidth = 2
         tabBar.layer.borderColor = UIColor(hex: 0xF2F2F2).cgColor
@@ -70,8 +71,8 @@ class TabBarController: UITabBarController {
                                          title: String,
                                          image: UIImage) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
-        // TODO: - PartyVC로 넘어갈 때 다크모드에서 탭바가 검정색이 되는 현상 고쳐야 됨
         tabBar.backgroundColor = .white
+        navController.navigationBar.barTintColor = .white
         
         navController.tabBarItem.title = title
         // 네비게이션 타이틀 속성 설정.

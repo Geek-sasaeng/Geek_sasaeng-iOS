@@ -353,7 +353,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return imageView
     }()
     
-    var deleteView: UIView = {
+    lazy var deleteView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.clipsToBounds = true
@@ -384,7 +384,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* set cancelButton */
-        let cancelButton = UIButton()
+        lazy var cancelButton = UIButton()
         cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
         cancelButton.titleLabel?.font = .customFont(.neoRegular, size: 15)
@@ -407,7 +407,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         let contentLabel = UILabel()
         let lineView = UIView()
-        let confirmButton = UIButton()
+        lazy var confirmButton = UIButton()
         
         [contentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)

@@ -11,9 +11,24 @@ import UIKit
 import SnapKit
 import QuartzCore
 
-class CreatePartyViewController: UIViewController {
-    
+class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
+
     // MARK: - SubViews
+    
+    // 스크롤뷰
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        return scrollView
+    }()
+    
+    // 콘텐츠뷰
+    let contentView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
     /* 우측 상단 등록 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
@@ -109,6 +124,12 @@ class CreatePartyViewController: UIViewController {
         return view
     }()
     
+    let testView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        return view
+    }()
+    
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
     
@@ -121,6 +142,9 @@ class CreatePartyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        /* 기숙사 좌표 불러오기 -> 나중에 스크롤 뷰 구현되면 맵뷰 추가해서 넣기 */
+        LocationAPI.getLocation(1)
         
         setMapView()
         setAttributeOfOptionLabel()
@@ -246,6 +270,7 @@ class CreatePartyViewController: UIViewController {
     }
     
     private func setDelegate() {
+        scrollView.delegate = self
         contentsTextView.delegate = self
         titleTextField.delegate = self
     }
@@ -335,17 +360,31 @@ class CreatePartyViewController: UIViewController {
     }
     
     private func addSubViews() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
-        mapSubView].forEach {
-            view.addSubview($0)
+         testView].forEach {
+            contentView.addSubview($0)
         }
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(UIScreen.main.bounds.width)
+        }
+        
+        // 컨텐츠뷰
+        contentView.snp.makeConstraints { (make) in
+            make.edges.width.equalToSuperview()
+            make.height.equalTo(UIScreen.main.bounds.height)
+        }
+        
         eatTogetherButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(105)
+            make.top.equalToSuperview().inset(37)
             make.left.equalToSuperview().inset(28)
         }
         
@@ -429,12 +468,19 @@ class CreatePartyViewController: UIViewController {
             make.height.equalTo(38)
         }
         
-        mapSubView.snp.makeConstraints { make in
+        testView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.left.equalToSuperview().offset(28)
             make.width.equalTo(314)
             make.height.equalTo(144)
         }
+        
+//        mapSubView.snp.makeConstraints { make in
+//            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+//            make.left.equalToSuperview().offset(28)
+//            make.width.equalTo(314)
+//            make.height.equalTo(144)
+//        }
     }
     
     /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
@@ -465,12 +511,12 @@ class CreatePartyViewController: UIViewController {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             eatTogetherButton.tintColor = .mainColor
             eatTogetherButton.setTitleColor(.mainColor, for: .normal)
-            CreateParty.hashTagEatTogether = 2
+            CreateParty.hashTag = true
         } else {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
             eatTogetherButton.tintColor = UIColor(hex: 0xD8D8D8)
             eatTogetherButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-            CreateParty.hashTagEatTogether = nil
+            CreateParty.hashTag = false
         }
     }
     
@@ -655,15 +701,9 @@ class CreatePartyViewController: UIViewController {
            let orderTime = CreateParty.orderTime,
            let maxMatching = CreateParty.maxMatching,
            let foodCategory = CreateParty.foodCategory,
-           let location = CreateParty.location {
-            var hashTag: [Int] = []
-            if let hashTahAsSoonAsMatch = CreateParty.hashTagOrderAsSoonAsMatch {
-                hashTag.append(hashTahAsSoonAsMatch)
-            }
-            if let hashTagEatTogether = CreateParty.hashTagEatTogether {
-                hashTag.append(hashTagEatTogether)
-            }
-            
+           let latitude = CreateParty.latitude,
+           let longitude = CreateParty.longitude,
+           let url = CreateParty.url {
             let input = CreatePartyInput(
                 dormitory: 1,
                 title: title,
@@ -671,13 +711,20 @@ class CreatePartyViewController: UIViewController {
                 orderTime: orderTime,
                 maxMatching: maxMatching,
                 foodCategory: foodCategory,
-                location: location,
-                hashTag: hashTag)
+                latitude: latitude,
+                longitude: longitude,
+                storeUrl: url,
+                hashTag: CreateParty.hashTag ?? false)
             
             CreatePartyViewModel.registerParty(input)
         }
         
         navigationController?.popViewController(animated: true)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("scrolled!!")
+        
     }
     
 }
@@ -732,5 +779,5 @@ extension CreatePartyViewController: UITextViewDelegate {
 }
 
 extension CreatePartyViewController: MTMapViewDelegate {
-    
+
 }
