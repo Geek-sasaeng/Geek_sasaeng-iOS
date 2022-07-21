@@ -716,7 +716,7 @@ class DeliveryViewController: UIViewController {
     
     /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
     @objc func tapSearchButton() {
-        let searchVC = SeachViewController()
+        let searchVC = SearchViewController()
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
     

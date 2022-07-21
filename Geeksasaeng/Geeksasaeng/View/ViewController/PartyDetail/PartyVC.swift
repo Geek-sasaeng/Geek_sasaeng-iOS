@@ -12,8 +12,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
     
-    let maxHeight = 55
-    let minHeight = 0
+    // TODO: - 파티 상세보기 API로부터 데이터 가져와야 함 일단은 임시 데이터
+    // 배달 예정 시간까지 남은 초(Seconds) 데이터
+    var currentSeconds: Int? = 10000
+
+    // 남은 시간 1초마다 구해줄 타이머
+    var timer: DispatchSourceTimer?
     
     // MARK: - Subviews
     
@@ -331,7 +335,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     var remainTimeLabel: UILabel = {
         let label = UILabel()
-        label.text = "00:00:00"
         label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
         return label
@@ -457,12 +460,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = self
         view.backgroundColor = .white
         
         addSubViews()
         setLayouts()
         setAttributes()
-        scrollView.delegate = self
+        startTimer()
     }
     
     // MARK: - Functions
@@ -639,6 +643,35 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // TODO: - 신청하기 View 탭바에 달라붙도록 구현해야 함............ 자료가 진짜 없다
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentOffset.y)
+    }
+    
+    /* 남은 시간 변경해줄 타이머 작동 */
+    private func startTimer() {
+        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+        timer?.schedule(deadline: .now(), repeating: 1)
+        
+        timer?.setEventHandler(handler: { [weak self] in
+            guard let self = self else { return }
+            
+            if let currentSeconds = self.currentSeconds {
+                // 1초마다 감소
+                self.currentSeconds! -= 1
+                
+                // 초를 시간, 분, 초 단위로 변경
+                let hourTime = currentSeconds / 60 / 60
+                let minuteTime = currentSeconds / 60 % 60
+                let secondTime = currentSeconds % 60
+                
+                // 텍스트 변경
+                self.remainTimeLabel.text = "\(hourTime):\(minuteTime):\(secondTime)"
+                
+                if currentSeconds <= 0 {
+                    // TODO: - 남은 시간 지나면?
+                    self.timer?.cancel()
+                }
+            }
+        })
+        timer?.resume()
     }
     
     /* 이전 화면으로 돌아가기 */

@@ -934,9 +934,9 @@
 		A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */; };
 		A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */; };
 		A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */; };
-		A20FC0F1287F30C40095224C /* SeachVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F0287F30C40095224C /* SeachVC.swift */; };
-		A20FC0F2287F30C40095224C /* SeachVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F0287F30C40095224C /* SeachVC.swift */; };
-		A20FC0F3287F30C40095224C /* SeachVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F0287F30C40095224C /* SeachVC.swift */; };
+		A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F0287F30C40095224C /* SearchVC.swift */; };
+		A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F0287F30C40095224C /* SearchVC.swift */; };
+		A20FC0F3287F30C40095224C /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F0287F30C40095224C /* SearchVC.swift */; };
 		A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
 		A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
 		A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
@@ -1364,7 +1364,7 @@
 		A2085ADE2870550200D6CF79 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListViewModel.swift; sourceTree = "<group>"; };
 		A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListModel.swift; sourceTree = "<group>"; };
-		A20FC0F0287F30C40095224C /* SeachVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeachVC.swift; sourceTree = "<group>"; };
+		A20FC0F0287F30C40095224C /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
@@ -2028,7 +2028,7 @@
 				A29F6F882885464900350744 /* Register */,
 				A26BD187287B0415003A0A48 /* DormitoryVC.swift */,
 				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
-				A20FC0F0287F30C40095224C /* SeachVC.swift */,
+				A20FC0F0287F30C40095224C /* SearchVC.swift */,
 				10D7EC982886E89F00D9E0FD /* PartyDetail */,
 				10D7EC972886E85600D9E0FD /* CreateParty */,
 			);
@@ -3186,7 +3186,7 @@
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2035EA5288341B00051498A /* AdModel.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
-				A20FC0F1287F30C40095224C /* SeachVC.swift in Sources */,
+				A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
@@ -3239,7 +3239,7 @@
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
 				10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
-				A20FC0F2287F30C40095224C /* SeachVC.swift in Sources */,
+				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
@@ -3310,7 +3310,7 @@
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
-				A20FC0F3287F30C40095224C /* SeachVC.swift in Sources */,
+				A20FC0F3287F30C40095224C /* SearchVC.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
