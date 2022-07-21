@@ -37,8 +37,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     lazy var reportButton: UIButton = {
         let button = UIButton()
         button.setTitle("신고하기", for: .normal)
-        // TODO: - 신고하기 뷰 연결 필요
-//        button.addTarget(self, action: #selector(showReportView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
         return button
     }()
     
@@ -697,6 +696,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.removeFromSuperview()
             }
         )
+    }
+    
+    /* 신고하기 버튼 눌렀을 때 화면 전환 */
+    @objc private func tapReportButton() {
+        let reportVC = ReportViewController()
+        // 옵션탭 집어넣고 화면 전환 실행
+        self.optionView.removeFromSuperview()
+        self.visualEffectView?.removeFromSuperview()
+        self.navigationController?.pushViewController(reportVC, animated: true)
     }
     
     @objc func showDeleteView() {
