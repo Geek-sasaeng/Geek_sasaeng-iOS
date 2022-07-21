@@ -124,11 +124,11 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    let testView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray
-        return view
-    }()
+//    let testView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .gray
+//        return view
+//    }()
     
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
@@ -137,14 +137,20 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     var isSettedOptions = false // 옵션이 모두 설정되었는지
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var mapView: MTMapView? // 카카오맵
+    var marker: MTMapPOIItem = {
+        let marker = MTMapPOIItem()
+        marker.showAnimationType = .dropFromHeaven
+        marker.markerType = .redPin
+        marker.itemName = "요기?"
+        marker.showDisclosureButtonOnCalloutBalloon = false
+        marker.draggable = true
+        return marker
+    }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        /* 기숙사 좌표 불러오기 -> 나중에 스크롤 뷰 구현되면 맵뷰 추가해서 넣기 */
-        LocationAPI.getLocation(1)
         
         setMapView()
         setAttributeOfOptionLabel()
@@ -158,16 +164,12 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         setLayouts()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        // mapView의 모든 poiItem 제거
-        for item in mapView!.poiItems {
-            mapView?.remove(item as? MTMapPOIItem)
-        }
-    }
-    
     // MARK: - Functions
     
     private func setMapView() {
+        /* 기숙사 좌표 불러오기 -> 나중에 스크롤 뷰 구현되면 맵뷰 추가해서 넣기 */
+        LocationAPI.getLocation(1)
+        
         // 지도 불러오기
         mapView = MTMapView(frame: mapSubView.frame)
         
@@ -179,8 +181,13 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             mapView.isUserInteractionEnabled = false
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: 37.456518177069526, longitude: 126.70531256589555)), zoomLevel: 5, animated: true)
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
+                                                                    longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
             
+            // 마커의 좌표 설정
+            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
+            
+            mapView.addPOIItems([marker])
             mapSubView.addSubview(mapView)
         }
     }
@@ -332,11 +339,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                     // 지도의 중심을 설정한 위치로 이동
                     self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude)), zoomLevel: 5, animated: true)
                     
-                    // 설정한 위치에 핀 표시
-                    let poiItem = MTMapPOIItem()
-                    poiItem.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
-                    poiItem.markerType = .redPin
-                    self.mapView?.addPOIItems([poiItem])
+                    // 설정한 위치로 마커 좌표 이동
+                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
                 }
                 
                 // Blur View 제거
@@ -365,7 +369,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
-         testView].forEach {
+         mapSubView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -468,19 +472,19 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(38)
         }
         
-        testView.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.width.equalTo(314)
-            make.height.equalTo(144)
-        }
-        
-//        mapSubView.snp.makeConstraints { make in
+//        testView.snp.makeConstraints { make in
+//            make.left.equalToSuperview().inset(28)
 //            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-//            make.left.equalToSuperview().offset(28)
 //            make.width.equalTo(314)
 //            make.height.equalTo(144)
 //        }
+        
+        mapSubView.snp.makeConstraints { make in
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+            make.left.equalToSuperview().offset(28)
+            make.width.equalTo(314)
+            make.height.equalTo(144)
+        }
     }
     
     /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
@@ -720,11 +724,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         navigationController?.popViewController(animated: true)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("scrolled!!")
-        
     }
     
 }

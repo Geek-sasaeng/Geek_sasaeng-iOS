@@ -364,7 +364,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(298)
         }
         
-        /* top View: 건너뛰기 */
+        /* top View: 삭제하기 */
         let topSubView = UIView()
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         view.addSubview(topSubView)
@@ -376,7 +376,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         /* set titleLabel */
         let titleLabel = UILabel()
-        titleLabel.text = "건너뛰기"
+        titleLabel.text = "삭제하기"
         titleLabel.textColor = UIColor(hex: 0xA8A8A8)
         titleLabel.font = .customFont(.neoRegular, size: 14)
         topSubView.addSubview(titleLabel)
@@ -700,11 +700,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func showDeleteView() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+        optionView.removeFromSuperview()
         
         view.addSubview(deleteView)
         deleteView.snp.makeConstraints { make in
