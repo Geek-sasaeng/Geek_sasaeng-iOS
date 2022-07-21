@@ -37,10 +37,11 @@ class ReportDetailEtcViewController: UIViewController {
         return textView
     }()
     
-    // 하단에 있는 신고하기 뷰
-    lazy var reportBarView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
+    // 하단에 있는 신고하기 버튼
+    lazy var reportButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .mainColor
+        button.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
         
         let reportLabel: UILabel = {
             let label = UILabel()
@@ -49,13 +50,13 @@ class ReportDetailEtcViewController: UIViewController {
             label.font = .customFont(.neoBold, size: 20)
             return label
         }()
-        view.addSubview(reportLabel)
+        button.addSubview(reportLabel)
         reportLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(15)
         }
         
-        return view
+        return button
     }()
     
     // MARK: - Life Cycle
@@ -107,7 +108,7 @@ class ReportDetailEtcViewController: UIViewController {
         [
             reportCategoryLabel,
             reportTextView,
-            reportBarView
+            reportButton
         ].forEach { view.addSubview($0) }
     }
     
@@ -121,7 +122,7 @@ class ReportDetailEtcViewController: UIViewController {
             make.left.right.equalToSuperview().inset(29)
             make.height.equalTo(100)
         }
-        reportBarView.snp.makeConstraints { make in
+        reportButton.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(55 + 20)    // 20은 safeAreaLayoutGuide 아래 빈 공간 가리기 위해 추가
             make.bottom.equalToSuperview()
@@ -152,23 +153,32 @@ class ReportDetailEtcViewController: UIViewController {
     }
     
     /* 키보드 올라올 때 실행되는 함수 */
-    @objc func keyboardUp(notification: NSNotification) {
+    @objc
+    private func keyboardUp(notification: NSNotification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
            let keyboardRectangle = keyboardFrame.cgRectValue
        
             // reportBarView의 y축을 키보드 높이만큼 올려준다
             UIView.animate(
                 withDuration: 0.3, animations: {
-                    self.reportBarView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height + 20)
+                    self.reportButton.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height + 20)
                 }
             )
         }
     }
     
     /* 키보드 내려갈 때 실행되는 함수 */
-    @objc func keyboardDown() {
+    @objc
+    private func keyboardDown() {
         // reportBarView 위치 제자리로
-        self.reportBarView.transform = .identity
+        self.reportButton.transform = .identity
+    }
+    
+    /* 하단의 신고하기 버튼을 눌렀을 때 실행되는 함수 -> 신고 제출, 신고하기 토스트 메세지 */
+    @objc
+    private func tapReportButton() {
+        // TODO: - 신고하기 API 연동
+        showToast(viewController: self, message: "신고가 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
     }
 
 }
