@@ -981,6 +981,9 @@
 		A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
 		A2B045D32889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
 		A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
+		A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
+		A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
+		A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
 		A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
 		A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
@@ -1387,6 +1390,7 @@
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
 		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
+		A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailEtcVC.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
 		A2B42089286F151100278F92 /* AuthNumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumVC.swift; sourceTree = "<group>"; };
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -2077,6 +2081,7 @@
 			children = (
 				A2D2047828885A65002350C8 /* ReportVC.swift */,
 				A2B045D12889923200B97636 /* ReportDetailVC.swift */,
+				A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */,
 			);
 			path = Report;
 			sourceTree = "<group>";
@@ -3201,6 +3206,7 @@
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
+				A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				A2513F152878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
@@ -3282,6 +3288,7 @@
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
+				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3321,6 +3328,7 @@
 				A20FC0EB287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
+				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,

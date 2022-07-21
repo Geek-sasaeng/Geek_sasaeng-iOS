@@ -178,11 +178,16 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     
     /* 화살표 갯수만큼 스택뷰로 구성 */
     private func setArrowStackView(num: Int, stackView: UIStackView) {
-        for _ in 0..<num {
+        for i in 0..<num {
             /* Buttons */
             let arrowButton = UIButton()
             arrowButton.setImage(UIImage(named: "ReportArrow"), for: .normal)
-            arrowButton.addTarget(self, action: #selector(tapReportArrowButton(_:)), for: .touchUpInside)
+            if i == 5 {
+                // 기타 사유 선택
+                arrowButton.addTarget(self, action: #selector(tapReportEtcArrowButton), for: .touchUpInside)
+            } else {
+                arrowButton.addTarget(self, action: #selector(tapReportArrowButton), for: .touchUpInside)
+            }
             /* Stack View */
             stackView.addArrangedSubview(arrowButton)
         }
@@ -197,10 +202,15 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc
-    private func tapReportArrowButton(_ sender: UIButton) {
-        // TODO: - 신고하기 뷰 2로 이동
-        // 데이터 전달 텍스트 하나만 주면 됨
+    private func tapReportArrowButton() {
+        // TODO: - 데이터 전달 텍스트 하나만 주면 됨
         let reportDetailVC = ReportDetailViewController()
         self.navigationController?.pushViewController(reportDetailVC, animated: true)
+    }
+    
+    @objc
+    private func tapReportEtcArrowButton() {
+        let reportDetailEtcVC = ReportDetailEtcViewController()
+        self.navigationController?.pushViewController(reportDetailEtcVC, animated: true)
     }
 }
