@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+// TODO: - 서버로부터 검색 결과 가져오면 최근 검색어부터 뷰 싹 다 밀고 테이블뷰 가져와야 함...
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
@@ -37,8 +38,7 @@ class SearchViewController: UIViewController {
     
     var searchButton: UIButton = {
         let button = UIButton()
-        button.tintColor = .init(hex: 0x2F2F2F)
-        button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        button.setImage(UIImage(named: "SearchMark"), for: .normal)
         button.contentMode = .scaleAspectFit
         return button
     }()

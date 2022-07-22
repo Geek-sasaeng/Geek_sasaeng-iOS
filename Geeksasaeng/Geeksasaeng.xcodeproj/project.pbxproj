@@ -990,6 +990,12 @@
 		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
 		A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
+		A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
+		A2B045D32889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
+		A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
+		A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
+		A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
+		A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
 		A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
 		A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
@@ -1003,6 +1009,9 @@
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
+		A2D2047928885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
+		A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
+		A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
 		A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
 		A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */; };
@@ -1396,11 +1405,14 @@
 		A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckModel.swift; sourceTree = "<group>"; };
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
+		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
+		A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailEtcVC.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
 		A2B42089286F151100278F92 /* AuthNumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumVC.swift; sourceTree = "<group>"; };
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
+		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2056,6 +2068,7 @@
 				A20FC0F0287F30C40095224C /* SearchVC.swift */,
 				10D7EC982886E89F00D9E0FD /* PartyDetail */,
 				10D7EC972886E85600D9E0FD /* CreateParty */,
+				A2D2047728885A14002350C8 /* Report */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -2081,6 +2094,16 @@
 				103F1455286ACA84004B637B /* SceneDelegate.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		A2D2047728885A14002350C8 /* Report */ = {
+			isa = PBXGroup;
+			children = (
+				A2D2047828885A65002350C8 /* ReportVC.swift */,
+				A2B045D12889923200B97636 /* ReportDetailVC.swift */,
+				A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */,
+			);
+			path = Report;
 			sourceTree = "<group>";
 		};
 		C1A439548434797F19CEBE66 /* Frameworks */ = {
@@ -3176,6 +3199,7 @@
 				106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
+				A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				108B633828899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
@@ -3184,6 +3208,7 @@
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
+				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
@@ -3202,6 +3227,7 @@
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
+				A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
@@ -3267,6 +3293,7 @@
 				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
+				A2B045D32889923200B97636 /* ReportDetailVC.swift in Sources */,
 				102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
 				10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */,
@@ -3280,6 +3307,7 @@
 				108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
+				A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */,
 				A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2513F1E287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				106D9756287D7C32005CFB85 /* CategoryVC.swift in Sources */,
@@ -3288,6 +3316,7 @@
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
+				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3331,15 +3360,18 @@
 				A20FC0EB287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
+				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2513F232878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
+				A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */,
 				A2513F172878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
+				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
@@ -3505,7 +3537,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3528,7 +3560,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3544,7 +3576,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3567,7 +3599,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
