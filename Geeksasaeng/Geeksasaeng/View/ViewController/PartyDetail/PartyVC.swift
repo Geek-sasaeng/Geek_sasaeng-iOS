@@ -421,10 +421,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     public func setDefaultValue() {
 //        chiefProfileImgUrl -> default image 추후에
 //        id
-//        latitude
+//        latitude -> 카카오맵 띄워서 좌표 설정
 //        longitude
 //        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
-        /* 지금 제대로 안 뜨는 거: updatedAt, foodCategory, */
+        /* 지금 제대로 안 뜨는 거: foodCategory, url(모델에 추가 해야 함) */
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"

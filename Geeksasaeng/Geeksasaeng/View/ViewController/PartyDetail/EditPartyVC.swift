@@ -115,6 +115,33 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     var selectedUrlLabel = UILabel()
     var selectedLocationLabel = UILabel()
     
+    /* Edit imageView */
+    let orderEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let matchingEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let categoryEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let urlEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let locationEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
     
@@ -264,6 +291,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
+         orderEditImageView, matchingEditImageView, categoryEditImageView, urlEditImageView, locationEditImageView,
          testView].forEach {
             contentView.addSubview($0)
         }
@@ -365,6 +393,33 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(188)
             make.height.equalTo(38)
+        }
+        
+        /* Edit Pencil imageView */
+        orderEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(orderForecastTimeButton.snp.top).offset(14)
+            make.right.equalTo(orderForecastTimeButton.snp.right).inset(14)
+        }
+        matchingEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedPersonLabel.snp.top).offset(14)
+            make.right.equalTo(selectedPersonLabel.snp.right).inset(14)
+        }
+        categoryEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedCategoryLabel.snp.top).offset(14)
+            make.right.equalTo(selectedCategoryLabel.snp.right).inset(14)
+        }
+        urlEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedUrlLabel.snp.top).offset(14)
+            make.right.equalTo(selectedUrlLabel.snp.right).inset(14)
+        }
+        locationEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedLocationLabel.snp.top).offset(14)
+            make.right.equalTo(selectedLocationLabel.snp.right).inset(14)
         }
         
         testView.snp.makeConstraints { make in
