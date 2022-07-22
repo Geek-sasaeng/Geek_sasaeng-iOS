@@ -33,12 +33,19 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
+    // 신청하기 뷰가 들어갈 뷰 -> 신청하기 뷰를 탭바 위에 고정시켜 놓기 위해 필요!
+    let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .none
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
     // 외부 참조가 필요해서 이 버튼만 밖에 빼놓음!
     lazy var reportButton: UIButton = {
         let button = UIButton()
         button.setTitle("신고하기", for: .normal)
-        // TODO: - 신고하기 뷰 연결 필요
-//        button.addTarget(self, action: #selector(showReportView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
         return button
     }()
     
@@ -474,7 +481,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func addSubViews() {
         self.view.addSubview(scrollView)
         self.scrollView.addSubview(contentView)
-        self.scrollView.addSubview(matchingStatusView)
+        
+        self.view.addSubview(containerView)
+        self.containerView.addSubview(matchingStatusView)
         
         [
             profileImageView,
@@ -502,9 +511,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalTo(UIScreen.main.bounds.width)
         }
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
-        contentView.snp.makeConstraints { (make) in
+        contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
             make.height.equalTo(UIScreen.main.bounds.height)
+        }
+        
+        // 신청하기 뷰를 고정시켜 놓을 컨테이너 뷰
+        containerView.snp.makeConstraints { make in
+            make.width.height.equalToSuperview()
         }
         
         profileImageView.snp.makeConstraints { make in
@@ -557,9 +571,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         matchingStatusView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(170)
-            make.height.equalTo(55)
-            make.width.equalToSuperview()
+            // 탭바 높이만큼 떨어뜨려 놓는다
+            if let tabBarCont = tabBarController {
+                make.bottom.equalToSuperview().inset(tabBarCont.tabBar.bounds.height)
+                make.height.equalTo(55)
+                make.width.equalToSuperview()
+            }
         }
         
         matchingDataWhiteLabel.snp.makeConstraints { make in
@@ -697,6 +714,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.removeFromSuperview()
             }
         )
+    }
+    
+    /* 신고하기 버튼 눌렀을 때 화면 전환 */
+    @objc private func tapReportButton() {
+        let reportVC = ReportViewController()
+        // 옵션탭 집어넣고 화면 전환 실행
+        self.optionView.removeFromSuperview()
+        self.visualEffectView?.removeFromSuperview()
+        self.navigationController?.pushViewController(reportVC, animated: true)
     }
     
     @objc func showDeleteView() {
