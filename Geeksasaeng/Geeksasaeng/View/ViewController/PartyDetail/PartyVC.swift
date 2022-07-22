@@ -82,7 +82,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             button.setTitle("수정하기", for: .normal)
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
             // TODO: - 수정하기 뷰 연결 필요
-    //        button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
+            button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
             return button
         }()
         var deleteButton: UIButton = {
@@ -128,9 +128,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return imageView
     }()
     
-    var nickNameLabel: UILabel = {
+    lazy var nickNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "네오"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
@@ -162,7 +161,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     var contentLabel: UILabel = {
         let label = UILabel()
-        label.text = "어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구.어쩌구 저쩌구."
         label.font = .customFont(.neoLight, size: 15)
         label.textColor = .init(hex: 0x5B5B5B)
         label.numberOfLines = 0
@@ -174,150 +172,81 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
+
+    var orderLabel: UILabel = {
+        let label = UILabel()
+        label.text = "주문 예정 시간"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    var orderReserveLabel: UILabel = {
+        let label = UILabel()
+        label.text = "05월 15일"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
     
-    var verticalStackView: UIStackView = {
-        
-        var timeStackView: UIStackView = {
-            var orderLabel: UILabel = {
-                let label = UILabel()
-                label.text = "주문 예정 시간"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            var orderReserveDateLabel: UILabel = {
-                let label = UILabel()
-                label.text = "05월 15일"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            var orderReserveTimeLabel: UILabel = {
-                let label = UILabel()
-                label.text = "23시 00분"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            
-            let stackView = UIStackView(arrangedSubviews: [orderLabel, orderReserveDateLabel, orderReserveTimeLabel])
-            stackView.spacing = 36
-            return stackView
-        }()
-        
-        var matchingStackView: UIStackView = {
-            var matchingLabel: UILabel = {
-                let label = UILabel()
-                label.text = "매칭 현황"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            var matchingDataLabel: UILabel = {
-                let label = UILabel()
-                label.text = "2/4"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            
-            let stackView = UIStackView(arrangedSubviews: [matchingLabel, matchingDataLabel])
-            stackView.spacing = 63
-            return stackView
-        }()
-        
-        var categoryStackView: UIStackView = {
-            var categoryLabel: UILabel = {
-                let label = UILabel()
-                label.text = "카테고리"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            var categoryDataLabel: UILabel = {
-                let label = UILabel()
-                label.text = "중식"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            
-            let stackView = UIStackView(arrangedSubviews: [categoryLabel, categoryDataLabel])
-            stackView.spacing = 66
-            return stackView
-        }()
-        
-        var storeLinkStackView: UIStackView = {
-            var storeLinkLabel: UILabel = {
-                let label = UILabel()
-                label.text = "식당 링크"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            var storeLinkDataLabel: UILabel = {
-                let label = UILabel()
-                label.text = "???"
-                label.numberOfLines = 1
-                label.lineBreakMode = .byCharWrapping
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            
-            let stackView = UIStackView(arrangedSubviews: [storeLinkLabel, storeLinkDataLabel])
-            stackView.spacing = 63
-            return stackView
-        }()
-        
-        var locationStackView: UIStackView = {
-            var pickupLocationLabel: UILabel = {
-                let label = UILabel()
-                label.text = "수령 장소"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            var pickupLocationDataLabel: UILabel = {
-                let label = UILabel()
-                label.text = "제1기숙사 후문"
-                label.textColor = .init(hex: 0x2F2F2F)
-                label.font = .customFont(.neoMedium, size: 13)
-                return label
-            }()
-            
-            let stackView = UIStackView(arrangedSubviews: [pickupLocationLabel, pickupLocationDataLabel])
-            stackView.spacing = 63
-            return stackView
-        }()
-        
-        [
-            timeStackView,
-            matchingStackView,
-            categoryStackView,
-            storeLinkStackView,
-            locationStackView
-        ].forEach {
-            $0.axis = .horizontal
-            $0.alignment = .fill
-            $0.distribution = .fill
-        }
-        
-        /* Vertical StackView */
-        let stackView = UIStackView(arrangedSubviews: [
-            timeStackView,
-            matchingStackView,
-            categoryStackView,
-            storeLinkStackView,
-            locationStackView
-        ])
-        
-        stackView.axis = .vertical
-        stackView.alignment = .leading  // vertical stackview의 좌우 정렬 기준!
-        stackView.distribution = .fill
-        stackView.spacing = 24
-        
-        return stackView
+    var matchingLabel: UILabel = {
+        let label = UILabel()
+        label.text = "매칭 현황"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    var matchingDataLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    
+    var categoryLabel: UILabel = {
+        let label = UILabel()
+        label.text = "카테고리"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    var categoryDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "중식"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    
+    var storeLinkLabel: UILabel = {
+        let label = UILabel()
+        label.text = "식당 링크"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    var storeLinkDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "???"
+        label.numberOfLines = 1
+        label.lineBreakMode = .byCharWrapping
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    
+    var pickupLocationLabel: UILabel = {
+        let label = UILabel()
+        label.text = "수령 장소"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
+    }()
+    var pickupLocationDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "제1기숙사 후문"
+        label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoMedium, size: 13)
+        return label
     }()
     
     var mapView: UIView = {
@@ -371,7 +300,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(298)
         }
         
-        /* top View: 건너뛰기 */
+        /* top View: 삭제하기 */
         let topSubView = UIView()
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         view.addSubview(topSubView)
@@ -383,7 +312,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         /* set titleLabel */
         let titleLabel = UILabel()
-        titleLabel.text = "건너뛰기"
+        titleLabel.text = "삭제하기"
         titleLabel.textColor = UIColor(hex: 0xA8A8A8)
         titleLabel.font = .customFont(.neoRegular, size: 14)
         topSubView.addSubview(titleLabel)
@@ -463,6 +392,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
+    // MARK: - Properties
+    var deliveryData: DeliveryListModelResult?
+    var detailData = getDetailInfoResult()
+    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -470,6 +403,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         scrollView.delegate = self
         view.backgroundColor = .white
         
+        setDetailData()
         addSubViews()
         setLayouts()
         setAttributes()
@@ -477,6 +411,33 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // MARK: - Functions
+    
+    private func setDetailData() {
+        if let partyId = self.deliveryData?.id {
+            DeliveryListDetailViewModel.getDetailInfo(viewController: self, partyId)
+        }
+    }
+    
+    public func setDefaultValue() {
+//        chiefProfileImgUrl -> default image 추후에
+//        id
+//        latitude
+//        longitude
+//        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
+        /* 지금 제대로 안 뜨는 거: updatedAt, foodCategory, */
+        nickNameLabel.text = detailData.chief
+        contentLabel.text = detailData.content
+        matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
+        categoryDataLabel.text = detailData.foodCategory
+        if detailData.hashTag ?? false {
+            hashTagLabel.isHidden = false
+        } else {
+            hashTagLabel.isHidden = true
+        }
+        orderReserveLabel.text = detailData.orderTime
+        titleLabel.text = detailData.title
+        postingTime.text = detailData.updatedAt
+    }
     
     private func addSubViews() {
         self.view.addSubview(scrollView)
@@ -486,14 +447,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         self.containerView.addSubview(matchingStatusView)
         
         [
-            profileImageView,
-            nickNameLabel,
-            postingTime,
-            hashTagLabel,
-            titleLabel,
-            contentLabel,
+            profileImageView, nickNameLabel, postingTime, hashTagLabel,
+            titleLabel, contentLabel,
             separateView,
-            verticalStackView,
+            orderLabel, matchingLabel, categoryLabel, storeLinkLabel, pickupLocationLabel,
+            orderReserveLabel, matchingDataLabel, categoryDataLabel, storeLinkDataLabel, pickupLocationDataLabel,
             mapView
         ].forEach { contentView.addSubview($0) }
         [
@@ -559,13 +517,63 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalToSuperview()
         }
         
-        verticalStackView.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(31)
+        orderLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
+            make.top.equalTo(separateView.snp.bottom).offset(31)
+            make.width.equalTo(78)
+        }
+        
+        matchingLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(orderLabel.snp.bottom).offset(24)
+            make.width.equalTo(78)
+        }
+        
+        categoryLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(matchingLabel.snp.bottom).offset(24)
+            make.width.equalTo(78)
+        }
+        
+        storeLinkLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(categoryLabel.snp.bottom).offset(24)
+            make.width.equalTo(78)
+        }
+        
+        pickupLocationLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(storeLinkLabel.snp.bottom).offset(24)
+            make.width.equalTo(78)
+        }
+        
+        orderReserveLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(orderLabel.snp.top)
+        }
+        
+        matchingDataLabel.snp.makeConstraints { make in
+            make.left.equalTo(orderReserveLabel.snp.left)
+            make.top.equalTo(matchingLabel.snp.top)
+        }
+        
+        categoryDataLabel.snp.makeConstraints { make in
+            make.left.equalTo(orderReserveLabel.snp.left)
+            make.top.equalTo(categoryLabel.snp.top)
+        }
+        
+        storeLinkDataLabel.snp.makeConstraints { make in
+            make.left.equalTo(orderReserveLabel.snp.left)
+            make.top.equalTo(storeLinkLabel.snp.top)
+        }
+        
+        pickupLocationDataLabel.snp.makeConstraints { make in
+            make.left.equalTo(orderReserveLabel.snp.left)
+            make.top.equalTo(pickupLocationLabel.snp.top)
         }
         
         mapView.snp.makeConstraints { make in
-            make.top.equalTo(verticalStackView.snp.bottom).offset(14)
+            make.top.equalTo(pickupLocationLabel.snp.bottom).offset(24)
             make.left.right.equalToSuperview().inset(23)
             make.height.equalTo(122)
         }
@@ -655,6 +663,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
         showPartyPost()
+        
+        deleteView.removeFromSuperview()
     }
     
     // TODO: - 신청하기 View 탭바에 달라붙도록 구현해야 함............ 자료가 진짜 없다
@@ -716,6 +726,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         )
     }
     
+    @objc func showEditView() {
+        optionView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+        
+        let editPartyVC = EditPartyViewController()
+        editPartyVC.detailData = detailData
+        navigationController?.pushViewController(editPartyVC, animated: true)
+    }
+        
     /* 신고하기 버튼 눌렀을 때 화면 전환 */
     @objc private func tapReportButton() {
         let reportVC = ReportViewController()
@@ -726,11 +745,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func showDeleteView() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+        optionView.removeFromSuperview()
         
         view.addSubview(deleteView)
         deleteView.snp.makeConstraints { make in

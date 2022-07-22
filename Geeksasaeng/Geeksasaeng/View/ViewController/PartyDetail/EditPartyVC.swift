@@ -1,18 +1,14 @@
 //
-//  CreatePartyVC.swift
+//  EditPartyVC.swift
 //  Geeksasaeng
 //
-//  Created by 조동진 on 2022/07/11.
+//  Created by 조동진 on 2022/07/21.
 //
-
-/* 파티 생성하기 API 구현 이후: 등록버튼 누를 때 전역변수 모두 초기화 */
 
 import UIKit
 import SnapKit
-import QuartzCore
 
-class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
-
+class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - SubViews
     
     // 스크롤뷰
@@ -35,7 +31,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     /* 우측 상단 등록 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
-        registerButton.setTitle("등록", for: .normal)
+        registerButton.setTitle("완료", for: .normal)
         registerButton.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
         let barButton = UIBarButtonItem(customView: registerButton)
         barButton.isEnabled = false
@@ -119,13 +115,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     var selectedUrlLabel = UILabel()
     var selectedLocationLabel = UILabel()
     
-    let mapSubView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 5
-        return view
-    }()
+    /* 서브뷰 나타났을 때 뒤에 블러뷰 */
+    var visualEffectView: UIVisualEffectView?
     
     let testView: UIView = {
         let view = UIView()
@@ -133,85 +124,30 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    /* 서브뷰 나타났을 때 뒤에 블러뷰 */
-    var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
-    var isSettedOptions = false // 옵션이 모두 설정되었는지
     var isEditedContentsTextView = false // 내용이 수정되었는지
-    var mapView: MTMapView? // 카카오맵
-    var marker: MTMapPOIItem = {
-        let marker = MTMapPOIItem()
-        marker.showAnimationType = .dropFromHeaven
-        marker.markerType = .redPin
-        marker.itemName = "요기?"
-        marker.showDisclosureButtonOnCalloutBalloon = false
-        marker.draggable = true
-        return marker
-    }()
+    var detailData: getDetailInfoResult?
+    // TODO: - detailData로 기본값 설정하기
+    
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        /* 기숙사 좌표 불러오기 */
-        LocationAPI.getLocation(1)
-        // MARK: - 여기서 맵뷰 객체 생성하면 서브뷰에서 런타임 에러
-//        setMapView()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
         setDelegate()
         setNavigationBar()
         setDefaultDate()
-        setNotificationCenter()
         setTapGestureToLabels()
         addSubViews()
         setLayouts()
     }
     
     // MARK: - Functions
-    
-    private func setMapView() {
-        // 지도 불러오기
-        mapView = MTMapView(frame: mapSubView.frame)
-        
-        if let mapView = mapView {
-            // 델리게이트 연결
-            mapView.delegate = self
-            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
-            mapView.baseMapType = .standard
-            mapView.isUserInteractionEnabled = false
-            
-            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
-                                                                    longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            
-            // 마커의 좌표 설정
-            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
-            
-            mapView.addPOIItems([marker])
-            mapSubView.addSubview(mapView)
-        }
-    }
-    
-    private func setTapGestureToLabels() {
-        let personTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPersonLabel))
-        selectedPersonLabel.isUserInteractionEnabled = true
-        selectedPersonLabel.addGestureRecognizer(personTapGesture)
-        
-        let categoryTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedCategoryLabel))
-        selectedCategoryLabel.isUserInteractionEnabled = true
-        selectedCategoryLabel.addGestureRecognizer(categoryTapGesture)
-        
-        let urlTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedUrlLabel))
-        selectedUrlLabel.isUserInteractionEnabled = true
-        selectedUrlLabel.addGestureRecognizer(urlTapGesture)
-        
-        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedLocationLabel))
-        selectedLocationLabel.isUserInteractionEnabled = true
-        selectedLocationLabel.addGestureRecognizer(placeTapGesture)
-    }
     
     @objc func tapContentView() {
         view.endEditing(true)
@@ -287,7 +223,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     private func setNavigationBar() {
         self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
-        self.navigationItem.title = "파티 생성하기"
+        self.navigationItem.title = "파티 수정하기"
         self.navigationItem.titleView?.tintColor = .init(hex: 0x2F2F2F)
         
         // set barButtonItem
@@ -296,74 +232,30 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
-    private func setNotificationCenter() {
-        NotificationCenter.default.addObserver(forName: Notification.Name("TapConfirmButton"), object: nil, queue: nil) { notification in
-            let result = notification.object as! String
-            if result == "true" {
-                // 각 서브뷰에서 저장된 전역변수 데이터 출력
-                if let orderForecastTime = CreateParty.orderForecastTime {
-                    self.orderForecastTimeButton.layer.shadowRadius = 0
-                    self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
-                    self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
-                    self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
-                    self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
-                }
-                
-                if let matchingPerson = CreateParty.matchingPerson {
-                    self.selectedPersonLabel.text = "      \(matchingPerson)"
-                    self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedPersonLabel.textColor = .black
-                    self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-                if let category = CreateParty.category {
-                    self.selectedCategoryLabel.text = "      \(category)"
-                    self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedCategoryLabel.textColor = .black
-                    self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-                if let url = CreateParty.url {
-                    self.selectedUrlLabel.text = "      \(url)"
-                    self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedUrlLabel.textColor = .black
-                    self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-                if let address = CreateParty.address {
-                    self.selectedLocationLabel.text = "      \(address)"
-                    self.selectedLocationLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedLocationLabel.textColor = .black
-                    self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-//                if let latitude = CreateParty.latitude,
-//                   let longitude = CreateParty.longitude {
-//                    // 지도의 중심을 설정한 위치로 이동
-//                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude)), zoomLevel: 5, animated: true)
-//
-//                    // 설정한 위치로 마커 좌표 이동
-//                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
-//                }
-                
-                // Blur View 제거
-                self.visualEffectView?.removeFromSuperview()
-                
-                // subVC 제거
-                let viewControllers = self.children
-                viewControllers.forEach {
-                    $0.view.removeFromSuperview()
-                    $0.removeFromParent()
-                }
-                
-                self.isSettedOptions = true
-                if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
-                    self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
-                    self.view.layoutSubviews()
-                }
-            }
-        }
+    private func setDefaultDate() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "      MM월 dd일        HH시 mm분"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
+    }
+    
+    private func setTapGestureToLabels() {
+        let personTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPersonLabel))
+        selectedPersonLabel.isUserInteractionEnabled = true
+        selectedPersonLabel.addGestureRecognizer(personTapGesture)
+        
+        let categoryTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedCategoryLabel))
+        selectedCategoryLabel.isUserInteractionEnabled = true
+        selectedCategoryLabel.addGestureRecognizer(categoryTapGesture)
+        
+        let urlTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedUrlLabel))
+        selectedUrlLabel.isUserInteractionEnabled = true
+        selectedUrlLabel.addGestureRecognizer(urlTapGesture)
+        
+        let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedLocationLabel))
+        selectedLocationLabel.isUserInteractionEnabled = true
+        selectedLocationLabel.addGestureRecognizer(placeTapGesture)
     }
     
     private func addSubViews() {
@@ -481,22 +373,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalTo(314)
             make.height.equalTo(144)
         }
-        
-//        mapSubView.snp.makeConstraints { make in
-//            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-//            make.left.equalToSuperview().offset(28)
-//            make.width.equalTo(314)
-//            make.height.equalTo(144)
-//        }
-    }
-    
-    /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
-    private func setDefaultDate() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "      MM월 dd일        HH시 mm분"
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
     }
     
     private func createBlueView() {
@@ -506,11 +382,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         visualEffectView.isUserInteractionEnabled = false
         view.addSubview(visualEffectView)
         self.visualEffectView = visualEffectView
-    }
-    
-    /* 이전 화면으로 돌아가기 */
-    @objc func tapBackButton(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated:true)
     }
     
     @objc func tapEatTogetherButton() {
@@ -524,6 +395,19 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             eatTogetherButton.tintColor = UIColor(hex: 0xD8D8D8)
             eatTogetherButton.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
             CreateParty.hashTag = false
+        }
+    }
+    
+    @objc func changeValueTitleTextField() {
+        if isEditedContentsTextView
+            && contentsTextView.text.count >= 1
+            && titleTextField.text?.count ?? 0 >= 1 {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+            self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
+            self.view.layoutSubviews()
+        } else if isEditedContentsTextView {
+            self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+            self.view.layoutSubviews()
         }
     }
     
@@ -541,22 +425,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 make.center.equalToSuperview()
             }
         }, completion: nil)
-    }
-    
-    @objc func changeValueTitleTextField() {
-        // isSettedOptions가 true인데 titleTextField가 지워진 경우
-        if isSettedOptions
-            && isEditedContentsTextView
-            && contentsTextView.text.count >= 1
-            && titleTextField.text?.count ?? 0 >= 1 {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
-            self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
-            self.view.layoutSubviews()
-        } else if (isEditedContentsTextView && isSettedOptions && titleTextField.text?.count ?? 0 < 1)
-                    || (isEditedContentsTextView && isSettedOptions && contentsTextView.text.count < 1) {
-            self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
-            self.view.layoutSubviews()
-        }
     }
     
     @objc func tapSelectedPersonLabel() {
@@ -701,37 +569,19 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
+    /* 이전 화면으로 돌아가기 */
+    @objc func tapBackButton(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated:true)
+    }
+    
     @objc func tapRegisterButton() {
-        // api 호출
-        if let title = titleTextField.text,
-           let content = contentsTextView.text,
-           let orderTime = CreateParty.orderTime,
-           let maxMatching = CreateParty.maxMatching,
-           let foodCategory = CreateParty.foodCategory,
-           let latitude = CreateParty.latitude,
-           let longitude = CreateParty.longitude,
-           let url = CreateParty.url {
-            let input = CreatePartyInput(
-                dormitory: 1,
-                title: title,
-                content: content,
-                orderTime: orderTime,
-                maxMatching: maxMatching,
-                foodCategory: foodCategory,
-                latitude: latitude,
-                longitude: longitude,
-                storeUrl: url,
-                hashTag: CreateParty.hashTag ?? false)
-            
-            CreatePartyViewModel.registerParty(input)
-        }
+        // 파티 수정하기 API 호출
         
         navigationController?.popViewController(animated: true)
     }
-    
 }
 
-extension CreatePartyViewController: UITextFieldDelegate {
+extension EditPartyViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let str = textField.text else { return true }
         let newLength = str.count + string.count - range.length
@@ -740,7 +590,7 @@ extension CreatePartyViewController: UITextFieldDelegate {
     }
 }
 
-extension CreatePartyViewController: UITextViewDelegate {
+extension EditPartyViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == "내용을 입력하세요" {
             textView.text = nil
@@ -758,15 +608,13 @@ extension CreatePartyViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         isEditedContentsTextView = true
-        if isSettedOptions
-            && isEditedContentsTextView
+        if isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(tapRegisterButton))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(tapRegisterButton))
             navigationItem.rightBarButtonItem?.tintColor = .mainColor
             view.layoutSubviews()
-        } else if (isEditedContentsTextView && isSettedOptions && contentsTextView.text.count < 1)
-                    || (isEditedContentsTextView && isSettedOptions && titleTextField.text?.count ?? 0 < 1) {
+        } else if isEditedContentsTextView {
             navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             view.layoutSubviews()
         }
@@ -778,8 +626,4 @@ extension CreatePartyViewController: UITextViewDelegate {
         
         return newLength <= 100
     }
-}
-
-extension CreatePartyViewController: MTMapViewDelegate {
-
 }
