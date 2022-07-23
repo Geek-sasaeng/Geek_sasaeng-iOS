@@ -81,7 +81,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let button = UIButton()
             button.setTitle("수정하기", for: .normal)
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
-            // TODO: - 수정하기 뷰 연결 필요
             button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
             return button
         }()
@@ -665,11 +664,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         showPartyPost()
         
         deleteView.removeFromSuperview()
-    }
-    
-    // TODO: - 신청하기 View 탭바에 달라붙도록 구현해야 함............ 자료가 진짜 없다
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
     }
     
     /* 남은 시간 변경해줄 타이머 작동 */

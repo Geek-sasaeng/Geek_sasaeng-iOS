@@ -1018,6 +1018,9 @@
 		A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
 		A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
 		A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
+		A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
+		A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
+		A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
@@ -1415,6 +1418,7 @@
 		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
+		A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
 		A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -1941,6 +1945,7 @@
 			children = (
 				A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */,
 				1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */,
+				A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */,
 				A29F6F872885461000350744 /* Search */,
 			);
 			path = Cell;
@@ -3241,6 +3246,7 @@
 				A2035EA128833ED60051498A /* AdViewModel.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2035EA5288341B00051498A /* AdModel.swift in Sources */,
+				A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
@@ -3262,6 +3268,7 @@
 			files = (
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
+				A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				A2513F1A287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */,
 				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
@@ -3328,6 +3335,7 @@
 				10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */,
 				10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
+				A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513F1F287872D70029C279 /* EmailAuthModel.swift in Sources */,
