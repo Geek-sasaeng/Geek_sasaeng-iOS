@@ -290,7 +290,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                 eatTogetherButton.setTitleColor(.mainColor, for: .normal)
             }
             
-            /* 시간 포맷팅 */
+            /* 날짜, 시간 포맷팅 */
             let str = detailData.orderTime!.replacingOccurrences(of: " ", with: "")
             let startIdx = str.index(str.startIndex, offsetBy: 5)
             let middleIdx = str.index(startIdx, offsetBy: 5)

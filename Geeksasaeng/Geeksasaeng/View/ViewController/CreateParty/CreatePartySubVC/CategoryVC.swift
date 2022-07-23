@@ -251,12 +251,26 @@ class CategoryViewController: UIViewController {
         switch data {
         case "한식":
             CreateParty.foodCategory = 1
-        case "중식":
+        case "양식":
             CreateParty.foodCategory = 2
-        case "일식":
+        case "중식":
             CreateParty.foodCategory = 3
+        case "일식":
+            CreateParty.foodCategory = 4
+        case "분식":
+            CreateParty.foodCategory = 5
+        case "치킨/피자":
+            CreateParty.foodCategory = 6
+        case "회/돈까스":
+            CreateParty.foodCategory = 7
+        case "패스트 푸드":
+            CreateParty.foodCategory = 8
+        case "디저트/음료":
+            CreateParty.foodCategory = 9
+        case "기타":
+            CreateParty.foodCategory = 10
         default:
-            CreateParty.foodCategory = 1 // 나머지는 일단 한식으로 저장
+            print("잘못된 카테고리입니다.")
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {

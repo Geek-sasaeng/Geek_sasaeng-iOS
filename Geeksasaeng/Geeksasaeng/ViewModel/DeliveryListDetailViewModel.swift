@@ -23,6 +23,8 @@ class getDetailInfoResult {
     var orderTime: String?
     var title: String?
     var updatedAt: String?
+    var storeUrl: String?
+    var authorStatus: Bool?
 }
 
 class DeliveryListDetailViewModel {
@@ -50,7 +52,9 @@ class DeliveryListDetailViewModel {
                            let maxMatching = result.maxMatching,
                            let orderTime = result.orderTime,
                            let title = result.title,
-                           let updatedAt = result.updatedAt {
+                           let updatedAt = result.updatedAt,
+                           let storeUrl = result.storeUrl,
+                           let authorStatus = result.authorStatus {
                             viewController.detailData.chief = chief
                             viewController.detailData.content = content
                             viewController.detailData.currentMatching = currentMatching
@@ -64,6 +68,8 @@ class DeliveryListDetailViewModel {
                             viewController.detailData.orderTime = orderTime
                             viewController.detailData.title = title
                             viewController.detailData.updatedAt = updatedAt
+                            viewController.detailData.storeUrl = storeUrl
+                            viewController.detailData.authorStatus = authorStatus
                             if let chiefProfileImgUrl = result.chiefProfileImgUrl {
                                 viewController.detailData.chiefProfileImgUrl = chiefProfileImgUrl
                             }
