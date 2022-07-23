@@ -105,7 +105,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         button.contentHorizontalAlignment = .left
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
-        button.setActivatedButton()
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor(hex: 0xF8F8F8)
         button.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
         return button
     }()
@@ -155,8 +156,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
-    // TODO: - detailData로 기본값 설정하기
-    
     
     // MARK: - Life Cycle
     
@@ -168,8 +167,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         setAttributeOfSelectedLabel()
         setDelegate()
         setNavigationBar()
-        setDefaultDate()
         setTapGestureToLabels()
+        setDefaultValue()
         addSubViews()
         setLayouts()
     }
@@ -230,9 +229,9 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     private func setAttributeOfSelectedLabel() {
         [selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel].forEach {
-            $0.font = .customFont(.neoRegular, size: 13)
-            $0.textColor = UIColor(hex: 0xD8D8D8)
-            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+            $0.font = .customFont(.neoMedium, size: 13)
+            $0.textColor = .black
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
             $0.layer.masksToBounds = true
             $0.layer.cornerRadius = 3
         }
@@ -259,14 +258,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
-    private func setDefaultDate() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "      MM월 dd일        HH시 mm분"
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
-    }
-    
     private func setTapGestureToLabels() {
         let personTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedPersonLabel))
         selectedPersonLabel.isUserInteractionEnabled = true
@@ -283,6 +274,37 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         let placeTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapSelectedLocationLabel))
         selectedLocationLabel.isUserInteractionEnabled = true
         selectedLocationLabel.addGestureRecognizer(placeTapGesture)
+    }
+    
+    /* 상세 조회 화면으로부터 받은 데이터로 각 컴포넌트 초기화 */
+    private func setDefaultValue() {
+        if let detailData = detailData {
+            titleTextField.text = detailData.title
+            contentsTextView.text = detailData.content
+            selectedPersonLabel.text = "      \(detailData.maxMatching!)명"
+            selectedCategoryLabel.text = "      \(detailData.foodCategory!)"
+            
+            if detailData.hashTag ?? false {
+                eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+                eatTogetherButton.tintColor = .mainColor
+                eatTogetherButton.setTitleColor(.mainColor, for: .normal)
+            }
+            
+            /* 시간 포맷팅 */
+            let str = detailData.orderTime!.replacingOccurrences(of: " ", with: "")
+            let startIdx = str.index(str.startIndex, offsetBy: 5)
+            let middleIdx = str.index(startIdx, offsetBy: 5)
+            let endIdx = str.index(middleIdx, offsetBy: 5)
+            let dateRange = startIdx..<middleIdx // 월, 일
+            let timeRange = middleIdx..<endIdx // 시, 분
+            let dateStr = str[dateRange].replacingOccurrences(of: "-", with: "월 ") + "일"
+            let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
+            orderForecastTimeButton.setTitle("      \(dateStr)    \(timeStr)", for: .normal)
+            
+            // TODO: - url 속성 생기면 추가, location 카카오맵 결정되면 추가
+//            selectedUrlLabel.text = detailData.url 지금 url 속성 없음
+//            selectedLocationLabel.text =  -> latitude, longitude으로 지역 검색 후 적용
+        }
     }
     
     private func addSubViews() {
