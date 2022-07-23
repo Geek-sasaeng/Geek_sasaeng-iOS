@@ -28,7 +28,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    /* 우측 상단 등록 버튼 */
+    /* 우측 상단 완료 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
         registerButton.setTitle("완료", for: .normal)
@@ -156,6 +156,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
+    var editInputData = EditPartyInput()
     
     // MARK: - Life Cycle
     
@@ -248,7 +249,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setNavigationBar() {
-        self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(tapRegisterButton))
+        navigationItem.rightBarButtonItem?.tintColor = .mainColor
         self.navigationItem.title = "파티 수정하기"
         self.navigationItem.titleView?.tintColor = .init(hex: 0x2F2F2F)
         
@@ -310,6 +312,11 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             CreateParty.matchingPerson = "\(detailData.maxMatching!)명"
             CreateParty.category = detailData.foodCategory
 //            CreateParty.url + default location
+            
+            /* 파티 수정 API를 호출하기 위함 */
+            // TODO: - selectedLabel에 있는 데이터를 제외한 데이터는 여기서 미리 저장하고 나머지 값은 완료버튼 눌렀을 때 저장하고 API 호출
+            editInputData.dormitory = 1
+//            editInputData.foodCategory =
         }
     }
     
@@ -485,7 +492,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         if isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.tapRegisterButton))
             self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
             self.view.layoutSubviews()
         } else if isEditedContentsTextView {
@@ -659,6 +666,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func tapRegisterButton() {
         // 파티 수정하기 API 호출
+        
         
         navigationController?.popViewController(animated: true)
     }
