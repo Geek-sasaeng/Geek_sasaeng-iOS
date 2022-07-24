@@ -432,7 +432,7 @@ class DeliveryViewController: UIViewController {
     private func setTableView() {
         partyTableView.dataSource = self
         partyTableView.delegate = self
-        partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
+        partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: PartyTableViewCell.identifier)
         
         partyTableView.rowHeight = 125
         partyTableView.separatorInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
@@ -957,7 +957,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PartyTableViewCell", for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PartyTableViewCell.identifier, for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
         
         // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
         let nowData = deliveryCellDataArray[indexPath.row]

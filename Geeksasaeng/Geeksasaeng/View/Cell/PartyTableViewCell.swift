@@ -10,6 +10,10 @@ import SnapKit
 
 class PartyTableViewCell: UITableViewCell {
     
+    // MARK: - Properties
+    
+    static let identifier = "PartyCell"
+    
     // MARK: - SubViews
     
     var peopleImageView: UIImageView = {

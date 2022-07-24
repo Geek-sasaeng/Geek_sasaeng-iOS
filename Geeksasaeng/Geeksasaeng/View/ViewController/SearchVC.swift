@@ -8,7 +8,6 @@
 import UIKit
 import SnapKit
 
-// TODO: - 서버로부터 검색 결과 가져오면 최근 검색어부터 뷰 싹 다 밀고 테이블뷰 가져와야 함...
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
@@ -38,7 +37,9 @@ class SearchViewController: UIViewController {
     // 목록에서 현재 커서 위치
     var cursor = 0
     // 배달 목록 데이터가 저장되는 배열
-    var deliveryCellDataArray: [DeliveryListModelResult] = []
+    var deliveryCellDataArray: [DeliveryListModelResult] = [
+        DeliveryListModelResult(id: 1, title: "Dummy Data", orderTime: "2022-07-25 12:50:00", currentMatching: 1, maxMatching: 4, hashTags: nil)
+    ]
     
     // MARK: - Subviews
     
@@ -61,8 +62,8 @@ class SearchViewController: UIViewController {
     lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "SearchMark"), for: .normal)
-        // TODO: - 검색 API 연동 후 수정
-        button.addTarget(self, action: #selector(hideSearchMainView), for: .touchUpInside)
+        // TODO: - 검색 API 연동 후 수정할 것임
+        button.addTarget(self, action: #selector(showSearchResultView), for: .touchUpInside)
         button.contentMode = .scaleAspectFit
         return button
     }()
@@ -256,21 +257,13 @@ class SearchViewController: UIViewController {
         return collectionView
     }()
     
-//    // 아침
-//    var breakfastFilterView = UIView()
-//    // 점심
-//    var lunchFilterView = UIView()
-//    // 저녁
-//    var dinnerFilterView = UIView()
-//    // 야식
-//    var midnightSnackFilterView = UIView()
-//
-//    /* 시간 관련 필터뷰들을 묶어놓는 스택뷰 */
-//    lazy var timeOptionStackView: UIStackView = {
-//        let stackView = UIStackView(arrangedSubviews: [breakfastFilterView, lunchFilterView, dinnerFilterView, midnightSnackFilterView])
-//        stackView.spacing = 10
-//        return stackView
-//    }()
+    /* Table View */
+    var partyTableView: UITableView = {
+        var tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.isHidden = true
+        return tableView
+    }()
     
     // MARK: - viewDidLoad()
     
@@ -290,6 +283,8 @@ class SearchViewController: UIViewController {
             weeklyTopCollectionView,
             timeCollectionView
         ].forEach { setCollectionView($0) }
+
+        setTableView()
         
         [
             filterImageView,
@@ -331,7 +326,8 @@ class SearchViewController: UIViewController {
             // 이 아래는 검색 결과 화면에 쓰이는 서브뷰들
             filterImageView, peopleFilterView,
             timeCollectionView,
-            peopleDropDownView, peopleFilterContainerView
+            peopleDropDownView, peopleFilterContainerView,
+            partyTableView
         ].forEach { view.addSubview($0) }
     }
     
@@ -413,6 +409,13 @@ class SearchViewController: UIViewController {
             make.centerY.equalTo(peopleFilterView)
             make.height.equalTo(34)
         }
+        
+        /* TableView */
+        partyTableView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(500)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+        }
     }
     
     /* collection view 등록 */
@@ -433,6 +436,25 @@ class SearchViewController: UIViewController {
         }
     }
     
+    private func setTableView() {
+        partyTableView.dataSource = self
+        partyTableView.delegate = self
+        partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: PartyTableViewCell.identifier)
+        
+        partyTableView.rowHeight = 125
+        partyTableView.separatorInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
+        
+        /* 새로고침 기능 */
+        // refresh 기능을 위해 tableView의 UIRefreshControl 객체를 초기화
+        partyTableView.refreshControl = UIRefreshControl()
+        // refresh로 위에 생기는 부분 배경색 설정
+        partyTableView.refreshControl?.backgroundColor = .white
+        // refresh 모양 색깔 설정
+        partyTableView.refreshControl?.tintColor = .mainColor
+        // refresh 하면 실행될 함수 연결
+        partyTableView.refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+    }
+    
     /* Vertical Label list의 label을 구성한다 */
     private func setVLabelList(_ passedArray: [String], _ stackView: UIStackView) {
           for i in 0..<passedArray.count {
@@ -448,9 +470,9 @@ class SearchViewController: UIViewController {
           }
     }
     
-    /* 검색 메인 화면을 숨긴다 -> 검색 결과 화면을 보여주려고! */
+    /* 검색 메인 화면을 숨겨서 검색 결과 화면을 보여준다! */
     @objc
-    private func hideSearchMainView() {
+    private func showSearchResultView() {
         [
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
@@ -465,8 +487,30 @@ class SearchViewController: UIViewController {
             peopleFilterView,
             peopleFilterLabel,
             peopleFilterToggleImageView,
-            timeCollectionView
+            timeCollectionView,
+            partyTableView
         ].forEach { $0.isHidden = false }
+    }
+    
+    /* 검색 결과 화면을 숨겨서 검색 메인 화면을 보여준다! */
+    private func showSearchMainView() {
+        [
+            recentSearchLabel,
+            dormitoryWeeklyTopLabel,
+            recentSearchCollectionView,
+            weeklyTopCollectionView,
+            firstSeparateView,
+            logoImageView
+        ].forEach { $0.isHidden = false }
+        
+        [
+            filterImageView,
+            peopleFilterView,
+            peopleFilterLabel,
+            peopleFilterToggleImageView,
+            timeCollectionView,
+            partyTableView
+        ].forEach { $0.isHidden = true }
     }
     
     /* 서브뷰에 제스쳐 추가 */
@@ -557,6 +601,14 @@ class SearchViewController: UIViewController {
         }
     }
     
+    /* 새로고침 기능 */
+    @objc private func pullToRefresh() {
+        // 테이블뷰 새로고침
+        partyTableView.reloadData()
+        // 당기는 게 끝나면 refresh도 끝나도록
+        partyTableView.refreshControl?.endRefreshing()
+    }
+    
     // 이전 화면으로 돌아가기
 //    @objc func back(sender: UIBarButtonItem) {
 //        self.navigationController?.popViewController(animated: true)
@@ -623,5 +675,81 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         } else {
             return CGSize(width: 54, height: 34)
         }
+    }
+}
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
+
+extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return deliveryCellDataArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PartyTableViewCell.identifier, for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
+        
+        // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
+        let nowData = deliveryCellDataArray[indexPath.row]
+        
+        // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
+        if let currentMatching = nowData.currentMatching,
+           let maxMatching = nowData.maxMatching,
+           let orderTime = nowData.orderTime,
+           let title = nowData.title,
+           let id = nowData.id {    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+            cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
+            cell.titleLabel.text = title + String(id)
+            
+            // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
+            // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            formatter.locale = Locale(identifier: "ko_KR")
+            formatter.timeZone = TimeZone(abbreviation: "KST")
+            
+            let nowDate = Date()
+//            let nowDateString = formatter.string(from: nowDate)
+//            print("DEBUG: 현재 시간", nowDateString)
+            
+            let orderDate = formatter.date(from: orderTime)
+            if let orderDate = orderDate {
+//                let orderDateString = formatter.string(from: orderDate)
+//                print("DEBUG: 주문 예정 시간", orderDateString)
+                
+                // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
+                
+                // 각각 일, 시간, 분 단위로 변환
+                let dayTime = intervalSecs / 60 / 60 / 24
+                let hourTime = intervalSecs / 60 / 60 % 24
+                let minuteTime = intervalSecs / 60 % 60
+                //                    let secondTime = intervalSecs % 60
+                
+                // 각 값이 0이면 텍스트에서 제외한다
+                var dayString: String? = nil
+                var hourString: String? = nil
+                var minuteString: String? = nil
+                
+                if dayTime != 0 {
+                    dayString = "\(dayTime)일 "
+                }
+                if hourTime != 0 {
+                    hourString = "\(hourTime)시간 "
+                }
+                if minuteTime != 0 {
+                    minuteString = "\(minuteTime)분 "
+                }
+                
+                cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
+            }
+            
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = PartyViewController()
+        viewController.deliveryData = deliveryCellDataArray[indexPath.row]
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
