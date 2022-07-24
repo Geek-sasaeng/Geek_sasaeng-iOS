@@ -29,4 +29,6 @@ struct DeliveryListDetailModelResult: Decodable {
     var orderTime: String?
     var title: String?
     var updatedAt: String?
+    var storeUrl: String?
+    var authorStatus: Bool?
 }

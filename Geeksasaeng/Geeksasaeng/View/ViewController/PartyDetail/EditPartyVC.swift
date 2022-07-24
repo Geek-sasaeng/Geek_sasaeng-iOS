@@ -28,7 +28,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    /* 우측 상단 등록 버튼 */
+    /* 우측 상단 완료 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
         registerButton.setTitle("완료", for: .normal)
@@ -105,7 +105,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         button.contentHorizontalAlignment = .left
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
-        button.setActivatedButton()
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor(hex: 0xF8F8F8)
         button.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
         return button
     }()
@@ -114,6 +115,33 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     var selectedCategoryLabel = UILabel()
     var selectedUrlLabel = UILabel()
     var selectedLocationLabel = UILabel()
+    
+    /* Edit imageView */
+    let orderEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let matchingEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let categoryEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let urlEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
+    let locationEditImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "PartyEdit")
+        return imageView
+    }()
     
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
@@ -128,8 +156,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
-    // TODO: - detailData로 기본값 설정하기
-    
+    var editInputData = EditPartyInput()
     
     // MARK: - Life Cycle
     
@@ -141,8 +168,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         setAttributeOfSelectedLabel()
         setDelegate()
         setNavigationBar()
-        setDefaultDate()
         setTapGestureToLabels()
+        setDefaultValue()
         addSubViews()
         setLayouts()
     }
@@ -203,9 +230,9 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     private func setAttributeOfSelectedLabel() {
         [selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel].forEach {
-            $0.font = .customFont(.neoRegular, size: 13)
-            $0.textColor = UIColor(hex: 0xD8D8D8)
-            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+            $0.font = .customFont(.neoMedium, size: 13)
+            $0.textColor = .black
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
             $0.layer.masksToBounds = true
             $0.layer.cornerRadius = 3
         }
@@ -222,7 +249,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setNavigationBar() {
-        self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(tapRegisterButton))
+        navigationItem.rightBarButtonItem?.tintColor = .mainColor
         self.navigationItem.title = "파티 수정하기"
         self.navigationItem.titleView?.tintColor = .init(hex: 0x2F2F2F)
         
@@ -230,14 +258,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(tapBackButton(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
-    }
-    
-    private func setDefaultDate() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "      MM월 dd일        HH시 mm분"
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
     }
     
     private func setTapGestureToLabels() {
@@ -258,12 +278,55 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         selectedLocationLabel.addGestureRecognizer(placeTapGesture)
     }
     
+    /* 상세 조회 화면으로부터 받은 데이터로 각 컴포넌트 초기화 */
+    private func setDefaultValue() {
+        if let detailData = detailData {
+            titleTextField.text = detailData.title
+            contentsTextView.text = detailData.content
+            selectedPersonLabel.text = "      \(detailData.maxMatching!)명"
+            selectedCategoryLabel.text = "      \(detailData.foodCategory!)"
+            
+            if detailData.hashTag ?? false {
+                eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+                eatTogetherButton.tintColor = .mainColor
+                eatTogetherButton.setTitleColor(.mainColor, for: .normal)
+            }
+            
+            /* 날짜, 시간 포맷팅 */
+            let str = detailData.orderTime!.replacingOccurrences(of: " ", with: "")
+            let startIdx = str.index(str.startIndex, offsetBy: 5)
+            let middleIdx = str.index(startIdx, offsetBy: 5)
+            let endIdx = str.index(middleIdx, offsetBy: 5)
+            let dateRange = startIdx..<middleIdx // 월, 일
+            let timeRange = middleIdx..<endIdx // 시, 분
+            let dateStr = str[dateRange].replacingOccurrences(of: "-", with: "월 ") + "일"
+            let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
+            orderForecastTimeButton.setTitle("      \(dateStr)    \(timeStr)", for: .normal)
+            
+            // TODO: - url 속성 생기면 추가, location 카카오맵 결정되면 추가, ReceiptPlaceVC default value도 설정
+//            selectedUrlLabel.text = detailData.url 지금 url 속성 없음
+//            selectedLocationLabel.text =  -> latitude, longitude으로 지역 검색 후 적용
+            
+            /* 서브뷰에 default value를 띄우기 위함 */
+            CreateParty.orderForecastTime = "\(dateStr) \(timeStr)"
+            CreateParty.matchingPerson = "\(detailData.maxMatching!)명"
+            CreateParty.category = detailData.foodCategory
+//            CreateParty.url + default location
+            
+            /* 파티 수정 API를 호출하기 위함 */
+            // TODO: - selectedLabel에 있는 데이터를 제외한 데이터는 여기서 미리 저장하고 나머지 값은 완료버튼 눌렀을 때 저장하고 API 호출
+            editInputData.dormitory = 1
+//            editInputData.foodCategory =
+        }
+    }
+    
     private func addSubViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
+         orderEditImageView, matchingEditImageView, categoryEditImageView, urlEditImageView, locationEditImageView,
          testView].forEach {
             contentView.addSubview($0)
         }
@@ -367,6 +430,33 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(38)
         }
         
+        /* Edit Pencil imageView */
+        orderEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(orderForecastTimeButton.snp.top).offset(14)
+            make.right.equalTo(orderForecastTimeButton.snp.right).inset(14)
+        }
+        matchingEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedPersonLabel.snp.top).offset(14)
+            make.right.equalTo(selectedPersonLabel.snp.right).inset(14)
+        }
+        categoryEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedCategoryLabel.snp.top).offset(14)
+            make.right.equalTo(selectedCategoryLabel.snp.right).inset(14)
+        }
+        urlEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedUrlLabel.snp.top).offset(14)
+            make.right.equalTo(selectedUrlLabel.snp.right).inset(14)
+        }
+        locationEditImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(10)
+            make.top.equalTo(selectedLocationLabel.snp.top).offset(14)
+            make.right.equalTo(selectedLocationLabel.snp.right).inset(14)
+        }
+        
         testView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
@@ -402,7 +492,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         if isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(self.tapRegisterButton))
             self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
             self.view.layoutSubviews()
         } else if isEditedContentsTextView {
@@ -576,6 +666,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func tapRegisterButton() {
         // 파티 수정하기 API 호출
+        
         
         navigationController?.popViewController(animated: true)
     }

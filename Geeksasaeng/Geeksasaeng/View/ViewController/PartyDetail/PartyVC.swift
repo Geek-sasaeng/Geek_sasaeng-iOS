@@ -394,6 +394,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var deliveryData: DeliveryListModelResult?
     var detailData = getDetailInfoResult()
+    // TODO: - detailData.authorStatus == Bool -> 수정 & 삭제 메뉴 토글
     
     // MARK: - viewDidLoad()
     
@@ -420,20 +421,31 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     public func setDefaultValue() {
 //        chiefProfileImgUrl -> default image 추후에
 //        id
-//        latitude
+//        latitude -> 카카오맵 띄워서 좌표 설정
 //        longitude
 //        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
-        /* 지금 제대로 안 뜨는 거: updatedAt, foodCategory, */
+        /* 지금 제대로 안 뜨는 거: foodCategory, url(모델에 추가 해야 함) */
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
         categoryDataLabel.text = detailData.foodCategory
+        storeLinkDataLabel.text = detailData.storeUrl
         if detailData.hashTag ?? false {
             hashTagLabel.isHidden = false
         } else {
             hashTagLabel.isHidden = true
         }
-        orderReserveLabel.text = detailData.orderTime
+        
+        /* 날짜, 시간 포맷팅 */
+        let str = detailData.orderTime!.replacingOccurrences(of: " ", with: "")
+        let startIdx = str.index(str.startIndex, offsetBy: 5)
+        let middleIdx = str.index(startIdx, offsetBy: 5)
+        let endIdx = str.index(middleIdx, offsetBy: 5)
+        let dateRange = startIdx..<middleIdx // 월, 일
+        let timeRange = middleIdx..<endIdx // 시, 분
+        let dateStr = str[dateRange].replacingOccurrences(of: "-", with: "월 ") + "일"
+        let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
+        orderReserveLabel.text = "\(dateStr)      \(timeStr)"
         titleLabel.text = detailData.title
         postingTime.text = detailData.updatedAt
     }

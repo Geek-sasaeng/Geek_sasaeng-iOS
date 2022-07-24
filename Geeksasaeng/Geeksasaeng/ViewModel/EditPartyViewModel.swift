@@ -1,24 +1,24 @@
 //
-//  CreatePartyViewModel.swift
+//  EditPartyViewModel.swift
 //  Geeksasaeng
 //
-//  Created by 조동진 on 2022/07/17.
+//  Created by 조동진 on 2022/07/23.
 //
 
 import UIKit
 import Alamofire
 
-class CreatePartyViewModel {
-    public static func registerParty(_ parameter : CreatePartyInput) {
-        AF.request("https://geeksasaeng.shop/delivery-party", method: .post,
+class EditPartyViewModel {
+    public static func EditParty(_ parameter : EditPartyInput, partyId: Int) {
+        AF.request("https://geeksasaeng.shop/delivery-party/\(partyId)", method: .put,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
-        .responseDecodable(of: CreatePartyModel.self) { response in
+        .responseDecodable(of: EditPartyModel.self) { response in
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 파티생성 성공")
+                    print("DEBUG: 파티수정 성공")
                     
                 } else {
                     print("DEBUG:", result.message!)

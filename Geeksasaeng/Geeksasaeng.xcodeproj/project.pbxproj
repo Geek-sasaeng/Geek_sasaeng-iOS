@@ -924,6 +924,12 @@
 		10E6956528885589000B7309 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E6956428885589000B7309 /* LocationAPI.swift */; };
 		10E6956628885589000B7309 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E6956428885589000B7309 /* LocationAPI.swift */; };
 		10E6956728885589000B7309 /* LocationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E6956428885589000B7309 /* LocationAPI.swift */; };
+		10E8E713288C3E9700AF4581 /* EditPartyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E712288C3E9700AF4581 /* EditPartyModel.swift */; };
+		10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E712288C3E9700AF4581 /* EditPartyModel.swift */; };
+		10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E712288C3E9700AF4581 /* EditPartyModel.swift */; };
+		10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E716288C401200AF4581 /* EditPartyViewModel.swift */; };
+		10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E716288C401200AF4581 /* EditPartyViewModel.swift */; };
+		10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E716288C401200AF4581 /* EditPartyViewModel.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1387,6 +1393,8 @@
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
 		10D7EC932886AFC500D9E0FD /* UrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlVC.swift; sourceTree = "<group>"; };
 		10E6956428885589000B7309 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
+		10E8E712288C3E9700AF4581 /* EditPartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyModel.swift; sourceTree = "<group>"; };
+		10E8E716288C401200AF4581 /* EditPartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyViewModel.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1483,6 +1491,7 @@
 				A2035EA4288341B00051498A /* AdModel.swift */,
 				108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */,
 				108B6333288998F9008C4F65 /* CreatePartyModel.swift */,
+				10E8E712288C3E9700AF4581 /* EditPartyModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1497,6 +1506,7 @@
 				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
 				10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */,
 				108B633728899A4C008C4F65 /* DeliveryListDetailViewModel.swift */,
+				10E8E716288C401200AF4581 /* EditPartyViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -3218,6 +3228,7 @@
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
+				10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
@@ -3231,6 +3242,7 @@
 				10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */,
+				10E8E713288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				10E6956528885589000B7309 /* LocationAPI.swift in Sources */,
 				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				106D9751287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
@@ -3317,6 +3329,7 @@
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
+				10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
@@ -3330,6 +3343,7 @@
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
+				10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 			);
@@ -3351,6 +3365,7 @@
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
+				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				108B6332288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */,
@@ -3391,6 +3406,7 @@
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
+				10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
@@ -3553,7 +3569,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LM9BKUSL5K;
+				DEVELOPMENT_TEAM = 3QV3QL2LC8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3576,7 +3592,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3615,7 +3631,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;

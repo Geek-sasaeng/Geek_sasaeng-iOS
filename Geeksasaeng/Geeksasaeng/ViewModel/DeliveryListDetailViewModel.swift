@@ -23,12 +23,14 @@ class getDetailInfoResult {
     var orderTime: String?
     var title: String?
     var updatedAt: String?
+    var storeUrl: String?
+    var authorStatus: Bool?
 }
 
 class DeliveryListDetailViewModel {
     public static func getDetailInfo(viewController: PartyViewController, _ partyId : Int) {
         AF.request("https://geeksasaeng.shop/delivery-party/\(partyId)", method: .get, parameters: nil,
-        headers: ["Authorization": "Bearer eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJqd3RJbmZvIjp7InVuaXZlcnNpdHlJZCI6MSwidXNlcklkIjoyNn0sImlhdCI6MTY1Nzk0MTQ4NiwiZXhwIjoxNjU4ODMwNTE5fQ.n9HFrLuc97GeWOcKo-ffAj-k5XAvcd7IH0iEuOVzPaQ"])
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: DeliveryListDetailModel.self) { response in
             switch response.result {
@@ -50,7 +52,9 @@ class DeliveryListDetailViewModel {
                            let maxMatching = result.maxMatching,
                            let orderTime = result.orderTime,
                            let title = result.title,
-                           let updatedAt = result.updatedAt {
+                           let updatedAt = result.updatedAt,
+                           let storeUrl = result.storeUrl,
+                           let authorStatus = result.authorStatus {
                             viewController.detailData.chief = chief
                             viewController.detailData.content = content
                             viewController.detailData.currentMatching = currentMatching
@@ -64,6 +68,8 @@ class DeliveryListDetailViewModel {
                             viewController.detailData.orderTime = orderTime
                             viewController.detailData.title = title
                             viewController.detailData.updatedAt = updatedAt
+                            viewController.detailData.storeUrl = storeUrl
+                            viewController.detailData.authorStatus = authorStatus
                             if let chiefProfileImgUrl = result.chiefProfileImgUrl {
                                 viewController.detailData.chiefProfileImgUrl = chiefProfileImgUrl
                             }
