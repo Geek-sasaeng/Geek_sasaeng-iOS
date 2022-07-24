@@ -930,6 +930,12 @@
 		10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E716288C401200AF4581 /* EditPartyViewModel.swift */; };
 		10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E716288C401200AF4581 /* EditPartyViewModel.swift */; };
 		10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E716288C401200AF4581 /* EditPartyViewModel.swift */; };
+		10E8E71C288D739100AF4581 /* DeletePartyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E71B288D739100AF4581 /* DeletePartyModel.swift */; };
+		10E8E71D288D739100AF4581 /* DeletePartyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E71B288D739100AF4581 /* DeletePartyModel.swift */; };
+		10E8E71E288D739100AF4581 /* DeletePartyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E71B288D739100AF4581 /* DeletePartyModel.swift */; };
+		10E8E721288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
+		10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
+		10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1389,6 +1395,8 @@
 		10E6956428885589000B7309 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
 		10E8E712288C3E9700AF4581 /* EditPartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyModel.swift; sourceTree = "<group>"; };
 		10E8E716288C401200AF4581 /* EditPartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyViewModel.swift; sourceTree = "<group>"; };
+		10E8E71B288D739100AF4581 /* DeletePartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyModel.swift; sourceTree = "<group>"; };
+		10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyViewModel.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1478,12 +1486,11 @@
 				A29F6F842885454200350744 /* Login */,
 				A29F6F852885455700350744 /* EmailAuth */,
 				A29F6F862885456700350744 /* PhoneAuth */,
+				10E8E71A288D735900AF4581 /* Party */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
 				A2035EA4288341B00051498A /* AdModel.swift */,
 				108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */,
-				108B6333288998F9008C4F65 /* CreatePartyModel.swift */,
-				10E8E712288C3E9700AF4581 /* EditPartyModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1493,12 +1500,11 @@
 			children = (
 				A29F6F8C2885470700350744 /* Login */,
 				A29F6F8D2885476F00350744 /* Register */,
+				10E8E71F288D73E500AF4581 /* Party */,
 				A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */,
 				A2035EA028833ED60051498A /* AdViewModel.swift */,
 				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
-				10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */,
 				108B633728899A4C008C4F65 /* DeliveryListDetailViewModel.swift */,
-				10E8E716288C401200AF4581 /* EditPartyViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -1983,6 +1989,26 @@
 				10AC5CA82889269000C8086A /* EditPartyVC.swift */,
 			);
 			path = PartyDetail;
+			sourceTree = "<group>";
+		};
+		10E8E71A288D735900AF4581 /* Party */ = {
+			isa = PBXGroup;
+			children = (
+				108B6333288998F9008C4F65 /* CreatePartyModel.swift */,
+				10E8E712288C3E9700AF4581 /* EditPartyModel.swift */,
+				10E8E71B288D739100AF4581 /* DeletePartyModel.swift */,
+			);
+			path = Party;
+			sourceTree = "<group>";
+		};
+		10E8E71F288D73E500AF4581 /* Party */ = {
+			isa = PBXGroup;
+			children = (
+				10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */,
+				10E8E716288C401200AF4581 /* EditPartyViewModel.swift */,
+				10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */,
+			);
+			path = Party;
 			sourceTree = "<group>";
 		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
@@ -3207,6 +3233,7 @@
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
+				10E8E71C288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */,
@@ -3260,6 +3287,7 @@
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */,
+				10E8E721288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				106D9755287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				1040FB9A2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
@@ -3290,6 +3318,7 @@
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
+				10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
@@ -3330,6 +3359,7 @@
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 				10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				10E8E71D288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 			);
@@ -3366,6 +3396,7 @@
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
 				102B35DE2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
@@ -3396,6 +3427,7 @@
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
+				10E8E71E288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A20FC0F3287F30C40095224C /* SearchVC.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
