@@ -737,6 +737,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         let editPartyVC = EditPartyViewController()
         editPartyVC.detailData = detailData
+        editPartyVC.isEdittiedDelegate = self
         navigationController?.pushViewController(editPartyVC, animated: true)
     }
         
@@ -771,5 +772,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         navigationController?.popViewController(animated: true)
         
         // TODO: - 삭제되는 순간 테이블뷰 리로드 -> DeliveryVC에서 구현해야 할 듯 ?
+    }
+}
+
+extension PartyViewController: EdittedDelegate {
+    func checkEditted(isEditted: Bool) {
+        if isEditted {
+            self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+        }
     }
 }
