@@ -702,7 +702,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
            let partyId = detailData?.id,
            let title = titleTextField.text,
            let content = contentsTextView.text {
-            EditPartyViewModel.EditParty(dormitoryId: 1,
+            EditPartyViewModel.EditParty(dormitoryId: 1, partyId: partyId,
                 EditPartyInput(foodCategory: foodCategory,
                                title: title, content: content,
                                orderTime: orderTime,
