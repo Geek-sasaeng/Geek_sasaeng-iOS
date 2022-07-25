@@ -47,7 +47,9 @@ class DeliveryListViewModel {
                         
                         // 성공 시에만 completion으로 result를 넘겨줌
                         if let resultData = result.result {
-                            completion(resultData)
+                            if let realData = resultData.deliveryPartiesVoList {
+                                completion(realData)
+                            }
                         }
                     } else {
                         print("DEBUG:", result.message!)
