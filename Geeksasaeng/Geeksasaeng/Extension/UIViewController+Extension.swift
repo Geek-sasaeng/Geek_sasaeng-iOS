@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIViewController {
-    func showToast(viewController: UIViewController, message : String, font: UIFont, color: UIColor) {
+    public func showToast(viewController: UIViewController, message : String, font: UIFont, color: UIColor) {
         let toastLabel = UILabel()
         toastLabel.backgroundColor = color.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
@@ -31,5 +31,23 @@ extension UIViewController {
         }, completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
         })
+    }
+    
+    /* 왼쪽에서 오른쪽으로 Swipe Gesture Recognizer를 추가하는 함수 */
+    public func addRightSwipe() {
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.swipeAction(swipe:)))
+        rightSwipe.direction = UISwipeGestureRecognizer.Direction.right
+        view.addGestureRecognizer(rightSwipe)
+    }
+    
+    /* 스와이프 감지했을 때, 이전 화면으로 돌아가는 동작 실행 */
+    @objc public func swipeAction(swipe: UISwipeGestureRecognizer) {
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        transition.type = CATransitionType.push
+        transition.subtype = CATransitionSubtype.fromLeft
+        self.view.window!.layer.add(transition, forKey: nil)
+        self.dismiss(animated: false, completion: nil)
     }
 }

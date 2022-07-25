@@ -19,8 +19,6 @@ class ReportDetailViewController: UIViewController {
     
     var reportCategoryLabel: UILabel = {
         let label = UILabel()
-        // TODO: - 화면 전환 시 데이터 전달 필요
-        label.text = "광고 같아요"
         label.font = .customFont(.neoMedium, size: 16)
         label.textColor = .black
         return label

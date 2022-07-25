@@ -39,7 +39,7 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
         
         // 레이아웃 설정
         contentView.snp.makeConstraints { make in
-            make.top.left.right.height.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         
         contentView.clipsToBounds = true
