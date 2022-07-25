@@ -8,7 +8,6 @@
 import Foundation
 
 struct EditPartyInput: Encodable {
-    var dormitory: Int?
     var foodCategory: Int?
     var title: String?
     var content: String?

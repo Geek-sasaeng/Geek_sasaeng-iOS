@@ -29,8 +29,8 @@ class EditPartyViewModel {
 //        }
 //    }
     
-    public static func EditParty(_ parameter : EditPartyInput, partyId: Int) {
-        AF.request("https://geeksasaeng.shop/delivery-party/\(partyId)", method: .put,
+    public static func EditParty(dormitoryId: Int, _ parameter : EditPartyInput) {
+        AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party/228", method: .put,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()

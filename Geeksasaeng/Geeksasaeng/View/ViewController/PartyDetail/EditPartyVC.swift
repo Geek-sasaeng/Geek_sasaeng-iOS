@@ -700,24 +700,22 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
            let longitude = CreateParty.longitude,
            let hashTag = CreateParty.hashTag,
            let partyId = detailData?.id,
-           let dormitory = detailData?.dormitory,
            let title = titleTextField.text,
            let content = contentsTextView.text {
-            EditPartyViewModel.EditParty(
-                EditPartyInput(dormitory: dormitory,
-                               foodCategory: foodCategory,
+            EditPartyViewModel.EditParty(dormitoryId: 1,
+                EditPartyInput(foodCategory: foodCategory,
                                title: title, content: content,
                                orderTime: orderTime,
                                maxMatching: maxMatching,
                                storeUrl: storeUrl,
                                latitude: latitude,
                                longitude: longitude,
-                               hashTag: hashTag),
-                partyId: partyId)
+                               hashTag: hashTag)
+            )
         }
         
         
-        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
     }
 }
 

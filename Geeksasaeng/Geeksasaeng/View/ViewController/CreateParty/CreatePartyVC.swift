@@ -717,7 +717,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
            let longitude = CreateParty.longitude,
            let url = CreateParty.url {
             let input = CreatePartyInput(
-                dormitory: 1,
                 title: title,
                 content: content,
                 orderTime: orderTime,
@@ -728,7 +727,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 storeUrl: url,
                 hashTag: CreateParty.hashTag ?? false)
             
-            CreatePartyViewModel.registerParty(input)
+            CreatePartyViewModel.registerParty(dormitoryId: 1, input)
         }
         
         navigationController?.popViewController(animated: true)

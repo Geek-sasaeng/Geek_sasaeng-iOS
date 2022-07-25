@@ -9,8 +9,8 @@ import UIKit
 import Alamofire
 
 class CreatePartyViewModel {
-    public static func registerParty(_ parameter : CreatePartyInput) {
-        AF.request("https://geeksasaeng.shop/delivery-party", method: .post,
+    public static func registerParty(dormitoryId: Int, _ parameter : CreatePartyInput) {
+        AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
