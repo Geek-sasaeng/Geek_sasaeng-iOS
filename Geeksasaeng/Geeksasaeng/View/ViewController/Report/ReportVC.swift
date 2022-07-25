@@ -10,6 +10,12 @@ import SnapKit
 
 class ReportViewController: UIViewController, UIScrollViewDelegate {
     
+    // MARK: - Properties
+    
+    // 테이블뷰 셀의 label로 들어갈 신고 카테고리 항목들을 정의
+    var postReportCategoryData = ["광고 같아요", "사기가 의심돼요", "배달 정보가 부정확해요", "기타 사유 선택"]
+    var userReportCategoryData = ["비매너 사용자예요", "욕설을 해요", "성희롱을 해요", "사기를 당했어요", "거래 및 환불 신고", "기타 사유 선택"]
+    
     // MARK: - SubViews
     
     // 스크롤뷰
@@ -39,17 +45,25 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
+    /* 파티 게시글 신고 카테고리들이 들어갈 테이블뷰 */
+    var postReportTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        return tableView
+    }()
+    
     var separateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
     
-    var postReportOptionStackView = UIStackView()
-    var userReportOptionStackView = UIStackView()
-    
-    var arrowStackViewOne = UIStackView()
-    var arrowStackViewTwo = UIStackView()
+    /* 사용자 신고 카테고리들이 들어갈 테이블뷰 */
+    var userReportTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        return tableView
+    }()
     
     // MARK: - Life Cycle
     
@@ -58,6 +72,8 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .white
         
         scrollView.delegate = self
+        
+        setTableView()
         setAttributes()
         addSubViews()
         setLayouts()
@@ -74,25 +90,9 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
         
-        // 파티 게시글 신고 항목 labels를 스택뷰로 설정
-        setVerticalLabelList(["광고 같아요", "사기가 의심돼요", "배달 정보가 부정확해요", "기타 사유 선택"], postReportOptionStackView)
-        // 사용자 신고 항목 labels를 스택뷰로 설정
-        setVerticalLabelList(["비매너 사용자예요", "욕설을 해요", "성희롱을 해요", "사기를 당했어요", "거래 및 환불 신고", "기타 사유 선택"], userReportOptionStackView)
-        
-        // 화살표 갯수만큼 스택뷰로 설정
-        setArrowStackView(num: 4, stackView: arrowStackViewOne)
-        setArrowStackView(num: 6, stackView: arrowStackViewTwo)
-        
-        // 스택뷰들 속성 설정
-        [
-            postReportOptionStackView, userReportOptionStackView,
-            arrowStackViewOne, arrowStackViewTwo
-        ].forEach {
-            $0.axis = .vertical
-            $0.distribution = .fillEqually
-            $0.alignment = .leading
-            $0.spacing = 22
-        }
+        // 테이블뷰 구분선 제거
+        postReportTableView.separatorStyle = .none
+        userReportTableView.separatorStyle = .none
     }
     
     private func addSubViews() {
@@ -100,12 +100,10 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         scrollView.addSubview(contentView)
         [
             postReportLabel,
-            postReportOptionStackView,
-            arrowStackViewOne,
+            postReportTableView,
             separateView,
             userReportLabel,
-            userReportOptionStackView,
-            arrowStackViewTwo
+            userReportTableView
         ].forEach { contentView.addSubview($0) }
     }
     
@@ -127,20 +125,17 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
             make.left.equalToSuperview().inset(29)
             make.top.equalToSuperview()
         }
-        postReportOptionStackView.snp.makeConstraints { make in
-            make.top.equalTo(postReportLabel.snp.bottom).offset(41)
-            make.left.equalToSuperview().inset(45)
-            make.height.equalTo(154)
-        }
-        arrowStackViewOne.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(46)
-            make.top.equalTo(postReportLabel.snp.bottom).offset(41)
-            make.height.equalTo(154)
+        
+        postReportTableView.snp.makeConstraints { make in
+            make.top.equalTo(postReportLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(29)
+            print(postReportTableView.rowHeight)
+            make.height.equalTo(postReportTableView.rowHeight * CGFloat(postReportCategoryData.count))
         }
         
         // 구분선 뷰
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(postReportOptionStackView.snp.bottom).offset(51)
+            make.top.equalTo(postReportTableView.snp.bottom).offset(40)
             make.width.equalToSuperview()
             make.height.equalTo(8)
         }
@@ -150,47 +145,27 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(separateView.snp.bottom).offset(51)
             make.left.equalToSuperview().inset(29)
         }
-        userReportOptionStackView.snp.makeConstraints { make in
-            make.top.equalTo(userReportLabel.snp.bottom).offset(41)
-            make.left.equalToSuperview().inset(45)
-            make.height.equalTo(228)
-        }
-        arrowStackViewTwo.snp.makeConstraints { make in
-            make.top.equalTo(userReportLabel.snp.bottom).offset(41)
-            make.right.equalToSuperview().inset(46)
-            make.height.equalTo(228)
+        
+        userReportTableView.snp.makeConstraints { make in
+            make.top.equalTo(userReportLabel.snp.bottom).offset(30)
+            make.left.right.equalToSuperview().inset(29)
+            make.height.equalTo(userReportTableView.rowHeight * CGFloat(userReportCategoryData.count))
         }
     }
     
-    /* 여러 개의 label을 Vertical Label list로 구성한다 */
-    private func setVerticalLabelList(_ strDataArr: [String], _ stackView: UIStackView) {
-        for i in 0..<strDataArr.count {
-            /* Filter Label */
-            let filterLabel = UILabel()
-            filterLabel.textColor = .init(hex: 0x636363)
-            filterLabel.font = .customFont(.neoMedium, size: 14)
-            filterLabel.text = strDataArr[i]
-            
-            /* Stack View */
-            stackView.addArrangedSubview(filterLabel)
-        }
-    }
-    
-    /* 화살표 갯수만큼 스택뷰로 구성 */
-    private func setArrowStackView(num: Int, stackView: UIStackView) {
-        for i in 0..<num {
-            /* Buttons */
-            let arrowButton = UIButton()
-            arrowButton.setImage(UIImage(named: "ReportArrow"), for: .normal)
-            if i == 5 {
-                // 기타 사유 선택
-                arrowButton.addTarget(self, action: #selector(tapReportEtcArrowButton), for: .touchUpInside)
-            } else {
-                arrowButton.addTarget(self, action: #selector(tapReportArrowButton), for: .touchUpInside)
-            }
-            /* Stack View */
-            stackView.addArrangedSubview(arrowButton)
-        }
+    /* 테이블뷰 세팅 */
+    private func setTableView() {
+        postReportTableView.delegate = self
+        postReportTableView.dataSource = self
+        postReportTableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
+        
+        userReportTableView.delegate = self
+        userReportTableView.dataSource = self
+        userReportTableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
+        
+        // 테이블뷰 셀 높이 설정
+        postReportTableView.rowHeight = 41   // 11 + 11 + 19
+        userReportTableView.rowHeight = 41   // 11 + 11 + 19
     }
     
     // MARK: - Objc Functions
@@ -201,16 +176,69 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.popViewController(animated: true)
     }
     
+    /* 기타 사유 선택 카테고리가 아닌 화살표를 눌렀을 때 실행되는 함수 */
     @objc
-    private func tapReportArrowButton() {
-        // TODO: - 데이터 전달 텍스트 하나만 주면 됨
+    private func tapReportArrowButton(_ sender: UIButton) {
         let reportDetailVC = ReportDetailViewController()
+        // 태그 번호에 따라 파티 게시글 신고 화살표인지, 사용자 신고의 화살표인지 확인
+        if sender.tag < 4 {
+            reportDetailVC.reportCategoryLabel.text = postReportCategoryData[sender.tag]
+        } else {
+            reportDetailVC.reportCategoryLabel.text = userReportCategoryData[sender.tag - 4]    // 인덱스 가져올 땐 다시 4빼서
+        }
+        
         self.navigationController?.pushViewController(reportDetailVC, animated: true)
     }
     
+    /* 기타 사유 선택 카테고리 화살표를 눌렀을 때 실행되는 함수 */
     @objc
     private func tapReportEtcArrowButton() {
         let reportDetailEtcVC = ReportDetailEtcViewController()
         self.navigationController?.pushViewController(reportDetailEtcVC, animated: true)
+    }
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    /* 셀 갯수 설정 */
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == postReportTableView {
+            return postReportCategoryData.count
+        } else {
+            return userReportCategoryData.count
+        }
+    }
+    
+    /* 셀 내용 구성 -> 두 테이블을 구분해서 매치되는 배열의 데이터를 label text로 지정 */
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ReportTableViewCell.identifier, for: indexPath) as? ReportTableViewCell else { return UITableViewCell() }
+        
+        if tableView == postReportTableView {
+            cell.reportCategoryLabel.text = postReportCategoryData[indexPath.row]
+            cell.arrowButton.tag = indexPath.row
+            
+            // target 연결
+            if indexPath.row == postReportCategoryData.count - 1 {
+                // 기타 사유 선택
+                cell.arrowButton.addTarget(self, action: #selector(tapReportEtcArrowButton), for: .touchUpInside)
+            } else {
+                cell.arrowButton.addTarget(self, action: #selector(tapReportArrowButton), for: .touchUpInside)
+            }
+            return cell
+        } else {
+            cell.reportCategoryLabel.text = userReportCategoryData[indexPath.row]
+            cell.arrowButton.tag = indexPath.row + 4    // 파티 게시글 신고 화살표 태그 번호랑 이어지도록 4부터 시작하게 함.
+            
+            // target 연결
+            if indexPath.row == userReportCategoryData.count - 1 {
+                // 기타 사유 선택
+                cell.arrowButton.addTarget(self, action: #selector(tapReportEtcArrowButton), for: .touchUpInside)
+            } else {
+                cell.arrowButton.addTarget(self, action: #selector(tapReportArrowButton), for: .touchUpInside)
+            }
+            return cell
+        }
     }
 }

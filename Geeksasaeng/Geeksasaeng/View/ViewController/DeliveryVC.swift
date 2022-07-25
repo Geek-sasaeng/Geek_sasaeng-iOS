@@ -135,7 +135,7 @@ class DeliveryViewController: UIViewController {
     
     /* Filter Icon */
     let filterImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "line.3.horizontal.decrease"))
+        let imageView = UIImageView(image: UIImage(named: "FilterImage"))
         imageView.tintColor = UIColor(hex: 0x2F2F2F)
         return imageView
     }()
@@ -379,7 +379,8 @@ class DeliveryViewController: UIViewController {
         
         /* Filter */
         filterImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(23)
+            make.width.equalTo(23)
+            make.height.equalTo(15)
             make.centerY.equalTo(peopleFilterView.snp.centerY)
             make.left.equalTo(adCollectionView.snp.left).offset(28)
         }
@@ -431,7 +432,7 @@ class DeliveryViewController: UIViewController {
     private func setTableView() {
         partyTableView.dataSource = self
         partyTableView.delegate = self
-        partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: "PartyTableViewCell")
+        partyTableView.register(PartyTableViewCell.self, forCellReuseIdentifier: PartyTableViewCell.identifier)
         
         partyTableView.rowHeight = 125
         partyTableView.separatorInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
@@ -477,7 +478,7 @@ class DeliveryViewController: UIViewController {
     }
     
     /* Vertical Label list의 label을 구성한다 */
-    func setVLabelList(_ passedArray: [String], _ stackView: UIStackView) {
+    private func setVLabelList(_ passedArray: [String], _ stackView: UIStackView) {
           for i in 0..<passedArray.count {
               /* Filter Label */
               let filterLabel = UILabel()
@@ -956,7 +957,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PartyTableViewCell", for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PartyTableViewCell.identifier, for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
         
         // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
         let nowData = deliveryCellDataArray[indexPath.row]

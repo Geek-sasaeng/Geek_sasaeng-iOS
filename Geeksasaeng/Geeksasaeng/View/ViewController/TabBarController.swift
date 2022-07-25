@@ -71,6 +71,10 @@ class TabBarController: UITabBarController {
                                          title: String,
                                          image: UIImage) -> UIViewController {
         let navController = UINavigationController(rootViewController: rootViewController)
+        
+        // 스와이프 제스쳐로 VC를 pop할 수 있게 delegate 설정
+        navController.interactivePopGestureRecognizer?.delegate = self
+        
         tabBar.backgroundColor = .white
         navController.navigationBar.barTintColor = .white
         
@@ -92,5 +96,15 @@ class TabBarController: UITabBarController {
             NSAttributedString.Key.font : UIFont.customFont(.neoBold, size: 20)], for: .selected)
         
         return navController
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension UIViewController: UIGestureRecognizerDelegate {
+    
+    /* 스와이프 제스쳐로 VC를 pop할 수 있게 설정 */
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
