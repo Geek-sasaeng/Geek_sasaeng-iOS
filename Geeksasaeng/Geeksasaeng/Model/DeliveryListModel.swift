@@ -12,7 +12,12 @@ struct DeliveryListModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
     var message: String?
-    var result: [DeliveryListModelResult]?
+    var result: DeliveryListModelResultList?
+}
+
+struct DeliveryListModelResultList: Decodable {
+    var deliveryPartiesVoList: [DeliveryListModelResult]?
+    var finalPage: Bool?
 }
 
 struct DeliveryListModelResult: Decodable {
@@ -21,5 +26,6 @@ struct DeliveryListModelResult: Decodable {
     var orderTime: String?
     var currentMatching: Int?
     var maxMatching: Int?
-    var hashTags: [String]?
+    var hasHashTags: Bool?
+    var foodCategory: String?
 }
