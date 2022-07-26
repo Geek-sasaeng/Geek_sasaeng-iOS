@@ -10,6 +10,7 @@ import Alamofire
 
 class getDetailInfoResult {
     var chief: String?
+    var chiefId: Int?
     var chiefProfileImgUrl: String?
     var content: String?
     var currentMatching: Int?
@@ -42,6 +43,7 @@ class DeliveryListDetailViewModel {
                     // 프로퍼티에 저장 -> profileImgUrl 수정 필요
                     if let result = result.result {
                         if let chief = result.chief,
+                           let chiefId = result.chiefId,
                            let content = result.content,
                            let currentMatching = result.currentMatching,
                            let foodCategory = result.foodCategory,
@@ -58,6 +60,7 @@ class DeliveryListDetailViewModel {
                            let authorStatus = result.authorStatus,
                            let dormitory = result.dormitory {
                             viewController.detailData.chief = chief
+                            viewController.detailData.chiefId = chiefId
                             viewController.detailData.content = content
                             viewController.detailData.currentMatching = currentMatching
                             viewController.detailData.foodCategory = foodCategory

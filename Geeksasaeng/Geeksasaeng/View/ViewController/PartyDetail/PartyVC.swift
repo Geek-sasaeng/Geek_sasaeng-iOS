@@ -396,7 +396,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var detailData = getDetailInfoResult()
     // TODO: - detailData.authorStatus == Bool -> 수정 & 삭제 메뉴 토글
     
-    // MARK: - viewDidLoad()
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
