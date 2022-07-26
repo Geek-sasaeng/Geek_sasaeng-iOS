@@ -380,7 +380,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.setTitleColor(.mainColor, for: .normal)
         confirmButton.setTitle("확인", for: .normal)
         confirmButton.titleLabel?.font = .customFont(.neoRegular, size: 18)
-        confirmButton.addTarget(self, action: #selector(removeDeleteView), for: .touchUpInside)
+        confirmButton.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(15)
@@ -424,7 +424,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
 //        latitude -> 카카오맵 띄워서 좌표 설정
 //        longitude
 //        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
-        /* 지금 제대로 안 뜨는 거: foodCategory, url(모델에 추가 해야 함) */
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
@@ -762,5 +761,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     @objc func removeDeleteView() {
         deleteView.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
+    }
+    
+    @objc func tapConfirmButton() {
+        if let partyId = detailData.id {
+            DeletePartyViewModel.deleteParty(partyId: partyId)
+        }
+        removeDeleteView()
+        navigationController?.popViewController(animated: true)
+        
+        // TODO: - 삭제되는 순간 테이블뷰 리로드 -> DeliveryVC에서 구현해야 할 듯 ?
     }
 }

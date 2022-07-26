@@ -156,7 +156,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
-    var editInputData = EditPartyInput()
     
     // MARK: - Life Cycle
     
@@ -303,7 +302,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
             orderForecastTimeButton.setTitle("      \(dateStr)    \(timeStr)", for: .normal)
             
-            // TODO: - url 속성 생기면 추가, location 카카오맵 결정되면 추가, ReceiptPlaceVC default value도 설정
+            // TODO: - location 카카오맵 결정되면 추가, ReceiptPlaceVC default value도 설정
 //            selectedUrlLabel.text = detailData.url 지금 url 속성 없음
 //            selectedLocationLabel.text =  -> latitude, longitude으로 지역 검색 후 적용
             
@@ -311,12 +310,38 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             CreateParty.orderForecastTime = "\(dateStr) \(timeStr)"
             CreateParty.matchingPerson = "\(detailData.maxMatching!)명"
             CreateParty.category = detailData.foodCategory
-//            CreateParty.url + default location
+            CreateParty.url = detailData.storeUrl
+            CreateParty.latitude = detailData.latitude
+            CreateParty.longitude = detailData.longitude
             
-            /* 파티 수정 API를 호출하기 위함 */
-            // TODO: - selectedLabel에 있는 데이터를 제외한 데이터는 여기서 미리 저장하고 나머지 값은 완료버튼 눌렀을 때 저장하고 API 호출
-            editInputData.dormitory = 1
-//            editInputData.foodCategory =
+            /* 수정하기 API를 호출하기 위함 */
+            CreateParty.orderTime = detailData.orderTime
+            CreateParty.maxMatching = detailData.maxMatching
+            CreateParty.hashTag = detailData.hashTag
+            switch detailData.foodCategory {
+            case "한식":
+                CreateParty.foodCategory = 1
+            case "양식":
+                CreateParty.foodCategory = 2
+            case "중식":
+                CreateParty.foodCategory = 3
+            case "일식":
+                CreateParty.foodCategory = 4
+            case "분식":
+                CreateParty.foodCategory = 5
+            case "치킨/피자":
+                CreateParty.foodCategory = 6
+            case "회/돈까스":
+                CreateParty.foodCategory = 7
+            case "패스트 푸드":
+                CreateParty.foodCategory = 8
+            case "디저트/음료":
+                CreateParty.foodCategory = 9
+            case "기타":
+                CreateParty.foodCategory = 10
+            default:
+                print("category ERROR")
+            }
         }
     }
     
@@ -665,10 +690,32 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func tapRegisterButton() {
-        // 파티 수정하기 API 호출
+        /* 파티 수정하기 API 호출 */
+        // CreateParty를 통해 초기화해야 하는 속성: foodCategory, orderTime, maxMatching, storeUrl, latitude, longtitude, hashTag
+        if let foodCategory = CreateParty.foodCategory,
+           let orderTime = CreateParty.orderTime,
+           let maxMatching = CreateParty.maxMatching,
+           let storeUrl = CreateParty.url,
+           let latitude = CreateParty.latitude,
+           let longitude = CreateParty.longitude,
+           let hashTag = CreateParty.hashTag,
+           let partyId = detailData?.id,
+           let title = titleTextField.text,
+           let content = contentsTextView.text {
+            EditPartyViewModel.EditParty(dormitoryId: 1, partyId: partyId,
+                EditPartyInput(foodCategory: foodCategory,
+                               title: title, content: content,
+                               orderTime: orderTime,
+                               maxMatching: maxMatching,
+                               storeUrl: storeUrl,
+                               latitude: latitude,
+                               longitude: longitude,
+                               hashTag: hashTag)
+            )
+        }
         
         
-        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
     }
 }
 

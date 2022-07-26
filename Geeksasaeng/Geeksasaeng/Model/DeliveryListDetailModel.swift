@@ -31,4 +31,5 @@ struct DeliveryListDetailModelResult: Decodable {
     var updatedAt: String?
     var storeUrl: String?
     var authorStatus: Bool?
+    var dormitory: Int?
 }

@@ -25,6 +25,7 @@ class getDetailInfoResult {
     var updatedAt: String?
     var storeUrl: String?
     var authorStatus: Bool?
+    var dormitory: Int?
 }
 
 class DeliveryListDetailViewModel {
@@ -54,7 +55,8 @@ class DeliveryListDetailViewModel {
                            let title = result.title,
                            let updatedAt = result.updatedAt,
                            let storeUrl = result.storeUrl,
-                           let authorStatus = result.authorStatus {
+                           let authorStatus = result.authorStatus,
+                           let dormitory = result.dormitory {
                             viewController.detailData.chief = chief
                             viewController.detailData.content = content
                             viewController.detailData.currentMatching = currentMatching
@@ -70,6 +72,7 @@ class DeliveryListDetailViewModel {
                             viewController.detailData.updatedAt = updatedAt
                             viewController.detailData.storeUrl = storeUrl
                             viewController.detailData.authorStatus = authorStatus
+                            viewController.detailData.dormitory = dormitory
                             if let chiefProfileImgUrl = result.chiefProfileImgUrl {
                                 viewController.detailData.chiefProfileImgUrl = chiefProfileImgUrl
                             }

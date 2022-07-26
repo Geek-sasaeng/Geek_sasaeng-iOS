@@ -26,7 +26,6 @@ struct CreateParty {
 
 // delivery-parties API Request Input
 struct CreatePartyInput: Encodable {
-    var dormitory: Int?
     var title: String?
     var content: String?
     var orderTime: String?
