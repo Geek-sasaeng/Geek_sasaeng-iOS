@@ -408,7 +408,16 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         setLayouts()
         setAttributes()
         startTimer()
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapEditButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                self.setDetailData()
+            }
+        }
     }
+    
+    
     
     // MARK: - Functions
     

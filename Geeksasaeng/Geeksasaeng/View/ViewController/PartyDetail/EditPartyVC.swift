@@ -720,7 +720,10 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             )
         }
         
-        /* 수정되었음을 알림 -> 토스트 메시지 띄우고 수정된 정보로 업데이트: delegate로 구현 */
+        /* 수정된 정보로 이전 뷰 내용 업데이트 */
+        NotificationCenter.default.post(name: NSNotification.Name("TapEditButton"), object: "true")
+        
+        /* 수정되었음을 알림 -> 토스트 메시지 띄우기 (Delegate pattern) */
         isEdittiedDelegate?.checkEditted(isEditted: true)
         navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
     }
