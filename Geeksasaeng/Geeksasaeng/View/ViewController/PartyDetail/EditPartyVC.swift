@@ -8,6 +8,11 @@
 import UIKit
 import SnapKit
 
+/* 이전 뷰로 수정되었음을 전달해주기 위한 Protocol (delegate pattern) */
+protocol EdittedDelegate: AnyObject { // delegate pattern을 위한 protocol 정의
+  func checkEditted(isEditted: Bool)
+}
+
 class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - SubViews
     
@@ -154,6 +159,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     
     // MARK: - Properties
+    weak var isEdittiedDelegate: EdittedDelegate?
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
     
@@ -714,7 +720,11 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             )
         }
         
+        /* 수정된 정보로 이전 뷰 내용 업데이트 */
+        NotificationCenter.default.post(name: NSNotification.Name("TapEditButton"), object: "true")
         
+        /* 수정되었음을 알림 -> 토스트 메시지 띄우기 (Delegate pattern) */
+        isEdittiedDelegate?.checkEditted(isEditted: true)
         navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
     }
 }

@@ -172,7 +172,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
     }
     
     // MARK: - Functions
