@@ -1000,6 +1000,9 @@
 		A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
+		A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */; };
+		A26DA3C528918D0F002DB07D /* DormitoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */; };
+		A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */; };
 		A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
@@ -1033,6 +1036,9 @@
 		A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
 		A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
 		A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E641692879DE4700B40A63 /* UniversityNameModel.swift */; };
+		A2E6EADE2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
+		A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
+		A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
@@ -1428,6 +1434,7 @@
 		A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckModel.swift; sourceTree = "<group>"; };
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
+		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
 		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
 		A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailEtcVC.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
@@ -1438,6 +1445,7 @@
 		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
+		A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryNameModel.swift; sourceTree = "<group>"; };
 		A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
@@ -1496,6 +1504,7 @@
 				A29F6F862885456700350744 /* PhoneAuth */,
 				10E8E71A288D735900AF4581 /* Party */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
+				A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */,
 				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
 				A2035EA4288341B00051498A /* AdModel.swift */,
 				108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */,
@@ -1510,6 +1519,7 @@
 				A29F6F8D2885476F00350744 /* Register */,
 				10E8E71F288D73E500AF4581 /* Party */,
 				A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */,
+				A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */,
 				A2035EA028833ED60051498A /* AdViewModel.swift */,
 				A20FC0E8287F1B1F0095224C /* DeliveryListViewModel.swift */,
 				108B633728899A4C008C4F65 /* DeliveryListDetailViewModel.swift */,
@@ -3286,9 +3296,11 @@
 				108B6330288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
+				A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2035EA128833ED60051498A /* AdViewModel.swift in Sources */,
+				A2E6EADE2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
 				1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2035EA5288341B00051498A /* AdModel.swift in Sources */,
 				A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
@@ -3336,9 +3348,11 @@
 				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
+				A26DA3C528918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				105E60AA287C32710030C927 /* CreatePartyVC.swift in Sources */,
+				A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
 				102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
@@ -3396,6 +3410,7 @@
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				108B6332288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */,
@@ -3423,6 +3438,7 @@
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
+				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
@@ -3624,7 +3640,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3663,7 +3679,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;

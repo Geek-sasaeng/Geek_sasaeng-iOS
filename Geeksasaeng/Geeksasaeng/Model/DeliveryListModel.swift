@@ -26,6 +26,6 @@ struct DeliveryListModelResult: Decodable {
     var orderTime: String?
     var currentMatching: Int?
     var maxMatching: Int?
-    var hasHashTags: Bool?
+    var hasHashTag: Bool?
     var foodCategory: String?
 }
