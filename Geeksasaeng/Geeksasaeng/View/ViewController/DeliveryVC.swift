@@ -649,6 +649,7 @@ class DeliveryViewController: UIViewController {
             // 데이터를 배열에 추가
             self.deliveryCellDataArray.append($0)
             print("DEBUG: 받아온 배달 데이터", $0)
+            print("DEBUG: 배달 데이터 배열 현황", deliveryCellDataArray)
         }
         
         // 테이블뷰 리로드
@@ -961,14 +962,15 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
         
         // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
         let nowData = deliveryCellDataArray[indexPath.row]
+        print(nowData)
         
-        // TODO: - hashTags는 디자인 확정된 후에 추가
         // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
         if let currentMatching = nowData.currentMatching,
            let maxMatching = nowData.maxMatching,
            let orderTime = nowData.orderTime,
            let title = nowData.title,
-           let id = nowData.id {    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+           let id = nowData.id,    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+           let hasHashTag = nowData.hasHashTag {
             cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
             cell.titleLabel.text = title + String(id)
             
@@ -1015,6 +1017,8 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
             }
             
+            // 해시태그 설정
+            cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
         }
         return cell
     }
