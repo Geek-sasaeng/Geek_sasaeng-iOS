@@ -13,8 +13,8 @@ import SnapKit
 class DormitoryViewController: UIViewController {
     
     // MARK: - Properties
-    // TODO: 선택된 학교에 맞춰서 기숙사 이름(?) API 연동 필요
-    var dormitoryNameArray: [String] = ["제1기숙사", "제2기숙사", "제3기숙사"]
+    
+    var dormitoryNameArray: [DormitoryNameResult] = []
     
     // MARK: - Subviews
     
@@ -76,6 +76,7 @@ class DormitoryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        getDormitoryData()
         addSubViews()
         setLayouts()
         setPickerView()
@@ -136,6 +137,16 @@ class DormitoryViewController: UIViewController {
         dormitoryPickerView.dataSource = self
     }
     
+    /* 기숙사 이름 리스트 가져오기 */
+    private func getDormitoryData() {
+        // TODO: - 학교 이름 리스트 API 연동 후 수정 예정. 일단 1로 넣어둠
+        DormitoryListViewModel.requestGetDormitoryList(self, universityId: 1) { result in
+            self.dormitoryNameArray.append(contentsOf: result)
+            // append 후에는 reload 필수. 안 하면 안 들어가있음.
+            self.dormitoryPickerView.reloadAllComponents()
+        }
+    }
+    
     /* 홈 화면으로 전환 */
     @objc private func tapStartButton() {
         let tabBarController = TabBarController()
@@ -171,7 +182,7 @@ extension DormitoryViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         let dormitoryNameLabel: UILabel = {
             let label = UILabel()
             label.font = .customFont(.neoMedium, size: 20)
-            label.text = dormitoryNameArray[row]
+            label.text = dormitoryNameArray[row].name
             return label
         }()
         
@@ -196,7 +207,6 @@ extension DormitoryViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         // 선택된 row의 텍스트 컬러만을 바꾸기 위해!
         pickerView.reloadAllComponents()
         
-        // TODO: picker view를 통해 최종으로 선택된 기숙사 이름을 API를 통해 전송해줘야 함
         print("DEBUG: ", dormitoryNameArray[row])
     }
 }

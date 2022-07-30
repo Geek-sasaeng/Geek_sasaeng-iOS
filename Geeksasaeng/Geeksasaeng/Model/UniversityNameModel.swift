@@ -16,9 +16,6 @@ struct UniversityNameModel: Decodable {
 }
 
 struct UniversityNameResult: Decodable {
-    var createdAt: String?
-    var updatedAt: String?
-    var status: String?
     var id: Int?
     var name: String?
     var emailAddress: String?

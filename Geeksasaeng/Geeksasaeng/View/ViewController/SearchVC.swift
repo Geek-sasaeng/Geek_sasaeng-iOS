@@ -38,7 +38,7 @@ class SearchViewController: UIViewController {
     var cursor = 0
     // 배달 목록 데이터가 저장되는 배열
     var deliveryCellDataArray: [DeliveryListModelResult] = [
-        DeliveryListModelResult(id: 1, title: "Dummy Data", orderTime: "2022-07-25 12:50:00", currentMatching: 1, maxMatching: 4, hasHashTags: nil)
+        DeliveryListModelResult(id: 1, title: "Dummy Data", orderTime: "2022-07-25 12:50:00", currentMatching: 1, maxMatching: 4, hasHashTag: true)
     ]
     
     // MARK: - Subviews

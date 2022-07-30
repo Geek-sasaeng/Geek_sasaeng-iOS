@@ -54,7 +54,8 @@ class PartyTableViewCell: UITableViewCell {
     
     var hashtagLabel: UILabel = {
         var label = UILabel()
-        label.textColor = UIColor(hex: 0x636363)
+        label.text = "같이 먹고 싶어요"
+        label.textColor = UIColor(hex: 0xEFEFEF)
         label.font = .customFont(.neoMedium, size: 12)
         return label
     }()
@@ -111,8 +112,8 @@ class PartyTableViewCell: UITableViewCell {
         }
         
         hashtagLabel.snp.makeConstraints { make in
-            make.top.equalTo(categoryLabel.snp.top)
-            make.left.equalTo(categoryLabel.snp.right).offset(45)
+            make.centerY.equalTo(categoryLabel)
+            make.left.equalToSuperview().inset(101)
         }
         
 //        badgeImageView.snp.makeConstraints { make in
