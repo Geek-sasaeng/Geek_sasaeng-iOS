@@ -10,7 +10,7 @@ import Alamofire
 
 /* 기숙사 리스트 조회 */
 class DormitoryListViewModel {
-    public static func requestGetDormitoryList(_ viewController: DormitoryViewController, universityId: Int, completion: @escaping ([DormitoryNameResult]) -> Void) {
+    public static func requestGetDormitoryList(universityId: Int, completion: @escaping ([DormitoryNameResult]) -> Void) {
         AF.request("https://geeksasaeng.shop/\(universityId)/dormitories", method: .get, parameters: nil)
             .validate()
             .responseDecodable(of: DormitoryNameModel.self) {

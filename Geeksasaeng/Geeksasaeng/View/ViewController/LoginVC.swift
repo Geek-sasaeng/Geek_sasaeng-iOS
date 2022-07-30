@@ -253,6 +253,8 @@ class LoginViewController: UIViewController {
         // 첫 로그인 시에는 기숙사 선택 화면으로 이동
         if isFirstLogin {
             let dormitoryVC = DormitoryViewController()
+            // TODO: - 서버에서 로그인 API res로 닉네임 주면 그때 수정 예정
+//            dormitoryVC.userNickName = userNickName
             dormitoryVC.modalTransitionStyle = .crossDissolve
             dormitoryVC.modalPresentationStyle = .fullScreen
             present(dormitoryVC, animated: true)
