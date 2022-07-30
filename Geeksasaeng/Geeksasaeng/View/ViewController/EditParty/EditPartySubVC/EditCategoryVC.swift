@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class CategoryViewController: UIViewController {
+class EditCategoryViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 카테고리 선택 */
     let titleLabel: UILabel = {
@@ -16,15 +16,6 @@ class CategoryViewController: UIViewController {
         label.text = "카테고리 선택"
         label.font = .customFont(.neoMedium, size: 18)
         return label
-    }()
-    
-    /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
     }()
     
     /* category labels */
@@ -91,22 +82,13 @@ class CategoryViewController: UIViewController {
     /* nextButton: 다음 버튼 */
     lazy var nextButton: UIButton = {
         let button = UIButton()
-        button.setTitle("다음", for: .normal)
+        button.setTitle("완료", for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
         button.setDeactivatedNextButton()
         button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
-    }()
-    
-    /* pageLabel: 3/5 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "3/5"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
     }()
     
     // MARK: - Properties
@@ -149,7 +131,7 @@ class CategoryViewController: UIViewController {
     
     private func addSubViews() {
         [
-            titleLabel, backButton, nextButton, pageLabel,
+            titleLabel, nextButton,
             korean, western, chinese, japanese, snack, chicken, rawfish, fastfood, dessert, etc
         ].forEach {
             view.addSubview($0)
@@ -162,20 +144,10 @@ class CategoryViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         
-        backButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
-        }
-        
         nextButton.snp.makeConstraints { make in
             make.width.equalTo(262)
             make.height.equalTo(51)
             make.bottom.equalToSuperview().inset(35)
-            make.centerX.equalToSuperview()
-        }
-        
-        pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(nextButton.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         }
         
@@ -271,14 +243,7 @@ class CategoryViewController: UIViewController {
             print("잘못된 카테고리입니다.")
         }
         
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = UrlViewController()
-            self.addChild(childView)
-            self.view.addSubview(childView.view)
-            childView.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("TapEditCategoryButton"), object: "true")
     }
 
     @objc func tapCategoryButton(_ sender: UIButton) {
@@ -296,10 +261,5 @@ class CategoryViewController: UIViewController {
         nextButton.setActivatedNextButton()
         
         data = sender.titleLabel?.text
-    }
-    
-    @objc func tapBackButton() {
-        view.removeFromSuperview()
-        removeFromParent()
     }
 }

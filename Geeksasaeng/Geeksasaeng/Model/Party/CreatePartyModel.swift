@@ -7,8 +7,8 @@
 
 import Foundation
 
-// 저장 후 사용자에게 보여줄 데이터
 struct CreateParty {
+    // 저장 후 사용자에게 보여줄 데이터
     static var orderForecastTime: String?
     static var matchingPerson: String?
     static var category: String?
