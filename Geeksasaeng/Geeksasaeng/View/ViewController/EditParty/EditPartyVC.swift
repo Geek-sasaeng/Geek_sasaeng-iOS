@@ -85,7 +85,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         textView.font = .customFont(.neoRegular, size: 15)
         textView.refreshControl?.contentVerticalAlignment = .top
         textView.text = "내용을 입력하세요"
-        textView.textColor = UIColor(hex: 0xD8D8D8)
+        textView.textColor = .black
         return textView
     }()
     
@@ -106,7 +106,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     /* selected Button & labels */
     lazy var orderForecastTimeButton: UIButton = {
         let button = UIButton()
-        button.titleLabel?.font = .customFont(.neoRegular, size: 13)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.contentHorizontalAlignment = .left
         button.layer.cornerRadius = 3
         button.clipsToBounds = true
@@ -169,6 +169,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setNotificationCenter()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
         setDelegate()
@@ -179,40 +180,94 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         setLayouts()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditOrderTimeButton"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditPersonButton"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditCategoryButton"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditUrlButton"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditLocationButton"), object: nil)
+        
+        // 전역변수 초기화
+        CreateParty.orderForecastTime = nil
+        CreateParty.matchingPerson = nil
+        CreateParty.category = nil
+        CreateParty.url = nil
+        CreateParty.address = nil
+        CreateParty.latitude = nil
+        CreateParty.longitude = nil
+    }
+    
     // MARK: - Functions
+    
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapEditOrderTimeButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                if let orderForecastTime = CreateParty.orderForecastTime {
+                    self.orderForecastTimeButton.layer.shadowRadius = 0
+                    self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
+                    self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
+                    self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
+                    self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
+                }
+                self.visualEffectView?.removeFromSuperview()
+                self.children.first?.view.removeFromSuperview()
+                self.children.first?.removeFromParent()
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapEditPersonButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                if let matchingPerson = CreateParty.matchingPerson {
+                    self.selectedPersonLabel.text = "      \(matchingPerson)"
+                    self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedPersonLabel.textColor = .black
+                    self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                self.visualEffectView?.removeFromSuperview()
+                self.children.first?.view.removeFromSuperview()
+                self.children.first?.removeFromParent()
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapEditCategoryButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                if let category = CreateParty.category {
+                    self.selectedCategoryLabel.text = "      \(category)"
+                    self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedCategoryLabel.textColor = .black
+                    self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
+                self.visualEffectView?.removeFromSuperview()
+                self.children.first?.view.removeFromSuperview()
+                self.children.first?.removeFromParent()
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapEditUrlButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                
+                self.visualEffectView?.removeFromSuperview()
+                self.children.first?.view.removeFromSuperview()
+                self.children.first?.removeFromParent()
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapEditLocationButton"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                self.visualEffectView?.removeFromSuperview()
+                self.children.first?.view.removeFromSuperview()
+                self.children.first?.removeFromParent()
+            }
+        }
+    }
     
     @objc func tapContentView() {
         view.endEditing(true)
-        
-        // 다음 버튼 누른 VC에 대한 데이터 저장, 표시
-        if let orderForecastTime = CreateParty.orderForecastTime {
-            self.orderForecastTimeButton.layer.shadowRadius = 0
-            self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
-            self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
-            self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
-            self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
-        }
-        
-        if let matchingPerson = CreateParty.matchingPerson {
-            self.selectedPersonLabel.text = "      \(matchingPerson)"
-            self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
-            self.selectedPersonLabel.textColor = .black
-            self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-        }
-        
-        if let url = CreateParty.url {
-            self.selectedUrlLabel.text = "      \(url)"
-            self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
-            self.selectedUrlLabel.textColor = .black
-            self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-        }
-        
-        if let category = CreateParty.category {
-            self.selectedCategoryLabel.text = "      \(category)"
-            self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
-            self.selectedCategoryLabel.textColor = .black
-            self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-        }
         
         visualEffectView?.removeFromSuperview()
         children.forEach {
@@ -290,6 +345,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             contentsTextView.text = detailData.content
             selectedPersonLabel.text = "      \(detailData.maxMatching!)명"
             selectedCategoryLabel.text = "      \(detailData.foodCategory!)"
+            selectedUrlLabel.text = "      \(detailData.storeUrl!)"
             
             if detailData.hashTag ?? false {
                 eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
@@ -306,14 +362,13 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             let timeRange = middleIdx..<endIdx // 시, 분
             let dateStr = str[dateRange].replacingOccurrences(of: "-", with: "월 ") + "일"
             let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
-            orderForecastTimeButton.setTitle("      \(dateStr)    \(timeStr)", for: .normal)
+            orderForecastTimeButton.setTitle("      \(dateStr)        \(timeStr)", for: .normal)
             
             // TODO: - location 카카오맵 결정되면 추가, ReceiptPlaceVC default value도 설정
-//            selectedUrlLabel.text = detailData.url 지금 url 속성 없음
 //            selectedLocationLabel.text =  -> latitude, longitude으로 지역 검색 후 적용
             
             /* 서브뷰에 default value를 띄우기 위함 */
-            CreateParty.orderForecastTime = "\(dateStr) \(timeStr)"
+            CreateParty.orderForecastTime = "\(dateStr)        \(timeStr)"
             CreateParty.matchingPerson = "\(detailData.maxMatching!)명"
             CreateParty.category = detailData.foodCategory
             CreateParty.url = detailData.storeUrl
@@ -539,7 +594,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = OrderForecastTimeViewController()
+            let childView = EditOrderForecastTimeViewController()
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in
@@ -550,21 +605,11 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func tapSelectedPersonLabel() {
         createBlueView()
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
+            let orderForecastTimeVC = EditMatchingPersonViewController()
             self.addChild(orderForecastTimeVC)
             self.view.addSubview(orderForecastTimeVC.view)
             orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
         }, completion: nil)
@@ -574,28 +619,10 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
+            let orderForecastTimeVC = EditCategoryViewController()
             self.addChild(orderForecastTimeVC)
             self.view.addSubview(orderForecastTimeVC.view)
             orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let categoryVC = CategoryViewController()
-            self.addChild(categoryVC)
-            self.view.addSubview(categoryVC.view)
-            categoryVC.view.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
         }, completion: nil)
@@ -605,37 +632,10 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         createBlueView()
         // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
+            let orderForecastTimeVC = EditUrlViewController()
             self.addChild(orderForecastTimeVC)
             self.view.addSubview(orderForecastTimeVC.view)
             orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let categoryVC = CategoryViewController()
-            self.addChild(categoryVC)
-            self.view.addSubview(categoryVC.view)
-            categoryVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let urlVC = UrlViewController()
-            self.addChild(urlVC)
-            self.view.addSubview(urlVC.view)
-            urlVC.view.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
         }, completion: nil)
@@ -645,46 +645,10 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
+            let orderForecastTimeVC = EditReceiptPlaceViewController()
             self.addChild(orderForecastTimeVC)
             self.view.addSubview(orderForecastTimeVC.view)
             orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let categoryVC = CategoryViewController()
-            self.addChild(categoryVC)
-            self.view.addSubview(categoryVC.view)
-            categoryVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let urlVC = UrlViewController()
-            self.addChild(urlVC)
-            self.view.addSubview(urlVC.view)
-            urlVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let receiptPlaceVC = ReceiptPlaceViewController()
-            self.addChild(receiptPlaceVC)
-            self.view.addSubview(receiptPlaceVC.view)
-            receiptPlaceVC.view.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
         }, completion: nil)

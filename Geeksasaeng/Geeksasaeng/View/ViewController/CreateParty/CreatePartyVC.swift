@@ -172,6 +172,15 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
+        
+        // 전역변수 초기화
+        CreateParty.orderForecastTime = nil
+        CreateParty.matchingPerson = nil
+        CreateParty.category = nil
+        CreateParty.url = nil
+        CreateParty.address = nil
+        CreateParty.latitude = nil
+        CreateParty.longitude = nil
     }
     
     // MARK: - Functions

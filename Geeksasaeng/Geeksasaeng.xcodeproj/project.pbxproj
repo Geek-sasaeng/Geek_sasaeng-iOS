@@ -918,6 +918,21 @@
 		10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
+		10D4D6B32894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */; };
+		10D4D6B42894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */; };
+		10D4D6B52894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */; };
+		10D4D6BB2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6BA2894F8A700B53AB0 /* EditMatchingPersonVC.swift */; };
+		10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6BA2894F8A700B53AB0 /* EditMatchingPersonVC.swift */; };
+		10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6BA2894F8A700B53AB0 /* EditMatchingPersonVC.swift */; };
+		10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6BE2894F8B000B53AB0 /* EditCategoryVC.swift */; };
+		10D4D6C02894F8B000B53AB0 /* EditCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6BE2894F8B000B53AB0 /* EditCategoryVC.swift */; };
+		10D4D6C12894F8B000B53AB0 /* EditCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6BE2894F8B000B53AB0 /* EditCategoryVC.swift */; };
+		10D4D6C32894F8B800B53AB0 /* EditUrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6C22894F8B800B53AB0 /* EditUrlVC.swift */; };
+		10D4D6C42894F8B800B53AB0 /* EditUrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6C22894F8B800B53AB0 /* EditUrlVC.swift */; };
+		10D4D6C52894F8B800B53AB0 /* EditUrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6C22894F8B800B53AB0 /* EditUrlVC.swift */; };
+		10D4D6C72894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6C62894F8C000B53AB0 /* EditReceiptPlaceVC.swift */; };
+		10D4D6C82894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6C62894F8C000B53AB0 /* EditReceiptPlaceVC.swift */; };
+		10D4D6C92894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4D6C62894F8C000B53AB0 /* EditReceiptPlaceVC.swift */; };
 		10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
 		10D7EC952886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
 		10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D7EC932886AFC500D9E0FD /* UrlVC.swift */; };
@@ -1397,6 +1412,11 @@
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10AC5CA82889269000C8086A /* EditPartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyVC.swift; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
+		10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderForecastTimeVC.swift; sourceTree = "<group>"; };
+		10D4D6BA2894F8A700B53AB0 /* EditMatchingPersonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMatchingPersonVC.swift; sourceTree = "<group>"; };
+		10D4D6BE2894F8B000B53AB0 /* EditCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCategoryVC.swift; sourceTree = "<group>"; };
+		10D4D6C22894F8B800B53AB0 /* EditUrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUrlVC.swift; sourceTree = "<group>"; };
+		10D4D6C62894F8C000B53AB0 /* EditReceiptPlaceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditReceiptPlaceVC.swift; sourceTree = "<group>"; };
 		10D7EC932886AFC500D9E0FD /* UrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlVC.swift; sourceTree = "<group>"; };
 		10E6956428885589000B7309 /* LocationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAPI.swift; sourceTree = "<group>"; };
 		10E8E712288C3E9700AF4581 /* EditPartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyModel.swift; sourceTree = "<group>"; };
@@ -1983,6 +2003,27 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		10D4D6B02894F84F00B53AB0 /* EditParty */ = {
+			isa = PBXGroup;
+			children = (
+				10AC5CA82889269000C8086A /* EditPartyVC.swift */,
+				10D4D6B12894F86700B53AB0 /* EditPartySubVC */,
+			);
+			path = EditParty;
+			sourceTree = "<group>";
+		};
+		10D4D6B12894F86700B53AB0 /* EditPartySubVC */ = {
+			isa = PBXGroup;
+			children = (
+				10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */,
+				10D4D6BA2894F8A700B53AB0 /* EditMatchingPersonVC.swift */,
+				10D4D6BE2894F8B000B53AB0 /* EditCategoryVC.swift */,
+				10D4D6C22894F8B800B53AB0 /* EditUrlVC.swift */,
+				10D4D6C62894F8C000B53AB0 /* EditReceiptPlaceVC.swift */,
+			);
+			path = EditPartySubVC;
+			sourceTree = "<group>";
+		};
 		10D7EC972886E85600D9E0FD /* CreateParty */ = {
 			isa = PBXGroup;
 			children = (
@@ -1990,15 +2031,6 @@
 				106D975C287D8BC2005CFB85 /* CreatePartySubVC */,
 			);
 			path = CreateParty;
-			sourceTree = "<group>";
-		};
-		10D7EC982886E89F00D9E0FD /* PartyDetail */ = {
-			isa = PBXGroup;
-			children = (
-				A2B420A4286F370F00278F92 /* PartyVC.swift */,
-				10AC5CA82889269000C8086A /* EditPartyVC.swift */,
-			);
-			path = PartyDetail;
 			sourceTree = "<group>";
 		};
 		10E8E71A288D735900AF4581 /* Party */ = {
@@ -2112,8 +2144,9 @@
 				A26BD187287B0415003A0A48 /* DormitoryVC.swift */,
 				A2B420A9286F58C100278F92 /* DeliveryVC.swift */,
 				A20FC0F0287F30C40095224C /* SearchVC.swift */,
-				10D7EC982886E89F00D9E0FD /* PartyDetail */,
+				A2B420A4286F370F00278F92 /* PartyVC.swift */,
 				10D7EC972886E85600D9E0FD /* CreateParty */,
+				10D4D6B02894F84F00B53AB0 /* EditParty */,
 				A2D2047728885A14002350C8 /* Report */,
 			);
 			path = ViewController;
@@ -3252,12 +3285,15 @@
 				A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				108B633828899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				A2513F212878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
+				10D4D6BB2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
+				10D4D6B32894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
+				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
@@ -3286,6 +3322,7 @@
 				108B6330288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
+				10D4D6C72894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2035EA128833ED60051498A /* AdViewModel.swift in Sources */,
@@ -3294,6 +3331,7 @@
 				A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */,
+				10D4D6C32894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
@@ -3330,10 +3368,12 @@
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
+				10D4D6C82894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
 				10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
+				10D4D6B42894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2E6416B2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
@@ -3343,6 +3383,7 @@
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
+				10D4D6C02894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				10E6956628885589000B7309 /* LocationAPI.swift in Sources */,
 				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
@@ -3355,6 +3396,7 @@
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
@@ -3373,6 +3415,7 @@
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 				10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				10D4D6C42894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				10E8E71D288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
@@ -3387,6 +3430,8 @@
 				10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
+				10D4D6C52894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
+				10D4D6C92894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513F1F287872D70029C279 /* EmailAuthModel.swift in Sources */,
@@ -3410,6 +3455,7 @@
 				A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
+				10D4D6B52894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
@@ -3421,6 +3467,7 @@
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A20FC0EB287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
+				10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
@@ -3437,6 +3484,7 @@
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
+				10D4D6C12894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,

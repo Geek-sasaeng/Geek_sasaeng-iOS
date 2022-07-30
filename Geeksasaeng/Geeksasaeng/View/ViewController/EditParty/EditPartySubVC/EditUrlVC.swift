@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class UrlViewController: UIViewController {
+class EditUrlViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
     let titleLabel: UILabel = {
@@ -16,15 +16,6 @@ class UrlViewController: UIViewController {
         label.text = "식당 링크"
         label.font = .customFont(.neoMedium, size: 18)
         return label
-    }()
-    
-    /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
     }()
     
     /* url 입력 텍스트 필드 */
@@ -44,14 +35,14 @@ class UrlViewController: UIViewController {
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
         button.titleLabel?.font = .customFont(.neoLight, size: 15)
         button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
-        button.addTarget(self, action: #selector(tapPassButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
     
     /* nextButton: 다음 버튼 */
     lazy var nextButton: UIButton = {
         let button = UIButton()
-        button.setTitle("다음", for: .normal)
+        button.setTitle("완료", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.layer.cornerRadius = 5
@@ -60,15 +51,6 @@ class UrlViewController: UIViewController {
         button.setActivatedNextButton()
         button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
-    }()
-    
-    /* pageLabel: 4/5 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "4/5"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
     }()
     
     // MARK: - Properties
@@ -95,7 +77,7 @@ class UrlViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [titleLabel, backButton, urlTextField, passButton, nextButton, pageLabel].forEach {
+        [titleLabel, urlTextField, passButton, nextButton].forEach {
             view.addSubview($0)
         }
     }
@@ -104,11 +86,6 @@ class UrlViewController: UIViewController {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(29)
             make.centerX.equalToSuperview()
-        }
-        
-        backButton.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
         }
         
         urlTextField.snp.makeConstraints { make in
@@ -128,11 +105,6 @@ class UrlViewController: UIViewController {
             make.bottom.equalToSuperview().inset(35)
             make.centerX.equalToSuperview()
         }
-        
-        pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(nextButton.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
-        }
     }
     
     private func setDefaultValueOfTextField() {
@@ -147,29 +119,6 @@ class UrlViewController: UIViewController {
             CreateParty.url = url
         }
         
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = ReceiptPlaceViewController()
-            self.addChild(childView)
-            self.view.addSubview(childView.view)
-            childView.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-    }
-    
-    @objc func tapPassButton() {
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = ReceiptPlaceViewController()
-            self.addChild(childView)
-            self.view.addSubview(childView.view)
-            childView.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-    }
-    
-    @objc func tapBackButton() {
-        view.removeFromSuperview()
-        removeFromParent()
+        NotificationCenter.default.post(name: NSNotification.Name("TapEditUrlButton"), object: "true")
     }
 }
