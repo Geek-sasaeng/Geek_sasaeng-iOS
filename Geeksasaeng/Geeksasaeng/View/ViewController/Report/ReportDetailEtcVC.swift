@@ -37,6 +37,37 @@ class ReportDetailEtcViewController: UIViewController {
         return textView
     }()
     
+    var separateView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        return view
+    }()
+    
+    lazy var checkBoxButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "square"), for: .normal)
+        button.addTarget(self, action: #selector(tapCheckBoxButton(_:)), for: .touchUpInside)
+        button.tintColor = .init(hex: 0x5B5B5B)
+        return button
+    }()
+    
+    var blockUserLabel: UILabel = {
+        let label = UILabel()
+        label.text = "이 사용자 차단하기"
+        label.font = .customFont(.neoMedium, size: 15)
+        label.textColor = .mainColor
+        return label
+    }()
+    
+    var guideLabel: UILabel = {
+        let label = UILabel()
+        label.text = "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다."
+        label.numberOfLines = 0
+        label.font = .customFont(.neoRegular, size: 15)
+        label.textColor = .init(hex: 0xA8A8A8)
+        return label
+    }()
+    
     // 하단에 있는 신고하기 버튼
     lazy var reportButton: UIButton = {
         let button = UIButton()
@@ -108,6 +139,10 @@ class ReportDetailEtcViewController: UIViewController {
         [
             reportCategoryLabel,
             reportTextView,
+            separateView,
+            checkBoxButton,
+            blockUserLabel,
+            guideLabel,
             reportButton
         ].forEach { view.addSubview($0) }
     }
@@ -122,6 +157,26 @@ class ReportDetailEtcViewController: UIViewController {
             make.left.right.equalToSuperview().inset(29)
             make.height.equalTo(100)
         }
+        
+        separateView.snp.makeConstraints { make in
+            make.top.equalTo(reportTextView.snp.bottom).offset(20)
+            make.width.equalToSuperview()
+            make.height.equalTo(8)
+        }
+        
+        checkBoxButton.snp.makeConstraints { make in
+            make.top.equalTo(separateView.snp.bottom).offset(25)
+            make.left.equalToSuperview().inset(29)
+        }
+        blockUserLabel.snp.makeConstraints { make in
+            make.left.equalTo(checkBoxButton.snp.right).offset(5)
+            make.centerY.equalTo(checkBoxButton)
+        }
+        guideLabel.snp.makeConstraints { make in
+            make.top.equalTo(blockUserLabel.snp.bottom).offset(11)
+            make.left.right.equalToSuperview().inset(30)
+        }
+        
         reportButton.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(55 + 20)    // 20은 safeAreaLayoutGuide 아래 빈 공간 가리기 위해 추가
