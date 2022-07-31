@@ -13,6 +13,9 @@ class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
     
+    // 유저의 기숙사 정보 -> id랑 name 들어있음!
+    var dormitoryInfo: DormitoryNameResult?
+    
     // 광고 배너 이미지 데이터 배열
     var adCellDataArray: [AdModelResult] = [] {
         didSet {
@@ -46,19 +49,28 @@ class DeliveryViewController: UIViewController {
     
     // MARK: - Subviews
     
-    /* Navigation Bar Buttons */
-    var leftBarButtonItem: UIBarButtonItem = {
-        var schoolImageView = UIImageView(image: UIImage(systemName: "book"))
-        schoolImageView.tintColor = .black
-        schoolImageView.snp.makeConstraints { make in
+    lazy var dormitoryLabel: UILabel = {
+        let label = UILabel()
+        if let name = dormitoryInfo?.name {
+            label.text = "제" + name
+        }
+        label.font = .customFont(.neoBold, size: 20)
+        label.textColor = .black
+        return label
+    }()
+    
+    // TODO: - 학교 API 연동 후 학교 사진으로 변경
+    lazy var schoolImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "book"))
+        imageView.tintColor = .black
+        imageView.snp.makeConstraints { make in
             make.width.height.equalTo(31)
         }
-        
-        let dormitoryLabel = UILabel()
-        dormitoryLabel.text = "제1기숙사"
-        dormitoryLabel.font = .customFont(.neoBold, size: 20)
-        dormitoryLabel.textColor = .black
-        
+        return imageView
+    }()
+    
+    /* Navigation Bar Buttons */
+    lazy var leftBarButtonItem: UIBarButtonItem = {
         let stackView = UIStackView(arrangedSubviews: [schoolImageView, dormitoryLabel])
         stackView.spacing = 10
         

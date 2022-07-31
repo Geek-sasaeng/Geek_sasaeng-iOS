@@ -8,20 +8,27 @@
 import UIKit
 import SnapKit
 
-// TODO: - 디자인 수정된 거에 맞춰서 다시 해야 됨
 /* 회원가입 후, 첫 로그인 성공 시에 나오게 되는 기숙사 선택 화면 */
 class DormitoryViewController: UIViewController {
     
     // MARK: - Properties
     
-    var dormitoryNameArray: [DormitoryNameResult] = []
+    var dormitoryNameArray: [DormitoryNameResult] = [] {
+        didSet {
+            // 피커뷰로 아무것도 선택 안 했을 때 초기값 설정
+            dormitoryInfo = dormitoryNameArray[0]
+        }
+    }
+    // 현재 기숙사를 선택하고 있는 유저의 닉네임
+    var userNickName: String?
+    // 현재 피커뷰가 가리키고 있는 기숙사 정보 -> 스크롤 될 때마다 바뀜
+    var dormitoryInfo: DormitoryNameResult?
     
     // MARK: - Subviews
     
-    var welcomeLabel: UILabel = {
+    lazy var welcomeLabel: UILabel = {
         let label = UILabel()
-        // TODO: 로그인 시 홍길동 말고 해당 유저의 닉네임으로 설정해야 함
-        label.text = "홍길동님, 환영합니다"
+        label.text = "\(userNickName ?? "홍길동")님, 환영합니다"
         label.numberOfLines = 2
         label.font = .customFont(.neoBold, size: 32)
         label.textColor = .init(hex: 0x2F2F2F)
@@ -53,8 +60,6 @@ class DormitoryViewController: UIViewController {
     
     var dormitoryPickerView: UIPickerView = {
         let pickerView = UIPickerView()
-        // TODO: 학교 선택에 따른 기숙사 갯수 불러오기
-//        pickerView.backgroundColor = .mainColor
         return pickerView
     }()
     
@@ -140,7 +145,7 @@ class DormitoryViewController: UIViewController {
     /* 기숙사 이름 리스트 가져오기 */
     private func getDormitoryData() {
         // TODO: - 학교 이름 리스트 API 연동 후 수정 예정. 일단 1로 넣어둠
-        DormitoryListViewModel.requestGetDormitoryList(self, universityId: 1) { result in
+        DormitoryListViewModel.requestGetDormitoryList(universityId: 1) { result in
             self.dormitoryNameArray.append(contentsOf: result)
             // append 후에는 reload 필수. 안 하면 안 들어가있음.
             self.dormitoryPickerView.reloadAllComponents()
@@ -149,7 +154,13 @@ class DormitoryViewController: UIViewController {
     
     /* 홈 화면으로 전환 */
     @objc private func tapStartButton() {
+        // tabBarController 안의 deliveryVC에 데이터를 전달하는 방법!
         let tabBarController = TabBarController()
+        let navController = tabBarController.viewControllers![0] as! UINavigationController
+        let deliveryVC = navController.topViewController as! DeliveryViewController
+        
+        deliveryVC.dormitoryInfo = dormitoryInfo
+        
         tabBarController.modalTransitionStyle = .crossDissolve
         tabBarController.modalPresentationStyle = .fullScreen
         present(tabBarController, animated: true)
@@ -207,6 +218,7 @@ extension DormitoryViewController: UIPickerViewDelegate, UIPickerViewDataSource 
         // 선택된 row의 텍스트 컬러만을 바꾸기 위해!
         pickerView.reloadAllComponents()
         
-        print("DEBUG: ", dormitoryNameArray[row])
+        // select된 row의 배열값을 dormitoryInfo로 설정
+        dormitoryInfo = dormitoryNameArray[row]
     }
 }
