@@ -238,10 +238,22 @@ class ReportDetailViewController: UIViewController {
     /* 하단의 신고하기 버튼을 눌렀을 때 실행되는 함수 -> 신고 제출, 신고하기 토스트 메세지 */
     @objc
     private func tapReportButton() {
-        let input = ReportInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedDeliveryPartyId: partyId, reportedMemberId: memberId)
-        ReportAPI.requestReport(self, input) {
-            // 성공했으면 이전 뷰로 돌아가게
-            self.navigationController?.popViewController(animated: true)
+        guard let reportCategoryId = reportCategoryId else { return }
+        
+        print("reportCategoryId: ", reportCategoryId)
+        // 파티 게시글 신고일 때
+        if reportCategoryId < 5 {
+            let input = ReportPartyInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedDeliveryPartyId: partyId, reportedMemberId: memberId)
+            ReportAPI.requestReportParty(self, input) {
+                // 성공했으면 이전 뷰로 돌아가게
+                self.navigationController?.popViewController(animated: true)
+            }
+        } else {    // 사용자 신고일 때
+            let input = ReportMemberInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedMemberId: memberId)
+            ReportAPI.requestReportMember(self, input) {
+                // 성공했으면 이전 뷰로 돌아가게
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
 
