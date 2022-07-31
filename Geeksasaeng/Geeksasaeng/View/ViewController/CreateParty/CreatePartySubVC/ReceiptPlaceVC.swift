@@ -123,12 +123,12 @@ class ReceiptPlaceViewController: UIViewController {
         setLayouts()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        // mapView의 모든 poiItem 제거
-        for item in mapView!.poiItems {
-            mapView?.remove(item as? MTMapPOIItem)
-        }
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        // mapView의 모든 poiItem 제거
+//        for item in mapView!.poiItems {
+//            mapView?.remove(item as? MTMapPOIItem)
+//        }
+//    }
     
     // MARK: - Functions
     
@@ -242,6 +242,7 @@ class ReceiptPlaceViewController: UIViewController {
     
     @objc func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
+        self.mapView = nil
         
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
@@ -259,6 +260,10 @@ class ReceiptPlaceViewController: UIViewController {
             // API Request를 위해 전역에 좌표 저장
             self.latitude = placemark?.first?.location?.coordinate.latitude ?? 0
             self.longitude = placemark?.first?.location?.coordinate.longitude ?? 0
+            
+            // 마커 이동 안 했을 때를 대비하여 전역에 좌표 저장
+            CreateParty.latitude = self.latitude
+            CreateParty.longitude = self.longitude
             
             // 검색된 위치로 마커 이동
             self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0))

@@ -158,7 +158,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         /* 기숙사 좌표 불러오기 */
         LocationAPI.getLocation(1)
         // MARK: - 여기서 맵뷰 객체 생성하면 서브뷰에서 런타임 에러
-//        setMapView()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
         setDelegate()
@@ -199,13 +198,22 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
             mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
                                                                     longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            
             // 마커의 좌표 설정
             self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
             
             mapView.addPOIItems([marker])
             mapSubView.addSubview(mapView)
         }
+        
+        view.addSubview(mapSubView)
+        mapSubView.snp.makeConstraints { make in
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+            make.left.equalToSuperview().offset(28)
+            make.width.equalTo(314)
+            make.height.equalTo(144)
+        }
+        
+        view.layoutSubviews()
     }
     
     private func setTapGestureToLabels() {
@@ -350,14 +358,12 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
-//                if let latitude = CreateParty.latitude,
-//                   let longitude = CreateParty.longitude {
-//                    // 지도의 중심을 설정한 위치로 이동
-//                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude)), zoomLevel: 5, animated: true)
-//
-//                    // 설정한 위치로 마커 좌표 이동
-//                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude, longitude: longitude))
-//                }
+                // 좌표가 있으면 기존의 testView를 없애고 그 자리에 카카오맵 노출
+                if let _ = CreateParty.latitude,
+                   let _ = CreateParty.longitude {
+                    self.testView.removeFromSuperview()
+                    self.setMapView()
+                }
                 
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
@@ -494,13 +500,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.equalTo(314)
             make.height.equalTo(144)
         }
-        
-//        mapSubView.snp.makeConstraints { make in
-//            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-//            make.left.equalToSuperview().offset(28)
-//            make.width.equalTo(314)
-//            make.height.equalTo(144)
-//        }
     }
     
     /* 현재 날짜와 시간을 orderForecastTimeButton에 출력 */
