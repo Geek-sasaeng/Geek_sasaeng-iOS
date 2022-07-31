@@ -323,6 +323,14 @@ class DeliveryViewController: UIViewController {
         changeOrderTimeByMinute()
     }
     
+    // MARK: - viewWillAppear()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
+        navigationController?.isNavigationBarHidden = false
+    }
+    
     // MARK: - viewDidLayoutSubviews()
     
     override func viewDidLayoutSubviews() {
@@ -422,7 +430,7 @@ class DeliveryViewController: UIViewController {
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(500)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
         }
         
@@ -731,6 +739,7 @@ class DeliveryViewController: UIViewController {
     /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
     @objc func tapSearchButton() {
         let searchVC = SearchViewController()
+        searchVC.dormitoryInfo = self.dormitoryInfo
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
@@ -927,11 +936,13 @@ class DeliveryViewController: UIViewController {
             let position = scrollView.contentOffset.y
             print("pos", position)
             
-            // 마지막 데이터에 도달했을 때
-            // 셀 6개 반이 올라간 다음에, 다음 데이터 10개를 불러온다
-            // TODO: - 화면 크기에 따라 동적으로 변경되도록 설정
-            if position > ((partyTableView.rowHeight) * (6.5 + (10 * CGFloat(cursor)))) {
-//                print((partyTableView.rowHeight * 6.5) * CGFloat(cursor+1))
+            // 현재 화면에 테이블뷰 셀이 몇개까지 들어가는지
+            let maxCellNum = partyTableView.bounds.size.height / partyTableView.rowHeight
+            // '몇 번째 셀'이 위로 사라질 때 다음 데이터를 불러올지
+            let boundCellNum = 10 - maxCellNum
+            
+            // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
+            if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
                 // 다음 커서의 배달 목록을 불러온다
                 // TODO: - 다음 커서의 배달 목록 데이터가 없다면 커서 증가 X -> 서버 팀한테 말하기
                 cursor += 1

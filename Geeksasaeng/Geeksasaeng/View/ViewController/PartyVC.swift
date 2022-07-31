@@ -396,7 +396,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var detailData = getDetailInfoResult()
     // TODO: - detailData.authorStatus == Bool -> 수정 & 삭제 메뉴 토글
     
-    // MARK: - Life Cycle
+    // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -417,6 +417,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    // MARK: - viewWillAppear()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
+        navigationController?.isNavigationBarHidden = false
+    }
     
     
     // MARK: - Functions
