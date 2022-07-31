@@ -45,8 +45,6 @@ class PartyTableViewCell: UITableViewCell {
     
     var categoryLabel: UILabel = {
         var label = UILabel()
-        // TODO: - 서버 수정되면 카테고리 데이터 받아오기
-        label.text = "중식"
         label.textColor = UIColor(hex: 0x636363)
         label.font = .customFont(.neoMedium, size: 12)
         return label

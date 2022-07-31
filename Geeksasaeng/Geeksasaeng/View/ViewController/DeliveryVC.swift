@@ -992,10 +992,13 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
            let maxMatching = nowData.maxMatching,
            let orderTime = nowData.orderTime,
            let title = nowData.title,
-           let id = nowData.id,    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
-           let hasHashTag = nowData.hasHashTag {
-            cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
+           let hasHashTag = nowData.hasHashTag,
+           let foodCategory = nowData.foodCategory,
+           let id = nowData.id {  // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+            cell.peopleLabel.text = String(currentMatching) + "/" + String(maxMatching)
             cell.titleLabel.text = title + String(id)
+            cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
+            cell.categoryLabel.text = foodCategory
             
             // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
             // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
@@ -1039,9 +1042,6 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
                 
                 cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
             }
-            
-            // 해시태그 설정
-            cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
         }
         return cell
     }
