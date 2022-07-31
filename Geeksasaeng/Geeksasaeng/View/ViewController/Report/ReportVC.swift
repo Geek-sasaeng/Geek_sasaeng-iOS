@@ -13,8 +13,13 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     
     // 테이블뷰 셀의 label로 들어갈 신고 카테고리 항목들을 정의
-    var postReportCategoryData = ["광고 같아요", "사기가 의심돼요", "배달 정보가 부정확해요", "기타 사유 선택"]
-    var userReportCategoryData = ["비매너 사용자예요", "욕설을 해요", "성희롱을 해요", "사기를 당했어요", "거래 및 환불 신고", "기타 사유 선택"]
+    let postReportCategoryData = ["광고 같아요", "사기가 의심돼요", "배달 정보가 부정확해요", "기타 사유 선택"]
+    let userReportCategoryData = ["비매너 사용자예요", "욕설을 해요", "성희롱을 해요", "사기를 당했어요", "거래 및 환불 신고", "기타 사유 선택"]
+    
+    // 신고하기 탭이 눌린 현재 배달파티의 id값
+    var partyId: Int?
+    // 유저 id값
+    var memberId: Int?
     
     // MARK: - SubViews
     
@@ -187,13 +192,24 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
             reportDetailVC.reportCategoryLabel.text = userReportCategoryData[sender.tag - 4]    // 인덱스 가져올 땐 다시 4빼서
         }
         
+        // 신고하기 카테고리 id값, 파티 id값, 유저 id값 전달
+        reportDetailVC.reportCategoryId = sender.tag + 1 // 1부터 시작
+        reportDetailVC.partyId = partyId
+        reportDetailVC.memberId = memberId
+        
         self.navigationController?.pushViewController(reportDetailVC, animated: true)
     }
     
     /* 기타 사유 선택 카테고리 화살표를 눌렀을 때 실행되는 함수 */
     @objc
-    private func tapReportEtcArrowButton() {
+    private func tapReportEtcArrowButton(_ sender: UIButton) {
         let reportDetailEtcVC = ReportDetailEtcViewController()
+        
+        // 신고하기 카테고리 id값, 파티 id값, 유저 id값 전달
+        reportDetailEtcVC.reportCategoryId = sender.tag + 1 // 1부터 시작
+        reportDetailEtcVC.partyId = partyId
+        reportDetailEtcVC.memberId = memberId
+        
         self.navigationController?.pushViewController(reportDetailEtcVC, animated: true)
     }
 }

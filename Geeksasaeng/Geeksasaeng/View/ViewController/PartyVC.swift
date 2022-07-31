@@ -752,7 +752,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
     /* 신고하기 버튼 눌렀을 때 화면 전환 */
     @objc private func tapReportButton() {
+        guard let partyId = self.deliveryData?.id,
+              let memberId = self.detailData.chiefId else { return }
+        
         let reportVC = ReportViewController()
+        
+        // 해당 배달파티 id값, 유저 id값 전달
+        reportVC.partyId = partyId
+        reportVC.memberId = memberId
+        
         // 옵션탭 집어넣고 화면 전환 실행
         self.optionView.removeFromSuperview()
         self.visualEffectView?.removeFromSuperview()

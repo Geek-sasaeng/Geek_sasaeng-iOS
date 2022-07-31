@@ -1023,6 +1023,9 @@
 		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
 		A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
+		A2AF5395289696810052F734 /* ReportAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF5394289696810052F734 /* ReportAPI.swift */; };
+		A2AF5396289696810052F734 /* ReportAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF5394289696810052F734 /* ReportAPI.swift */; };
+		A2AF5397289696810052F734 /* ReportAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF5394289696810052F734 /* ReportAPI.swift */; };
 		A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
 		A2B045D32889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
 		A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D12889923200B97636 /* ReportDetailVC.swift */; };
@@ -1455,6 +1458,7 @@
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
 		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
+		A2AF5394289696810052F734 /* ReportAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAPI.swift; sourceTree = "<group>"; };
 		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
 		A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailEtcVC.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
@@ -2009,6 +2013,7 @@
 				107123F8287B06D800D58FD1 /* RepetitionAPI.swift */,
 				10A53C722882FA6D00DDCE87 /* APIKEY.swift */,
 				10E6956428885589000B7309 /* LocationAPI.swift */,
+				A2AF5394289696810052F734 /* ReportAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3305,6 +3310,7 @@
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
+				A2AF5395289696810052F734 /* ReportAPI.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
@@ -3362,6 +3368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2AF5396289696810052F734 /* ReportAPI.swift in Sources */,
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
@@ -3496,6 +3503,7 @@
 				A2513F172878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
+				A2AF5397289696810052F734 /* ReportAPI.swift in Sources */,
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,

@@ -12,8 +12,13 @@ class ReportDetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    // 체크박스가 체크되었는지 확인하기 위해
-    var isCheck: Bool = false
+    // 유저 차단 체크박스가 체크되었는지 확인하기 위해
+    var isBlock: Bool = false
+    
+    // 신고할 때 필요한 id값들
+    var reportCategoryId: Int?
+    var partyId: Int?
+    var memberId: Int?
     
     // MARK: - SubViews
     
@@ -113,11 +118,15 @@ class ReportDetailViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    /* 뷰 사라질 때, 반드시 옵져버를 리무브 할 것! */
     override func viewWillDisappear(_ animated: Bool) {
+        /* 뷰 사라질 때, 반드시 옵져버를 리무브 할 것! */
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 뷰가 어떤 이유에서든지 사라지면 tabBar를 다시 보이게 한다
+        self.tabBarController?.tabBar.isHidden = false
     }
+    
     
     // MARK: - Functions
     
@@ -194,16 +203,14 @@ class ReportDetailViewController: UIViewController {
      /* 이전 화면으로 돌아가기 */
     @objc
     private func back(sender: UIBarButtonItem) {
-        // 하단 탭바 다시 보이도록
-        self.navigationController?.tabBarController?.tabBar.isHidden = false
         self.navigationController?.popViewController(animated: true)
     }
     
     /* 이 사용자 차단하기 체크 박스 누르면 체크 모양 뜨도록 */
     @objc
     private func tapCheckBoxButton(_ sender: UIButton) {
-        isCheck = !isCheck
-        (isCheck) ? sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal) : sender.setImage(UIImage(systemName: "square"), for: .normal)
+        isBlock = !isBlock
+        (isBlock) ? sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal) : sender.setImage(UIImage(systemName: "square"), for: .normal)
     }
     
     /* 키보드 올라올 때 실행되는 함수 */
@@ -231,8 +238,11 @@ class ReportDetailViewController: UIViewController {
     /* 하단의 신고하기 버튼을 눌렀을 때 실행되는 함수 -> 신고 제출, 신고하기 토스트 메세지 */
     @objc
     private func tapReportButton() {
-        // TODO: - 신고하기 API 연동
-        showToast(viewController: self, message: "신고가 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+        let input = ReportInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedDeliveryPartyId: partyId, reportedMemberId: memberId)
+        ReportAPI.requestReport(self, input) {
+            // 성공했으면 이전 뷰로 돌아가게
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
 }
