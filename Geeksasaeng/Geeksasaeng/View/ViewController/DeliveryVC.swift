@@ -32,6 +32,8 @@ class DeliveryViewController: UIViewController {
     
     // 배달 목록 화면 처음 킨 건지 여부 확인
     var isInitial = true
+    // 배달 목록의 마지막 페이지인지 여부 확인
+    var isFinalPage = false
     
     // 필터링이 설정되어 있는지/아닌지 여부 확인
     var isPeopleFilterOn = false
@@ -537,32 +539,54 @@ class DeliveryViewController: UIViewController {
             DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, dormitoryId: 1) { [weak self] result in
                 self?.isInitial = false
                 
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
         else if maxMatching != nil, orderTimeCategory == nil {
             DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, dormitoryId: 1) { [weak self] result in
                 
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         // 3. 시간 필터링이 적용된 전체 배달 목록 조회
         else if maxMatching == nil, orderTimeCategory != nil {
             DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, orderTimeCategory: orderTimeCategory, dormitoryId: 1) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
                 
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
         else {
             DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, orderTimeCategory: orderTimeCategory, dormitoryId: 1) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
                 
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         
@@ -905,10 +929,9 @@ class DeliveryViewController: UIViewController {
     /* 새로고침 기능 */
     @objc private func pullToRefresh() {
         // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
-        if deliveryCellDataArray.count > 10 {
-            print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
-            deliveryCellDataArray.removeAll()
-        }
+        print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
+        deliveryCellDataArray.removeAll()
+        
         cursor = 0
         if nowTimeFilter == nil, nowPeopleFilter == nil {
             // API 호출
@@ -943,29 +966,30 @@ class DeliveryViewController: UIViewController {
             
             // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
             if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
-                // 다음 커서의 배달 목록을 불러온다
-                // TODO: - 다음 커서의 배달 목록 데이터가 없다면 커서 증가 X -> 서버 팀한테 말하기
-                cursor += 1
-                print("DEBUG: cursor", cursor)
-                // 필터링 X
-                if !isTimeFilterOn, !isPeopleFilterOn {
-                    print("DEBUG: 필터링 X")
-                    self.getDeliveryList()
-                }
-                // 시간 필터만
-                else if isTimeFilterOn, !isPeopleFilterOn {
-                    print("DEBUG: 시간 필터만")
-                    self.getDeliveryList(orderTimeCategory: nowTimeFilter)
-                }
-                // 인원수 필터만
-                else if !isTimeFilterOn, isPeopleFilterOn {
-                    print("DEBUG: 인원수 필터만")
-                    self.getDeliveryList(maxMatching: nowPeopleFilter)
-                }
-                // 둘 다 필터링
-                else {
-                    print("DEBUG: 둘 다 필터링")
-                    self.getDeliveryList(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
+                if !isFinalPage {
+                    cursor += 1
+                    print("DEBUG: cursor", cursor)
+                    // 필터링 X
+                    if !isTimeFilterOn, !isPeopleFilterOn {
+                        print("DEBUG: 필터링 X")
+                        self.getDeliveryList()
+                    }
+                    // 시간 필터만
+                    else if isTimeFilterOn, !isPeopleFilterOn {
+                        print("DEBUG: 시간 필터만")
+                        self.getDeliveryList(orderTimeCategory: nowTimeFilter)
+                    }
+                    // 인원수 필터만
+                    else if !isTimeFilterOn, isPeopleFilterOn {
+                        print("DEBUG: 인원수 필터만")
+                        self.getDeliveryList(maxMatching: nowPeopleFilter)
+                    }
+                    // 둘 다 필터링
+                    else {
+                        print("DEBUG: 둘 다 필터링")
+                        self.getDeliveryList(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+                    }
                 }
             }
         }

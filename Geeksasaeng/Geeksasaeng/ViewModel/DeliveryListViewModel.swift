@@ -12,7 +12,7 @@ import Alamofire
 class DeliveryListViewModel {
     
     // escaping을 통해 이 함수를 호출한 부분의 클로저로 결과 값을 넘겨줌 -> 호출한 VC에서 처리 가능해짐
-    public static func requestGetDeliveryList(isInitial: Bool, cursor: Int, maxMatching: Int? = nil, orderTimeCategory: String? = nil, dormitoryId: Int, completion: @escaping ([DeliveryListModelResult]) -> Void) {
+    public static func requestGetDeliveryList(isInitial: Bool, cursor: Int, maxMatching: Int? = nil, orderTimeCategory: String? = nil, dormitoryId: Int, completion: @escaping (DeliveryListModelResultList) -> Void) {
         let url = "https://geeksasaeng.shop/\(dormitoryId)/delivery-parties"
         var parameters: Parameters = [
             "cursor": cursor
@@ -47,9 +47,7 @@ class DeliveryListViewModel {
                         
                         // 성공 시에만 completion으로 result를 넘겨줌
                         if let resultData = result.result {
-                            if let realData = resultData.deliveryPartiesVoList {
-                                completion(realData)
-                            }
+                            completion(resultData)
                         }
                     } else {
                         print("DEBUG:", result.message!)

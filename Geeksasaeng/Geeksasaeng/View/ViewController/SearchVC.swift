@@ -38,6 +38,9 @@ class SearchViewController: UIViewController {
     // 목록에서 현재 커서 위치
     var cursor = 0
     
+    // 배달 목록의 마지막 페이지인지 여부 확인
+    var isFinalPage = false
+    
     // 배달 목록 데이터가 저장되는 배열
     var deliveryCellDataArray: [DeliveryListModelResult] = []
     // 현재 검색하고 있는 키워드를 저장 (구별을 위해)
@@ -532,29 +535,53 @@ class SearchViewController: UIViewController {
         // 1. 필터링 없는 전체 배달 목록 조회
         if nowPeopleFilter == nil, nowTimeFilter == nil {
             SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
         else if nowPeopleFilter != nil, nowTimeFilter == nil {
             SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, maxMatching: nowPeopleFilter) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         // 3. 시간 필터링이 적용된 전체 배달 목록 조회
         else if nowPeopleFilter == nil, nowTimeFilter != nil {
             SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, orderTimeCategory: nowTimeFilter) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
         // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
         else {
             SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
                 // 셀에 데이터 추가
-                self?.addCellData(result: result)
+                self?.addCellData(result: data)
             }
         }
     }
@@ -829,12 +856,13 @@ class SearchViewController: UIViewController {
             
             // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
             if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
-                // 다음 커서의 배달 목록을 불러온다
-                // TODO: - 다음 커서의 배달 목록 데이터가 없다면 커서 증가 X -> 서버 팀한테 말하기
-                cursor += 1
-                print("DEBUG: cursor", cursor)
-                print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
-                getSearchedDeliveryList()
+                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
+                if !isFinalPage {
+                    cursor += 1
+                    print("DEBUG: cursor", cursor)
+                    print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
+                    getSearchedDeliveryList()
+                }
             }
         }
     }
@@ -987,14 +1015,17 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - UITextFieldDelegate
+
 extension SearchViewController: UITextFieldDelegate {
+    /* 텍스트 필드 내용이 변경될 때 호출되는 함수 */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let str = textField.text else { return true }
         let newLength = str.count + string.count - range.length
         
-        // 검색 결과 보고난 후에 검색어 지우면 원래 검색 화면을 다시 보여준다
+        // 검색 결과 보고난 후에 검색어를 다 지우면 원래 검색 화면을 다시 보여준다
         if newLength == 0 {
-            nowSearchKeyword = ""
+            nowSearchKeyword = ""   // 초기화
             showSearchMainView()
         }
         
