@@ -483,8 +483,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     public func setDefaultValue() {
 //        chiefProfileImgUrl -> default image 추후에
 //        id
-//        latitude -> 카카오맵 띄워서 좌표 설정
-//        longitude
 //        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
@@ -523,10 +521,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             mapView.isUserInteractionEnabled = false
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
-                                                                    longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526,
+                                                                    longitude: detailData.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
             // 마커의 좌표 설정
-            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
+            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555))
             
             mapView.addPOIItems([marker])
             mapSubView.addSubview(mapView)

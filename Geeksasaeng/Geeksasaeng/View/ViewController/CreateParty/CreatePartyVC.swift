@@ -157,7 +157,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .white
         
         /* 기숙사 좌표 불러오기 */
-        LocationAPI.getLocation(1)
+        LocationAPI.getLocation(dormitoryInfo?.id ?? 1)
         
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
