@@ -24,6 +24,12 @@
 		102B35E02879BD980042F691 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DF2879BD980042F691 /* String+Extension.swift */; };
 		102B35E12879BD980042F691 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DF2879BD980042F691 /* String+Extension.swift */; };
 		102B35E22879BD980042F691 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35DF2879BD980042F691 /* String+Extension.swift */; };
+		1031AA9E28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */; };
+		1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */; };
+		1031AAA028981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */; };
+		1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */; };
+		1031AAA328981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */; };
+		1031AAA428981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */; };
 		103F1454286ACA84004B637B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1453286ACA84004B637B /* AppDelegate.swift */; };
 		103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1455286ACA84004B637B /* SceneDelegate.swift */; };
 		103F145D286ACA86004B637B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
@@ -1103,6 +1109,8 @@
 		102B35D72879BD050042F691 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		102B35DB2879BD670042F691 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		102B35DF2879BD980042F691 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfUseAgreementVC.swift; sourceTree = "<group>"; };
+		1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoAgreementVC.swift; sourceTree = "<group>"; };
 		103F1450286ACA84004B637B /* Geeksasaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geeksasaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1453286ACA84004B637B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103F1455286ACA84004B637B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1563,6 +1571,16 @@
 				A2B4208D286F1EE000278F92 /* ViewController */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		1031AA9C289815DD004B6568 /* Agreement */ = {
+			isa = PBXGroup;
+			children = (
+				1040FB972875C06D0060A3E4 /* AgreementVC.swift */,
+				1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */,
+				1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */,
+			);
+			path = Agreement;
 			sourceTree = "<group>";
 		};
 		103F1447286ACA84004B637B = {
@@ -2130,7 +2148,7 @@
 				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
 				A2B42089286F151100278F92 /* AuthNumVC.swift */,
 				1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */,
-				1040FB972875C06D0060A3E4 /* AgreementVC.swift */,
+				1031AA9C289815DD004B6568 /* Agreement */,
 			);
 			path = Register;
 			sourceTree = "<group>";
@@ -3308,6 +3326,7 @@
 				10D4D6BB2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
+				1031AA9E28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				10D4D6B32894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
@@ -3315,6 +3334,7 @@
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
+				1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				A2AF5395289696810052F734 /* ReportAPI.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
@@ -3393,6 +3413,7 @@
 				10D7EC952886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
+				1031AAA328981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				10D4D6C82894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
@@ -3428,6 +3449,7 @@
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
+				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
@@ -3504,12 +3526,14 @@
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
+				1031AAA028981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2513F232878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */,
 				A2513F172878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
+				1031AAA428981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				A2AF5397289696810052F734 /* ReportAPI.swift in Sources */,
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,

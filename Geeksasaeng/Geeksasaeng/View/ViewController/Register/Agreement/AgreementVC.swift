@@ -107,7 +107,7 @@ class AgreementViewController: UIViewController {
         return view
     }()
     
-    let wholeAgreementArrow: UIButton = {
+    lazy var wholeAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
         return button
@@ -116,6 +116,7 @@ class AgreementViewController: UIViewController {
     let termsOfUseAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
+        button.addTarget(self, action: #selector(tapTermsOfUseAgreementArrow), for: .touchUpInside)
         return button
     }()
     
@@ -344,6 +345,14 @@ class AgreementViewController: UIViewController {
         }
     }
     
+    @objc func tapTermsOfUseAgreementArrow() {
+        let termsOfUseAgreementVC = TermsOfUseAgreementViewController()
+        termsOfUseAgreementVC.modalTransitionStyle = .crossDissolve
+        termsOfUseAgreementVC.modalPresentationStyle = .fullScreen
+        
+        present(termsOfUseAgreementVC, animated: true)
+    }
+    
     /* 네이버 회원가입 시 사용 */
     public func showDomitoryView() {
         let dormitoryVC = DormitoryViewController()
@@ -352,5 +361,3 @@ class AgreementViewController: UIViewController {
         present(dormitoryVC, animated: true)
     }
 }
-
-// TODO: - 이용약관 동의서 화면 두 개 추가

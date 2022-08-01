@@ -127,7 +127,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    let testView: UIView = {
+    let blockedView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
         return view
@@ -360,10 +360,10 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
-                // 좌표가 있으면 기존의 testView를 없애고 그 자리에 카카오맵 노출
+                // 좌표가 있으면 기존의 blockedView를 없애고 그 자리에 카카오맵 노출
                 if let _ = CreateParty.latitude,
                    let _ = CreateParty.longitude {
-                    self.testView.removeFromSuperview()
+                    self.blockedView.removeFromSuperview()
                     self.setMapView()
                 }
                 
@@ -393,7 +393,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
-         testView].forEach {
+         blockedView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -496,7 +496,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(38)
         }
         
-        testView.snp.makeConstraints { make in
+        blockedView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.width.equalTo(314)
