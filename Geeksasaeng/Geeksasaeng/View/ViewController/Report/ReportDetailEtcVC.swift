@@ -12,8 +12,13 @@ class ReportDetailEtcViewController: UIViewController {
     
     // MARK: - Properties
     
-    // 체크박스가 체크되었는지 확인하기 위해
-    var isCheck: Bool = false
+    // 유저 차단 체크박스가 체크되었는지 확인하기 위해
+    var isBlock: Bool = false
+    
+    // 신고할 때 필요한 id값들
+    var reportCategoryId: Int?
+    var partyId: Int?
+    var memberId: Int?
     
     // MARK: - SubViews
     
@@ -35,6 +40,37 @@ class ReportDetailEtcViewController: UIViewController {
         textView.autocorrectionType = .no
         textView.autocapitalizationType = .none
         return textView
+    }()
+    
+    var separateView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        return view
+    }()
+    
+    lazy var checkBoxButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "square"), for: .normal)
+        button.addTarget(self, action: #selector(tapCheckBoxButton(_:)), for: .touchUpInside)
+        button.tintColor = .init(hex: 0x5B5B5B)
+        return button
+    }()
+    
+    var blockUserLabel: UILabel = {
+        let label = UILabel()
+        label.text = "이 사용자 차단하기"
+        label.font = .customFont(.neoMedium, size: 15)
+        label.textColor = .mainColor
+        return label
+    }()
+    
+    var guideLabel: UILabel = {
+        let label = UILabel()
+        label.text = "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다."
+        label.numberOfLines = 0
+        label.font = .customFont(.neoRegular, size: 15)
+        label.textColor = .init(hex: 0xA8A8A8)
+        return label
     }()
     
     // 하단에 있는 신고하기 버튼
@@ -83,10 +119,13 @@ class ReportDetailEtcViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    /* 뷰 사라질 때, 반드시 옵져버를 리무브 할 것! */
     override func viewWillDisappear(_ animated: Bool) {
+        /* 뷰 사라질 때, 반드시 옵져버를 리무브 할 것! */
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 뷰가 어떤 이유에서든지 사라지면 tabBar를 다시 보이게 한다
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Functions
@@ -108,6 +147,10 @@ class ReportDetailEtcViewController: UIViewController {
         [
             reportCategoryLabel,
             reportTextView,
+            separateView,
+            checkBoxButton,
+            blockUserLabel,
+            guideLabel,
             reportButton
         ].forEach { view.addSubview($0) }
     }
@@ -122,6 +165,26 @@ class ReportDetailEtcViewController: UIViewController {
             make.left.right.equalToSuperview().inset(29)
             make.height.equalTo(100)
         }
+        
+        separateView.snp.makeConstraints { make in
+            make.top.equalTo(reportTextView.snp.bottom).offset(20)
+            make.width.equalToSuperview()
+            make.height.equalTo(8)
+        }
+        
+        checkBoxButton.snp.makeConstraints { make in
+            make.top.equalTo(separateView.snp.bottom).offset(25)
+            make.left.equalToSuperview().inset(29)
+        }
+        blockUserLabel.snp.makeConstraints { make in
+            make.left.equalTo(checkBoxButton.snp.right).offset(5)
+            make.centerY.equalTo(checkBoxButton)
+        }
+        guideLabel.snp.makeConstraints { make in
+            make.top.equalTo(blockUserLabel.snp.bottom).offset(11)
+            make.left.right.equalToSuperview().inset(30)
+        }
+        
         reportButton.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(55 + 20)    // 20은 safeAreaLayoutGuide 아래 빈 공간 가리기 위해 추가
@@ -140,16 +203,14 @@ class ReportDetailEtcViewController: UIViewController {
      /* 이전 화면으로 돌아가기 */
     @objc
     private func back(sender: UIBarButtonItem) {
-        // 하단 탭바 다시 보이도록
-        self.navigationController?.tabBarController?.tabBar.isHidden = false
         self.navigationController?.popViewController(animated: true)
     }
     
     /* 이 사용자 차단하기 체크 박스 누르면 체크 모양 뜨도록 */
     @objc
     private func tapCheckBoxButton(_ sender: UIButton) {
-        isCheck = !isCheck
-        (isCheck) ? sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal) : sender.setImage(UIImage(systemName: "square"), for: .normal)
+        isBlock = !isBlock
+        (isBlock) ? sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal) : sender.setImage(UIImage(systemName: "square"), for: .normal)
     }
     
     /* 키보드 올라올 때 실행되는 함수 */
@@ -177,8 +238,23 @@ class ReportDetailEtcViewController: UIViewController {
     /* 하단의 신고하기 버튼을 눌렀을 때 실행되는 함수 -> 신고 제출, 신고하기 토스트 메세지 */
     @objc
     private func tapReportButton() {
-        // TODO: - 신고하기 API 연동
-        showToast(viewController: self, message: "신고가 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+        guard let reportCategoryId = reportCategoryId else { return }
+        
+        print("reportCategoryId: ", reportCategoryId)
+        // 파티 게시글 신고일 때
+        if reportCategoryId < 5 {
+            let input = ReportPartyInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedDeliveryPartyId: partyId, reportedMemberId: memberId)
+            ReportAPI.requestReportParty(self, input) {
+                // 성공했으면 이전 뷰로 돌아가게
+                self.navigationController?.popViewController(animated: true)
+            }
+        } else {    // 사용자 신고일 때
+            let input = ReportMemberInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedMemberId: memberId)
+            ReportAPI.requestReportMember(self, input) {
+                // 성공했으면 이전 뷰로 돌아가게
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
     }
 
 }

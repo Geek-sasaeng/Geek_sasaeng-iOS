@@ -182,10 +182,8 @@ class LoginViewController: UIViewController {
         let registerVC = RegisterViewController()
         
         // TODO: - 회원가입 과정 중에 모달 방식 고민 필요
-        // coverVertical로 할 거면 fullScreen 안 하는 게 나을 듯
-        // crossDissolve로 할 거면 fullScreen 하는 게 나을 듯
-        registerVC.modalTransitionStyle = .coverVertical
-//        registerVC.modalPresentationStyle = .fullScreen
+        registerVC.modalTransitionStyle = .crossDissolve
+        registerVC.modalPresentationStyle = .fullScreen
         
         present(registerVC, animated: true)
     }

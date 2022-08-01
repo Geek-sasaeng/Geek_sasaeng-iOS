@@ -324,7 +324,7 @@ class RegisterViewController: UIViewController {
         let emailAuthVC = EmailAuthViewController()
         
         emailAuthVC.modalTransitionStyle = .coverVertical
-//        emailAuthVC.modalPresentationStyle = .fullScreen
+        emailAuthVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달
         if let idData = self.idTextField.text,

@@ -163,13 +163,16 @@ class AgreementViewController: UIViewController {
     // MARK: - Function
     
     func addSubViews() {
-        [progressBar, remainBar, progressIcon, remainIcon,
-         welcomeLabel, wholeAgreementCheckBox, termsOfUseAgreementCheckBox, personalInfoAgreementCheckBox,
-         wholeAgreementButton, separateView, termsOfUseAgreementButton, personalInfoAgreementButton,
-         wholeAgreementArrow, termsOfUseAgreementArrow, personalInfoAgreementArrow,
-         completeButton].forEach {
-            view.addSubview($0)
-        }
+        [
+            progressBar, remainBar, progressIcon, remainIcon,
+            welcomeLabel,
+            wholeAgreementCheckBox, wholeAgreementButton,
+            separateView,
+            termsOfUseAgreementCheckBox, termsOfUseAgreementButton,
+            personalInfoAgreementCheckBox, personalInfoAgreementButton,
+            wholeAgreementArrow, termsOfUseAgreementArrow, personalInfoAgreementArrow,
+            completeButton
+        ].forEach { view.addSubview($0) }
     }
     
     func setLayouts() {

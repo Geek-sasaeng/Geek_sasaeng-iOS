@@ -22,9 +22,6 @@ class SearchViewController: UIViewController {
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
     
-    // 배달 목록 화면 처음 킨 건지 여부 확인
-    var isInitial = true
-    
     // 필터링이 설정되어 있는지/아닌지 여부 확인
     var isPeopleFilterOn = false
     var isTimeFilterOn = false
@@ -33,18 +30,26 @@ class SearchViewController: UIViewController {
     var nowPeopleFilter: Int? = nil
     // 현재 설정되어 있는 시간 필터값
     var nowTimeFilter: String? = nil
-
+    
+    // TODO: - 회원가입 에러가 해결되면 dormitoryId 수정 예정
+    // 새로 회원가입 해서 기숙사 선택 화면 거치게 하면 dormitoryInfo 생길 것임! 미니 계정은 기숙사 선택 과정을 안 거친 계정이라 이거 없어서 지금 테스트 불가능함
+    // 기숙사 정보 -> id랑 name 다 있음
+    var dormitoryInfo: DormitoryNameResult?
     // 목록에서 현재 커서 위치
     var cursor = 0
+    
+    // 배달 목록의 마지막 페이지인지 여부 확인
+    var isFinalPage = false
+    
     // 배달 목록 데이터가 저장되는 배열
-    var deliveryCellDataArray: [DeliveryListModelResult] = [
-        DeliveryListModelResult(id: 1, title: "Dummy Data", orderTime: "2022-07-25 12:50:00", currentMatching: 1, maxMatching: 4, hasHashTag: true)
-    ]
+    var deliveryCellDataArray: [DeliveryListModelResult] = []
+    // 현재 검색하고 있는 키워드를 저장 (구별을 위해)
+    var nowSearchKeyword: String = ""
     
     // MARK: - Subviews
     
     /* 검색창 textField */
-    var searchTextField: UITextField = {
+    lazy var searchTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .white
         textField.textColor = .init(hex: 0x2F2F2F)
@@ -56,14 +61,14 @@ class SearchViewController: UIViewController {
             ]
         )
         textField.makeBottomLine(323)
+        textField.delegate = self
         return textField
     }()
     
     lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "SearchMark"), for: .normal)
-        // TODO: - 검색 API 연동 후 수정할 것임
-        button.addTarget(self, action: #selector(showSearchResultView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
         button.contentMode = .scaleAspectFit
         return button
     }()
@@ -74,9 +79,11 @@ class SearchViewController: UIViewController {
         return label
     }()
     
-    var dormitoryWeeklyTopLabel: UILabel = {
+    lazy var dormitoryWeeklyTopLabel: UILabel = {
         let label = UILabel()
-        // TODO: - 추후에 기숙사 정보 받아와서 넣기
+//        if let name = dormitoryInfo?.name {
+//            label.text = "\("제" + name) Weekly TOP 10"
+//        }
         label.text = "제1기숙사 Weekly TOP 10"
         return label
     }()
@@ -265,12 +272,23 @@ class SearchViewController: UIViewController {
         return tableView
     }()
     
+    /* 테이블뷰 셀 하단에 블러뷰 */
+    lazy var blurView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140))
+        // 그라데이션 적용
+        view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
+        view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        // setAttributes
         [recentSearchLabel, dormitoryWeeklyTopLabel].forEach {
             setMainTextAttributes($0)
         }
@@ -278,6 +296,7 @@ class SearchViewController: UIViewController {
         addSubViews()
         setLayouts()
         
+        // collection view 설정
         [
             recentSearchCollectionView,
             weeklyTopCollectionView,
@@ -286,6 +305,7 @@ class SearchViewController: UIViewController {
 
         setTableView()
         
+        // 검색 결과 화면 숨기기 - 초기화
         [
             filterImageView,
             peopleFilterView,
@@ -327,7 +347,8 @@ class SearchViewController: UIViewController {
             filterImageView, peopleFilterView,
             timeCollectionView,
             peopleDropDownView, peopleFilterContainerView,
-            partyTableView
+            partyTableView,
+            blurView
         ].forEach { view.addSubview($0) }
     }
     
@@ -413,8 +434,15 @@ class SearchViewController: UIViewController {
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(500)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+        }
+        
+        /* blur view */
+        blurView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(140)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -470,6 +498,93 @@ class SearchViewController: UIViewController {
           }
     }
     
+    /*
+     검색 버튼을 눌렀을 때 실행되는 함수
+     - API를 통해 검색어가 들어간 배달 파티 리스트를 불러옴
+     - 검색 결과 화면을 보여줌
+     */
+    @objc
+    private func tapSearchButton() {
+        if nowSearchKeyword != searchTextField.text {
+            deliveryCellDataArray.removeAll()
+            cursor = 0
+            getSearchedDeliveryList()
+            
+            nowSearchKeyword = searchTextField.text!
+            print("DEBUG: 검색 키워드", nowSearchKeyword)
+            
+            showSearchResultView()
+        }
+    }
+    
+    /* 배달 파티 검색 */
+    private func getSearchedDeliveryList() {
+//        print(searchTextField.text, dormitoryInfo)
+        guard let keyword = searchTextField.text else { return }
+//              let dormitoryInfo = dormitoryInfo,
+//              let dormitoryId = dormitoryInfo.id else { return }
+//        print(keyword, dormitoryInfo)
+        if searchTextField.text == "" { return }
+        
+        print("DEBUG: 검색어 내용", keyword)
+        
+        // 푸터뷰(= 데이터 받아올 때 테이블뷰 맨 아래 새로고침 표시 뜨는 거) 생성
+        self.partyTableView.tableFooterView = createSpinnerFooter()
+        
+        // 1. 필터링 없는 전체 배달 목록 조회
+        if nowPeopleFilter == nil, nowTimeFilter == nil {
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
+                // 셀에 데이터 추가
+                self?.addCellData(result: data)
+            }
+        }
+        // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
+        else if nowPeopleFilter != nil, nowTimeFilter == nil {
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, maxMatching: nowPeopleFilter) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
+                // 셀에 데이터 추가
+                self?.addCellData(result: data)
+            }
+        }
+        // 3. 시간 필터링이 적용된 전체 배달 목록 조회
+        else if nowPeopleFilter == nil, nowTimeFilter != nil {
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, orderTimeCategory: nowTimeFilter) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
+                // 셀에 데이터 추가
+                self?.addCellData(result: data)
+            }
+        }
+        // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
+        else {
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter) { [weak self] result in
+                guard let data = result.deliveryPartiesVoList,
+                      let isFinalPage = result.finalPage else { return }
+                
+                print("DEBUG: 마지막 페이지인가?", isFinalPage)
+                // 마지막 페이지인지 아닌지 전달
+                self!.isFinalPage = isFinalPage
+                // 셀에 데이터 추가
+                self?.addCellData(result: data)
+            }
+        }
+    }
+    
     /* 검색 메인 화면을 숨겨서 검색 결과 화면을 보여준다! */
     @objc
     private func showSearchResultView() {
@@ -488,7 +603,8 @@ class SearchViewController: UIViewController {
             peopleFilterLabel,
             peopleFilterToggleImageView,
             timeCollectionView,
-            partyTableView
+            partyTableView,
+            blurView
         ].forEach { $0.isHidden = false }
     }
     
@@ -509,8 +625,120 @@ class SearchViewController: UIViewController {
             peopleFilterLabel,
             peopleFilterToggleImageView,
             timeCollectionView,
-            partyTableView
+            partyTableView,
+            blurView
         ].forEach { $0.isHidden = true }
+    }
+    
+    /* peopleFilter를 사용하여 데이터 가져오기 */
+    private func getPeopleFilterList(text: String?) {
+        // TODO: - Bool값 false가 되는 때도 설정 필요
+        deliveryCellDataArray.removeAll()
+        isPeopleFilterOn = true
+        
+        enum peopleOption: String {
+            case two = "2명 이하"
+            case four = "4명 이하"
+            case six = "6명 이하"
+            case eight = "8명 이하"
+            case ten = "10명 이하"
+        }
+        
+        print("TEST: ", text ?? "")
+        var num: Int? = nil
+        switch text {
+        case peopleOption.two.rawValue:
+            num = 2
+        case peopleOption.four.rawValue:
+            num = 4
+        case peopleOption.six.rawValue:
+            num = 6
+        case peopleOption.eight.rawValue:
+            num = 8
+        case peopleOption.ten.rawValue:
+            num = 10
+        default:
+            num = nil
+        }
+        print("TEST: ", num ?? -1)
+
+        if let num = num {
+            cursor = 0
+            nowPeopleFilter = num
+            print("DEBUG:", nowPeopleFilter, nowTimeFilter)
+            getSearchedDeliveryList()
+        }
+    }
+
+    /* timeFilter를 사용하여 데이터 가져오기 */
+    private func getTimeFilterList(text: String?) {
+        if !isTimeFilterOn {
+            deliveryCellDataArray.removeAll()
+            isTimeFilterOn = true
+            cursor = 0
+        }
+
+        // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
+        enum TimeOption: String {
+            case breakfast = "BREAKFAST"
+            case lunch = "LUNCH"
+            case dinner = "DINNER"
+            case midnightSnacks = "MIDNIGHT_SNACKS"
+        }
+        
+        var orderTimeCategory: String? = nil
+        switch text {
+        case "아침" :
+            orderTimeCategory = TimeOption.breakfast.rawValue
+        case "점심" :
+            orderTimeCategory = TimeOption.lunch.rawValue
+        case "저녁" :
+            orderTimeCategory = TimeOption.dinner.rawValue
+        case "야식" :
+            orderTimeCategory = TimeOption.midnightSnacks.rawValue
+        default :
+            orderTimeCategory = ""
+        }
+        
+        if let orderTimeCategory = orderTimeCategory {
+            cursor = 0
+            nowTimeFilter = orderTimeCategory
+            print("DEBUG:", nowPeopleFilter, nowTimeFilter)
+            getSearchedDeliveryList()
+        }
+    }
+    
+    /* 서버로부터 받아온 response를 처리하는 함수. res가 성공이면 셀에 데이터를 추가해준다 */
+    private func addCellData(result: [DeliveryListModelResult]) {
+        // 데이터 로딩 표시 제거
+        DispatchQueue.main.async {
+            self.partyTableView.tableFooterView = nil
+        }
+        
+        result.forEach {
+            // 데이터를 배열에 추가
+            self.deliveryCellDataArray.append($0)
+            print("DEBUG: 받아온 배달 데이터", $0)
+            print("DEBUG: 배달 데이터 배열 현황", deliveryCellDataArray)
+        }
+        
+        // 테이블뷰 리로드
+        DispatchQueue.main.async {
+            self.partyTableView.reloadData()
+        }
+    }
+    
+    /* 무한 스크롤로 마지막 데이터까지 가면 나오는(= FooterView) 데이터 로딩 표시 생성 */
+    private func createSpinnerFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
+        
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.center = footerView.center
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        spinner.color = .mainColor
+        
+        return footerView
     }
     
     /* 서브뷰에 제스쳐 추가 */
@@ -565,7 +793,7 @@ class SearchViewController: UIViewController {
         peopleFilterLabel.text = label.text
         
         // 인원수 필터링 호출
-//        self.getPeopleFilterList(text: label.text)
+        self.getPeopleFilterList(text: label.text)
         
         for view in peopleOptionStackView.subviews {
             let label = view as! UILabel
@@ -583,7 +811,7 @@ class SearchViewController: UIViewController {
         if label.textColor != .mainColor {
             label.textColor = .mainColor
             // 시간 필터링 호출
-//            getTimeFilterList(text: label.text)
+            getTimeFilterList(text: label.text)
         } else {
             // 원래 색깔로 되돌려 놓는다
             label.textColor = .init(hex: 0xD8D8D8)
@@ -593,20 +821,49 @@ class SearchViewController: UIViewController {
             nowTimeFilter = nil
             
             cursor = 0
-            if nowPeopleFilter == nil {
-//                getDeliveryList()
-            } else {
-//                getDeliveryList(maxMatching: nowPeopleFilter)
-            }
+            print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
+            getSearchedDeliveryList()
         }
     }
     
     /* 새로고침 기능 */
     @objc private func pullToRefresh() {
+        // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
+        print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
+        deliveryCellDataArray.removeAll()
+        cursor = 0
+        
+        // API 호출
+        getSearchedDeliveryList()
+        
         // 테이블뷰 새로고침
         partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
         partyTableView.refreshControl?.endRefreshing()
+    }
+    
+    /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
+        if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
+            let position = scrollView.contentOffset.y
+            print("pos", position)
+            
+            // 현재 화면에 테이블뷰 셀이 몇개까지 들어가는지
+            let maxCellNum = partyTableView.bounds.size.height / partyTableView.rowHeight
+            let boundCellNum = 10 - maxCellNum
+            
+            // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
+            if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
+                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
+                if !isFinalPage {
+                    cursor += 1
+                    print("DEBUG: cursor", cursor)
+                    print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
+                    getSearchedDeliveryList()
+                }
+            }
+        }
     }
     
     // 이전 화면으로 돌아가기
@@ -696,7 +953,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
            let maxMatching = nowData.maxMatching,
            let orderTime = nowData.orderTime,
            let title = nowData.title,
-           let id = nowData.id {    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+           let id = nowData.id,    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+           let hasHashTag = nowData.hasHashTag {
             cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
             cell.titleLabel.text = title + String(id)
             
@@ -743,6 +1001,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
             }
             
+            // 해시태그 설정
+            cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
         }
         return cell
     }
@@ -751,5 +1011,23 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         let viewController = PartyViewController()
         viewController.deliveryData = deliveryCellDataArray[indexPath.row]
         self.navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension SearchViewController: UITextFieldDelegate {
+    /* 텍스트 필드 내용이 변경될 때 호출되는 함수 */
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let str = textField.text else { return true }
+        let newLength = str.count + string.count - range.length
+        
+        // 검색 결과 보고난 후에 검색어를 다 지우면 원래 검색 화면을 다시 보여준다
+        if newLength == 0 {
+            nowSearchKeyword = ""   // 초기화
+            showSearchMainView()
+        }
+        
+        return newLength <= 20
     }
 }
