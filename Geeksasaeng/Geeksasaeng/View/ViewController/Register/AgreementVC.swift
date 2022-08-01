@@ -38,6 +38,93 @@ class AgreementViewController: UIViewController {
         return imageView
     }()
     
+    let welcomeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "긱사생에 오신 것을\n환영합니다"
+        label.font = .customFont(.neoBold, size: 32)
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    lazy var wholeAgreementCheckBox: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var termsOfUseAgreementCheckBox: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var personalInfoAgreementCheckBox: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
+        button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var wholeAgreementButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(" 약관 전체동의", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .customFont(.neoBold, size: 18)
+        return button
+    }()
+    
+    lazy var termsOfUseAgreementButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .customFont(.neoRegular, size: 18)
+        // custom text
+        let text = " (필수) 이용약관 동의"
+        let attributeString = NSMutableAttributedString(string: text)
+        attributeString.addAttribute(.foregroundColor, value: UIColor.mainColor, range: (text as NSString).range(of: "(필수)"))
+        button.setAttributedTitle(attributeString, for: .normal)
+        return button
+    }()
+    
+    lazy var personalInfoAgreementButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = .customFont(.neoRegular, size: 18)
+        let text = " (필수) 개인정보 수집 및 이용동의"
+        let attributeString = NSMutableAttributedString(string: text)
+        attributeString.addAttribute(.foregroundColor, value: UIColor.mainColor, range: (text as NSString).range(of: "(필수)"))
+        button.setAttributedTitle(attributeString, for: .normal)
+        return button
+    }()
+    
+    let separateView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        return view
+    }()
+    
+    let wholeAgreementArrow: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
+        return button
+    }()
+    
+    let termsOfUseAgreementArrow: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
+        return button
+    }()
+    
+    let personalInfoAgreementArrow: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
+        return button
+    }()
+    
     lazy var completeButton: UIButton = {
         let button = UIButton()
         button.setTitle("완료", for: .normal)
@@ -76,10 +163,16 @@ class AgreementViewController: UIViewController {
     // MARK: - Function
     
     func addSubViews() {
-        [progressBar, remainBar, progressIcon, remainIcon,
-         completeButton].forEach {
-            view.addSubview($0)
-        }
+        [
+            progressBar, remainBar, progressIcon, remainIcon,
+            welcomeLabel,
+            wholeAgreementCheckBox, wholeAgreementButton,
+            separateView,
+            termsOfUseAgreementCheckBox, termsOfUseAgreementButton,
+            personalInfoAgreementCheckBox, personalInfoAgreementButton,
+            wholeAgreementArrow, termsOfUseAgreementArrow, personalInfoAgreementArrow,
+            completeButton
+        ].forEach { view.addSubview($0) }
     }
     
     func setLayouts() {
@@ -111,6 +204,63 @@ class AgreementViewController: UIViewController {
             make.height.equalTo(36)
             make.top.equalTo(progressBar.snp.top).offset(-8)
             make.right.equalTo(remainBar.snp.right).offset(3)
+        }
+        
+        welcomeLabel.snp.makeConstraints { make in
+            make.top.equalTo(remainBar.snp.bottom).offset(183)
+            make.left.equalToSuperview().inset(23)
+        }
+        
+        wholeAgreementCheckBox.snp.makeConstraints { make in
+            make.top.equalTo(welcomeLabel.snp.bottom).offset(106)
+            make.left.equalToSuperview().inset(23)
+        }
+        
+        wholeAgreementButton.snp.makeConstraints { make in
+            make.top.equalTo(wholeAgreementCheckBox.snp.top).offset(-5)
+            make.left.equalTo(wholeAgreementCheckBox.snp.right).offset(9)
+        }
+        
+        separateView.snp.makeConstraints { make in
+            make.top.equalTo(wholeAgreementButton.snp.bottom).offset(28)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(324)
+            make.height.equalTo(1)
+        }
+        
+        termsOfUseAgreementCheckBox.snp.makeConstraints { make in
+            make.top.equalTo(separateView.snp.bottom).offset(39)
+            make.left.equalToSuperview().inset(23)
+        }
+        
+        termsOfUseAgreementButton.snp.makeConstraints { make in
+            make.top.equalTo(termsOfUseAgreementCheckBox.snp.top).offset(-5)
+            make.left.equalTo(termsOfUseAgreementCheckBox.snp.right).offset(9)
+        }
+        
+        personalInfoAgreementCheckBox.snp.makeConstraints { make in
+            make.top.equalTo(termsOfUseAgreementButton.snp.bottom).offset(44)
+            make.left.equalToSuperview().inset(23)
+        }
+        
+        personalInfoAgreementButton.snp.makeConstraints { make in
+            make.top.equalTo(personalInfoAgreementCheckBox.snp.top).offset(-5)
+            make.left.equalTo(personalInfoAgreementCheckBox.snp.right).offset(9)
+        }
+        
+        wholeAgreementArrow.snp.makeConstraints { make in
+            make.top.equalTo(wholeAgreementButton.snp.top).offset(5)
+            make.right.equalToSuperview().inset(32)
+        }
+        
+        termsOfUseAgreementArrow.snp.makeConstraints { make in
+            make.top.equalTo(termsOfUseAgreementButton.snp.top).offset(5)
+            make.right.equalToSuperview().inset(32)
+        }
+        
+        personalInfoAgreementArrow.snp.makeConstraints { make in
+            make.top.equalTo(personalInfoAgreementButton.snp.top).offset(5)
+            make.right.equalToSuperview().inset(32)
         }
         
         completeButton.snp.makeConstraints { make in
@@ -186,6 +336,14 @@ class AgreementViewController: UIViewController {
         present(loginVC, animated: true)
     }
     
+    @objc func tapCheckButton(_ sender: UIButton) {
+        if sender.currentImage == UIImage(systemName: "rectangle") {
+            sender.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
+        } else {
+            sender.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        }
+    }
+    
     /* 네이버 회원가입 시 사용 */
     public func showDomitoryView() {
         let dormitoryVC = DormitoryViewController()
@@ -194,3 +352,5 @@ class AgreementViewController: UIViewController {
         present(dormitoryVC, animated: true)
     }
 }
+
+// TODO: - 이용약관 동의서 화면 두 개 추가
