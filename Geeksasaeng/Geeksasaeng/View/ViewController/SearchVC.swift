@@ -68,7 +68,6 @@ class SearchViewController: UIViewController {
     lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "SearchMark"), for: .normal)
-        // TODO: - 검색 API 연동 후 수정할 것임
         button.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
         button.contentMode = .scaleAspectFit
         return button
