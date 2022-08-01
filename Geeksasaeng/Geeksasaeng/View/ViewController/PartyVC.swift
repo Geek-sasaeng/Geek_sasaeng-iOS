@@ -282,9 +282,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
-    var mapView: UIView = {
+    let mapSubView: UIView = {
         let view = UIView()
-        view.backgroundColor = .init(hex: 0xEFEFEF)
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 5
         return view
     }()
     
@@ -428,6 +429,17 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     var deliveryData: DeliveryListModelResult?
     var detailData = getDetailInfoResult()
+    var dormitoryInfo: DormitoryNameResult? // dormitory id, name
+    var mapView: MTMapView? // 카카오맵
+    var marker: MTMapPOIItem = {
+        let marker = MTMapPOIItem()
+        marker.showAnimationType = .dropFromHeaven
+        marker.markerType = .redPin
+        marker.itemName = "요기?"
+        marker.showDisclosureButtonOnCalloutBalloon = false
+        marker.draggable = true
+        return marker
+    }()
     
     // MARK: - viewDidLoad()
     
@@ -437,6 +449,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .white
         
         setDetailData()
+        setMapView()
         addSubViews()
         setLayouts()
         setAttributes()
@@ -498,6 +511,28 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         postingTime.text = detailData.updatedAt
     }
     
+    private func setMapView() {
+        // 지도 불러오기
+        mapView = MTMapView(frame: mapSubView.frame)
+        
+        if let mapView = mapView {
+            // 델리게이트 연결
+            mapView.delegate = self
+            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
+            mapView.baseMapType = .standard
+            mapView.isUserInteractionEnabled = false
+            
+            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
+                                                                    longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
+            // 마커의 좌표 설정
+            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
+            
+            mapView.addPOIItems([marker])
+            mapSubView.addSubview(mapView)
+        }
+    }
+    
     private func addSubViews() {
         self.view.addSubview(scrollView)
         self.scrollView.addSubview(contentView)
@@ -511,7 +546,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             separateView,
             orderLabel, matchingLabel, categoryLabel, storeLinkLabel, pickupLocationLabel,
             orderReserveLabel, matchingDataLabel, categoryDataLabel, storeLinkDataLabel, pickupLocationDataLabel,
-            mapView
+            mapSubView
         ].forEach { contentView.addSubview($0) }
         [
             matchingDataWhiteLabel,
@@ -631,7 +666,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(pickupLocationLabel.snp.top)
         }
         
-        mapView.snp.makeConstraints { make in
+        mapSubView.snp.makeConstraints { make in
             make.top.equalTo(pickupLocationLabel.snp.bottom).offset(24)
             make.left.right.equalToSuperview().inset(23)
             make.height.equalTo(122)
@@ -666,9 +701,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setAttributes() {
-        
-        mapView.layer.cornerRadius = 5
-        
         /* Navigation Bar Attrs */
         self.navigationItem.title = "파티 보기"
         navigationItem.hidesBackButton = true   // 원래 백버튼은 숨기고,
@@ -815,6 +847,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         visualEffectView?.removeFromSuperview()
         
         let editPartyVC = EditPartyViewController()
+        editPartyVC.dormitoryInfo = dormitoryInfo
         editPartyVC.detailData = detailData
         editPartyVC.isEdittiedDelegate = self
         navigationController?.pushViewController(editPartyVC, animated: true)
@@ -868,4 +901,8 @@ extension PartyViewController: EdittedDelegate {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
         }
     }
+}
+
+extension PartyViewController: MTMapViewDelegate {
+    
 }

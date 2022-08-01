@@ -149,6 +149,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         marker.draggable = true
         return marker
     }()
+    var dormitoryInfo: DormitoryNameResult?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -157,7 +158,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         
         /* 기숙사 좌표 불러오기 */
         LocationAPI.getLocation(1)
-        // MARK: - 여기서 맵뷰 객체 생성하면 서브뷰에서 런타임 에러
+        
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
         setDelegate()
@@ -171,6 +172,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
+        mapView = nil // 맵뷰 초기화
         
         // 전역변수 초기화
         CreateParty.orderForecastTime = nil
@@ -734,7 +736,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 storeUrl: url,
                 hashTag: CreateParty.hashTag ?? false)
             
-            CreatePartyViewModel.registerParty(dormitoryId: 1, input)
+            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input)
         }
         
         navigationController?.popViewController(animated: true)
