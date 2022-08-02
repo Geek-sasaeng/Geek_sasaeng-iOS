@@ -150,6 +150,8 @@ class AgreementViewController: UIViewController {
     var university: String? = nil
     
     var isFromNaverRegister = false
+    var accessToken: String?
+    var email: String?
     
     // MARK: - viewDidLoad()
     
@@ -277,29 +279,11 @@ class AgreementViewController: UIViewController {
         // TODO: - 네이버 회원가입 수정 필요
         if isFromNaverRegister { // naver 회원가입인 경우
 //            phoneNum = phoneNum?.replacingOccurrences(of: "-", with: "")
-            if let checkPassword = self.pwCheckData,
-               let emailId = self.emailId,
-               let loginId = self.idData,
+            if let email = email,
                let nickname = self.nickNameData,
-               let password = self.pwData,
-               let phoneNumberId = self.phoneNumberId,
-               let universityName = self.university {
-                print(checkPassword)
-                print(emailId)
-                print(loginId)
-                print(nickname)
-                print(password)
-                print(phoneNumberId)
-                print(universityName)
-                let input = RegisterInput(checkPassword: checkPassword,
-                                          emailId: emailId,
-                                          informationAgreeStatus: "Y",
-                                          loginId: loginId,
-                                          nickname: nickname,
-                                          password: password,
-                                          phoneNumberId: phoneNumberId,
-                                          universityName: universityName)
-                
+               let universityName = self.university,
+               let accessToken = self.accessToken {
+                let input = NaverRegisterInput(accessToken: accessToken, email: email, informationAgreeStatus: "Y", nickname: nickname, universityName: universityName)
                 RegisterAPI.registerUserFromNaver(self, input)
             }
         } else { // naver 회원가입이 아닌 경우
