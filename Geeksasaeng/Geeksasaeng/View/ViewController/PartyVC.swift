@@ -448,8 +448,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         scrollView.delegate = self
         view.backgroundColor = .white
         
-        setDetailData()
         setMapView()
+        setDetailData()
         addSubViews()
         setLayouts()
         setAttributes()
@@ -476,7 +476,36 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     private func setDetailData() {
         if let partyId = self.deliveryData?.id {
-            DeliveryListDetailViewModel.getDetailInfo(viewController: self, partyId)
+            DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
+                // detailData에 데이터 넣기
+                if let self = self {
+                    self.detailData.chief = result.chief
+                    self.detailData.chiefId = result.chiefId
+                    self.detailData.content = result.content
+                    self.detailData.currentMatching = result.currentMatching
+                    self.detailData.foodCategory = result.foodCategory
+                    self.detailData.hashTag = result.hashTag
+                    self.detailData.id = result.id
+                
+                    // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
+                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!)), zoomLevel: 5, animated: true)
+                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!))
+                    
+                    self.detailData.matchingStatus = result.matchingStatus
+                    self.detailData.maxMatching = result.maxMatching
+                    self.detailData.orderTime = result.orderTime
+                    self.detailData.title = result.title
+                    self.detailData.updatedAt = result.updatedAt
+                    self.detailData.storeUrl = result.storeUrl
+                    self.detailData.authorStatus = result.authorStatus
+                    self.detailData.dormitory = result.dormitory
+                    if let chiefProfileImgUrl = result.chiefProfileImgUrl {
+                        self.detailData.chiefProfileImgUrl = chiefProfileImgUrl
+                    }
+                    
+                    self.setDefaultValue()
+                }
+            })
         }
     }
     
@@ -509,7 +538,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         postingTime.text = detailData.updatedAt
     }
     
-    private func setMapView() {
+    public func setMapView() {
+        print("setMapView 호출 시점")
         // 지도 불러오기
         mapView = MTMapView(frame: mapSubView.frame)
         
