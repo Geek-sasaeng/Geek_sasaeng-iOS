@@ -52,6 +52,9 @@ class DeliveryViewController: UIViewController {
     var nowPeopleFilter: Int? = nil
     // 현재 설정되어 있는 시간 필터값
     var nowTimeFilter: String? = nil
+    
+    // 현재 설정되어 있는 시간 필터 label
+    var selectedTimeLabel: UILabel? = nil
 
     // 목록에서 현재 커서 위치
     var cursor = 0
@@ -606,6 +609,7 @@ class DeliveryViewController: UIViewController {
         // TODO: - Bool값 false가 되는 때도 설정 필요
         deliveryCellDataArray.removeAll()
         isPeopleFilterOn = true
+        cursor = 0
         
         enum peopleOption: String {
             case two = "2명 이하"
@@ -634,7 +638,6 @@ class DeliveryViewController: UIViewController {
         print("TEST: ", num ?? -1)
 
         if let num = num {
-            cursor = 0
             nowPeopleFilter = num
             
             // 상태에 따라 다른 파라미터로 API를 호출한다
@@ -649,11 +652,10 @@ class DeliveryViewController: UIViewController {
 
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
-        if !isTimeFilterOn {
-            deliveryCellDataArray.removeAll()
-            isTimeFilterOn = true
-            cursor = 0
-        }
+        deliveryCellDataArray.removeAll()
+        // 시간 필터 ON
+        isTimeFilterOn = true
+        cursor = 0
 
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
         enum TimeOption: String {
@@ -678,7 +680,7 @@ class DeliveryViewController: UIViewController {
         }
         
         if let orderTimeCategory = orderTimeCategory {
-            cursor = 0
+            // 현재 시간 필터 설정
             nowTimeFilter = orderTimeCategory
             
             // 상태에 따라 다른 파라미터로 API를 호출
@@ -864,20 +866,31 @@ class DeliveryViewController: UIViewController {
     @objc private func tapTimeOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
-        // label 색 변경 - mainColor로 -> 필터가 선택된 것
+        // label 색 변경
+        // 선택돼있던 label이 아니었다면, mainColor로 바꿔준다
         if label.textColor != .mainColor {
+            // 원래 선택돼있던 label 색깔은 해제한다. -> 시간 필터 1개만 선택 가능
+            if selectedTimeLabel != nil {
+                // 색깔 원상복귀
+                selectedTimeLabel?.textColor = .init(hex: 0xD8D8D8)
+            }
             label.textColor = .mainColor
+            selectedTimeLabel = label
+            
             // 시간 필터링 호출
             getTimeFilterList(text: label.text)
         } else {
-            // 원래 색깔로 되돌려 놓는다
+            // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
             label.textColor = .init(hex: 0xD8D8D8)
             
             // 시간 필터 해제
             isTimeFilterOn = false
             nowTimeFilter = nil
             
+            // 초기화
+            deliveryCellDataArray.removeAll()
             cursor = 0
+            
             if nowPeopleFilter == nil {
                 getDeliveryList()
             } else {
