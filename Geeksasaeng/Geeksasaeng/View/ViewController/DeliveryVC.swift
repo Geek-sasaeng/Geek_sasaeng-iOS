@@ -9,6 +9,12 @@ import UIKit
 import SnapKit
 import Kingfisher
 
+/* Delegate Pattern을 구현하기 위한 프로토콜 */
+protocol UpdateDeliveryDelegate {
+    // 배달 목록을 새로고침 해준다.
+   func updateDeliveryList()
+}
+
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
@@ -1068,9 +1074,11 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = PartyViewController()
-        viewController.deliveryData = deliveryCellDataArray[indexPath.row]
-        self.navigationController?.pushViewController(viewController, animated: true)
+        let partyVC = PartyViewController()
+        partyVC.deliveryData = deliveryCellDataArray[indexPath.row]
+        // delegate로 자기 자신(DeliveryVC)를 넘겨줌
+        partyVC.delegate = self
+        self.navigationController?.pushViewController(partyVC, animated: true)
     }
 }
 
@@ -1136,4 +1144,15 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         }
     }
     
+}
+
+// MARK: - UpdateDeliveryDelegate
+
+extension DeliveryViewController: UpdateDeliveryDelegate {
+    /* PartyVC에서 배달 파티가 삭제되면,
+     DeliveryVC의 배달 목록을 새로고침 시키는 함수 */
+    func updateDeliveryList() {
+        print("DEBUG: 삭제됐으니 테이블뷰 리로드 할게요")
+        pullToRefresh()
+    }
 }
