@@ -30,7 +30,72 @@ class getDetailInfoResult {
 }
 
 class DeliveryListDetailViewModel {
-    public static func getDetailInfo(viewController: PartyViewController, _ partyId : Int) {
+//    public static func getDetailInfo(viewController: PartyViewController, _ partyId : Int) {
+//        AF.request("https://geeksasaeng.shop/delivery-party/\(partyId)", method: .get, parameters: nil,
+//                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+//        .validate()
+//        .responseDecodable(of: DeliveryListDetailModel.self) { response in
+//            switch response.result {
+//            case .success(let result):
+//                if result.isSuccess! {
+//                    print("DEBUG: 디테일 정보 불러오기 성공")
+//
+//                    // 프로퍼티에 저장 -> profileImgUrl 수정 필요
+//                    if let result = result.result {
+//                        if let chief = result.chief,
+//                           let chiefId = result.chiefId,
+//                           let content = result.content,
+//                           let currentMatching = result.currentMatching,
+//                           let foodCategory = result.foodCategory,
+//                           let hashTag = result.hashTag,
+//                           let id = result.id,
+//                           let latitude = result.latitude,
+//                           let longitude = result.longitude,
+//                           let matchingStatus = result.matchingStatus,
+//                           let maxMatching = result.maxMatching,
+//                           let orderTime = result.orderTime,
+//                           let title = result.title,
+//                           let updatedAt = result.updatedAt,
+//                           let storeUrl = result.storeUrl,
+//                           let authorStatus = result.authorStatus,
+//                           let dormitory = result.dormitory {
+//                            viewController.detailData.chief = chief
+//                            viewController.detailData.chiefId = chiefId
+//                            viewController.detailData.content = content
+//                            viewController.detailData.currentMatching = currentMatching
+//                            viewController.detailData.foodCategory = foodCategory
+//                            viewController.detailData.hashTag = hashTag
+//                            viewController.detailData.id = id
+//
+//                            viewController.detailData.latitude = latitude
+//                            viewController.detailData.longitude = longitude
+//
+//                            viewController.detailData.matchingStatus = matchingStatus
+//                            viewController.detailData.maxMatching = maxMatching
+//                            viewController.detailData.orderTime = orderTime
+//                            viewController.detailData.title = title
+//                            viewController.detailData.updatedAt = updatedAt
+//                            viewController.detailData.storeUrl = storeUrl
+//                            viewController.detailData.authorStatus = authorStatus
+//                            viewController.detailData.dormitory = dormitory
+//                            if let chiefProfileImgUrl = result.chiefProfileImgUrl {
+//                                viewController.detailData.chiefProfileImgUrl = chiefProfileImgUrl
+//                            }
+//                        }
+//                    }
+//
+//                    viewController.setDefaultValue()
+//
+//                } else {
+//                    print("DEBUG:", result.message!)
+//                }
+//            case .failure(let error):
+//                print("DEBUG:", error.localizedDescription)
+//            }
+//        }
+//    }
+    
+    public static func getDetailInfo(partyId : Int, completion: @escaping (DeliveryListDetailModelResult) -> Void) {
         AF.request("https://geeksasaeng.shop/delivery-party/\(partyId)", method: .get, parameters: nil,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
@@ -39,50 +104,8 @@ class DeliveryListDetailViewModel {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 디테일 정보 불러오기 성공")
-                    
-                    // 프로퍼티에 저장 -> profileImgUrl 수정 필요
-                    if let result = result.result {
-                        if let chief = result.chief,
-                           let chiefId = result.chiefId,
-                           let content = result.content,
-                           let currentMatching = result.currentMatching,
-                           let foodCategory = result.foodCategory,
-                           let hashTag = result.hashTag,
-                           let id = result.id,
-                           let latitude = result.latitude,
-                           let longitude = result.longitude,
-                           let matchingStatus = result.matchingStatus,
-                           let maxMatching = result.maxMatching,
-                           let orderTime = result.orderTime,
-                           let title = result.title,
-                           let updatedAt = result.updatedAt,
-                           let storeUrl = result.storeUrl,
-                           let authorStatus = result.authorStatus,
-                           let dormitory = result.dormitory {
-                            viewController.detailData.chief = chief
-                            viewController.detailData.chiefId = chiefId
-                            viewController.detailData.content = content
-                            viewController.detailData.currentMatching = currentMatching
-                            viewController.detailData.foodCategory = foodCategory
-                            viewController.detailData.hashTag = hashTag
-                            viewController.detailData.id = id
-                            viewController.detailData.latitude = latitude
-                            viewController.detailData.longitude = longitude
-                            viewController.detailData.matchingStatus = matchingStatus
-                            viewController.detailData.maxMatching = maxMatching
-                            viewController.detailData.orderTime = orderTime
-                            viewController.detailData.title = title
-                            viewController.detailData.updatedAt = updatedAt
-                            viewController.detailData.storeUrl = storeUrl
-                            viewController.detailData.authorStatus = authorStatus
-                            viewController.detailData.dormitory = dormitory
-                            if let chiefProfileImgUrl = result.chiefProfileImgUrl {
-                                viewController.detailData.chiefProfileImgUrl = chiefProfileImgUrl
-                            }
-                        }
-                    }
-                    
-                    viewController.setDefaultValue()
+                    // 성공 시에 completion에 result 전달
+                    completion(result.result!)
                     
                 } else {
                     print("DEBUG:", result.message!)

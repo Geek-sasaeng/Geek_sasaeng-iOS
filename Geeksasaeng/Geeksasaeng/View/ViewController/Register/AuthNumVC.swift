@@ -102,9 +102,8 @@ class AuthNumViewController: UIViewController {
     var uuid: UUID? = nil
     
     /* 네이버 회원가입에서 받아온 데이터 */
-    var phoneNumberId: Int? = nil // nil이 아니면 네이버 회원가입이란 말이니까 폰인증 화면 건너뛰고 이용약관 화면으로 바로 이동 -> 필요한 데이터도 전달
-    
     var isFromNaverRegister = false
+    var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -272,13 +271,10 @@ class AuthNumViewController: UIViewController {
             agreementVC.modalTransitionStyle = .crossDissolve
             agreementVC.modalPresentationStyle = .fullScreen
             
-            agreementVC.idData = idData
-            agreementVC.pwData = pwData
-            agreementVC.pwCheckData = pwCheckData
+            agreementVC.accessToken = accessToken
             agreementVC.nickNameData = nickNameData
-            agreementVC.emailId = emailId
+            agreementVC.email = email
             agreementVC.university = university
-            agreementVC.phoneNumberId = phoneNumberId
             agreementVC.isFromNaverRegister = true
             
             present(agreementVC, animated: true)

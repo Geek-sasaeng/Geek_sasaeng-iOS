@@ -886,6 +886,7 @@ class DeliveryViewController: UIViewController {
     /* CreatePartyButton을 누르면 파티 생성 화면으로 전환 */
     @objc func tapCreatePartyButton() {
         let viewController = CreatePartyViewController()
+        viewController.dormitoryInfo = dormitoryInfo
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -1072,6 +1073,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewController = PartyViewController()
+        viewController.dormitoryInfo = dormitoryInfo
         viewController.deliveryData = deliveryCellDataArray[indexPath.row]
         self.navigationController?.pushViewController(viewController, animated: true)
     }

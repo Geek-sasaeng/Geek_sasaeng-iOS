@@ -23,7 +23,7 @@ struct LocationModelResult: Decodable {
 class LocationAPI {
     public static func getLocation(_ dormitoryId : Int) {
         AF.request("https://geeksasaeng.shop/\(dormitoryId)/default-location", method: .get, parameters: nil,
-        headers: ["Authorization": "Bearer eyJ0eXBlIjoiand0IiwiYWxnIjoiSFMyNTYifQ.eyJqd3RJbmZvIjp7InVuaXZlcnNpdHlJZCI6MSwidXNlcklkIjoyNn0sImlhdCI6MTY1Nzk0MTQ4NiwiZXhwIjoxNjU4ODMwNTE5fQ.n9HFrLuc97GeWOcKo-ffAj-k5XAvcd7IH0iEuOVzPaQ"])
+        headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: LocationModel.self) { response in
             switch response.result {

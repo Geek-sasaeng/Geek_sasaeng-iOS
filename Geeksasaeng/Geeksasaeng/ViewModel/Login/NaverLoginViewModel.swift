@@ -62,10 +62,10 @@ class naverLoginViewModel {
                     print("네이버 로그인 핸드폰 ",phone)
                     print("네이버 로그인 이메일 ",email)
                     
-                    /* 네이버 로그인 최초인지 확인 */
-                    let input = LoginInput(loginId: email, password: "1q2w3e4r!")
-                    LoginViewModel.loginNaver(viewController: viewController, input, id: email, phoneNumber: phone)
-                    
+                    /* 토큰으로 서버에 네이버 로그인 시도 */
+                    print("==========", accessToken)
+                    let input = NaverLoginInput(accessToken: accessToken)
+                    LoginViewModel.loginNaver(viewController: viewController, input)
                 }
                 else { // 실패
                     print("ERROR!")

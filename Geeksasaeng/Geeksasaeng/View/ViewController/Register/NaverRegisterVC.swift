@@ -207,14 +207,11 @@ class NaverRegisterViewController: UIViewController {
     var isExpanded: Bool! = false
     
     /* 회원가입 정보 */
-    var idData: String? = nil // 네아로에서 email
-    var phoneNumber: String? = nil // 네아로에서 phone
     // 밑에 건 이 화면에서 바로 생성하여 전달 -> 변수로 둘 필요 x
-    var pwData: String? = nil // 임의 비밀번호 -> 1q2w3e4r!로 전달
-    var pwCheckData: String? = nil // 임의 비밀번호
     var nickNameData: String? = nil // nickNameTextField에서
     var university: String? = nil // selectYourUnivLabel에서
     var email: String? = nil // emailTextField에서
+    var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
     
     // MARK: - Life Cycle
     
@@ -222,12 +219,12 @@ class NaverRegisterViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        addSubViews()
-        setLayouts()
         setUniversitySelectView()
         setAttributes()
         setTextFieldTarget()
         setLabelTap()
+        addSubViews()
+        setLayouts()
     }
     
     // MARK: - Functions
@@ -429,13 +426,10 @@ class NaverRegisterViewController: UIViewController {
         authNumVC.modalPresentationStyle = .fullScreen
         
         authNumVC.isFromNaverRegister = true
-//        authNumVC.phoneNumber = phoneNumber -> 수정 필요
-        authNumVC.idData = idData
+        authNumVC.accessToken = accessToken
         authNumVC.nickNameData = nickNameTextField.text
         authNumVC.university = selectYourUnivLabel.text
         authNumVC.email = "\(emailTextField.text!)" + "\(emailAddressTextField.text!)"
-        authNumVC.pwData = "1q2w3e4r!"
-        authNumVC.pwCheckData = "1q2w3e4r!"
         
         present(authNumVC, animated: true)
     }

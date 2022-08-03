@@ -33,3 +33,19 @@ struct LoginInput : Encodable {
 struct NaverLoginCheck {
     static var firstLogin = false
 }
+
+struct NaverLoginInput: Encodable {
+    var accessToken: String?
+}
+
+struct NaverLoginOutput: Decodable {
+    var isSuccess: Bool?
+    var code: Int?
+    var message: String?
+    var result: NaverLoginResult?
+}
+
+struct NaverLoginResult: Decodable {
+    var jwt: String?
+    var loginStatus: String?
+}

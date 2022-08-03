@@ -97,6 +97,7 @@ class LoginViewController: UIViewController {
     // MARK: - Properties
     let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
+    var accessToken: String?
     
     // MARK: - viewDidLoad()
     
@@ -270,13 +271,21 @@ class LoginViewController: UIViewController {
         present(tabBarController, animated: true)
     }
     
-    public func showNaverRegisterView(id: String, phoneNum: String) {
+    /* 네이버 회원가입으로 이동 */
+    public func showNaverRegisterView() {
         let naverRegisterVC = NaverRegisterViewController()
+        naverRegisterVC.accessToken = accessToken
         naverRegisterVC.modalTransitionStyle = .crossDissolve
         naverRegisterVC.modalPresentationStyle = .fullScreen
-        naverRegisterVC.phoneNumber = phoneNum
-        naverRegisterVC.idData = id
         present(naverRegisterVC, animated: true)
+    }
+    
+    /* 기숙사 선택화면으로 이동 */
+    public func showDormitoryView() {
+        let dormitoryVC = DormitoryViewController()
+        dormitoryVC.modalTransitionStyle = .crossDissolve
+        dormitoryVC.modalPresentationStyle = .fullScreen
+        present(dormitoryVC, animated: true)
     }
 }
 

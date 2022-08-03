@@ -162,6 +162,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     weak var isEdittiedDelegate: EdittedDelegate?
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
+    var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     
     // MARK: - Life Cycle
     
@@ -672,7 +673,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
            let partyId = detailData?.id,
            let title = titleTextField.text,
            let content = contentsTextView.text {
-            EditPartyViewModel.EditParty(dormitoryId: 1, partyId: partyId,
+            EditPartyViewModel.EditParty(dormitoryId: dormitoryInfo?.id ?? 1, partyId: partyId,
                 EditPartyInput(foodCategory: foodCategory,
                                title: title, content: content,
                                orderTime: orderTime,
