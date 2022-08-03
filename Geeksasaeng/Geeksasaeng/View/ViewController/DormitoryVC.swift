@@ -28,8 +28,8 @@ class DormitoryViewController: UIViewController {
     
     lazy var welcomeLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(userNickName ?? "홍길동")님, 환영합니다"
-        label.numberOfLines = 2
+        label.text = "\(userNickName ?? "홍길동")님,\n환영합니다"
+        label.numberOfLines = 0
         label.font = .customFont(.neoBold, size: 32)
         label.textColor = .init(hex: 0x2F2F2F)
         return label
@@ -104,7 +104,6 @@ class DormitoryViewController: UIViewController {
         welcomeLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.left.equalToSuperview().inset(23)
-            make.width.equalTo(148)
         }
         
         questionLabel.snp.makeConstraints { make in
