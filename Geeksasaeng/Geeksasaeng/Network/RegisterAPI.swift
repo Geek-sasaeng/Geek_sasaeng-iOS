@@ -57,6 +57,7 @@ struct NaverRegisterModelResult: Decodable {
     var nickname: String?
     var phoneNumber: Int?
     var universityName: String?
+    var jwt: String?
 }
 
 
@@ -92,6 +93,7 @@ class RegisterAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
+                    LoginModel.jwt = result.result?.jwt
                     viewController.showDomitoryView()
                 } else {
                     print("DEBUG:", result.message!)
