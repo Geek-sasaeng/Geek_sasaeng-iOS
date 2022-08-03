@@ -198,7 +198,7 @@ class SearchViewController: UIViewController {
         stackView.layoutIfNeeded()
         stackView.distribution = .fillProportionally
         stackView.alignment = .leading
-        stackView.spacing = 10
+        stackView.spacing = 22
         
         // stackView label 내용 구성
         setVLabelList(["2명 이하", "4명 이하", "6명 이하", "8명 이하", "10명 이하"], stackView)
@@ -212,14 +212,15 @@ class SearchViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xF8F8F8)
         
         // 왼쪽, 오른쪽 하단의 코너에만 cornerRadius를 적용
-        view.layer.cornerRadius = 5
+        view.layer.masksToBounds = true
         view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMaxYCorner]
+        view.layer.cornerRadius = 5
         view.isHidden = true
         
         view.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(6)
-            make.left.equalToSuperview().inset(11)
+            make.top.equalToSuperview().inset(15)
+            make.left.equalToSuperview().inset(14)
         }
         return view
     }()
@@ -414,13 +415,13 @@ class SearchViewController: UIViewController {
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(124)
+            make.height.equalTo(219)
             make.top.equalTo(peopleFilterView.snp.bottom)
             make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(158)
+            make.height.equalTo(253)
             make.top.equalTo(peopleFilterView)
             make.left.equalTo(filterImageView.snp.right).offset(16)
         }
@@ -490,7 +491,7 @@ class SearchViewController: UIViewController {
               let filterLabel = UILabel()
               let filterText = passedArray[i]
               filterLabel.textColor = .init(hex: 0xD8D8D8)
-              filterLabel.font = .customFont(.neoMedium, size: 11)
+              filterLabel.font = .customFont(.neoMedium, size: 14)
               filterLabel.text = filterText
               
               /* Stack View */

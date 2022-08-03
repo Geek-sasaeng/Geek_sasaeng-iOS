@@ -22,6 +22,7 @@ struct LoginOutput : Decodable {
 struct LoginModelResult : Decodable {
     var jwt: String?
     var loginStatus: String?
+    var nickName: String?
 }
 
 // 로그인을 했을 때 보낼 Request body의 형태.

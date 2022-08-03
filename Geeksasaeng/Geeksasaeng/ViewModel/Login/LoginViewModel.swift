@@ -30,12 +30,13 @@ class LoginViewModel {
                     print("DEBUG: 로그인 성공", result.result ?? "")
                     
                     // 로그인 완료 후 경우에 따른 화면 전환
-                    if result.result?.loginStatus == "NEVER" {
-                        viewController.showNextView(isFirstLogin: true)
-                    } else {
-                        viewController.showNextView(isFirstLogin: false)
+                    if let result = result.result {
+                        if result.loginStatus == "NEVER" {
+                            viewController.showNextView(isFirstLogin: true, nickName: result.nickName ?? "홍길동")
+                        } else {
+                            viewController.showNextView(isFirstLogin: false)
+                        }
                     }
-                    
                 } else {
                     print("DEBUG:", result.message!)
                 }
