@@ -11,10 +11,6 @@ import SnapKit
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
-    
-    // TODO: - 파티 상세보기 API로부터 데이터 가져와야 함 일단은 임시 데이터
-    // 배달 예정 시간까지 남은 초(Seconds) 데이터
-    var currentSeconds: Int? = 10000
 
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
@@ -819,19 +815,32 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         timer?.setEventHandler(handler: { [weak self] in
             guard let self = self else { return }
             
-            if let currentSeconds = self.currentSeconds {
+            // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            formatter.locale = Locale(identifier: "ko_KR")
+            formatter.timeZone = TimeZone(abbreviation: "KST")
+            
+            let nowDate = Date()
+            
+            guard let orderTime = self.detailData.orderTime else { return }
+            let orderDate = formatter.date(from: orderTime)
+            if let orderDate = orderDate {
+                // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                var intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
+                
                 // 1초마다 감소
-                self.currentSeconds! -= 1
+                intervalSecs -= 1
                 
                 // 초를 시간, 분, 초 단위로 변경
-                let hourTime = currentSeconds / 60 / 60
-                let minuteTime = currentSeconds / 60 % 60
-                let secondTime = currentSeconds % 60
+                let hourTime = intervalSecs / 60 / 60
+                let minuteTime = intervalSecs / 60 % 60
+                let secondTime = intervalSecs % 60
                 
                 // 텍스트 변경
                 self.remainTimeLabel.text = "\(hourTime):\(minuteTime):\(secondTime)"
                 
-                if currentSeconds <= 0 {
+                if intervalSecs <= 0 {
                     self.timer?.cancel()
                 }
             }
