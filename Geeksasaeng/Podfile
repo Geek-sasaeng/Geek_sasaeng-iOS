@@ -10,6 +10,9 @@ target 'Geeksasaeng' do
   pod 'Kingfisher', '~> 7.0'
   pod 'Alamofire'
   pod 'naveridlogin-sdk-ios'
+  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths
