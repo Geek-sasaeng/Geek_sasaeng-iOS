@@ -36,6 +36,31 @@ struct RegisterInput : Encodable {
     var universityName: String?
 }
 
+struct NaverRegisterInput: Encodable {
+    var accessToken: String?
+    var email: String?
+    var informationAgreeStatus: String?
+    var nickname: String?
+    var universityName: String?
+}
+
+struct NaverRegisterModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: NaverRegisterModelResult?
+}
+
+struct NaverRegisterModelResult: Decodable {
+    var email: Int?
+    var loginId: String?
+    var nickname: String?
+    var phoneNumber: Int?
+    var universityName: String?
+    var jwt: String?
+}
+
+
 // 회원가입 API 연동
 class RegisterAPI {
     public static func registerUser(_ viewController : AgreementViewController, _ parameter : RegisterInput) {
@@ -59,19 +84,16 @@ class RegisterAPI {
         }
     }
     
-    public static func registerUserFromNaver(_ viewController : AgreementViewController, _ parameter : RegisterInput) {
+    public static func registerUserFromNaver(_ viewController : AgreementViewController, _ parameter : NaverRegisterInput) {
         AF.request("https://geeksasaeng.shop/members/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
-        .responseDecodable(of: RegisterModel.self) { response in
+        .responseDecodable(of: NaverRegisterModel.self) { response in
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
-                    // 네이버 회원가입 시 자동 로그인 자동 활성화
-                    UserDefaults.standard.set(parameter.loginId, forKey: "id")
-                    UserDefaults.standard.set(parameter.password, forKey: "password")
-                    
+                    LoginModel.jwt = result.result?.jwt
                     viewController.showDomitoryView()
                 } else {
                     print("DEBUG:", result.message!)

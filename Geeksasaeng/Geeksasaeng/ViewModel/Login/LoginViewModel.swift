@@ -46,28 +46,32 @@ class LoginViewModel {
         }
     }
     
-    public static func loginNaver(viewController: LoginViewController, _ parameter : LoginInput, id: String, phoneNumber: String) {
-        AF.request("https://geeksasaeng.shop/login", method: .post,
+    public static func loginNaver(viewController: LoginViewController, _ parameter : NaverLoginInput) {
+        AF.request("https://geeksasaeng.shop/login/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
-        .responseDecodable(of: LoginOutput.self) { response in
+        .responseDecodable(of: NaverLoginOutput.self) { response in
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    // 네이버 아이디 비밀번호가 긱사생 DB에 등록되어 있으면
-                    print("DEBUG: 성공")
-                    print("DEBUG: \(result.code!)")
-                    viewController.showHomeView()
+                    LoginModel.jwt = result.result?.jwt
+                    if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
+                        print("DEBUG: 성공")
+                        print("DEBUG: \(result.code!)")
+                        viewController.showDormitoryView()
+                    } else { // 로그인 성공 -> 홈 화면으로 이동
+                        viewController.showHomeView()
+                    }
                     
                 } else {
-                    // 네이버 아이디 비밀번호로 처음 로그인 한 경우
+                    // 네이버 로그인 실패
                     print(result.code!)
                     print("DEBUG:", result.message!)
-                    print("회원가입 화면으로 이동합니다")
-                    if result.code == 2400 {
-                        viewController.showNaverRegisterView(id: id, phoneNum: phoneNumber)
-                    } else {
-                        print("DEBUG:", result.message!)
+                    
+                    if result.code == 2807 { // 아예 첫 로그인 -> 회원가입 화면으로 이동
+//                        LoginModel.jwt = result.result?.jwt -> jwt 값을 줄까 ?
+                        viewController.accessToken = parameter.accessToken
+                        viewController.showNaverRegisterView()
                     }
                 }
             case .failure(let error):

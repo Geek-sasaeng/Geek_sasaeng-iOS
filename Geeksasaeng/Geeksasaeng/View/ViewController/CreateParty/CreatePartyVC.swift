@@ -127,7 +127,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    let testView: UIView = {
+    let blockedView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
         return view
@@ -149,6 +149,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         marker.draggable = true
         return marker
     }()
+    var dormitoryInfo: DormitoryNameResult?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -156,8 +157,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .white
         
         /* 기숙사 좌표 불러오기 */
-        LocationAPI.getLocation(1)
-        // MARK: - 여기서 맵뷰 객체 생성하면 서브뷰에서 런타임 에러
+        LocationAPI.getLocation(dormitoryInfo?.id ?? 1)
+        
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
         setDelegate()
@@ -171,6 +172,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
+        mapView = nil // 맵뷰 초기화
         
         // 전역변수 초기화
         CreateParty.orderForecastTime = nil
@@ -358,10 +360,10 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 
-                // 좌표가 있으면 기존의 testView를 없애고 그 자리에 카카오맵 노출
+                // 좌표가 있으면 기존의 blockedView를 없애고 그 자리에 카카오맵 노출
                 if let _ = CreateParty.latitude,
                    let _ = CreateParty.longitude {
-                    self.testView.removeFromSuperview()
+                    self.blockedView.removeFromSuperview()
                     self.setMapView()
                 }
                 
@@ -391,7 +393,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
-         testView].forEach {
+         blockedView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -494,7 +496,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(38)
         }
         
-        testView.snp.makeConstraints { make in
+        blockedView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.width.equalTo(314)
@@ -734,7 +736,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 storeUrl: url,
                 hashTag: CreateParty.hashTag ?? false)
             
-            CreatePartyViewModel.registerParty(dormitoryId: 1, input)
+            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input)
         }
         
         navigationController?.popViewController(animated: true)

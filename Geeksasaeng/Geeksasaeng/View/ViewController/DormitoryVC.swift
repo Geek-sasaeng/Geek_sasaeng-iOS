@@ -153,6 +153,10 @@ class DormitoryViewController: UIViewController {
     
     /* 홈 화면으로 전환 */
     @objc private func tapStartButton() {
+        // Dormitory 수정 API 호출 -> loginStatus = NOTNEVER로 수정
+        let input = DormitoryInput(dormitoryId: dormitoryInfo?.id)
+        DormitoryAPI.patchDormitory(input)
+        
         // tabBarController 안의 deliveryVC에 데이터를 전달하는 방법!
         let tabBarController = TabBarController()
         let navController = tabBarController.viewControllers![0] as! UINavigationController
