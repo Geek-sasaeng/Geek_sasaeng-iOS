@@ -7,6 +7,8 @@
 
 import UIKit
 
+/* 스플래쉬 정적 화면 */
+/* MVP에 안 쓰는 걸로 -> 이유: 애니메이션 영상이랑 위치 안 맞음 + 애니메이션 마지막 화면이랑 같아서 빼기로 함 */
 class SplashViewController: UIViewController {
 
     // MARK: - Subviews

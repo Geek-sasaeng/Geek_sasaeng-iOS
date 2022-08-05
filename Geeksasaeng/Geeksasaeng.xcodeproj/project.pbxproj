@@ -997,6 +997,12 @@
 		A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
+		A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
+		A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
+		A24F0B22289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
+		A24F0B24289CC1D8007A9C5C /* Splash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A24F0B23289CC1D8007A9C5C /* Splash.mp4 */; };
+		A24F0B25289CC1D8007A9C5C /* Splash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A24F0B23289CC1D8007A9C5C /* Splash.mp4 */; };
+		A24F0B26289CC1D8007A9C5C /* Splash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A24F0B23289CC1D8007A9C5C /* Splash.mp4 */; };
 		A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
 		A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
 		A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
@@ -1466,6 +1472,8 @@
 		A20FC0F0287F30C40095224C /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
+		A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashPlayerVC.swift; sourceTree = "<group>"; };
+		A24F0B23289CC1D8007A9C5C /* Splash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Splash.mp4; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
 		A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthViewModel.swift; sourceTree = "<group>"; };
 		A2513F1028785FA30029C279 /* PhoneAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthCheckModel.swift; sourceTree = "<group>"; };
@@ -1624,6 +1632,7 @@
 				100FB99528745BE3008947DD /* View */,
 				100FB99428745AAC008947DD /* ViewModel */,
 				A2B4208E286F1F0500278F92 /* Extension */,
+				A24F0B23289CC1D8007A9C5C /* Splash.mp4 */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
@@ -2185,6 +2194,7 @@
 		A2B4208D286F1EE000278F92 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */,
 				A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */,
 				A2B42098286F249800278F92 /* TabBarController.swift */,
 				103F1483286ACB95004B637B /* LoginVC.swift */,
@@ -2375,6 +2385,7 @@
 				1054407E287F0055003B8799 /* deprecated.html in Resources */,
 				1078711D286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf in Resources */,
 				105441DA287F0056003B8799 /* functions_8.html in Resources */,
+				A24F0B24289CC1D8007A9C5C /* Splash.mp4 in Resources */,
 				10543FB8287F0055003B8799 /* map_present_tracking.png in Resources */,
 				10544177287F0056003B8799 /* defines_0.js in Resources */,
 				10543FD3287F0055003B8799 /* map_present.png in Resources */,
@@ -2687,6 +2698,7 @@
 				10544196287F0056003B8799 /* functions_d.html in Resources */,
 				1054408E287F0055003B8799 /* interface_m_t_map_polyline.js in Resources */,
 				1054417B287F0056003B8799 /* all_0.html in Resources */,
+				A24F0B25289CC1D8007A9C5C /* Splash.mp4 in Resources */,
 				10544115287F0056003B8799 /* variables_2.html in Resources */,
 				10544055287F0055003B8799 /* interface_m_t_map_camera_update-members.html in Resources */,
 				1054404F287F0055003B8799 /* _m_t_map_location_marker_item_8h.html in Resources */,
@@ -2971,6 +2983,7 @@
 				10544197287F0056003B8799 /* functions_d.html in Resources */,
 				1054408F287F0055003B8799 /* interface_m_t_map_polyline.js in Resources */,
 				1054417C287F0056003B8799 /* all_0.html in Resources */,
+				A24F0B26289CC1D8007A9C5C /* Splash.mp4 in Resources */,
 				10544116287F0056003B8799 /* variables_2.html in Resources */,
 				10544056287F0055003B8799 /* interface_m_t_map_camera_update-members.html in Resources */,
 				10544050287F0055003B8799 /* _m_t_map_location_marker_item_8h.html in Resources */,
@@ -3348,6 +3361,7 @@
 				1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				A2AF5395289696810052F734 /* ReportAPI.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
+				A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
@@ -3462,6 +3476,7 @@
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
+				A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
@@ -3531,6 +3546,7 @@
 				102B35D62879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */,
 				A20B53F8288D7F27006C695E /* TimeCollectionViewCell.swift in Sources */,
+				A24F0B22289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A20FC0EB287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
@@ -3721,7 +3737,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3741,7 +3757,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
@@ -3760,7 +3776,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3780,7 +3796,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
