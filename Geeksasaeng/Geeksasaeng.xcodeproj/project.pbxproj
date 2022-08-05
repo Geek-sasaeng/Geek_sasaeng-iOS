@@ -38,6 +38,9 @@
 		103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1474286ACA86004B637B /* GeeksasaengUITests.swift */; };
 		103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1476286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift */; };
 		103F1484286ACB95004B637B /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1483286ACB95004B637B /* LoginVC.swift */; };
+		103F5E47289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */; };
+		103F5E48289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */; };
+		103F5E49289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */; };
 		1040FB982875C06E0060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
 		1040FB9A2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */; };
 		1040FB9B2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */; };
@@ -924,6 +927,9 @@
 		10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
+		10B75B60289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
+		10B75B61289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
+		10B75B62289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
 		10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
@@ -1129,6 +1135,7 @@
 		103F1474286ACA86004B637B /* GeeksasaengUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeeksasaengUITests.swift; sourceTree = "<group>"; };
 		103F1476286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeeksasaengUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		103F1483286ACB95004B637B /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLoginAPI.swift; sourceTree = "<group>"; };
 		1040FB972875C06D0060A3E4 /* AgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementVC.swift; sourceTree = "<group>"; };
 		1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthVC.swift; sourceTree = "<group>"; };
 		10543D60287EFECE003B8799 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -1438,6 +1445,7 @@
 		108D5971289AE7B700F2C258 /* DormitoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryAPI.swift; sourceTree = "<group>"; };
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10AC5CA82889269000C8086A /* EditPartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyVC.swift; sourceTree = "<group>"; };
+		10B75B5F289CDD810002865C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
 		10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderForecastTimeVC.swift; sourceTree = "<group>"; };
 		10D4D6BA2894F8A700B53AB0 /* EditMatchingPersonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMatchingPersonVC.swift; sourceTree = "<group>"; };
@@ -1627,6 +1635,7 @@
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
+				10B75B5F289CDD810002865C /* GoogleService-Info.plist */,
 				105442B8287F0083003B8799 /* Kakao-Map-Bridge-Header.h */,
 			);
 			path = Geeksasaeng;
@@ -2037,6 +2046,13 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		10B75B63289CE1DC0002865C /* Chatting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Chatting;
+			sourceTree = "<group>";
+		};
 		10C8D26F287735E60044552A /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -2046,6 +2062,7 @@
 				10E6956428885589000B7309 /* LocationAPI.swift */,
 				A2AF5394289696810052F734 /* ReportAPI.swift */,
 				108D5971289AE7B700F2C258 /* DormitoryAPI.swift */,
+				103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -2196,6 +2213,7 @@
 				10D7EC972886E85600D9E0FD /* CreateParty */,
 				10D4D6B02894F84F00B53AB0 /* EditParty */,
 				A2D2047728885A14002350C8 /* Report */,
+				10B75B63289CE1DC0002865C /* Chatting */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -2526,6 +2544,7 @@
 				1054414D287F0056003B8799 /* classes_0.js in Resources */,
 				1054404E287F0055003B8799 /* _m_t_map_location_marker_item_8h.html in Resources */,
 				1054425E287F0057003B8799 /* protocol_m_t_map_reverse_geo_coder_delegate_01-p-members.html in Resources */,
+				10B75B60289CDD810002865C /* GoogleService-Info.plist in Resources */,
 				10543F97287F0055003B8799 /* shadow_balloon.png in Resources */,
 				10544192287F0056003B8799 /* properties_7.js in Resources */,
 				10544201287F0056003B8799 /* variables_0.js in Resources */,
@@ -2920,6 +2939,7 @@
 				10543FB0287F0055003B8799 /* map_pin_red@3x.png in Resources */,
 				10543FAD287F0055003B8799 /* th_line.png in Resources */,
 				1054423E287F0057003B8799 /* nav_h.png in Resources */,
+				10B75B61289CDD810002865C /* GoogleService-Info.plist in Resources */,
 				10544154287F0056003B8799 /* properties_b.js in Resources */,
 				10543FE9287F0055003B8799 /* dir_e176454b22f670c69197578a11d04323.js in Resources */,
 			);
@@ -3204,6 +3224,7 @@
 				10543FB1287F0055003B8799 /* map_pin_red@3x.png in Resources */,
 				10543FAE287F0055003B8799 /* th_line.png in Resources */,
 				1054423F287F0057003B8799 /* nav_h.png in Resources */,
+				10B75B62289CDD810002865C /* GoogleService-Info.plist in Resources */,
 				10544155287F0056003B8799 /* properties_b.js in Resources */,
 				10543FEA287F0055003B8799 /* dir_e176454b22f670c69197578a11d04323.js in Resources */,
 			);
@@ -3352,6 +3373,7 @@
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
+				103F5E47289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
 				10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */,
@@ -3427,6 +3449,7 @@
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				1031AAA328981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
+				103F5E48289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				10D4D6C82894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
@@ -3559,6 +3582,7 @@
 				10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,
+				103F5E49289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
@@ -3741,10 +3765,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3780,10 +3804,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = UMC.Geeksasaeng.Apple;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;

@@ -23,6 +23,9 @@ struct LoginModelResult : Decodable {
     var jwt: String?
     var loginStatus: String?
     var nickName: String?
+    var dormitoryId: Int?
+    var dormitoryName: String?
+    var userImageUrl: String?
 }
 
 // 로그인을 했을 때 보낼 Request body의 형태.
@@ -49,4 +52,8 @@ struct NaverLoginOutput: Decodable {
 struct NaverLoginResult: Decodable {
     var jwt: String?
     var loginStatus: String?
+    var nickName: String?
+    var dormitoryId: Int?
+    var dormitoryName: String?
+    var userImageUrl: String?
 }

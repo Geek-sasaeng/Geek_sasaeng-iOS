@@ -21,6 +21,8 @@ class DeliveryViewController: UIViewController {
     
     // 유저의 기숙사 정보 -> id랑 name 들어있음!
     var dormitoryInfo: DormitoryNameResult?
+    // userImageUrl -> 채팅, 내 프로필 등에서 사용
+    var userImageUrl: String?
     
     // 광고 배너 이미지 데이터 배열
     var adCellDataArray: [AdModelResult] = [] {
@@ -1089,13 +1091,13 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = PartyViewController()
-        viewController.dormitoryInfo = dormitoryInfo
-        viewController.deliveryData = deliveryCellDataArray[indexPath.row]
+        let partyVC = PartyViewController()
+        partyVC.dormitoryInfo = dormitoryInfo
+        partyVC.deliveryData = deliveryCellDataArray[indexPath.row]
         
         // delegate로 자기 자신(DeliveryVC)를 넘겨줌
         partyVC.delegate = self
-        self.navigationController?.pushViewController(viewController, animated: true)
+        self.navigationController?.pushViewController(partyVC, animated: true)
     }
 }
 

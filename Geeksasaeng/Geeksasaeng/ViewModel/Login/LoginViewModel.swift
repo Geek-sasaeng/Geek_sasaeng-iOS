@@ -7,6 +7,8 @@
 
 import Alamofire
 
+// 자동로그인 체크 -> jwt 로컬에 저장 -> attempAutoLogin: header에 jwt 넣어서 API 호출
+
 // 로그인 API 연동
 class LoginViewModel {
     public func login(_ viewController : LoginViewController, _ parameter : LoginInput) {
@@ -18,14 +20,17 @@ class LoginViewModel {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 성공")
-                    // 자동로그인 체크 시 UserDefaults에 id, pw 저장
+                    // 자동로그인 체크 시 UserDefaults에 jwt 저장
                     if viewController.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
-                        UserDefaults.standard.set(parameter.loginId, forKey: "id")
-                        UserDefaults.standard.set(parameter.password, forKey: "password")
+                        UserDefaults.standard.set(result.result?.jwt, forKey: "jwt")
                     }
                     
                     // static property에 jwt 값 저장
                     LoginModel.jwt = result.result?.jwt
+                    // dormitoryId, Name 저장
+                    viewController.dormitoryInfo = DormitoryNameResult(id: result.result?.dormitoryId, name: result.result?.dormitoryName)
+                    // userImageUrl 저장
+                    viewController.userImageUrl = result.result?.userImageUrl
                     
                     print("DEBUG: 로그인 성공", result.result ?? "")
                     
@@ -54,12 +59,15 @@ class LoginViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
+//                    UserDefaults.standard.set(result.result?.jwt, forKey: "jwt") -> 네이버 회원가입 시 등록됨
                     LoginModel.jwt = result.result?.jwt
                     if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
                         print("DEBUG: 성공")
                         print("DEBUG: \(result.code!)")
-                        viewController.showDormitoryView()
+                        viewController.showDormitoryView(nickname: result.result?.nickName ?? "홍길동")
                     } else { // 로그인 성공 -> 홈 화면으로 이동
+                        viewController.dormitoryInfo = DormitoryNameResult(id: result.result?.dormitoryId, name: result.result?.dormitoryName)
+                        viewController.userImageUrl = result.result?.userImageUrl
                         viewController.showHomeView()
                     }
                     
@@ -69,7 +77,6 @@ class LoginViewModel {
                     print("DEBUG:", result.message!)
                     
                     if result.code == 2807 { // 아예 첫 로그인 -> 회원가입 화면으로 이동
-//                        LoginModel.jwt = result.result?.jwt -> jwt 값을 줄까 ?
                         viewController.accessToken = parameter.accessToken
                         viewController.showNaverRegisterView()
                     }
