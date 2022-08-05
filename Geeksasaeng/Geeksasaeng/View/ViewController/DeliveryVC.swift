@@ -21,6 +21,8 @@ class DeliveryViewController: UIViewController {
     
     // 유저의 기숙사 정보 -> id랑 name 들어있음!
     var dormitoryInfo: DormitoryNameResult?
+    // userImageUrl -> 채팅, 내 프로필 등에서 사용
+    var userImageUrl: String?
     
     // 광고 배너 이미지 데이터 배열
     var adCellDataArray: [AdModelResult] = [] {

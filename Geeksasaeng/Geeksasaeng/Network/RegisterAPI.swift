@@ -93,6 +93,8 @@ class RegisterAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
+                    // 네이버 회원가입은 자동 로그인이 default
+                    UserDefaults.standard.set(result.result?.jwt, forKey: "jwt")
                     LoginModel.jwt = result.result?.jwt
                     viewController.showDomitoryView()
                 } else {

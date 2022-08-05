@@ -100,9 +100,12 @@ class LoginViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    
     let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
     var accessToken: String?
+    var dormitoryInfo: DormitoryNameResult?
+    var userImageUrl: String?
     
     // MARK: - viewDidLoad()
     
@@ -114,10 +117,10 @@ class LoginViewController: UIViewController {
         attemptAutoLogin()
         addSubViews()
         setLayouts()
-//        print(UIScreen.main.bounds.size)
     }
     
-    // MARK: - Function
+    // MARK: - Functions
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
@@ -190,10 +193,8 @@ class LoginViewController: UIViewController {
     }
     
     private func attemptAutoLogin() {
-        if let id = UserDefaults.standard.string(forKey: "id"),
-           let password = UserDefaults.standard.string(forKey: "password") {
-            let input = LoginInput(loginId: id, password: password)
-            loginVM.login(self, input)
+        if let jwt = UserDefaults.standard.string(forKey: "jwt") {
+            AutoLoginAPI.attemptAutoLogin(self, jwt: jwt)
         }
     }
     
@@ -218,8 +219,6 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: 네이버 아이디 로그아웃 -> 토큰 삭제 (아이디 비밀번호 재입력 하게) => 나중에 차례되면 구현
-    // MARK: 긱사생 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 x)
-    // MARK: 네이버 회원가입 -> 기숙사 선택 화면 -> 홈 화면 (자동 로그인 자동 활성화 o)
     @objc func tapNaverloginButton() {
         naverLoginVM.requestLogin()
 //        if naverLoginVM.isExistToken() {
@@ -285,6 +284,12 @@ class LoginViewController: UIViewController {
     /* 홈 화면으로 이동 */
     public func showHomeView() {
         let tabBarController = TabBarController()
+        
+        let navController = tabBarController.viewControllers![0] as! UINavigationController
+        let deliveryVC = navController.topViewController as! DeliveryViewController
+        deliveryVC.dormitoryInfo = dormitoryInfo
+        deliveryVC.userImageUrl = userImageUrl
+        
         tabBarController.modalTransitionStyle = .crossDissolve
         tabBarController.modalPresentationStyle = .fullScreen
         present(tabBarController, animated: true)
@@ -300,8 +305,9 @@ class LoginViewController: UIViewController {
     }
     
     /* 기숙사 선택화면으로 이동 */
-    public func showDormitoryView() {
+    public func showDormitoryView(nickname: String) {
         let dormitoryVC = DormitoryViewController()
+        dormitoryVC.userNickName = nickname
         dormitoryVC.modalTransitionStyle = .crossDissolve
         dormitoryVC.modalPresentationStyle = .fullScreen
         present(dormitoryVC, animated: true)
@@ -309,7 +315,7 @@ class LoginViewController: UIViewController {
 }
 
 
-// MARK: - LoginVC Extensions
+// MARK: - NaverThirdPartyLoginConnectionDelegate
 
 extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
     // 로그인 성공
