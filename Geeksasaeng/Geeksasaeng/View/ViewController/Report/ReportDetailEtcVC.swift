@@ -50,7 +50,7 @@ class ReportDetailEtcViewController: UIViewController {
     
     lazy var checkBoxButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "square"), for: .normal)
+        button.setImage(UIImage(named: "CheckBox"), for: .normal)
         button.addTarget(self, action: #selector(tapCheckBoxButton(_:)), for: .touchUpInside)
         button.tintColor = .init(hex: 0x5B5B5B)
         return button

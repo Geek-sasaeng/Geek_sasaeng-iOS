@@ -399,19 +399,20 @@ class DeliveryViewController: UIViewController {
             make.top.equalTo(deliveryPartyLabel.snp.bottom).offset(13)
             make.left.equalToSuperview().inset(18)
             make.height.equalTo(3)
-            make.width.equalTo(110)
+            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
         }
         marketBar.snp.makeConstraints { make in
             make.top.equalTo(marketLabel.snp.bottom).offset(13)
             make.left.equalTo(deliveryPartyBar.snp.right)
             make.height.equalTo(3)
-            make.width.equalTo(110)
+            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
         }
         helperBar.snp.makeConstraints { make in
             make.top.equalTo(helperLabel.snp.bottom).offset(13)
             make.left.equalTo(marketBar.snp.right)
             make.right.equalToSuperview().inset(18)
             make.height.equalTo(3)
+            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
         }
         
         /* Ad */
