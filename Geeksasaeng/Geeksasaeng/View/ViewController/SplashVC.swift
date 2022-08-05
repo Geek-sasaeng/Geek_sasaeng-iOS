@@ -62,8 +62,7 @@ class SplashViewController: UIViewController {
         appLogoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(view.snp.centerY).offset(-80)
-            make.width.equalTo(209)
-            make.height.equalTo(209)
+            make.width.height.equalTo(209)
         }
         subTitleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
