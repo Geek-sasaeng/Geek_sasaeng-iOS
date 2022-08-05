@@ -35,7 +35,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .none
-        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -77,7 +76,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         var deleteButton: UIButton = {
             let button = UIButton()
             button.setTitle("삭제하기", for: .normal)
-            // MARK: - 삭제하기 뷰 연결 필요
             button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
             return button
         }()
@@ -168,7 +166,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     var postingTime: UILabel = {
         let label = UILabel()
-        label.text = "05/15 23:57"
         label.font = .customFont(.neoRegular, size: 11)
         label.textColor = .init(hex: 0xD8D8D8)
         return label
@@ -184,7 +181,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "중식 같이 먹어요 같이 먹자"
         label.font = .customFont(.neoBold, size: 20)
         label.textColor = .black
         return label
@@ -213,7 +209,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }()
     var orderReserveLabel: UILabel = {
         let label = UILabel()
-        label.text = "05월 15일"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
@@ -242,7 +237,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }()
     var categoryDataLabel: UILabel = {
         let label = UILabel()
-        label.text = "중식"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
@@ -274,7 +268,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }()
     var pickupLocationDataLabel: UILabel = {
         let label = UILabel()
-        label.text = "제1기숙사 후문"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
@@ -308,11 +301,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
-    var signUpButton: UIButton = {
+    lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.setTitle("신청하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 16)
+        button.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
         return button
     }()
     
@@ -354,9 +348,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         /* set cancelButton */
         lazy var cancelButton = UIButton()
-        cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
         cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
-        cancelButton.titleLabel?.font = .customFont(.neoRegular, size: 15)
         cancelButton.addTarget(self, action: #selector(removeDeleteView), for: .touchUpInside)
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
@@ -417,8 +410,105 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(15)
-            make.width.equalTo(60)
-            make.height.equalTo(30)
+        }
+        
+        return view
+    }()
+    
+    /* 신청하기 누르면 나오는 신청하기 Alert 뷰 */
+    lazy var registerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 7
+        view.snp.makeConstraints { make in
+            make.width.equalTo(256)
+            make.height.equalTo(222)
+        }
+        
+        /* top View: 삭제하기 */
+        let topSubView = UIView()
+        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        view.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel()
+        titleLabel.text = "파티 신청하기"
+        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
+        titleLabel.font = .customFont(.neoMedium, size: 14)
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton()
+        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
+        cancelButton.addTarget(self, action: #selector(removeRegisterView), for: .touchUpInside)
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView()
+        bottomSubView.backgroundColor = UIColor.white
+        view.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(162)
+        }
+        
+        let contentLabel = UILabel()
+        let lineView = UIView()
+        lazy var confirmButton = UIButton()
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        
+        /* set contentLabel */
+        contentLabel.text = "이 파티를\n신청하시겠습니까?"
+        contentLabel.numberOfLines = 0
+        contentLabel.textColor = .init(hex: 0x2F2F2F)
+        contentLabel.font = .customFont(.neoMedium, size: 14)
+        let attrString = NSMutableAttributedString(string: contentLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        paragraphStyle.alignment = .center
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        contentLabel.attributedText = attrString
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(25)
+        }
+        
+        /* set lineView */
+        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        
+        /* set confirmButton */
+        confirmButton.setTitleColor(.mainColor, for: .normal)
+        confirmButton.setTitle("확인", for: .normal)
+        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
+        confirmButton.addTarget(self, action: #selector(tapRegisterConfirmButton), for: .touchUpInside)
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
         }
         
         return view
@@ -516,7 +606,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
         categoryDataLabel.text = detailData.foodCategory
-        storeLinkDataLabel.text = detailData.storeUrl
+        storeLinkDataLabel.text = (detailData.storeUrl == "null") ? "???" : detailData.storeUrl
         if detailData.hashTag ?? false {
             hashTagLabel.isHidden = false
         } else {
@@ -597,7 +687,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         // 신청하기 뷰를 고정시켜 놓을 컨테이너 뷰
         containerView.snp.makeConstraints { make in
-            make.width.height.equalToSuperview()
+            make.bottom.width.equalToSuperview()
+            // 컨테이너뷰 높이 = 탭바 높이 + 매칭 상태바 높이
+            if let tabBarCont = tabBarController {
+                make.height.equalTo(tabBarCont.tabBar.bounds.height + 55)
+            }
         }
         
         profileImageView.snp.makeConstraints { make in
@@ -719,6 +813,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         signUpButton.snp.makeConstraints { make in
             make.right.equalTo(arrowImageView.snp.left).offset(-11)
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
+            make.width.equalTo(59)
         }
         arrowImageView.snp.makeConstraints { make in
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
@@ -805,6 +900,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         deleteView.removeFromSuperview()
+        registerView.removeFromSuperview()
     }
     
     /* 남은 시간 변경해줄 타이머 작동 */
@@ -832,8 +928,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 // 1초마다 감소
                 intervalSecs -= 1
                 
-                // 초를 시간, 분, 초 단위로 변경
+                // 남은 일자를 시간으로 변환하면 몇 시간인지 ex) 2일 -> 48시간
                 let hourTime = intervalSecs / 60 / 60
+                // 몇 분, 몇 초 남았는지
                 let minuteTime = intervalSecs / 60 % 60
                 let secondTime = intervalSecs % 60
                 
@@ -882,7 +979,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         )
     }
     
-    @objc func showEditView() {
+    @objc private func showEditView() {
         optionViewForAuthor.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
         
@@ -910,7 +1007,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.pushViewController(reportVC, animated: true)
     }
     
-    @objc func showDeleteView() {
+    @objc private func showDeleteView() {
         optionViewForAuthor.removeFromSuperview()
         
         view.addSubview(deleteView)
@@ -919,13 +1016,20 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc func removeDeleteView() {
+    @objc private func removeDeleteView() {
         deleteView.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
     }
     
+    /* 신청하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
+    @objc
+    private func removeRegisterView() {
+        registerView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+    }
+    
     /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
-    @objc func tapConfirmButton() {
+    @objc private func tapConfirmButton() {
         if let partyId = detailData.id {
             // 파티 삭제
             DeletePartyViewModel.deleteParty(partyId: partyId)
@@ -936,6 +1040,31 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         delegate?.updateDeliveryList()
         // 이전화면으로 이동
         navigationController?.popViewController(animated: true)
+    }
+    
+    /* 배달 파티 신청하기 버튼 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapSignUpButton() {
+        // 배경을 흐리게, 블러뷰로 설정
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
+        
+        /* 신청하기 뷰 보여줌 */
+        view.addSubview(registerView)
+        registerView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+    }
+    
+    /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapRegisterConfirmButton() {
+        // 신청하기 뷰 없애고
+        removeRegisterView()
+        // TODO: - 이 유저를 채팅방에 초대하기
     }
 }
 

@@ -197,7 +197,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func tapSignUpButton() {
+    @objc private func tapSignUpButton() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
         

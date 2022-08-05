@@ -113,7 +113,7 @@ class AgreementViewController: UIViewController {
         return button
     }()
     
-    let termsOfUseAgreementArrow: UIButton = {
+    lazy var termsOfUseAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
         button.addTarget(self, action: #selector(tapTermsOfUseAgreementArrow), for: .touchUpInside)

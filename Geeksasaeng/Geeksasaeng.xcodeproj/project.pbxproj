@@ -1003,6 +1003,8 @@
 		A24F0B24289CC1D8007A9C5C /* Splash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A24F0B23289CC1D8007A9C5C /* Splash.mp4 */; };
 		A24F0B25289CC1D8007A9C5C /* Splash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A24F0B23289CC1D8007A9C5C /* Splash.mp4 */; };
 		A24F0B26289CC1D8007A9C5C /* Splash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A24F0B23289CC1D8007A9C5C /* Splash.mp4 */; };
+		A24F0B27289D49C6007A9C5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
+		A24F0B28289D49C7007A9C5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
 		A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
 		A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
 		A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */; };
@@ -2897,6 +2899,7 @@
 				10544277287F0057003B8799 /* globals_defs.html in Resources */,
 				10544118287F0056003B8799 /* properties_9.html in Resources */,
 				105440B8287F0056003B8799 /* functions_d.js in Resources */,
+				A24F0B27289D49C6007A9C5C /* Assets.xcassets in Resources */,
 				105441D5287F0056003B8799 /* functions_c.html in Resources */,
 				10544073287F0055003B8799 /* doxygen.png in Resources */,
 				10544067287F0055003B8799 /* interface_m_t_map_point.html in Resources */,
@@ -3182,6 +3185,7 @@
 				10544278287F0057003B8799 /* globals_defs.html in Resources */,
 				10544119287F0056003B8799 /* properties_9.html in Resources */,
 				105440B9287F0056003B8799 /* functions_d.js in Resources */,
+				A24F0B28289D49C7007A9C5C /* Assets.xcassets in Resources */,
 				105441D6287F0056003B8799 /* functions_c.html in Resources */,
 				10544074287F0055003B8799 /* doxygen.png in Resources */,
 				10544068287F0055003B8799 /* interface_m_t_map_point.html in Resources */,
@@ -3757,7 +3761,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
@@ -3796,7 +3800,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
