@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine(335)
+        textField.makeBottomLine(UIScreen.main.bounds.width - 23 * 2)
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()
@@ -41,7 +41,7 @@ class LoginViewController: UIViewController {
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine(335)
+        textField.makeBottomLine(UIScreen.main.bounds.width - 23 * 2)
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()
@@ -75,13 +75,18 @@ class LoginViewController: UIViewController {
     
     lazy var automaticLoginButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.setImage(UIImage(named: "CheckBox"), for: .normal)
         button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
-        button.setTitle(" 자동 로그인", for: .normal)
-        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
-        button.titleLabel?.font = .customFont(.neoLight, size: 15)
         button.addTarget(self, action: #selector(tapAutomaticLoginButton), for: .touchUpInside)
         return button
+    }()
+    
+    let autoLoginLabel: UILabel = {
+        let label = UILabel()
+        label.text = "자동 로그인"
+        label.font = .customFont(.neoRegular, size: 15)
+        label.textColor = .init(hex: 0x5B5B5B)
+        return label
     }()
     
     lazy var signUpButton: UIButton = {
@@ -109,6 +114,7 @@ class LoginViewController: UIViewController {
         attemptAutoLogin()
         addSubViews()
         setLayouts()
+//        print(UIScreen.main.bounds.size)
     }
     
     // MARK: - Function
@@ -117,52 +123,65 @@ class LoginViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [logoImageView, idTextField, passwordTextField, loginButton, naverLoginButton, automaticLoginButton, signUpButton].forEach { view.addSubview($0) }
+        [
+            logoImageView,
+            idTextField, passwordTextField,
+            loginButton, naverLoginButton,
+            automaticLoginButton,autoLoginLabel,
+            signUpButton
+        ].forEach { view.addSubview($0) }
     }
     
     private func setLayouts() {
         logoImageView.snp.makeConstraints { make in
             make.width.height.equalTo(133)
-            make.centerX.equalTo(self.view.center)
-            make.top.equalToSuperview().offset(150)
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(UIScreen.main.bounds.height / 6.83)
         }
         
         idTextField.snp.makeConstraints { make in
-            make.centerX.equalTo(self.logoImageView)
-            make.top.equalTo(self.logoImageView.snp.bottom).offset(50)
+            make.centerX.equalTo(logoImageView)
+            make.top.equalTo(logoImageView.snp.bottom).offset(UIScreen.main.bounds.height / 16.8)
             make.left.equalTo(23)
-            make.width.equalTo(314)
+            make.right.equalTo(-23)
         }
         
         passwordTextField.snp.makeConstraints { make in
-            make.centerX.equalTo(self.logoImageView)
-            make.top.equalTo(self.idTextField.snp.bottom).offset(30)
+            make.centerX.equalTo(logoImageView)
+            make.top.equalTo(idTextField.snp.bottom).offset(30)
             make.left.equalTo(23)
-            make.width.equalTo(314)
+            make.right.equalTo(-23)
         }
         
         loginButton.snp.makeConstraints { make in
-            make.centerX.equalTo(self.logoImageView)
-            make.width.equalTo(314)
-            make.top.equalTo(self.passwordTextField.snp.bottom).offset(50)
+            make.centerX.equalTo(logoImageView)
+            make.top.equalTo(passwordTextField.snp.bottom).offset(50)
+            make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(51)
         }
         
         naverLoginButton.snp.makeConstraints { make in
-            make.centerX.equalTo(self.logoImageView)
-            make.width.equalTo(314)
-            make.top.equalTo(self.loginButton.snp.bottom).offset(10)
+            make.centerX.equalTo(logoImageView)
+            make.top.equalTo(loginButton.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(51)
         }
         
-        automaticLoginButton.snp.makeConstraints { make in
-            make.centerX.equalTo(self.logoImageView)
-            make.top.equalTo(self.naverLoginButton.snp.bottom).offset(15)
+        autoLoginLabel.snp.makeConstraints { make in
+            make.top.equalTo(naverLoginButton.snp.bottom).offset(21)
+            make.centerX.equalTo(logoImageView).offset(9.5)
         }
         
+        automaticLoginButton.snp.makeConstraints { make in
+            make.right.equalTo(autoLoginLabel.snp.left).offset(-5)
+            make.centerY.equalTo(autoLoginLabel)
+            make.width.height.equalTo(15)
+        }
+        
+        // TODO: - 아이팟 터치에서는 다른 버튼 크기를 비율 맞춰 줄여봐도 이 버튼이 가려짐. 스크롤뷰 추가해야 할 듯
         signUpButton.snp.makeConstraints { make in
-            make.centerX.equalTo(self.logoImageView)
-            make.top.equalTo(self.automaticLoginButton.snp.bottom).offset(45)
+            make.centerX.equalTo(logoImageView)
+            make.top.equalTo(automaticLoginButton.snp.bottom).offset(UIScreen.main.bounds.height / 18.7)
         }
     }
     
@@ -211,10 +230,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc func tapAutomaticLoginButton() {
-        if automaticLoginButton.currentImage == UIImage(systemName: "rectangle") {
+        if automaticLoginButton.currentImage == UIImage(named: "CheckBox") {
             automaticLoginButton.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
         } else {
-            automaticLoginButton.setImage(UIImage(systemName: "rectangle"), for: .normal)
+            automaticLoginButton.setImage(UIImage(named: "CheckBox"), for: .normal)
         }
     }
     
@@ -248,12 +267,12 @@ class LoginViewController: UIViewController {
     }
     
     /* 로그인 완료 후 화면 전환 */
-    public func showNextView(isFirstLogin: Bool) {
+    public func showNextView(isFirstLogin: Bool, nickName: String? = nil) {
         // 첫 로그인 시에는 기숙사 선택 화면으로 이동
         if isFirstLogin {
             let dormitoryVC = DormitoryViewController()
-            // TODO: - 서버에서 로그인 API res로 닉네임 주면 그때 수정 예정
-//            dormitoryVC.userNickName = userNickName
+            print("체크", nickName!)
+            dormitoryVC.userNickName = nickName
             dormitoryVC.modalTransitionStyle = .crossDissolve
             dormitoryVC.modalPresentationStyle = .fullScreen
             present(dormitoryVC, animated: true)

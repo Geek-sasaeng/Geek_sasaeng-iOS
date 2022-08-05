@@ -9,6 +9,12 @@ import UIKit
 import SnapKit
 import Kingfisher
 
+/* Delegate Pattern을 구현하기 위한 프로토콜 */
+protocol UpdateDeliveryDelegate {
+    // 배달 목록을 새로고침 해준다.
+   func updateDeliveryList()
+}
+
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
@@ -27,6 +33,9 @@ class DeliveryViewController: UIViewController {
     // 광고 배너의 현재 페이지를 체크하는 변수 (자동 스크롤할 때 필요)
     var nowPage: Int = 0
     
+    // 시간 필터 배열
+    var timeDataArray = ["아침", "점심", "저녁", "야식"]
+    
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
     
@@ -43,6 +52,9 @@ class DeliveryViewController: UIViewController {
     var nowPeopleFilter: Int? = nil
     // 현재 설정되어 있는 시간 필터값
     var nowTimeFilter: String? = nil
+    
+    // 현재 설정되어 있는 시간 필터 label
+    var selectedTimeLabel: UILabel? = nil
 
     // 목록에서 현재 커서 위치
     var cursor = 0
@@ -80,7 +92,8 @@ class DeliveryViewController: UIViewController {
         return barButton
     }()
     lazy var rightBarButtonItem: UIBarButtonItem = {
-        let searchButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(tapSearchButton))
+        let searchButton = UIBarButtonItem(image: UIImage(named: "SearchMark"), style: .plain, target: self, action: #selector(tapSearchButton))
+        searchButton.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 13)
         searchButton.tintColor = .init(hex: 0x2F2F2F)
         return searchButton
     }()
@@ -90,18 +103,21 @@ class DeliveryViewController: UIViewController {
     var deliveryPartyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
+        label.font = .customFont(.neoBold, size: 16)
         label.text = "배달파티"
         return label
     }()
     var marketLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0xCBCBCB)
+        label.font = .customFont(.neoMedium, size: 16)
         label.text = "마켓"
         return label
     }()
     var helperLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0xCBCBCB)
+        label.font = .customFont(.neoMedium, size: 16)
         label.text = "헬퍼"
         return label
     }()
@@ -143,6 +159,7 @@ class DeliveryViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         // 직접 페이징 가능하도록
         collectionView.isPagingEnabled = true
+        collectionView.tag = 1
         
         return collectionView
     }()
@@ -158,7 +175,7 @@ class DeliveryViewController: UIViewController {
     var peopleFilterLabel: UILabel = {
         let label = UILabel()
         label.text = "인원 선택"
-        label.font = .customFont(.neoMedium, size: 11)
+        label.font = .customFont(.neoMedium, size: 14)
         label.textColor = UIColor(hex: 0xA8A8A8)
         return label
     }()
@@ -170,7 +187,7 @@ class DeliveryViewController: UIViewController {
     lazy var peopleFilterView: UIView = {
         var view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
-        view.layer.cornerRadius = 3
+        view.layer.cornerRadius = 5
         
         [
             peopleFilterLabel,
@@ -179,34 +196,17 @@ class DeliveryViewController: UIViewController {
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(10)
+            make.left.equalToSuperview().offset(14)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(9)
+            make.width.equalTo(12)
             make.height.equalTo(6)
             make.centerY.equalToSuperview().offset(-1)
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(9)
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
         }
         return view
     }()
    
-    /* Time Filter */
-    // 아침
-    var breakfastFilterView = UIView()
-    // 점심
-    var lunchFilterView = UIView()
-    // 저녁
-    var dinnerFilterView = UIView()
-    // 야식
-    var midnightSnackFilterView = UIView()
-    
-    /* 시간 관련 필터뷰들을 묶어놓는 스택뷰 */
-    lazy var timeOptionStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [breakfastFilterView, lunchFilterView, dinnerFilterView, midnightSnackFilterView])
-        stackView.spacing = 10
-        return stackView
-    }()
-    
     /* Expanded Filter Views */
     /* DropDown뷰의 데이터가 들어갈 stackView 생성 */
     lazy var peopleOptionStackView: UIStackView = {
@@ -216,7 +216,7 @@ class DeliveryViewController: UIViewController {
         stackView.layoutIfNeeded()
         stackView.distribution = .fillProportionally
         stackView.alignment = .leading
-        stackView.spacing = 10
+        stackView.spacing = 22
         
         // stackView label 내용 구성
         setVLabelList(["2명 이하", "4명 이하", "6명 이하", "8명 이하", "10명 이하"], stackView)
@@ -228,12 +228,17 @@ class DeliveryViewController: UIViewController {
     lazy var peopleDropDownView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
+        
+        // 왼쪽, 오른쪽 하단의 코너에만 cornerRadius를 적용
+        view.layer.masksToBounds = true
+        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMaxYCorner]
+        view.layer.cornerRadius = 5
         view.isHidden = true
         
         view.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(12)
-            make.left.equalToSuperview().inset(11)
+            make.top.equalToSuperview().inset(15)
+            make.left.equalToSuperview().inset(14)
         }
         return view
     }()
@@ -244,11 +249,11 @@ class DeliveryViewController: UIViewController {
         view.backgroundColor = .none
         view.layer.borderWidth = 5
         view.clipsToBounds = true
-        view.layer.cornerRadius = 3
+        view.layer.cornerRadius = 6
         view.isHidden = true
         
         // 테두리 그림자 생성
-        view.layer.shadowRadius = 3
+        view.layer.shadowRadius = 5
         view.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
         view.layer.shadowOpacity = 1
         view.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -257,6 +262,27 @@ class DeliveryViewController: UIViewController {
         [peopleFilterView, peopleDropDownView].forEach { view.addSubview($0) }
         
         return view
+    }()
+    
+    /* Time Filter -> 컬렉션뷰로 */
+    var timeCollectionView: UICollectionView = {
+        // 레이아웃 설정
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        // 셀 크기 설정
+        layout.itemSize = CGSize(width: 54, height: 34)
+        // 셀 사이 좌우 간격 설정
+        layout.minimumInteritemSpacing = 9
+        
+        // 컬렉션뷰 생성
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .white
+        collectionView.tag = 2
+        
+        // indicator 숨김
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
     }()
     
     /* Table View */
@@ -296,16 +322,12 @@ class DeliveryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        setTimeFilterAttrs(thisView: breakfastFilterView, text: "아침")
-        setTimeFilterAttrs(thisView: lunchFilterView, text: "점심")
-        setTimeFilterAttrs(thisView: dinnerFilterView, text: "저녁")
-        setTimeFilterAttrs(thisView: midnightSnackFilterView, text: "야식")
-        
         addSubViews()
         setLayouts()
         
         setTableView()
-        setCollectionView()
+        // collection view 설정
+        [ adCollectionView, timeCollectionView ].forEach { setCollectionView($0) }
         
         setLabelTap()
         setFilterViewTap()
@@ -350,7 +372,7 @@ class DeliveryViewController: UIViewController {
             deliveryPartyBar, marketBar, helperBar,
             adCollectionView,
             filterImageView, peopleFilterView,
-            timeOptionStackView,
+            timeCollectionView,
             peopleDropDownView, peopleFilterContainerView,
             partyTableView,
             blurView,   // 적은 순서에 따라 view가 추가됨 = 순서에 따라 앞뒤의 뷰가 달라짐
@@ -374,22 +396,23 @@ class DeliveryViewController: UIViewController {
             make.centerX.equalTo(helperBar.snp.centerX)
         }
         deliveryPartyBar.snp.makeConstraints { make in
-            make.top.equalTo(deliveryPartyLabel.snp.bottom).offset(5)
+            make.top.equalTo(deliveryPartyLabel.snp.bottom).offset(13)
             make.left.equalToSuperview().inset(18)
             make.height.equalTo(3)
-            make.width.equalTo(110)
+            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
         }
         marketBar.snp.makeConstraints { make in
-            make.top.equalTo(marketLabel.snp.bottom).offset(5)
+            make.top.equalTo(marketLabel.snp.bottom).offset(13)
             make.left.equalTo(deliveryPartyBar.snp.right)
             make.height.equalTo(3)
-            make.width.equalTo(110)
+            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
         }
         helperBar.snp.makeConstraints { make in
-            make.top.equalTo(helperLabel.snp.bottom).offset(5)
+            make.top.equalTo(helperLabel.snp.bottom).offset(13)
             make.left.equalTo(marketBar.snp.right)
             make.right.equalToSuperview().inset(18)
             make.height.equalTo(3)
+            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
         }
         
         /* Ad */
@@ -400,6 +423,7 @@ class DeliveryViewController: UIViewController {
         }
         
         /* Filter */
+        // 인원수 필터
         filterImageView.snp.makeConstraints { make in
             make.width.equalTo(23)
             make.height.equalTo(15)
@@ -407,26 +431,29 @@ class DeliveryViewController: UIViewController {
             make.left.equalTo(adCollectionView.snp.left).offset(28)
         }
         peopleFilterView.snp.makeConstraints { make in
-            make.width.equalTo(79)
-            make.height.equalTo(30)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
             make.left.equalTo(filterImageView.snp.right).offset(16)
-        }
-        timeOptionStackView.snp.makeConstraints { make in
-            make.centerY.equalTo(peopleFilterView.snp.centerY)
-            make.left.equalTo(peopleFilterView.snp.right).offset(10)
+            make.width.equalTo(101)
+            make.height.equalTo(34)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(140)
+            make.height.equalTo(219)
             make.top.equalTo(peopleFilterView.snp.bottom)
             make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
-            make.width.equalTo(79)
-            make.height.equalTo(170)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(13)
+            make.width.equalTo(peopleFilterView)
+            make.height.equalTo(253)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
             make.left.equalTo(filterImageView.snp.right).offset(16)
+        }
+        // 시간 필터
+        timeCollectionView.snp.makeConstraints { make in
+            make.left.equalTo(peopleFilterView.snp.right).offset(9)
+            make.right.equalToSuperview().inset(9)
+            make.centerY.equalTo(peopleFilterView)
+            make.height.equalTo(34)
         }
         
         /* TableView */
@@ -471,31 +498,17 @@ class DeliveryViewController: UIViewController {
     }
     
     /* collection view 등록 */
-    private func setCollectionView() {
-        adCollectionView.delegate = self
-        adCollectionView.dataSource = self
-        adCollectionView.clipsToBounds = true
-        adCollectionView.register(AdCollectionViewCell.self,
-                                  forCellWithReuseIdentifier: AdCollectionViewCell.identifier)
-    }
-    
-    /* 필터뷰의 속성을 세팅해주는 함수 */
-    private func setTimeFilterAttrs(thisView: UIView, text: String) {
-        thisView.backgroundColor = .init(hex: 0xF8F8F8)
-        thisView.layer.cornerRadius = 3
-        thisView.snp.makeConstraints { make in
-            make.width.equalTo(41)
-            make.height.equalTo(28)
-        }
+    private func setCollectionView(_ collectionView: UICollectionView) {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.clipsToBounds = true
         
-        let label = UILabel()
-        label.text = text
-        label.font = .customFont(.neoMedium, size: 11)
-        label.textColor = UIColor(hex: 0xA8A8A8)
-        
-        thisView.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+        if collectionView.tag == 1 {
+            collectionView.register(AdCollectionViewCell.self,
+                                    forCellWithReuseIdentifier: AdCollectionViewCell.identifier)
+        } else {
+            collectionView.register(TimeCollectionViewCell.self,
+                                    forCellWithReuseIdentifier: TimeCollectionViewCell.identifier)
         }
     }
     
@@ -505,8 +518,8 @@ class DeliveryViewController: UIViewController {
               /* Filter Label */
               let filterLabel = UILabel()
               let filterText = passedArray[i]
-              filterLabel.textColor = .init(hex: 0xD8D8D8)
-              filterLabel.font = .customFont(.neoMedium, size: 11)
+              filterLabel.textColor = .init(hex: 0xA8A8A8)
+              filterLabel.font = .customFont(.neoMedium, size: 14)
               filterLabel.text = filterText
               
               /* Stack View */
@@ -597,6 +610,7 @@ class DeliveryViewController: UIViewController {
         // TODO: - Bool값 false가 되는 때도 설정 필요
         deliveryCellDataArray.removeAll()
         isPeopleFilterOn = true
+        cursor = 0
         
         enum peopleOption: String {
             case two = "2명 이하"
@@ -625,7 +639,6 @@ class DeliveryViewController: UIViewController {
         print("TEST: ", num ?? -1)
 
         if let num = num {
-            cursor = 0
             nowPeopleFilter = num
             
             // 상태에 따라 다른 파라미터로 API를 호출한다
@@ -640,11 +653,10 @@ class DeliveryViewController: UIViewController {
 
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
-        if !isTimeFilterOn {
-            deliveryCellDataArray.removeAll()
-            isTimeFilterOn = true
-            cursor = 0
-        }
+        deliveryCellDataArray.removeAll()
+        // 시간 필터 ON
+        isTimeFilterOn = true
+        cursor = 0
 
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
         enum TimeOption: String {
@@ -669,7 +681,7 @@ class DeliveryViewController: UIViewController {
         }
         
         if let orderTimeCategory = orderTimeCategory {
-            cursor = 0
+            // 현재 시간 필터 설정
             nowTimeFilter = orderTimeCategory
             
             // 상태에 따라 다른 파라미터로 API를 호출
@@ -718,8 +730,6 @@ class DeliveryViewController: UIViewController {
     /* label에 탭 제스쳐 추가 */
     private func setLabelTap() {
         for label in [deliveryPartyLabel, marketLabel, helperLabel] {
-            label.font = .customFont(.neoMedium, size: 14)
-            
             // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
             let labelTapGesture = UITapGestureRecognizer(target: self,
                                                          action: #selector(tapCategoryLabel(sender:)))
@@ -736,19 +746,6 @@ class DeliveryViewController: UIViewController {
                                                          action: #selector(tapPeopleOption(sender:)))
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(labelTapGesture)
-        }
-        
-        // timeOptionStackView의 서브뷰 안의 label에게 탭 제스쳐를 추가한다.
-        timeOptionStackView.subviews.forEach { view in
-            view.subviews.forEach { sub in
-                let label = sub as! UILabel
-                print(label.text!)
-                // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
-                let labelTapGesture = UITapGestureRecognizer(target: self,
-                                                             action: #selector(tapTimeOption(sender:)))
-                label.isUserInteractionEnabled = true
-                label.addGestureRecognizer(labelTapGesture)
-            }
         }
     }
     
@@ -781,8 +778,11 @@ class DeliveryViewController: UIViewController {
                 helperBar.backgroundColor = .init(hex: 0xCBCBCB)
                 // 텍스트 색깔 활성화
                 deliveryPartyLabel.textColor = .init(hex: 0x2F2F2F)
+                deliveryPartyLabel.font = .customFont(.neoBold, size: 16)
                 marketLabel.textColor = .init(hex: 0xCBCBCB)
+                marketLabel.font = .customFont(.neoMedium, size: 16)
                 helperLabel.textColor = .init(hex: 0xCBCBCB)
+                helperLabel.font = .customFont(.neoMedium, size: 16)
                 // 배달파티 리스트 보여주기
                 break
             case "마켓":
@@ -793,8 +793,11 @@ class DeliveryViewController: UIViewController {
                 helperBar.backgroundColor = .init(hex: 0xCBCBCB)
                 // 텍스트 색깔 활성화
                 deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
+                deliveryPartyLabel.font = .customFont(.neoMedium, size: 16)
                 marketLabel.textColor = .init(hex: 0x2F2F2F)
+                marketLabel.font = .customFont(.neoBold, size: 16)
                 helperLabel.textColor = .init(hex: 0xCBCBCB)
+                helperLabel.font = .customFont(.neoMedium, size: 16)
                 // 마켓 리스트 보여주기
                 break
             case "헬퍼":
@@ -805,8 +808,11 @@ class DeliveryViewController: UIViewController {
                 helperBar.backgroundColor = .mainColor
                 // 텍스트 색깔 활성화
                 deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
+                deliveryPartyLabel.font = .customFont(.neoMedium, size: 16)
                 marketLabel.textColor = .init(hex: 0xCBCBCB)
+                marketLabel.font = .customFont(.neoMedium, size: 16)
                 helperLabel.textColor = .init(hex: 0x2F2F2F)
+                helperLabel.font = .customFont(.neoBold, size: 16)
                 // 헬퍼 리스트 보여주기
                 break
             default:
@@ -832,7 +838,7 @@ class DeliveryViewController: UIViewController {
             peopleFilterLabel.textColor = .mainColor
             peopleFilterToggleImageView.image =  UIImage(named: "ToggleDownMark")
         } else {
-            peopleFilterView.layer.cornerRadius = 3     // 원래대로 돌려놓기
+            peopleFilterView.layer.cornerRadius = 5     // 원래대로 돌려놓기
             peopleFilterToggleImageView.image =  UIImage(named: "ToggleMark")
         }
     }
@@ -861,20 +867,31 @@ class DeliveryViewController: UIViewController {
     @objc private func tapTimeOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
-        // label 색 변경 - mainColor로 -> 필터가 선택된 것
+        // label 색 변경
+        // 선택돼있던 label이 아니었다면, mainColor로 바꿔준다
         if label.textColor != .mainColor {
+            // 원래 선택돼있던 label 색깔은 해제한다. -> 시간 필터 1개만 선택 가능
+            if selectedTimeLabel != nil {
+                // 색깔 원상복귀
+                selectedTimeLabel?.textColor = .init(hex: 0xD8D8D8)
+            }
             label.textColor = .mainColor
+            selectedTimeLabel = label
+            
             // 시간 필터링 호출
             getTimeFilterList(text: label.text)
         } else {
-            // 원래 색깔로 되돌려 놓는다
+            // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
             label.textColor = .init(hex: 0xD8D8D8)
             
             // 시간 필터 해제
             isTimeFilterOn = false
             nowTimeFilter = nil
             
+            // 초기화
+            deliveryCellDataArray.removeAll()
             cursor = 0
+            
             if nowPeopleFilter == nil {
                 getDeliveryList()
             } else {
@@ -1075,6 +1092,9 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
         let viewController = PartyViewController()
         viewController.dormitoryInfo = dormitoryInfo
         viewController.deliveryData = deliveryCellDataArray[indexPath.row]
+        
+        // delegate로 자기 자신(DeliveryVC)를 넘겨줌
+        partyVC.delegate = self
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
@@ -1083,25 +1103,48 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
-    /* cell(광고) 몇 개 넣을지 설정 */
+    /* cell을 몇 개 넣을지 설정 */
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return adCellDataArray.count
+        // 광고
+        if collectionView.tag == 1 {
+            return adCellDataArray.count
+        } else {
+            // 시간 필터
+            return timeDataArray.count
+        }
     }
     
-    /* cell에 어떤 이미지의 광고를 넣을지 설정 */
+    /* cell의 내용 설정 */
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        // AdCollectionViewCell 타입의 cell 생성
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdCollectionViewCell.identifier, for: indexPath) as? AdCollectionViewCell else { return UICollectionViewCell() }
-        
-        // cell의 이미지(광고 이미지) 설정
-        // url에 정확한 이미지 url 주소를 넣는다
-        if let imgString = adCellDataArray[indexPath.item].imgUrl {
-            let url = URL(string: imgString)
-            cell.cellImageView.kf.setImage(with: url)
+        // cell에 어떤 이미지의 광고를 넣을지 설정
+        if collectionView.tag == 1 {
+            // AdCollectionViewCell 타입의 cell 생성
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AdCollectionViewCell.identifier, for: indexPath) as? AdCollectionViewCell else { return UICollectionViewCell() }
+            
+            // cell의 이미지(광고 이미지) 설정
+            // url에 정확한 이미지 url 주소를 넣는다
+            if let imgString = adCellDataArray[indexPath.item].imgUrl {
+                let url = URL(string: imgString)
+                cell.cellImageView.kf.setImage(with: url)
+            }
+            
+            return cell
+        } else {
+            // 시간 필터 셀 구성
+            // TimeCollectionViewCell 타입의 cell 생성
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimeCollectionViewCell.identifier, for: indexPath) as? TimeCollectionViewCell else {
+                return UICollectionViewCell() }
+            
+            // cell의 설정
+            cell.timeLabel.text = timeDataArray[indexPath.item]
+            
+            // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록
+            let labelTapGesture = UITapGestureRecognizer(target: self,
+                                                         action: #selector(tapTimeOption(sender:)))
+            cell.timeLabel.isUserInteractionEnabled = true
+            cell.timeLabel.addGestureRecognizer(labelTapGesture)
+            return cell
         }
-        
-        return cell
     }
     
     /* 수동 스크롤이 끝났을 때 실행되는 함수 */
@@ -1118,4 +1161,15 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         }
     }
     
+}
+
+// MARK: - UpdateDeliveryDelegate
+
+extension DeliveryViewController: UpdateDeliveryDelegate {
+    /* PartyVC에서 배달 파티가 삭제되면,
+     DeliveryVC의 배달 목록을 새로고침 시키는 함수 */
+    func updateDeliveryList() {
+        print("DEBUG: 삭제됐으니 테이블뷰 리로드 할게요")
+        pullToRefresh()
+    }
 }

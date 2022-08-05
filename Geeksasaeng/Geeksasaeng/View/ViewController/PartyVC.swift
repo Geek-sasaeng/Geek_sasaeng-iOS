@@ -18,6 +18,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
 
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateDeliveryDelegate?
     
     // MARK: - Subviews
     
@@ -427,6 +429,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     // MARK: - Properties
+    
     var deliveryData: DeliveryListModelResult?
     var detailData = getDetailInfoResult()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
@@ -912,16 +915,22 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         visualEffectView?.removeFromSuperview()
     }
     
+    /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc func tapConfirmButton() {
         if let partyId = detailData.id {
+            // 파티 삭제
             DeletePartyViewModel.deleteParty(partyId: partyId)
         }
+        // 삭제하기 뷰 없애고
         removeDeleteView()
+        // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
+        delegate?.updateDeliveryList()
+        // 이전화면으로 이동
         navigationController?.popViewController(animated: true)
-        
-        // TODO: - 삭제되는 순간 테이블뷰 리로드 -> DeliveryVC에서 구현해야 할 듯 ?
     }
 }
+
+// MARK: - EdittedDelegate
 
 extension PartyViewController: EdittedDelegate {
     func checkEditted(isEditted: Bool) {
