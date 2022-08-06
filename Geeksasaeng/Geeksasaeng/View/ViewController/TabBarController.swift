@@ -61,7 +61,7 @@ class TabBarController: UITabBarController {
         viewControllers = [
             createNavController(for: DeliveryViewController(), title: titleArray[0], image: UIImage(named: "Home")!),
             createNavController(for: DeliveryViewController(), title: "", image: UIImage(named: "Community")!),
-            createNavController(for: ChattingListViewController(), title: "", image: UIImage.init(named: "Chat")!),
+            createNavController(for: ChatListViewController(), title: "", image: UIImage.init(named: "Chat")!),
             createNavController(for: DeliveryViewController(), title: "", image: UIImage.init(named: "Profile")!),
         ]
     }
