@@ -100,6 +100,7 @@ class LoginViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    
     let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
     var accessToken: String?
@@ -118,7 +119,8 @@ class LoginViewController: UIViewController {
         setLayouts()
     }
     
-    // MARK: - Function
+    // MARK: - Functions
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
@@ -196,7 +198,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func tapSignUpButton() {
+    @objc private func tapSignUpButton() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
         
@@ -313,7 +315,7 @@ class LoginViewController: UIViewController {
 }
 
 
-// MARK: - LoginVC Extensions
+// MARK: - NaverThirdPartyLoginConnectionDelegate
 
 extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
     // 로그인 성공
