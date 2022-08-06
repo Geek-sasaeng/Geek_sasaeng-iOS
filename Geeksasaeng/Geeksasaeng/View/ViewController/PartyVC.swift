@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import CoreLocation
 
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
@@ -649,6 +650,21 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         orderReserveLabel.text = "\(dateStr)      \(timeStr)"
         titleLabel.text = detailData.title
         postingTime.text = detailData.updatedAt
+        
+        /* 현재 위치를 한글 데이터로 받아오기 */
+        let locationNow = CLLocation(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)
+        let geocoder = CLGeocoder()
+        let locale = Locale(identifier: "ko_kr")
+        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
+        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
+            if let address = placemarks {
+                if let administrativeArea = address.last?.administrativeArea,
+                   let locality = address.last?.locality,
+                   let name = address.last?.name {
+                    self.pickupLocationDataLabel.text = "\(administrativeArea) \(locality) \(name)"
+                }
+            }
+        }
     }
     
     public func setMapView() {
