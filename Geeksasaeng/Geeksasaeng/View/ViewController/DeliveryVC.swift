@@ -544,14 +544,20 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 배달 목록 정보 API로 불러오기 */
-    // TODO: - 추후에 기숙사 정보 불러와서 dormitoryId로 넣기
     private func getDeliveryList(maxMatching: Int? = nil, orderTimeCategory: String? = nil) {
         // 푸터뷰(= 데이터 받아올 때 테이블뷰 맨 아래 새로고침 표시 뜨는 거) 생성
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
+        // 기숙사 id가 nil일 경우, 배달파티 목록을 불러올 수 없기 때문에 로그 띄우기
+        guard let dormitoryId = dormitoryInfo?.id else {
+            print("DEBUG: 기숙사id가 nil값입니다.")
+            return
+        }
+        print("DEBUG: 제\(dormitoryId)기숙사의 배달파티 리스트 데이터입니다")
+        
         // 1. 필터링 없는 전체 배달 목록 조회
         if maxMatching == nil, orderTimeCategory == nil {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, dormitoryId: 1) { [weak self] result in
+            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, dormitoryId: dormitoryId) { [weak self] result in
                 self?.isInitial = false
                 
                 guard let data = result.deliveryPartiesVoList,
@@ -566,7 +572,7 @@ class DeliveryViewController: UIViewController {
         }
         // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
         else if maxMatching != nil, orderTimeCategory == nil {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, dormitoryId: 1) { [weak self] result in
+            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, dormitoryId: dormitoryId) { [weak self] result in
                 
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
@@ -580,7 +586,7 @@ class DeliveryViewController: UIViewController {
         }
         // 3. 시간 필터링이 적용된 전체 배달 목록 조회
         else if maxMatching == nil, orderTimeCategory != nil {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, orderTimeCategory: orderTimeCategory, dormitoryId: 1) { [weak self] result in
+            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, orderTimeCategory: orderTimeCategory, dormitoryId: dormitoryId) { [weak self] result in
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
                 
@@ -593,7 +599,7 @@ class DeliveryViewController: UIViewController {
         }
         // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
         else {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, orderTimeCategory: orderTimeCategory, dormitoryId: 1) { [weak self] result in
+            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, orderTimeCategory: orderTimeCategory, dormitoryId: dormitoryId) { [weak self] result in
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
                 
@@ -1175,10 +1181,10 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
 // MARK: - UpdateDeliveryDelegate
 
 extension DeliveryViewController: UpdateDeliveryDelegate {
-    /* PartyVC에서 배달 파티가 삭제되면,
+    /* PartyVC에서 배달 파티가 생성/삭제되면,
      DeliveryVC의 배달 목록을 새로고침 시키는 함수 */
     func updateDeliveryList() {
-        print("DEBUG: 삭제됐으니 테이블뷰 리로드 할게요")
+        print("DEBUG: 파티가 업데이트됐으니 테이블뷰 리로드 할게요")
         pullToRefresh()
     }
 }

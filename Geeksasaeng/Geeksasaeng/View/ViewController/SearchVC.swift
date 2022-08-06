@@ -31,8 +31,6 @@ class SearchViewController: UIViewController {
     // 현재 설정되어 있는 시간 필터값
     var nowTimeFilter: String? = nil
     
-    // TODO: - 회원가입 에러가 해결되면 dormitoryId 수정 예정
-    // 새로 회원가입 해서 기숙사 선택 화면 거치게 하면 dormitoryInfo 생길 것임! 미니 계정은 기숙사 선택 과정을 안 거친 계정이라 이거 없어서 지금 테스트 불가능함
     // 기숙사 정보 -> id랑 name 다 있음
     var dormitoryInfo: DormitoryNameResult?
     // 목록에서 현재 커서 위치
@@ -81,10 +79,9 @@ class SearchViewController: UIViewController {
     
     lazy var dormitoryWeeklyTopLabel: UILabel = {
         let label = UILabel()
-//        if let name = dormitoryInfo?.name {
-//            label.text = "\("제" + name) Weekly TOP 10"
-//        }
-        label.text = "제1기숙사 Weekly TOP 10"
+        if let name = dormitoryInfo?.name {
+            label.text = "\("제" + name) Weekly TOP 10"
+        }
         return label
     }()
     
@@ -520,21 +517,20 @@ class SearchViewController: UIViewController {
     
     /* 배달 파티 검색 */
     private func getSearchedDeliveryList() {
-//        print(searchTextField.text, dormitoryInfo)
-        guard let keyword = searchTextField.text else { return }
-//              let dormitoryInfo = dormitoryInfo,
-//              let dormitoryId = dormitoryInfo.id else { return }
-//        print(keyword, dormitoryInfo)
+        guard let keyword = searchTextField.text,
+              let dormitoryInfo = dormitoryInfo,
+              let dormitoryId = dormitoryInfo.id else { return }
+        print("DEBUG:", keyword, dormitoryInfo)
         if searchTextField.text == "" { return }
         
-        print("DEBUG: 검색어 내용", keyword)
+        print("DEBUG: 검색어 내용 \(keyword) 기숙사 정보 \(dormitoryInfo)")
         
         // 푸터뷰(= 데이터 받아올 때 테이블뷰 맨 아래 새로고침 표시 뜨는 거) 생성
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
         // 1. 필터링 없는 전체 배달 목록 조회
         if nowPeopleFilter == nil, nowTimeFilter == nil {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword) { [weak self] result in
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword) { [weak self] result in
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
                 
@@ -547,7 +543,7 @@ class SearchViewController: UIViewController {
         }
         // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
         else if nowPeopleFilter != nil, nowTimeFilter == nil {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, maxMatching: nowPeopleFilter) { [weak self] result in
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, maxMatching: nowPeopleFilter) { [weak self] result in
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
                 
@@ -560,7 +556,7 @@ class SearchViewController: UIViewController {
         }
         // 3. 시간 필터링이 적용된 전체 배달 목록 조회
         else if nowPeopleFilter == nil, nowTimeFilter != nil {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, orderTimeCategory: nowTimeFilter) { [weak self] result in
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, orderTimeCategory: nowTimeFilter) { [weak self] result in
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
                 
@@ -573,7 +569,7 @@ class SearchViewController: UIViewController {
         }
         // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
         else {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: 1, keyword: keyword, maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter) { [weak self] result in
+            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter) { [weak self] result in
                 guard let data = result.deliveryPartiesVoList,
                       let isFinalPage = result.finalPage else { return }
                 
