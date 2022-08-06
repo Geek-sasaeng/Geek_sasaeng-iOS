@@ -514,6 +514,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
+    lazy var toastView: UIView? = nil
+    
     // MARK: - Properties
     
     var deliveryData: DeliveryListModelResult?
@@ -1068,9 +1070,109 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func tapRegisterConfirmButton() {
         // 신청하기 뷰 없애고
         removeRegisterView()
-        // TODO: - 이 유저를 채팅방에 초대하기
-        // 초대가 완료되었으면 파티 채팅방 생성 Alert 뷰 띄우기
         
+        // TODO: - 이 유저를 채팅방에 초대하기
+        // 초대가 완료되었으면 파티 채팅방 생성 완료 뷰 띄우기
+        
+        /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
+        toastView = {
+            let view = UIView()
+            view.backgroundColor = .init(hex: 0x474747, alpha: 0.6)
+            view.layer.cornerRadius = 5;
+            view.clipsToBounds  =  true
+            
+            // 서브뷰들
+            let toastLabel: UILabel = {
+                let label = UILabel()
+                label.text = "파티 채팅방이 생성되었습니다"
+                label.textColor = UIColor.white
+                label.font = .customFont(.neoMedium, size: 14)
+                label.alpha = 1.0
+                return label
+            }()
+            lazy var cancelButton: UIButton = {
+                let button = UIButton()
+                button.setImage(UIImage(named: "XmarkWhite"), for: .normal)
+                button.addTarget(self, action: #selector(tapCancelButton), for: .touchUpInside)
+                return button
+            }()
+            lazy var goChatButton: UIButton = {
+                let button = UIButton()
+                button.setTitle("바로가기 >", for: .normal)
+                button.setTitleColor(.white, for: .normal)
+                button.titleLabel?.font =  .customFont(.neoBold, size: 15)
+                button.addTarget(self, action: #selector(tapGoChatButton), for: .touchUpInside)
+                return button
+            }()
+            
+            [toastLabel, cancelButton, goChatButton]
+                .forEach { view.addSubview($0) }
+            toastLabel.snp.makeConstraints { make in
+                make.top.equalToSuperview().inset(24)
+                make.centerX.equalToSuperview()
+            }
+            cancelButton.snp.makeConstraints { make in
+                make.top.equalToSuperview().inset(12)
+                make.right.equalToSuperview().inset(6)
+                make.width.equalTo(20)
+                make.height.equalTo(15)
+            }
+            goChatButton.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(toastLabel.snp.bottom).offset(9)
+                make.width.equalTo(72)
+                make.height.equalTo(19)
+            }
+            
+            return view
+        }()
+        
+        // toastView가 보이게 설정
+        view.addSubview(toastView!)
+        toastView!.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalTo(246)
+            make.height.equalTo(93)
+        }
+        
+        // 3초 뒤에 사라지도록 타이머 설정
+        let _ = Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
+            self.tapCancelButton()
+        })
+    }
+    
+    /* 채팅방 생성 완료 뷰 X 눌렀을 때 사라지게 하는 함수 */
+    @objc
+    private func tapCancelButton() {
+        // 자연스럽게 사라지게 설정
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+            self.toastView!.alpha = 0.0
+        }, completion: {(isCompleted) in
+            self.toastView!.removeFromSuperview()
+        })
+    }
+    
+    /* 바로가기 눌렀을 때 채팅탭을 보여주는 함수 */
+    @objc
+    private func tapGoChatButton() {
+        print("DEBUG: 채팅탭으로 바로가기")
+        // 2번 인덱스인 채팅 탭을 보여준다
+        self.tabBarController?.selectedIndex = 2
+        
+        // 탭바에 아이템이 있고, 선택된 아이템이 있을 때에만 { } 안을 실행
+        if let items = self.tabBarController?.tabBar.items,
+           let selectedItem = self.tabBarController?.tabBar.selectedItem {
+            // 아이콘 아래 띄울 타이틀 설정
+            selectedItem.title = "채팅"
+            
+            // 선택된 아이템(채팅)이 아니면 title 값을 제거해준다
+            items.forEach {
+                if $0 != selectedItem {
+                    $0.title = ""
+                }
+            }
+        }
     }
 }
 

@@ -30,7 +30,7 @@ extension UIViewController {
             make.height.equalTo(61)
             make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)
         }
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {
             toastLabel.alpha = 0.0
         }, completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
