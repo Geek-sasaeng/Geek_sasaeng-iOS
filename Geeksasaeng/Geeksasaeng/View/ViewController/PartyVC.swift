@@ -547,6 +547,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.addObserver(forName: Notification.Name("TapEditButton"), object: nil, queue: nil) { notification in
             let result = notification.object as! String
             if result == "true" {
+                print("수정 완료 버튼이 눌렸당")
                 self.setDetailData()
             }
         }
@@ -575,6 +576,29 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     self.detailData.foodCategory = result.foodCategory
                     self.detailData.hashTag = result.hashTag
                     self.detailData.id = result.id
+                    self.detailData.latitude = result.latitude
+                    self.detailData.longitude = result.longitude
+                    
+                    // partyEdit 고려하여 전역에 데이터 넣기 -> edit API 호출 시 nil 값 방지
+                    switch result.foodCategory {
+                    case "한식": CreateParty.foodCategory = 1
+                    case "양식": CreateParty.foodCategory = 2
+                    case "중식": CreateParty.foodCategory = 3
+                    case "일식": CreateParty.foodCategory = 4
+                    case "분식": CreateParty.foodCategory = 5
+                    case "치킨/피자": CreateParty.foodCategory = 6
+                    case "회/돈까스": CreateParty.foodCategory = 7
+                    case "패스트 푸드": CreateParty.foodCategory = 8
+                    case "디저트/음료": CreateParty.foodCategory = 9
+                    case "기타": CreateParty.foodCategory = 10
+                    default: print("잘못된 카테고리입니다.")
+                    }
+                    CreateParty.orderTime = result.orderTime
+                    CreateParty.maxMatching = result.maxMatching
+                    CreateParty.url = result.storeUrl
+                    CreateParty.latitude = result.latitude
+                    CreateParty.longitude = result.longitude
+                    CreateParty.hashTag = result.hashTag
                 
                     // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
                     self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!)), zoomLevel: 5, animated: true)
@@ -1065,6 +1089,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 신청하기 뷰 없애고
         removeRegisterView()
         // TODO: - 이 유저를 채팅방에 초대하기
+        let chattingVC = ChattingViewController()
+        navigationController?.pushViewController(chattingVC, animated: true)
     }
 }
 

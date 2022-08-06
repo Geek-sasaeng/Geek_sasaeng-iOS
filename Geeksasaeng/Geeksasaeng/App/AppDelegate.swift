@@ -7,11 +7,14 @@
 
 import UIKit
 import NaverThirdPartyLogin
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        
         application.registerForRemoteNotifications()
         let instance = NaverThirdPartyLoginConnection.getSharedInstance()
         instance?.isNaverAppOauthEnable = true

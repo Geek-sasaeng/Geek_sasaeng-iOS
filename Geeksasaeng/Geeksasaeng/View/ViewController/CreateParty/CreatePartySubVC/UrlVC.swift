@@ -85,6 +85,11 @@ class UrlViewController: UIViewController {
     }
     
     // MARK: - Functions
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     private func setViewLayout() {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
@@ -138,13 +143,17 @@ class UrlViewController: UIViewController {
     private func setDefaultValueOfTextField() {
         if let url = CreateParty.url {
             urlTextField.text = url
+            return
         }
     }
     
     @objc func tapNextButton() {
         if let url = urlTextField.text {
-            print("=======", url)
             CreateParty.url = url
+        }
+        
+        if urlTextField.text?.count == 0 {
+            CreateParty.url = "Empty"
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -158,6 +167,7 @@ class UrlViewController: UIViewController {
     }
     
     @objc func tapPassButton() {
+        CreateParty.url = "Empty"
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = ReceiptPlaceViewController()
             self.addChild(childView)

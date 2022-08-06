@@ -30,7 +30,7 @@ struct AutoLoginModelResult: Decodable {
 }
 
 class AutoLoginAPI {
-    public static func attemptAutoLogin(_ viewController: LoginViewController, jwt: String) {
+    public static func attemptAutoLogin(jwt: String, completion: @escaping (AutoLoginModelResult) -> Void) {
         AF.request("https://geeksasaeng.shop/login/auto", method: .post,
                    headers: ["Authorization": "Bearer " + jwt])
             .validate()
@@ -39,22 +39,7 @@ class AutoLoginAPI {
                 case .success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 성공")
-                        
-                        LoginModel.jwt = jwt
-                        viewController.dormitoryInfo = DormitoryNameResult(id: result.result?.dormitoryId, name: result.result?.dormitoryName)
-                        // userImageUrl 저장
-                        viewController.userImageUrl = result.result?.userImageUrl
-                        
-                        print("DEBUG: 로그인 성공", result.result ?? "")
-                        
-                        // 로그인 완료 후 경우에 따른 화면 전환
-                        if let result = result.result {
-                            if result.loginStatus == "NEVER" {
-                                viewController.showNextView(isFirstLogin: true, nickName: result.nickname ?? "홍길동")
-                            } else {
-                                viewController.showNextView(isFirstLogin: false)
-                            }
-                        }
+                        completion(result.result ?? AutoLoginModelResult())
                     } else {
                         print("DEBUG: 실패", result.message!)
                     }

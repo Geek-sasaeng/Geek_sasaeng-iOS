@@ -115,7 +115,6 @@ class ReceiptPlaceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
         setLocation()
         setMapView()
         setViewLayout()

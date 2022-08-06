@@ -736,10 +736,14 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 storeUrl: url,
                 hashTag: CreateParty.hashTag ?? false)
             
-            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input)
+            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
+                if success {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    print("파티 생성 실패")
+                }
+            }
         }
-        
-        navigationController?.popViewController(animated: true)
     }
     
 }

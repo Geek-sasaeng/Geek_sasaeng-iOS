@@ -115,7 +115,6 @@ class EditUrlViewController: UIViewController {
     
     @objc func tapNextButton() {
         if let url = urlTextField.text {
-            print("=======", url)
             CreateParty.url = url
         }
         
