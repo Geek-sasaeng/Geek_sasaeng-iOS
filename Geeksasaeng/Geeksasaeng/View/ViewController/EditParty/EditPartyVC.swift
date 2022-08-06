@@ -14,6 +14,7 @@ protocol EdittedDelegate: AnyObject { // delegate pattern을 위한 protocol 정
 }
 
 class EditPartyViewController: UIViewController, UIScrollViewDelegate {
+    
     // MARK: - SubViews
     
     // 스크롤뷰
@@ -159,6 +160,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     
     // MARK: - Properties
+    
     weak var isEdittiedDelegate: EdittedDelegate?
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var detailData: getDetailInfoResult?
@@ -673,7 +675,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
            let partyId = detailData?.id,
            let title = titleTextField.text,
            let content = contentsTextView.text {
-            EditPartyViewModel.EditParty(dormitoryId: dormitoryInfo?.id ?? 1, partyId: partyId,
+            EditPartyViewModel.editParty(dormitoryId: dormitoryInfo?.id ?? 1, partyId: partyId,
                 EditPartyInput(foodCategory: foodCategory,
                                title: title, content: content,
                                orderTime: orderTime,

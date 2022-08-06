@@ -52,7 +52,7 @@ class SplashPlayerViewController: AVPlayerViewController {
     }
     
     /* 애니메이션 다 끝났으면 playerController를 dismiss 시키고 LoginVC로 이동 */
-    @objc func finishVideo() {
+    @objc private func finishVideo() {
         print("func : finishVideo")
         dismiss(animated: false) {
             let loginVC = LoginViewController()

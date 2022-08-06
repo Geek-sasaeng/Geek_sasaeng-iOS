@@ -760,14 +760,16 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
-    @objc func tapSearchButton() {
+    @objc
+    private func tapSearchButton() {
         let searchVC = SearchViewController()
         searchVC.dormitoryInfo = self.dormitoryInfo
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
     /* 카테고리 탭의 label을 탭하면 실행되는 함수 */
-    @objc private func tapCategoryLabel(sender: UIGestureRecognizer) {
+    @objc
+    private func tapCategoryLabel(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
 
         if let category = label.text {
@@ -824,7 +826,8 @@ class DeliveryViewController: UIViewController {
     }
     
     /* peopleFilterView 탭하면 DropDown 뷰를 보여준다 */
-    @objc private func tapPeopleFilterView() {
+    @objc
+    private func tapPeopleFilterView() {
         print("DEBUG: filter view tap")
         
         // 필터뷰 확장
@@ -846,7 +849,8 @@ class DeliveryViewController: UIViewController {
     }
     
     /* peopleFilterView의 Option으로 있는 label을 탭하면 실행되는 함수 */
-    @objc private func tapPeopleOption(sender: UIGestureRecognizer) {
+    @objc
+    private func tapPeopleOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
         // label 색 변경 - 진하게
@@ -866,7 +870,8 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 시간 필터를 탭하면 mainColor로 색깔 바뀌도록 */
-    @objc private func tapTimeOption(sender: UIGestureRecognizer) {
+    @objc
+    private func tapTimeOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
         // label 색 변경
@@ -903,7 +908,8 @@ class DeliveryViewController: UIViewController {
     }
     
     /* CreatePartyButton을 누르면 파티 생성 화면으로 전환 */
-    @objc func tapCreatePartyButton() {
+    @objc
+    private func tapCreatePartyButton() {
         let viewController = CreatePartyViewController()
         viewController.dormitoryInfo = dormitoryInfo
         self.navigationController?.pushViewController(viewController, animated: true)
@@ -947,7 +953,8 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 새로고침 기능 */
-    @objc private func pullToRefresh() {
+    @objc
+    private func pullToRefresh() {
         // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
         print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
         deliveryCellDataArray.removeAll()

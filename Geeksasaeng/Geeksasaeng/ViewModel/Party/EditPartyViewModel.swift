@@ -29,7 +29,8 @@ class EditPartyViewModel {
 //        }
 //    }
     
-    public static func EditParty(dormitoryId: Int, partyId: Int, _ parameter : EditPartyInput) {
+    // TODO: - 수정 필요. 파티 수정이 성공 안 했을 때도 성공했다는 토스트 메세지가 뜹니다.
+    public static func editParty(dormitoryId: Int, partyId: Int, _ parameter : EditPartyInput) {
         AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party/\(partyId)", method: .put,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])

@@ -180,7 +180,8 @@ class OrderForecastTimeViewController: UIViewController {
         }
     }
     
-    @objc func changedDatePickerValue() {
+    @objc
+    private func changedDatePickerValue() {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM월 dd일"
         formatter.locale = Locale(identifier: "ko_KR")
@@ -189,7 +190,8 @@ class OrderForecastTimeViewController: UIViewController {
         dateTextField.sendActions(for: .editingChanged)
     }
     
-    @objc func changedTimePickerValue() {
+    @objc
+    private func changedTimePickerValue() {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH시 mm분"
         formatter.locale = Locale(identifier: "ko_KR")
@@ -198,7 +200,8 @@ class OrderForecastTimeViewController: UIViewController {
         timeTextField.sendActions(for: .editingChanged)
     }
     
-    @objc func tapNextButton() {
+    @objc
+    private func tapNextButton() {
         // 날짜, 시간 정보 전역변수에 저장
         CreateParty.orderForecastTime = "\(dateTextField.text!)        \(timeTextField.text!)"
         

@@ -165,7 +165,7 @@ class AgreementViewController: UIViewController {
     
     // MARK: - Function
     
-    func addSubViews() {
+    private func addSubViews() {
         [
             progressBar, remainBar, progressIcon, remainIcon,
             welcomeLabel,
@@ -178,7 +178,7 @@ class AgreementViewController: UIViewController {
         ].forEach { view.addSubview($0) }
     }
     
-    func setLayouts() {
+    private func setLayouts() {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
@@ -313,28 +313,30 @@ class AgreementViewController: UIViewController {
         }
     }
     
-    /* 일반 회원가입 끝났으면 로그인 화면으로 돌아가도록 */
-    @objc public func showLoginView() {
-        let loginVC = LoginViewController()
-        loginVC.modalTransitionStyle = .crossDissolve
-        loginVC.modalPresentationStyle = .fullScreen
-        present(loginVC, animated: true)
-    }
-    
-    @objc func tapCheckButton(_ sender: UIButton) {
-        if sender.currentImage == UIImage(systemName: "rectangle") {
+    @objc
+    private func tapCheckButton(_ sender: UIButton) {
+        if sender.currentImage == UIImage(named: "CheckBox") {
             sender.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
         } else {
-            sender.setImage(UIImage(systemName: "rectangle"), for: .normal)
+            sender.setImage(UIImage(named: "CheckBox"), for: .normal)
         }
     }
     
-    @objc func tapTermsOfUseAgreementArrow() {
+    @objc
+    private func tapTermsOfUseAgreementArrow() {
         let termsOfUseAgreementVC = TermsOfUseAgreementViewController()
         termsOfUseAgreementVC.modalTransitionStyle = .crossDissolve
         termsOfUseAgreementVC.modalPresentationStyle = .fullScreen
         
         present(termsOfUseAgreementVC, animated: true)
+    }
+    
+    /* 일반 회원가입 끝났으면 로그인 화면으로 돌아가도록 */
+    public func showLoginView() {
+        let loginVC = LoginViewController()
+        loginVC.modalTransitionStyle = .crossDissolve
+        loginVC.modalPresentationStyle = .fullScreen
+        present(loginVC, animated: true)
     }
     
     /* 네이버 회원가입 시 사용 */

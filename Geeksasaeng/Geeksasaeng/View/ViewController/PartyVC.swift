@@ -560,7 +560,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         navigationController?.isNavigationBarHidden = false
     }
     
-    
     // MARK: - Functions
     
     private func setDetailData() {
@@ -979,7 +978,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         )
     }
     
-    @objc private func showEditView() {
+    @objc
+    private func showEditView() {
         optionViewForAuthor.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
         
@@ -991,7 +991,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
         
     /* 신고하기 버튼 눌렀을 때 화면 전환 */
-    @objc private func tapReportButton() {
+    @objc
+    private func tapReportButton() {
         guard let partyId = self.deliveryData?.id,
               let memberId = self.detailData.chiefId else { return }
         
@@ -1007,7 +1008,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.pushViewController(reportVC, animated: true)
     }
     
-    @objc private func showDeleteView() {
+    @objc
+    private func showDeleteView() {
         optionViewForAuthor.removeFromSuperview()
         
         view.addSubview(deleteView)
@@ -1016,7 +1018,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc private func removeDeleteView() {
+    @objc
+    private func removeDeleteView() {
         deleteView.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
     }
@@ -1029,7 +1032,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
-    @objc private func tapConfirmButton() {
+    @objc
+    private func tapConfirmButton() {
         if let partyId = detailData.id {
             // 파티 삭제
             DeletePartyViewModel.deleteParty(partyId: partyId)
@@ -1065,6 +1069,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 신청하기 뷰 없애고
         removeRegisterView()
         // TODO: - 이 유저를 채팅방에 초대하기
+        // 초대가 완료되었으면 파티 채팅방 생성 Alert 뷰 띄우기
+        
     }
 }
 

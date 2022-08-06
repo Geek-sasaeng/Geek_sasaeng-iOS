@@ -238,7 +238,8 @@ class AuthNumViewController: UIViewController {
         }
     }
     
-    @objc func didChangeTextField(_ sender: UITextField) {
+    @objc
+    private func didChangeTextField(_ sender: UITextField) {
         if authNumTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
         } else {
@@ -247,7 +248,8 @@ class AuthNumViewController: UIViewController {
     }
     
     // 이메일 재전송 하기 버튼 눌렀을 때 실행되는 함수
-    @objc func tapAuthResendButton() {
+    @objc
+    private func tapAuthResendButton() {
         timer?.cancel()
         currentSeconds = 300
         startTimer()

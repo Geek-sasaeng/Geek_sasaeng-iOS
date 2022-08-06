@@ -8,17 +8,21 @@
 import UIKit
 
 extension UIViewController {
-    public func showToast(viewController: UIViewController, message : String, font: UIFont, color: UIColor) {
-        let toastLabel = UILabel()
-        toastLabel.backgroundColor = color.withAlphaComponent(0.6)
-        toastLabel.textColor = UIColor.white
-        toastLabel.font = font
-        toastLabel.textAlignment = .center;
-        toastLabel.text = message
-        toastLabel.numberOfLines = 0
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 5;
-        toastLabel.clipsToBounds  =  true
+    public func showToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor) {
+        let toastLabel: UILabel = {
+            let label = UILabel()
+            label.backgroundColor = color.withAlphaComponent(0.6)
+            label.text = message
+            label.textColor = UIColor.white
+            label.textAlignment = .center;
+            label.font = font
+            label.numberOfLines = 0
+            label.alpha = 1.0
+            label.layer.cornerRadius = 5;
+            label.clipsToBounds  =  true
+            return label
+        }()
+        
         viewController.view.addSubview(toastLabel)
         toastLabel.snp.makeConstraints { make in
             make.centerX.equalTo(viewController.view.center)

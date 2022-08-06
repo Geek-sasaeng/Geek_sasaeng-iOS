@@ -212,13 +212,15 @@ class EditReceiptPlaceViewController: UIViewController {
         }
     }
     
-    @objc func tapConfirmButton() {
+    @objc
+    private func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditLocationButton"), object: "true")
     }
     
-    @objc func tapSearchButton() {
+    @objc
+    private func tapSearchButton() {
         geocoder.geocodeAddressString(searchTextField.text ?? "") { placemark, error in
             // 검색된 위치로 맵의 중심을 이동
             self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0)), zoomLevel: 5, animated: true)
