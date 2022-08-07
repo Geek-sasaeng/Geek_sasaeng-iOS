@@ -118,7 +118,7 @@ class EditCategoryViewController: UIViewController {
         }
     }
     
-    func setCategoryButtons() {
+    private func setCategoryButtons() {
         [korean, western, chinese, japanese, snack, chicken, rawfish, fastfood, dessert, etc].forEach {
             $0.layer.masksToBounds = true
             $0.layer.cornerRadius = 5
@@ -214,7 +214,8 @@ class EditCategoryViewController: UIViewController {
         }
     }
     
-    @objc func tapNextButton() {
+    @objc
+    private func tapNextButton() {
         CreateParty.category = data
         
         // API Input에 저장
@@ -246,7 +247,8 @@ class EditCategoryViewController: UIViewController {
         NotificationCenter.default.post(name: NSNotification.Name("TapEditCategoryButton"), object: "true")
     }
 
-    @objc func tapCategoryButton(_ sender: UIButton) {
+    @objc
+    private func tapCategoryButton(_ sender: UIButton) {
         if selectedCategory != nil {
             selectedCategory?.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
             selectedCategory?.backgroundColor = UIColor(hex: 0xEFEFEF)

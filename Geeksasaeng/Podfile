@@ -6,8 +6,8 @@ target 'Geeksasaeng' do
   use_frameworks!
 
   # Pods for Geeksasaeng
-  pod 'SnapKit', '~> 5.6.0'
-  pod 'Kingfisher', '~> 7.0'
+  pod 'SnapKit'
+  pod 'Kingfisher'
   pod 'Alamofire'
   pod 'naveridlogin-sdk-ios'
   pod 'Firebase/Core'

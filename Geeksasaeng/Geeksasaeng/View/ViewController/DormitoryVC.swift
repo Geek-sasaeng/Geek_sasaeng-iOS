@@ -152,7 +152,8 @@ class DormitoryViewController: UIViewController {
     }
     
     /* 홈 화면으로 전환 */
-    @objc private func tapStartButton() {
+    @objc
+    private func tapStartButton() {
         // Dormitory 수정 API 호출 -> loginStatus = NOTNEVER로 수정
         let input = DormitoryInput(dormitoryId: dormitoryInfo?.id)
         DormitoryAPI.patchDormitory(input)

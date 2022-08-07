@@ -777,9 +777,9 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Firestore
   - FirebaseFirestoreSwift
-  - Kingfisher (~> 7.0)
+  - Kingfisher
   - naveridlogin-sdk-ios
-  - SnapKit (~> 5.6.0)
+  - SnapKit
 
 SPEC REPOS:
   trunk:
@@ -832,6 +832,6 @@ SPEC CHECKSUMS:
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 40f6ae62105ec549755cc435b5106457c7b4aacd
+PODFILE CHECKSUM: da4dc734e20717e6229727bb3be01c4a8188bb0b
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

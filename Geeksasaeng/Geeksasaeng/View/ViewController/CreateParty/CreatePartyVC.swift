@@ -236,7 +236,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         selectedLocationLabel.addGestureRecognizer(placeTapGesture)
     }
     
-    @objc func tapContentView() {
+    @objc
+    private func tapContentView() {
         view.endEditing(true)
         
         // 다음 버튼 누른 VC에 대한 데이터 저장, 표시
@@ -523,11 +524,13 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* 이전 화면으로 돌아가기 */
-    @objc func tapBackButton(sender: UIBarButtonItem) {
+    @objc
+    private func tapBackButton(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated:true)
     }
     
-    @objc func tapEatTogetherButton() {
+    @objc
+    private func tapEatTogetherButton() {
         if eatTogetherButton.currentImage == UIImage(systemName: "checkmark.circle") {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             eatTogetherButton.tintColor = .mainColor
@@ -542,7 +545,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* show 주문 예정 시간 VC */
-    @objc func tapOrderForecastTimeButton() {
+    @objc
+    private func tapOrderForecastTimeButton() {
         view.endEditing(true)
         createBlueView()
         
@@ -557,7 +561,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    @objc func changeValueTitleTextField() {
+    @objc
+    private func changeValueTitleTextField() {
         // isSettedOptions가 true인데 titleTextField가 지워진 경우
         if isSettedOptions
             && isEditedContentsTextView
@@ -573,7 +578,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc func tapSelectedPersonLabel() {
+    @objc
+    private func tapSelectedPersonLabel() {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -595,7 +601,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
 
-    @objc func tapSelectedCategoryLabel() {
+    @objc
+    private func tapSelectedCategoryLabel() {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -626,7 +633,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    @objc func tapSelectedUrlLabel() {
+    @objc
+    private func tapSelectedUrlLabel() {
         createBlueView()
         // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -666,7 +674,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    @objc func tapSelectedLocationLabel() {
+    @objc
+    private func tapSelectedLocationLabel() {
         createBlueView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -715,7 +724,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }, completion: nil)
     }
     
-    @objc func tapRegisterButton() {
+    @objc
+    private func tapRegisterButton() {
         // api 호출
         if let title = titleTextField.text,
            let content = contentsTextView.text,
