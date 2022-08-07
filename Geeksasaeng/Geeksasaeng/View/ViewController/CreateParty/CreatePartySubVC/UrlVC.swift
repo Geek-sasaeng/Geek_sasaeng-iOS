@@ -155,7 +155,6 @@ class UrlViewController: UIViewController {
         urlTextFieldArrow.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(67)
             make.centerX.equalToSuperview()
-//            make.width.height.equalTo(9)
         }
         
         urlExplainLabel.snp.makeConstraints { make in
