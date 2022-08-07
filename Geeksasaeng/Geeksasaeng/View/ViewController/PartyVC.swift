@@ -723,7 +723,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height)
+            make.bottom.equalTo(mapSubView.snp.bottom).offset(55 + 20)
         }
         
         // 신청하기 뷰를 고정시켜 놓을 컨테이너 뷰
@@ -880,7 +880,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
-    @objc private func tapEllipsisOption() {
+    @objc
+    private func tapEllipsisOption() {
         guard let authorStatus = detailData.authorStatus else { return }
         
         // 글쓴이인지 아닌지 확인해서 해당하는 옵션뷰에 애니메이션을 적용한다

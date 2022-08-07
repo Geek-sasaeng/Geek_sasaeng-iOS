@@ -32,10 +32,10 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    /* 우측 상단 등록 버튼 */
+    /* 우측 상단 다음 버튼 */
     var deactivatedRightBarButtonItem: UIBarButtonItem = {
         let registerButton = UIButton()
-        registerButton.setTitle("등록", for: .normal)
+        registerButton.setTitle("다음", for: .normal)
         registerButton.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
         let barButton = UIBarButtonItem(customView: registerButton)
         barButton.isEnabled = false
@@ -380,7 +380,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 
                 self.isSettedOptions = true
                 if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: self, action: #selector(self.tapRegisterButton))
                     self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
                     self.view.layoutSubviews()
                 }
@@ -568,7 +568,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             && isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(self.tapRegisterButton))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: self, action: #selector(self.tapRegisterButton))
             self.navigationItem.rightBarButtonItem?.tintColor = .mainColor
             self.view.layoutSubviews()
         } else if (isEditedContentsTextView && isSettedOptions && titleTextField.text?.count ?? 0 < 1)
@@ -726,34 +726,47 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapRegisterButton() {
-        // api 호출
-        if let title = titleTextField.text,
-           let content = contentsTextView.text,
-           let orderTime = CreateParty.orderTime,
-           let maxMatching = CreateParty.maxMatching,
-           let foodCategory = CreateParty.foodCategory,
-           let latitude = CreateParty.latitude,
-           let longitude = CreateParty.longitude,
-           let url = CreateParty.url {
-            let input = CreatePartyInput(
-                title: title,
-                content: content,
-                orderTime: orderTime,
-                maxMatching: maxMatching,
-                foodCategory: foodCategory,
-                latitude: latitude,
-                longitude: longitude,
-                storeUrl: url,
-                hashTag: CreateParty.hashTag ?? false)
-            
-            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
-                if success {
-                    self.navigationController?.popViewController(animated: true)
-                } else {
-                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                }
+        view.endEditing(true)
+        createBlueView()
+        
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let childView = BankAccountViewController()
+            self.addChild(childView)
+            self.view.addSubview(childView.view)
+            childView.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
             }
-        }
+        }, completion: nil)
+        
+        
+        // api 호출
+//        if let title = titleTextField.text,
+//           let content = contentsTextView.text,
+//           let orderTime = CreateParty.orderTime,
+//           let maxMatching = CreateParty.maxMatching,
+//           let foodCategory = CreateParty.foodCategory,
+//           let latitude = CreateParty.latitude,
+//           let longitude = CreateParty.longitude,
+//           let url = CreateParty.url {
+//            let input = CreatePartyInput(
+//                title: title,
+//                content: content,
+//                orderTime: orderTime,
+//                maxMatching: maxMatching,
+//                foodCategory: foodCategory,
+//                latitude: latitude,
+//                longitude: longitude,
+//                storeUrl: url,
+//                hashTag: CreateParty.hashTag ?? false)
+//
+//            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
+//                if success {
+//                    self.navigationController?.popViewController(animated: true)
+//                } else {
+//                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+//                }
+//            }
+//        }
     }
     
 }
@@ -789,7 +802,7 @@ extension CreatePartyViewController: UITextViewDelegate {
             && isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "등록", style: .plain, target: self, action: #selector(tapRegisterButton))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음", style: .plain, target: self, action: #selector(tapRegisterButton))
             navigationItem.rightBarButtonItem?.tintColor = .mainColor
             view.layoutSubviews()
         } else if (isEditedContentsTextView && isSettedOptions && contentsTextView.text.count < 1)

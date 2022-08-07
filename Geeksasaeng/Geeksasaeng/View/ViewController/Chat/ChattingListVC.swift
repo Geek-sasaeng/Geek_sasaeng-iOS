@@ -16,6 +16,11 @@ class ChattingListViewController: UIViewController {
     var selectedLabel: UILabel? = nil
     // 채팅 더미 데이터
 //    var chatList = []
+    var isClickedArray: [Bool] = [false, false, false, false, false, false, false, false, false, false] {
+        didSet {
+            chattingTableView.reloadData()
+        }
+    }
     
     // MARK: - SubViews
     
@@ -46,7 +51,7 @@ class ChattingListViewController: UIViewController {
         return view
     }()
     
-    let chatTableView = UITableView()
+    let chattingTableView = UITableView()
     
     // MARK: - Life Cycle
     
@@ -60,7 +65,13 @@ class ChattingListViewController: UIViewController {
                            stackView: filterStackView)
         addSubViews()
         setLayouts()
+        setTableView()
         setLabelTap()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        chattingTableView.reloadData()
     }
     
     // MARK: - Functions
@@ -78,6 +89,7 @@ class ChattingListViewController: UIViewController {
     private func addSubViews() {
         [
             filterImageView, filterStackView,
+            chattingTableView,
             blurView
         ].forEach { view.addSubview($0) }
     }
@@ -102,6 +114,22 @@ class ChattingListViewController: UIViewController {
             make.height.equalTo(140)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        chattingTableView.snp.makeConstraints { make in
+            make.top.equalTo(filterStackView.snp.bottom).offset(12)
+            make.width.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+    
+    /* 테이블뷰 세팅 */
+    private func setTableView() {
+        chattingTableView.dataSource = self
+        chattingTableView.delegate = self
+        chattingTableView.register(ChattingListTableViewCell.self, forCellReuseIdentifier: ChattingListTableViewCell.identifier)
+        
+        chattingTableView.rowHeight = 81 + 6 + 6
+        chattingTableView.separatorStyle = .none
     }
     
     /* 배열에 담긴 이름으로 Filter Views를 만들고 스택뷰로 묶는다 */
@@ -182,14 +210,39 @@ class ChattingListViewController: UIViewController {
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
 
-//extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        chatList.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        <#code#>
-//    }
-//
-//
-//}
+extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate {
+    /* 채팅방 목록 갯수 설정 */
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        isClickedArray.count
+    }
+
+    /* 채팅방 목록 셀 내용 구성 */
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingListTableViewCell.identifier, for: indexPath) as? ChattingListTableViewCell else { return UITableViewCell() }
+        
+        if !isClickedArray[indexPath.row] {
+            print("나는야", indexPath.row)
+            // 그림자 설정
+            cell.containerView.setViewShadow(shadowOpacity: 0.1, shadowRadius: 3)
+            // 배경색 변경
+            cell.containerView.backgroundColor = .init(hex: 0xFCFDFE)
+        }
+        
+        return cell
+    }
+
+    /* 채팅방 셀이 클릭될 때 실행되는 함수 */
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 선택된 셀 데이터
+//        guard let selectedCell = tableView.cellForRow(at: indexPath) as? ChattingListTableViewCell else { return }
+        isClickedArray[indexPath.row] = true
+        
+        self.chattingTableView.moveRow(at: IndexPath(row: indexPath.row, section: 0), to: IndexPath(row: isClickedArray.endIndex-1, section: 0))
+        
+        // TODO: - 해당 채팅방으로 이동
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+}
