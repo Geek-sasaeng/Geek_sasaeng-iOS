@@ -1106,6 +1106,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         removeRegisterView()
         // TODO: - 이 유저를 채팅방에 초대하기
         let chattingVC = ChattingViewController()
+        chattingVC.maxMatching = detailData.maxMatching
         navigationController?.pushViewController(chattingVC, animated: true)
     }
 }

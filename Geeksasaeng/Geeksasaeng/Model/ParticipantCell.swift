@@ -44,8 +44,8 @@ class ParticipantCell: UICollectionViewCell {
         
         participantView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalTo(150)
-            make.height.equalTo(39)
+            make.width.equalTo(200)
+            make.height.equalTo(31)
         }
     }
 }

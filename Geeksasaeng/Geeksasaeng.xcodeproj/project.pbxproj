@@ -978,6 +978,9 @@
 		10E8E721288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
 		10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
 		10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
+		10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
+		10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
+		10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1482,6 +1485,7 @@
 		10E8E716288C401200AF4581 /* EditPartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyViewModel.swift; sourceTree = "<group>"; };
 		10E8E71B288D739100AF4581 /* DeletePartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyModel.swift; sourceTree = "<group>"; };
 		10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyViewModel.swift; sourceTree = "<group>"; };
+		10EBEFE8289F559300038EFC /* RoomInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoModel.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1581,12 +1585,12 @@
 				A29F6F852885455700350744 /* EmailAuth */,
 				A29F6F862885456700350744 /* PhoneAuth */,
 				10E8E71A288D735900AF4581 /* Party */,
+				10EBEFE7289F557900038EFC /* Chat */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 				A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */,
 				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
 				A2035EA4288341B00051498A /* AdModel.swift */,
 				108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */,
-				10223101289E68F600042ACC /* MessageModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2146,6 +2150,15 @@
 				10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */,
 			);
 			path = Party;
+			sourceTree = "<group>";
+		};
+		10EBEFE7289F557900038EFC /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				10223101289E68F600042ACC /* MessageModel.swift */,
+				10EBEFE8289F559300038EFC /* RoomInfoModel.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
@@ -3410,6 +3423,7 @@
 				A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
+				10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
 				103F5E47289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
@@ -3530,6 +3544,7 @@
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
+				10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
@@ -3611,6 +3626,7 @@
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
+				10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,

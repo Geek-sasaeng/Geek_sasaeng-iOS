@@ -54,26 +54,19 @@ class ChattingViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    var cellType: [cellContents] = [
-        cellContents(cellType: .participant, contents: "apple님이 입장하였습니다"),
-        cellContents(cellType: .participant, contents: "neoneo님이 입장하였습니다"),
-        cellContents(cellType: .participant, contents: "seori님이 입장하였습니다"),
-        cellContents(cellType: .message, contents: "안녕하세요"),
-        cellContents(cellType: .message, contents: "네 안녕하세요"),
-        cellContents(cellType: .message, contents: "메뉴 선택하셨나요?"),
-        cellContents(cellType: .message, contents: "저는 돈가스 먹을게요")
-    ]
-    // TODO: - firestore에 participant가 들어올 경우 cellType: .participant로 해서 cellType.append
+    var contents: [cellContents] = []
     let db = Firestore.firestore()
-    var messages: [MessageModel] = []
     var userNickname: String?
+    var maxMatching: Int?
+    var currentMatching: Int?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        
+        loadParticipants()
+        addParticipant()
         loadMessages()
         setCollectionView()
         addSubViews()
@@ -82,7 +75,6 @@ class ChattingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
-        // TODO: - 채팅방 이름으로 title config
         self.navigationItem.title = "채팅방 이름"
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
@@ -152,45 +144,92 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    private func addParticipant() {
+        // 불러온 걸 배열에 저장했다가 본인 닉네임 append -> update
+        db.collection("Rooms").document("TestRoom1").getDocument { documentSnapshot, error in
+            if let e = error {
+                print(e.localizedDescription)
+            } else {
+                print("참가자 추가")
+                if let document = documentSnapshot {
+                    if let data = try? document.data(as: RoomInfoModel.self) {
+                        var participants = data.roomInfo?.participants
+                        participants?.append(LoginModel.nickname ?? "")
+
+                        self.db.collection("Rooms").document("TestRoom1").updateData(["roomInfo" : ["participants": participants]])
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadParticipants() {
+        db.collection("Rooms").document("TestRoom1").addSnapshotListener { documentSnapshot, error in
+            if let e = error {
+                print(e.localizedDescription)
+            } else {
+                print("roomInfo 불러오기")
+                if let document = documentSnapshot {
+                    if let data = try? document.data(as: RoomInfoModel.self) {
+                        self.contents.append(cellContents(cellType: .participant, message: nil,
+                                                          participant: data.roomInfo?.participants?.last))
+                        self.currentMatching = data.roomInfo?.participants?.count // 참여자가 늘어나면 currentMatching에 추가
+                        if self.currentMatching == self.maxMatching {
+                            self.contents.append(cellContents(cellType: .maxMatching, message: nil, participant: nil))
+                        }
+                        
+                        DispatchQueue.main.async {
+                            self.collectionView.reloadData()
+                            self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+                        }
+                        
+                        
+                    }
+                }
+            }
+        }
+    }
+    
     private func loadMessages() {
-        db.collection("Rooms").document("TestRoom1").collection("Messages").order(by: "date").addSnapshotListener { querySnapshot, error in
-            self.messages = []
+        db.collection("Rooms").document("TestRoom1").collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
+//            self.contents = []
 
             if let e = error {
                 print(e.localizedDescription)
             } else {
-                querySnapshot?.documentChanges.forEach { diff in
-                    if diff.type == .added {
-                        let data = diff.document.data()
+                print("Messages 불러오기")
+                if let snapshotDocuments = querySnapshot?.documents {
+                    if let data = snapshotDocuments.last?.data() {
                         if let content = data["content"] as? String,
                            let nickname = data["nickname"] as? String,
                            let userImgUrl = data["userImgUrl"] as? String {
-                            print(data, nickname, userImgUrl)
-                            self.messages.append(MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl))
+                            self.contents.append(cellContents(cellType: .message,
+                                                              message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl),
+                                                              participant: nil))
 
                             DispatchQueue.main.async {
                                 self.collectionView.reloadData()
-                                self.collectionView.scrollToItem(at: IndexPath(row: self.messages.count-1, section: 0), at: .top, animated: true)
+                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
                             }
                         }
                     }
-                }
-//                if let snapshotDocuments = querySnapshot?.documents {
 //                    snapshotDocuments.forEach { doc in
 //                        let data = doc.data()
 //                        if let content = data["content"] as? String,
 //                           let nickname = data["nickname"] as? String,
 //                           let userImgUrl = data["userImgUrl"] as? String {
 //                            print(data, nickname, userImgUrl)
-//                            self.messages.append(MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl))
+//                            self.contents.append(cellContents(cellType: .message,
+//                                                              message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl),
+//                                                              participant: nil))
 //
 //                            DispatchQueue.main.async {
 //                                self.collectionView.reloadData()
-//                                self.collectionView.scrollToItem(at: IndexPath(row: self.messages.count-1, section: 0), at: .top, animated: true)
+//                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
 //                            }
 //                        }
 //                    }
-//                }
+                }
             }
         }
     }
@@ -217,13 +256,18 @@ class ChattingViewController: UIViewController {
         view.endEditing(true)
     }
     
-    // TODO: - TestRoom -> 서버에서 파티 생성, 상세조회 시 주는 고유 값으로 설정
+    // TODO: - TestRoom -> 서버에서 파티 생성, 상세조회 시 주는 고유 값으로 설정, participant & messasge -> firestore에서 지워진 게 나타남
     @objc func tapSendButton() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
         if let message = contentsTextView.text {
             db.collection("Rooms").document("TestRoom1").collection("Messages").document(UUID().uuidString).setData([
                 "content": message,
                 "nickname": LoginModel.nickname ?? "홍길동",
-                "userImgUrl": LoginModel.userImgUrl ?? "https://"
+                "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                "time": formatter.string(from: Date())
             ]) { error in
                 if let e = error {
                     print(e.localizedDescription)
@@ -250,32 +294,31 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return messages.count
+        return contents.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        switch cellType[indexPath.row].cellType {
-//        case .participant:
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
-//            cell.participantLabel.text = cellType[indexPath.row].contents
-//            return cell
-//        default:
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-//            cell.messageLabel.text = cellType[indexPath.row].contents
-//            return cell
-//        }
-        let message = messages[indexPath.row]
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-        
-        if message.nickname == LoginModel.nickname { // 보낸 사람이 자신이라면
-            cell.leftImageView.isHidden = true // 왼쪽 imageView hidden
-        } else {
-            cell.rightImageView.isHidden = true
+        switch contents[indexPath.row].cellType {
+        case .participant:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
+            cell.participantLabel.text =  "\(contents[indexPath.row].participant ?? "") 님이 입장하셨습니다"
+            return cell
+        case .maxMatching:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
+            cell.participantLabel.text = "모든 파티원이 입장을 마쳤습니다!"
+            return cell
+        default:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+            cell.messageLabel.text = contents[indexPath.row].message?.content
+            if contents[indexPath.row].message?.nickname == LoginModel.nickname {
+                cell.leftImageView.isHidden = true
+                cell.rightImageView.isHidden = false
+            } else {
+                cell.leftImageView.isHidden = false
+                cell.rightImageView.isHidden = true
+            }
+            return cell
         }
-        
-        cell.messageLabel.text = message.content
-        
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -288,9 +331,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
 enum cellType {
     case participant
     case message
+    case maxMatching
 }
 
 struct cellContents {
     var cellType: cellType?
-    var contents: String?
+    var message: MessageModel?
+    var participant: String?
 }
