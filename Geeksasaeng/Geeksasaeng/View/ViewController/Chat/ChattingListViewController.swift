@@ -1,5 +1,5 @@
 //
-//  ChatListVC.swift
+//  ChattingListVC.swift
 //  Geeksasaeng
 //
 //  Created by 서은수 on 2022/08/06.
@@ -8,7 +8,7 @@
 import UIKit
 
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
-class ChatListViewController: UIViewController {
+class ChattingListViewController: UIViewController {
     
     // MARK: - Properties
     

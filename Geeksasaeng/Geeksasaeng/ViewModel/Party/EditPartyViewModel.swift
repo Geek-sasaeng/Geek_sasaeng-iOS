@@ -29,7 +29,7 @@ class EditPartyViewModel {
 //        }
 //    }
     
-    public static func EditParty(dormitoryId: Int, partyId: Int, _ parameter : EditPartyInput, completion: @escaping (Bool) -> Void) {
+    public static func editParty(dormitoryId: Int, partyId: Int, _ parameter : EditPartyInput, completion: @escaping (Bool) -> Void) {
         AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party/\(partyId)", method: .put,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
