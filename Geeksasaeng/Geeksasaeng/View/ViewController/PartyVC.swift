@@ -880,7 +880,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
-    @objc private func tapEllipsisOption() {
+    @objc
+    private func tapEllipsisOption() {
         guard let authorStatus = detailData.authorStatus else { return }
         
         // 글쓴이인지 아닌지 확인해서 해당하는 옵션뷰에 애니메이션을 적용한다

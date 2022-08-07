@@ -70,7 +70,7 @@ class PartyTableViewCell: UITableViewCell {
     
     // MARK: - Set Functions
     
-    func addSubViews() {
+    private func addSubViews() {
         [
             peopleImageView,
             peopleLabel,
@@ -81,7 +81,7 @@ class PartyTableViewCell: UITableViewCell {
         ].forEach { contentView.addSubview($0) }
     }
     
-    func setLayouts() {
+    private func setLayouts() {
         peopleImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(25)
             make.left.equalToSuperview().inset(24)
@@ -113,16 +113,5 @@ class PartyTableViewCell: UITableViewCell {
             make.centerY.equalTo(categoryLabel)
             make.left.equalToSuperview().inset(101)
         }
-        
-//        badgeImageView.snp.makeConstraints { make in
-//            make.top.equalTo(hashtagLabel).offset(-3)
-//            make.left.equalTo(hashtagLabel.snp.right).offset(30)
-//            make.width.height.equalTo(18)
-//        }
-//
-//        nameLabel.snp.makeConstraints { make in
-//            make.top.equalTo(badgeImageView).offset(1)
-//            make.left.equalTo(badgeImageView.snp.right).offset(7)
-//        }
     }
 }

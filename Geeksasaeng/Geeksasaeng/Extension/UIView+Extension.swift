@@ -27,4 +27,12 @@ extension UIView {
         gradient.frame = bounds
         layer.addSublayer(gradient)
     }
+    
+    /* 뷰에 원하는 그림자 적용 */
+    public func setViewShadow(shadowOpacity: Float, shadowRadius: CGFloat) {
+        self.layer.shadowColor = UIColor.init(hex: 0x000000).cgColor
+        self.layer.shadowOpacity = shadowOpacity
+        self.layer.shadowOffset = .zero
+        self.layer.shadowRadius = shadowRadius
+    }
 }

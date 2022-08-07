@@ -40,14 +40,14 @@ class ReportTableViewCell: UITableViewCell {
     
     // MARK: - Functions
     
-    func addSubViews() {
+    private func addSubViews() {
         [
             reportCategoryLabel,
             arrowButton
         ].forEach { contentView.addSubview($0) }
     }
     
-    func setLayouts() {
+    private func setLayouts() {
         reportCategoryLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().inset(17)
