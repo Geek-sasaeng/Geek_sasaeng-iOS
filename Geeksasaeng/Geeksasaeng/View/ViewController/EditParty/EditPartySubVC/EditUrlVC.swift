@@ -35,7 +35,7 @@ class EditUrlViewController: UIViewController {
         button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
         button.titleLabel?.font = .customFont(.neoLight, size: 15)
         button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapPassButton), for: .touchUpInside)
         return button
     }()
     
@@ -49,7 +49,7 @@ class EditUrlViewController: UIViewController {
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
         return button
     }()
     
@@ -67,6 +67,10 @@ class EditUrlViewController: UIViewController {
     }
     
     // MARK: - Functions
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     private func setViewLayout() {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
@@ -114,10 +118,21 @@ class EditUrlViewController: UIViewController {
     }
     
     @objc
-    private func tapNextButton() {
+    private func tapConfirmButton() {
         if let url = urlTextField.text {
             CreateParty.url = url
         }
+        
+        if urlTextField.text?.count == 0 {
+            CreateParty.url = "?"
+        }
+        
+        NotificationCenter.default.post(name: NSNotification.Name("TapEditUrlButton"), object: "true")
+    }
+    
+    @objc
+    private func tapPassButton() {
+        CreateParty.url = "?"
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditUrlButton"), object: "true")
     }
