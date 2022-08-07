@@ -9,6 +9,18 @@
 /* Begin PBXBuildFile section */
 		100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99828745DDE008947DD /* NaverLoginModel.swift */; };
+		102230FA289E640700042ACC /* ChattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102230F9289E640700042ACC /* ChattingVC.swift */; };
+		102230FB289E640700042ACC /* ChattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102230F9289E640700042ACC /* ChattingVC.swift */; };
+		102230FC289E640700042ACC /* ChattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102230F9289E640700042ACC /* ChattingVC.swift */; };
+		102230FE289E665300042ACC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102230FD289E665300042ACC /* MessageCell.swift */; };
+		102230FF289E665300042ACC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102230FD289E665300042ACC /* MessageCell.swift */; };
+		10223100289E665300042ACC /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102230FD289E665300042ACC /* MessageCell.swift */; };
+		10223102289E68F600042ACC /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10223101289E68F600042ACC /* MessageModel.swift */; };
+		10223103289E68F600042ACC /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10223101289E68F600042ACC /* MessageModel.swift */; };
+		10223104289E68F600042ACC /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10223101289E68F600042ACC /* MessageModel.swift */; };
+		10223106289E697700042ACC /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10223105289E697700042ACC /* ParticipantCell.swift */; };
+		10223107289E697700042ACC /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10223105289E697700042ACC /* ParticipantCell.swift */; };
+		10223108289E697700042ACC /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10223105289E697700042ACC /* ParticipantCell.swift */; };
 		102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35CF2879BCD60042F691 /* UIView+Extension.swift */; };
 		102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35CF2879BCD60042F691 /* UIView+Extension.swift */; };
 		102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102B35CF2879BCD60042F691 /* UIView+Extension.swift */; };
@@ -966,6 +978,9 @@
 		10E8E721288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
 		10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
 		10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */; };
+		10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
+		10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
+		10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1127,6 +1142,10 @@
 /* Begin PBXFileReference section */
 		100FB99628745DA3008947DD /* NaverLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginViewModel.swift; sourceTree = "<group>"; };
 		100FB99828745DDE008947DD /* NaverLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverLoginModel.swift; sourceTree = "<group>"; };
+		102230F9289E640700042ACC /* ChattingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChattingVC.swift; path = Geeksasaeng/Network/ChattingVC.swift; sourceTree = SOURCE_ROOT; };
+		102230FD289E665300042ACC /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MessageCell.swift; path = Geeksasaeng/Network/MessageCell.swift; sourceTree = SOURCE_ROOT; };
+		10223101289E68F600042ACC /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		10223105289E697700042ACC /* ParticipantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ParticipantCell.swift; path = Geeksasaeng/Model/ParticipantCell.swift; sourceTree = SOURCE_ROOT; };
 		102B35CF2879BCD60042F691 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		102B35D32879BCF90042F691 /* UITextField+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		102B35D72879BD050042F691 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
@@ -1469,6 +1488,7 @@
 		10E8E716288C401200AF4581 /* EditPartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyViewModel.swift; sourceTree = "<group>"; };
 		10E8E71B288D739100AF4581 /* DeletePartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyModel.swift; sourceTree = "<group>"; };
 		10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyViewModel.swift; sourceTree = "<group>"; };
+		10EBEFE8289F559300038EFC /* RoomInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoModel.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1569,6 +1589,7 @@
 				A29F6F852885455700350744 /* EmailAuth */,
 				A29F6F862885456700350744 /* PhoneAuth */,
 				10E8E71A288D735900AF4581 /* Party */,
+				10EBEFE7289F557900038EFC /* Chat */,
 				A2E641692879DE4700B40A63 /* UniversityNameModel.swift */,
 				A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */,
 				A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */,
@@ -2061,6 +2082,16 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		10B75B63289CE1DC0002865C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				102230F9289E640700042ACC /* ChattingVC.swift */,
+				102230FD289E665300042ACC /* MessageCell.swift */,
+				10223105289E697700042ACC /* ParticipantCell.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		10C8D26F287735E60044552A /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -2123,6 +2154,15 @@
 				10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */,
 			);
 			path = Party;
+			sourceTree = "<group>";
+		};
+		10EBEFE7289F557900038EFC /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				10223101289E68F600042ACC /* MessageModel.swift */,
+				10EBEFE8289F559300038EFC /* RoomInfoModel.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
@@ -3372,6 +3412,7 @@
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */,
+				10223102289E68F600042ACC /* MessageModel.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				108B633828899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
@@ -3394,6 +3435,7 @@
 				A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
+				10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
 				103F5E47289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
@@ -3403,6 +3445,7 @@
 				10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				10E8E713288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
+				102230FE289E665300042ACC /* MessageCell.swift in Sources */,
 				10E6956528885589000B7309 /* LocationAPI.swift in Sources */,
 				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A21DB934289D896B00A523F1 /* ChatListVC.swift in Sources */,
@@ -3415,6 +3458,7 @@
 				A25EBDC5289AEDAD0068FAF6 /* SplashVC.swift in Sources */,
 				A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
+				102230FA289E640700042ACC /* ChattingVC.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
@@ -3423,6 +3467,7 @@
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				10D4D6C72894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
+				10223106289E697700042ACC /* ParticipantCell.swift in Sources */,
 				A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
@@ -3489,6 +3534,7 @@
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				105E60AA287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
+				10223107289E697700042ACC /* ParticipantCell.swift in Sources */,
 				102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
@@ -3498,6 +3544,7 @@
 				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A2085AE02870550200D6CF79 /* LoginModel.swift in Sources */,
+				10223103289E68F600042ACC /* MessageModel.swift in Sources */,
 				A2B045D32889923200B97636 /* ReportDetailVC.swift in Sources */,
 				102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
@@ -3506,9 +3553,12 @@
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				102230FF289E665300042ACC /* MessageCell.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
+				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
+				10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
@@ -3555,6 +3605,7 @@
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
 				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				108B6332288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
@@ -3564,6 +3615,7 @@
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				108B633A28899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
+				10223104289E68F600042ACC /* MessageModel.swift in Sources */,
 				108D5974289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
 				A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
@@ -3589,6 +3641,7 @@
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
+				10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
@@ -3601,6 +3654,7 @@
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
 				1031AAA428981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
+				10223108289E697700042ACC /* ParticipantCell.swift in Sources */,
 				A2AF5397289696810052F734 /* ReportAPI.swift in Sources */,
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
@@ -3614,6 +3668,7 @@
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
+				10223100289E665300042ACC /* MessageCell.swift in Sources */,
 				10E8E71E288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				A25EBDC7289AEDAD0068FAF6 /* SplashVC.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
@@ -3775,7 +3830,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LM9BKUSL5K;
+				DEVELOPMENT_TEAM = 3QV3QL2LC8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3814,7 +3869,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LM9BKUSL5K;
+				DEVELOPMENT_TEAM = 3QV3QL2LC8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",

@@ -684,15 +684,19 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                                latitude: latitude,
                                longitude: longitude,
                                hashTag: hashTag)
-            )
+            ) { success in
+                if success {
+                    /* 수정된 정보로 이전 뷰 내용 업데이트 */
+                    NotificationCenter.default.post(name: NSNotification.Name("TapEditButton"), object: "true")
+                    
+                    /* 수정되었음을 알림 -> 토스트 메시지 띄우기 (Delegate pattern) */
+                    self.isEdittiedDelegate?.checkEditted(isEditted: true)
+                    self.navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
+                } else {
+                    self.showToast(viewController: self, message: "파티 수정을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                }
+            }
         }
-        
-        /* 수정된 정보로 이전 뷰 내용 업데이트 */
-        NotificationCenter.default.post(name: NSNotification.Name("TapEditButton"), object: "true")
-        
-        /* 수정되었음을 알림 -> 토스트 메시지 띄우기 (Delegate pattern) */
-        isEdittiedDelegate?.checkEditted(isEditted: true)
-        navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
     }
 }
 

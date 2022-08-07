@@ -194,7 +194,23 @@ class LoginViewController: UIViewController {
     
     private func attemptAutoLogin() {
         if let jwt = UserDefaults.standard.string(forKey: "jwt") {
-            AutoLoginAPI.attemptAutoLogin(self, jwt: jwt)
+            print(jwt)
+            AutoLoginAPI.attemptAutoLogin(jwt: jwt) { result in
+                // static에 필요한 데이터 저장
+                LoginModel.jwt = jwt
+                LoginModel.nickname = result.nickname
+                LoginModel.userImgUrl = result.userImageUrl
+                
+                self.dormitoryInfo = DormitoryNameResult(id: result.dormitoryId, name: result.dormitoryName)
+                self.userImageUrl = result.userImageUrl
+                
+                // 로그인 완료 후 경우에 따른 화면 전환
+                if result.loginStatus == "NEVER" {
+                    self.showNextView(isFirstLogin: true, nickName: result.nickname ?? "홍길동")
+                } else {
+                    self.showNextView(isFirstLogin: false)
+                }
+            }
         }
     }
     
@@ -214,7 +230,29 @@ class LoginViewController: UIViewController {
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
             let input = LoginInput(loginId: id, password: pw)
-            loginVM.login(self, input)
+            loginVM.login(input) { result in
+                // 자동로그인 체크 시 UserDefaults에 jwt 저장
+                if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
+                    UserDefaults.standard.set(result.jwt, forKey: "jwt")
+                }
+                
+                // static property에 jwt, nickname, userImgUrl 저장
+                LoginModel.jwt = result.jwt
+                LoginModel.nickname = result.nickName
+                LoginModel.userImgUrl = result.userImageUrl
+                
+                // dormitoryId, Name 저장
+                self.dormitoryInfo = DormitoryNameResult(id: result.dormitoryId, name: result.dormitoryName)
+                // userImageUrl 저장
+                self.userImageUrl = result.userImageUrl
+                
+                // 로그인 완료 후 경우에 따른 화면 전환
+                if result.loginStatus == "NEVER" {
+                    self.showNextView(isFirstLogin: true, nickName: result.nickName ?? "홍길동")
+                } else {
+                    self.showNextView(isFirstLogin: false)
+                }
+            }
         }
     }
     

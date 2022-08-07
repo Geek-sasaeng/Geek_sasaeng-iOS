@@ -746,10 +746,14 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 storeUrl: url,
                 hashTag: CreateParty.hashTag ?? false)
             
-            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input)
+            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
+                if success {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                }
+            }
         }
-        
-        navigationController?.popViewController(animated: true)
     }
     
 }

@@ -9,6 +9,8 @@ import Foundation
 
 class LoginModel {
     static var jwt: String?
+    static var nickname: String?
+    static var userImgUrl: String?
 }
 
 // 로그인을 요청했을 때 받게 될 Response의 형태.
