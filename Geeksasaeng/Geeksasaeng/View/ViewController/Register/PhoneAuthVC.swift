@@ -393,7 +393,8 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    @objc func didChangeTextField() {
+    @objc
+    private func didChangeTextField() {
         if phoneNumTextField.text?.count ?? 0 >= 1 && authTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
             authCheckButton.setActivatedButton()
@@ -404,7 +405,8 @@ class PhoneAuthViewController: UIViewController {
     }
     
     // 인증번호 일치/불일치 확인
-    @objc func tapAuthCheckButton() {
+    @objc
+    private func tapAuthCheckButton() {
         /* 인증번호 입력한 게 맞는지 "확인" 버튼 눌렀을 때 확인하는 것으로 변경. */
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
@@ -413,7 +415,8 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    @objc public func showNextView() {
+    @objc
+    public func showNextView() {
         // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
 
@@ -442,7 +445,8 @@ class PhoneAuthViewController: UIViewController {
     }
     
     /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */
-    @objc func tapAuthSendButton() {
+    @objc
+    private func tapAuthSendButton() {
         if let phoneNum = self.phoneNumTextField.text,
            let uuid = uuid {
             startTimer()
@@ -454,7 +458,8 @@ class PhoneAuthViewController: UIViewController {
         }   // API 호출
     }
     
-    @objc func tapPassButton() {
+    @objc
+    private func tapPassButton() {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
@@ -467,7 +472,8 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
-    @objc func tapCancelButton() {
+    @objc
+    private func tapCancelButton() {
         passView.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
     }

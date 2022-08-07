@@ -225,7 +225,7 @@ class LoginViewController: UIViewController {
         present(registerVC, animated: true)
     }
     
-    @objc func tapLoginButton() {
+    @objc private func tapLoginButton() {
         // 로그인 시도
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
@@ -257,7 +257,7 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: 네이버 아이디 로그아웃 -> 토큰 삭제 (아이디 비밀번호 재입력 하게) => 나중에 차례되면 구현
-    @objc func tapNaverloginButton() {
+    @objc private func tapNaverloginButton() {
         naverLoginVM.requestLogin()
 //        if naverLoginVM.isExistToken() {
 //            showHomeView()
@@ -266,7 +266,7 @@ class LoginViewController: UIViewController {
 //        } -> 네이버 회원가입 때 어차피 자동 로그인 자동 활성화 하니까 토큰 여부 확인할 필요 없을 듯 ?
     }
     
-    @objc func tapAutomaticLoginButton() {
+    @objc private func tapAutomaticLoginButton() {
         if automaticLoginButton.currentImage == UIImage(named: "CheckBox") {
             automaticLoginButton.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
         } else {
@@ -274,7 +274,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func didChangeTextField(_ sender: UITextField) {
+    @objc private func didChangeTextField(_ sender: UITextField) {
         let text = sender.text ?? ""
         
         // 정규식 넣어서 수정 예정

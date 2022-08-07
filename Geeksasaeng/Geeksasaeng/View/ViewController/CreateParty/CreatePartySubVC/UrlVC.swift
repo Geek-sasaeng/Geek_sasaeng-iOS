@@ -147,7 +147,8 @@ class UrlViewController: UIViewController {
         }
     }
     
-    @objc func tapNextButton() {
+    @objc
+    private func tapNextButton() {
         if let url = urlTextField.text {
             CreateParty.url = url
         }
@@ -166,7 +167,8 @@ class UrlViewController: UIViewController {
         }, completion: nil)
     }
     
-    @objc func tapPassButton() {
+    @objc
+    private func tapPassButton() {
         CreateParty.url = "Empty"
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = ReceiptPlaceViewController()
@@ -178,7 +180,8 @@ class UrlViewController: UIViewController {
         }, completion: nil)
     }
     
-    @objc func tapBackButton() {
+    @objc
+    private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
     }

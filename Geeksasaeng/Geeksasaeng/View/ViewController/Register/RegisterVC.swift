@@ -320,7 +320,7 @@ class RegisterViewController: UIViewController {
     }
     
     // EmailAuthVC로 화면 전환.
-    @objc func showNextView() {
+    @objc private func showNextView() {
         let emailAuthVC = EmailAuthViewController()
         
         emailAuthVC.modalTransitionStyle = .coverVertical
@@ -340,7 +340,7 @@ class RegisterViewController: UIViewController {
         present(emailAuthVC, animated: true)
     }
     
-    @objc func didChangeTextField(_ sender: UITextField) {
+    @objc private func didChangeTextField(_ sender: UITextField) {
         if sender == idTextField {
             idCheck = false
         } else if sender == nickNameTextField {
@@ -367,7 +367,7 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    @objc func tapIdCheckButton() {
+    @objc private func tapIdCheckButton() {
         if idTextField.text?.isValidId() ?? false == false {
             idAvailableLabel.text = "6-20자 영문+숫자로 입력"
             idAvailableLabel.textColor = .red
@@ -380,7 +380,7 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    @objc func tapNickNameCheckButton() {
+    @objc private func tapNickNameCheckButton() {
         if nickNameTextField.text?.isValidNickname() ?? false == false {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
@@ -394,7 +394,7 @@ class RegisterViewController: UIViewController {
     }
     
     // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
-    @objc func isValidPwTextField() {
+    @objc private func isValidPwTextField() {
         if !(pwTextField.text?.isValidPassword() ?? false) {
             passwordAvailableLabel.isHidden = false
         } else {
@@ -403,7 +403,7 @@ class RegisterViewController: UIViewController {
     }
     
     // pw validation 검사
-    @objc func isValidPwCheckTextField() {
+    @objc private func isValidPwCheckTextField() {
         if pwCheckTextField.text != pwTextField.text {
             passwordSameCheckLabel.isHidden = false
         } else {

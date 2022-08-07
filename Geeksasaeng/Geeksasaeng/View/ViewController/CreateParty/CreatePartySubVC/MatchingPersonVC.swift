@@ -151,7 +151,8 @@ class MatchingPersonViewController: UIViewController {
         }
     }
     
-    @objc func tapBackButton() {
+    @objc
+    private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
     }

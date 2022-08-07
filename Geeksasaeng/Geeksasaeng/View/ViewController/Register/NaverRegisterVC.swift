@@ -228,6 +228,7 @@ class NaverRegisterViewController: UIViewController {
     }
     
     // MARK: - Functions
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
@@ -405,7 +406,7 @@ class NaverRegisterViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
     
-    @objc func tapNickNameCheckButton() {
+    @objc private func tapNickNameCheckButton() {
         if nickNameTextField.text?.isValidNickname() ?? false == false {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
@@ -419,7 +420,7 @@ class NaverRegisterViewController: UIViewController {
     }
     
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
-    @objc func showNextView() {
+    @objc private func showNextView() {
         let authNumVC = AuthNumViewController()
         
         authNumVC.modalTransitionStyle = .crossDissolve
@@ -434,7 +435,7 @@ class NaverRegisterViewController: UIViewController {
         present(authNumVC, animated: true)
     }
     
-    @objc func didChangeTextField(_ sender: UITextField) {
+    @objc private func didChangeTextField(_ sender: UITextField) {
         if sender == nickNameTextField {
             isNicknameChecked = false
         }

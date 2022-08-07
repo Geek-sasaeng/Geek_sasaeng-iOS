@@ -353,7 +353,7 @@ class EmailAuthViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
 
-    @objc func didChangeTextField(_ sender: UITextField) {
+    @objc private func didChangeTextField(_ sender: UITextField) {
         if emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
             authSendButton.setActivatedButton()
@@ -401,7 +401,7 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    @objc func tapNextButton() {
+    @objc private func tapNextButton() {
         let authNumVC = AuthNumViewController()
         
         authNumVC.modalTransitionStyle = .crossDissolve
