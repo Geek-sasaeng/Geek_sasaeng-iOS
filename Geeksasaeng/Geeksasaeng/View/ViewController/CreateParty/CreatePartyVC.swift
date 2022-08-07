@@ -740,7 +740,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 if success {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    print("파티 생성 실패")
+                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                 }
             }
         }
