@@ -236,6 +236,8 @@ class ReceiptPlaceViewController: UIViewController {
     private func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
         self.mapView = nil
+        
+        NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
     
     @objc

@@ -18,6 +18,8 @@ struct CreateParty {
     static var longitude: Double?
     
     // API Input에 넣기 위한 값 (CreateVC, OrderAsSoonAsMatchVC에서 초기화)
+    static var title: String?
+    static var content: String?
     static var orderTime: String?
     static var maxMatching: Int?
     static var foodCategory: Int?
