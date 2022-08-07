@@ -22,6 +22,9 @@ struct CreateParty {
     static var maxMatching: Int?
     static var foodCategory: Int?
     static var hashTag: Bool?
+    static var bank: String?
+    static var accountNumber: String?
+    static var chatRoomName: String?
 }
 
 // delivery-parties API Request Input
@@ -35,6 +38,9 @@ struct CreatePartyInput: Encodable {
     var longitude: Double?
     var storeUrl: String?
     var hashTag: Bool?
+    var bank: String?
+    var accountNumber: String?
+    var chatRoomName: String?
 }
 
 struct CreatePartyModel: Decodable {
@@ -60,4 +66,5 @@ struct CreatePartyModelResult : Decodable {
     var latitude: Double?
     var longitude: Double?
     var hashTag: Bool?
+    var uuid: String?
 }

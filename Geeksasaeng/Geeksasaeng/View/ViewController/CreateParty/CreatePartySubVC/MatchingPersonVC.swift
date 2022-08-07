@@ -113,7 +113,8 @@ class MatchingPersonViewController: UIViewController {
         }
     }
     
-    @objc func tapNextButton() {
+    @objc
+    private func tapNextButton() {
         // PickerView를 안 돌리고 화면 전환 했을 때, default 값 2명
         if data == nil {
             data = "2명"
