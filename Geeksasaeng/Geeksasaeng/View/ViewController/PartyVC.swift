@@ -723,7 +723,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height)
+            make.bottom.equalTo(mapSubView.snp.bottom).offset(55 + 20)
         }
         
         // 신청하기 뷰를 고정시켜 놓을 컨테이너 뷰

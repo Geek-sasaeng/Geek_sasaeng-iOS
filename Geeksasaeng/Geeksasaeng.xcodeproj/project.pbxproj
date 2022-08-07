@@ -1027,6 +1027,12 @@
 		A248D899289FBFD3000E2422 /* ChattingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D898289FBFD3000E2422 /* ChattingListModel.swift */; };
 		A248D89A289FBFD3000E2422 /* ChattingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D898289FBFD3000E2422 /* ChattingListModel.swift */; };
 		A248D89B289FBFD3000E2422 /* ChattingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D898289FBFD3000E2422 /* ChattingListModel.swift */; };
+		A248D89D289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
+		A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
+		A248D89F289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
+		A248D8A1289FFEAF000E2422 /* PartyNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */; };
+		A248D8A2289FFEAF000E2422 /* PartyNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */; };
+		A248D8A3289FFEAF000E2422 /* PartyNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */; };
 		A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
 		A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
 		A24F0B22289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
@@ -1514,6 +1520,8 @@
 		A248D890289FB8F1000E2422 /* ParticipantCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantCell.swift; sourceTree = "<group>"; };
 		A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListTableViewCell.swift; sourceTree = "<group>"; };
 		A248D898289FBFD3000E2422 /* ChattingListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListModel.swift; sourceTree = "<group>"; };
+		A248D89C289FF344000E2422 /* BankAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountVC.swift; sourceTree = "<group>"; };
+		A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyNameVC.swift; sourceTree = "<group>"; };
 		A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashPlayerVC.swift; sourceTree = "<group>"; };
 		A24F0B23289CC1D8007A9C5C /* Splash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Splash.mp4; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
@@ -2054,6 +2062,8 @@
 				106D9754287D7C32005CFB85 /* CategoryVC.swift */,
 				10D7EC932886AFC500D9E0FD /* UrlVC.swift */,
 				106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */,
+				A248D89C289FF344000E2422 /* BankAccountVC.swift */,
+				A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */,
 			);
 			path = CreatePartySubVC;
 			sourceTree = "<group>";
@@ -3413,6 +3423,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A248D89D289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */,
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
@@ -3436,6 +3447,7 @@
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				10D4D6B32894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				A248D8A1289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
@@ -3525,6 +3537,7 @@
 				A2035EA6288341B00051498A /* AdModel.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				A20FC0EA287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
+				A248D8A2289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
 				A2513F1228785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				10D7EC952886AFC500D9E0FD /* UrlVC.swift in Sources */,
@@ -3566,6 +3579,7 @@
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
@@ -3614,6 +3628,7 @@
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513F1F287872D70029C279 /* EmailAuthModel.swift in Sources */,
+				A248D89F289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
@@ -3659,6 +3674,7 @@
 				10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
+				A248D8A3289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
