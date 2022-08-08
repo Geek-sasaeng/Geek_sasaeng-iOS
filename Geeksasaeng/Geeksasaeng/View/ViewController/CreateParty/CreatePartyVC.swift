@@ -171,7 +171,9 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        print("파티생성 뷰 윌 디스어피어 호출")
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("TapBackButtonFromBankAccountVC"), object: nil)
         mapView = nil // 맵뷰 초기화
         
         // 전역변수 초기화
@@ -182,6 +184,9 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         CreateParty.address = nil
         CreateParty.latitude = nil
         CreateParty.longitude = nil
+        CreateParty.bank = nil
+        CreateParty.accountNumber = nil
+        CreateParty.chatRoomName = nil
     }
     
     // MARK: - Functions
@@ -386,6 +391,14 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 }
             }
         }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapBackButtonFromBankAccountVC"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                self.visualEffectView?.removeFromSuperview()
+            }
+        }
+        
     }
     
     private func addSubViews() {
@@ -726,47 +739,24 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapRegisterButton() {
+        if let title = titleTextField.text,
+           let content = contentsTextView.text {
+            CreateParty.title = title
+            CreateParty.content = content
+        }
+        
         view.endEditing(true)
         createBlueView()
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = BankAccountViewController()
+            childView.dormitoryInfo = self.dormitoryInfo
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
         }, completion: nil)
-        
-        
-        // api 호출
-//        if let title = titleTextField.text,
-//           let content = contentsTextView.text,
-//           let orderTime = CreateParty.orderTime,
-//           let maxMatching = CreateParty.maxMatching,
-//           let foodCategory = CreateParty.foodCategory,
-//           let latitude = CreateParty.latitude,
-//           let longitude = CreateParty.longitude,
-//           let url = CreateParty.url {
-//            let input = CreatePartyInput(
-//                title: title,
-//                content: content,
-//                orderTime: orderTime,
-//                maxMatching: maxMatching,
-//                foodCategory: foodCategory,
-//                latitude: latitude,
-//                longitude: longitude,
-//                storeUrl: url,
-//                hashTag: CreateParty.hashTag ?? false)
-//
-//            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
-//                if success {
-//                    self.navigationController?.popViewController(animated: true)
-//                } else {
-//                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
-//                }
-//            }
-//        }
     }
     
 }

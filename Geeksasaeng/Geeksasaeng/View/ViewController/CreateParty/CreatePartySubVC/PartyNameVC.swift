@@ -16,6 +16,7 @@ class PartyNameViewController: UIViewController {
         let label = UILabel()
         label.text = "파티 이름 입력하기"
         label.font = .customFont(.neoMedium, size: 18)
+        label.textColor = .black
         return label
     }()
     
@@ -39,6 +40,7 @@ class PartyNameViewController: UIViewController {
         textField.makeBottomLine(248)
         textField.font = .customFont(.neoMedium, size: 15)
         textField.textColor = .init(hex: 0x5B5B5B)
+        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
         return textField
     }()
     
@@ -60,7 +62,7 @@ class PartyNameViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
-        button.setActivatedNextButton()
+        button.setDeactivatedNextButton()
         button.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
         return button
     }()
@@ -73,6 +75,9 @@ class PartyNameViewController: UIViewController {
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label
     }()
+    
+    // MARK: - Properties
+    var dormitoryInfo: DormitoryNameResult?
     
     // MARK: - Life Cycle
     
@@ -152,7 +157,40 @@ class PartyNameViewController: UIViewController {
             CreateParty.chatRoomName = chatRoomName
         }
         
-        NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
+        // api 호출
+        if let title = CreateParty.title,
+           let content = CreateParty.content,
+           let orderTime = CreateParty.orderTime,
+           let maxMatching = CreateParty.maxMatching,
+           let foodCategory = CreateParty.foodCategory,
+           let latitude = CreateParty.latitude,
+           let longitude = CreateParty.longitude,
+           let url = CreateParty.url,
+           let bank = CreateParty.bank,
+           let accountNumber = CreateParty.accountNumber,
+           let chatRoomName = CreateParty.chatRoomName {
+            let input = CreatePartyInput(
+                title: title,
+                content: content,
+                orderTime: orderTime,
+                maxMatching: maxMatching,
+                foodCategory: foodCategory,
+                latitude: latitude,
+                longitude: longitude,
+                storeUrl: url,
+                hashTag: CreateParty.hashTag ?? false,
+                bank: bank,
+                accountNumber: accountNumber,
+                chatRoomName: chatRoomName)
+
+            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
+                if success {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                }
+            }
+        }
     }
     
     /* 백버튼 눌렀을 때 실행 -> 이전 화면으로 돌아간다 */
@@ -160,6 +198,13 @@ class PartyNameViewController: UIViewController {
     private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
+    }
+    
+    @objc
+    private func changeValueTitleTextField() {
+        if partyNameTextField.text?.count ?? 0 >= 1 {
+            confirmButton.setActivatedNextButton()
+        }
     }
 }
 

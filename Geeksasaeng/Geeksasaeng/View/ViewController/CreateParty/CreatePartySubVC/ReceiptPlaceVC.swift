@@ -101,7 +101,7 @@ class ReceiptPlaceViewController: UIViewController {
     var markerLocation: MTMapPoint? // 마커 좌표
     var marker: MTMapPOIItem = {
         let marker = MTMapPOIItem()
-        marker.showAnimationType = .dropFromHeaven
+        marker.showAnimationType = .noAnimation
         marker.markerType = .redPin
         marker.itemName = "요기?"
         marker.showDisclosureButtonOnCalloutBalloon = false
@@ -121,13 +121,6 @@ class ReceiptPlaceViewController: UIViewController {
         addSubViews()
         setLayouts()
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        // mapView의 모든 poiItem 제거
-//        for item in mapView!.poiItems {
-//            mapView?.remove(item as? MTMapPOIItem)
-//        }
-//    }
     
     // MARK: - Functions
     
@@ -243,6 +236,8 @@ class ReceiptPlaceViewController: UIViewController {
     private func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
         self.mapView = nil
+        
+        NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
     
     @objc

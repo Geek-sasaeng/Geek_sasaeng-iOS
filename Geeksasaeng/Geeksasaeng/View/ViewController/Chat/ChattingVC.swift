@@ -54,19 +54,25 @@ class ChattingViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    var contents: [cellContents] = []
     let db = Firestore.firestore()
+    let settings = FirestoreSettings()
+    
+    var contents: [cellContents] = []
     var userNickname: String?
     var maxMatching: Int?
     var currentMatching: Int?
+    
+    var firstRoomInfo = true
+    var firstMessage = true
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        loadParticipants()
+        setFirestore()
         addParticipant()
+        loadParticipants()
         loadMessages()
         setCollectionView()
         addSubViews()
@@ -144,6 +150,13 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    private func setFirestore() {
+        settings.isPersistenceEnabled = false
+        db.settings = settings
+        
+        db.clearPersistence()
+    }
+    
     private func addParticipant() {
         // 불러온 걸 배열에 저장했다가 본인 닉네임 append -> update
         db.collection("Rooms").document("TestRoom1").getDocument { documentSnapshot, error in
@@ -168,6 +181,11 @@ class ChattingViewController: UIViewController {
             if let e = error {
                 print(e.localizedDescription)
             } else {
+                // 첫 번째 데이터 버리기
+                if self.firstRoomInfo {
+                    self.firstRoomInfo = false
+                    return
+                }
                 print("roomInfo 불러오기")
                 if let document = documentSnapshot {
                     if let data = try? document.data(as: RoomInfoModel.self) {
@@ -182,8 +200,6 @@ class ChattingViewController: UIViewController {
                             self.collectionView.reloadData()
                             self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
                         }
-                        
-                        
                     }
                 }
             }
@@ -192,11 +208,14 @@ class ChattingViewController: UIViewController {
     
     private func loadMessages() {
         db.collection("Rooms").document("TestRoom1").collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
-//            self.contents = []
-
             if let e = error {
                 print(e.localizedDescription)
             } else {
+                // 첫 번째 데이터 버리기
+                if self.firstMessage {
+                    self.firstMessage = false
+                    return
+                }
                 print("Messages 불러오기")
                 if let snapshotDocuments = querySnapshot?.documents {
                     if let data = snapshotDocuments.last?.data() {
@@ -213,22 +232,6 @@ class ChattingViewController: UIViewController {
                             }
                         }
                     }
-//                    snapshotDocuments.forEach { doc in
-//                        let data = doc.data()
-//                        if let content = data["content"] as? String,
-//                           let nickname = data["nickname"] as? String,
-//                           let userImgUrl = data["userImgUrl"] as? String {
-//                            print(data, nickname, userImgUrl)
-//                            self.contents.append(cellContents(cellType: .message,
-//                                                              message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl),
-//                                                              participant: nil))
-//
-//                            DispatchQueue.main.async {
-//                                self.collectionView.reloadData()
-//                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
-//                            }
-//                        }
-//                    }
                 }
             }
         }

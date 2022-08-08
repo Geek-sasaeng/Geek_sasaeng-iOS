@@ -16,6 +16,7 @@ class BankAccountViewController: UIViewController {
         let label = UILabel()
         label.text = "계좌번호 입력하기"
         label.font = .customFont(.neoMedium, size: 18)
+        label.textColor = .black
         return label
     }()
     
@@ -29,7 +30,7 @@ class BankAccountViewController: UIViewController {
     }()
     
     /* 은행 이름 입력하는 텍스트 필드 */
-    let bankTextField: UITextField = {
+    lazy var bankTextField: UITextField = {
         let textField = UITextField()
         textField.attributedPlaceholder = NSAttributedString(
             string: "은행을 입력하세요",
@@ -39,11 +40,12 @@ class BankAccountViewController: UIViewController {
         textField.makeBottomLine(248)
         textField.font = .customFont(.neoMedium, size: 15)
         textField.textColor = .init(hex: 0x5B5B5B)
+        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
         return textField
     }()
     
     /* 계좌 번호 입력하는 텍스트 필드 */
-    let accountNumberTextField: UITextField = {
+    lazy var accountNumberTextField: UITextField = {
         let textField = UITextField()
         textField.attributedPlaceholder = NSAttributedString(
             string: "계좌번호를 입력하세요",
@@ -53,6 +55,7 @@ class BankAccountViewController: UIViewController {
         textField.makeBottomLine(248)
         textField.font = .customFont(.neoMedium, size: 15)
         textField.textColor = .init(hex: 0x5B5B5B)
+        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
         return textField
     }()
     
@@ -74,7 +77,7 @@ class BankAccountViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.clipsToBounds = true
-        button.setActivatedNextButton()
+        button.setDeactivatedNextButton()
         button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
     }()
@@ -87,6 +90,9 @@ class BankAccountViewController: UIViewController {
         label.textColor = UIColor(hex: 0xD8D8D8)
         return label
     }()
+    
+    // MARK: - Properties
+    var dormitoryInfo: DormitoryNameResult?
     
     // MARK: - Life Cycle
     
@@ -178,6 +184,7 @@ class BankAccountViewController: UIViewController {
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = PartyNameViewController()
+            childView.dormitoryInfo = self.dormitoryInfo
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in
@@ -191,5 +198,14 @@ class BankAccountViewController: UIViewController {
     private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
+        NotificationCenter.default.post(name: NSNotification.Name("TapBackButtonFromBankAccountVC"), object: "true")
+    }
+    
+    @objc
+    private func changeValueTitleTextField() {
+        if bankTextField.text?.count ?? 0 >= 1
+            && accountNumberTextField.text?.count ?? 0 >= 1 {
+            nextButton.setActivatedNextButton()
+        }
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import CoreLocation
 
 /* 이전 뷰로 수정되었음을 전달해주기 위한 Protocol (delegate pattern) */
 protocol EdittedDelegate: AnyObject { // delegate pattern을 위한 protocol 정의
@@ -152,7 +153,15 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
     
-    let testView: UIView = {
+    let mapSubView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 5
+        return view
+    }()
+    
+    let blockedView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
         return view
@@ -163,8 +172,18 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     weak var isEdittiedDelegate: EdittedDelegate?
     var isEditedContentsTextView = false // 내용이 수정되었는지
-    var detailData: getDetailInfoResult?
+    var mapView: MTMapView? // 카카오맵
+    var marker: MTMapPOIItem = {
+        let marker = MTMapPOIItem()
+        marker.showAnimationType = .dropFromHeaven
+        marker.markerType = .redPin
+        marker.itemName = "요기?"
+        marker.showDisclosureButtonOnCalloutBalloon = false
+        marker.draggable = true
+        return marker
+    }()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
+    var detailData: getDetailInfoResult?
     
     // MARK: - Life Cycle
     
@@ -190,6 +209,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditUrlButton"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditLocationButton"), object: nil)
         
+        mapView = nil // 맵뷰 초기화
+        
         // 전역변수 초기화
         CreateParty.orderForecastTime = nil
         CreateParty.matchingPerson = nil
@@ -201,6 +222,38 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // MARK: - Functions
+    
+    private func setMapView() {
+        // 지도 불러오기
+        mapView = MTMapView(frame: mapSubView.frame)
+        
+        if let mapView = mapView {
+            // 델리게이트 연결
+            mapView.delegate = self
+            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
+            mapView.baseMapType = .standard
+            mapView.isUserInteractionEnabled = false
+            
+            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
+                                                                    longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
+            // 마커의 좌표 설정
+            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
+            
+            mapView.addPOIItems([marker])
+            mapSubView.addSubview(mapView)
+        }
+        
+        view.addSubview(mapSubView)
+        mapSubView.snp.makeConstraints { make in
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
+            make.left.equalToSuperview().offset(28)
+            make.width.equalTo(314)
+            make.height.equalTo(144)
+        }
+        
+        view.layoutSubviews()
+    }
     
     private func setNotificationCenter() {
         NotificationCenter.default.addObserver(forName: Notification.Name("TapEditOrderTimeButton"), object: nil, queue: nil) { notification in
@@ -252,7 +305,12 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.addObserver(forName: Notification.Name("TapEditUrlButton"), object: nil, queue: nil) { notification in
             let result = notification.object as! String
             if result == "true" {
-                
+                if let url = CreateParty.url {
+                    self.selectedUrlLabel.text = "      \(url)"
+                    self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedUrlLabel.textColor = .black
+                    self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
                 self.visualEffectView?.removeFromSuperview()
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
@@ -262,9 +320,17 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.addObserver(forName: Notification.Name("TapEditLocationButton"), object: nil, queue: nil) { notification in
             let result = notification.object as! String
             if result == "true" {
+                if let address = CreateParty.address {
+                    self.selectedLocationLabel.text = "      \(address)"
+                    self.selectedLocationLabel.font = .customFont(.neoMedium, size: 13)
+                    self.selectedLocationLabel.textColor = .black
+                    self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+                }
                 self.visualEffectView?.removeFromSuperview()
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
+                self.blockedView.removeFromSuperview()
+                self.setMapView()
             }
         }
     }
@@ -406,6 +472,21 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             default:
                 print("category ERROR")
             }
+            
+            /* 현재 위치를 한글 데이터로 받아오기 */
+            let locationNow = CLLocation(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)
+            let geocoder = CLGeocoder()
+            let locale = Locale(identifier: "ko_kr")
+            // 위치 받기 (국적, 도시, 동&구, 상세 주소)
+            geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
+                if let address = placemarks {
+                    if let administrativeArea = address.last?.administrativeArea,
+                       let locality = address.last?.locality,
+                       let name = address.last?.name {
+                        self.selectedLocationLabel.text = "      \(administrativeArea) \(locality) \(name)"
+                    }
+                }
+            }
         }
     }
     
@@ -416,7 +497,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
          orderEditImageView, matchingEditImageView, categoryEditImageView, urlEditImageView, locationEditImageView,
-         testView].forEach {
+         blockedView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -546,7 +627,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             make.right.equalTo(selectedLocationLabel.snp.right).inset(14)
         }
         
-        testView.snp.makeConstraints { make in
+        blockedView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.width.equalTo(314)
@@ -745,4 +826,8 @@ extension EditPartyViewController: UITextViewDelegate {
         
         return newLength <= 100
     }
+}
+
+extension EditPartyViewController: MTMapViewDelegate {
+
 }

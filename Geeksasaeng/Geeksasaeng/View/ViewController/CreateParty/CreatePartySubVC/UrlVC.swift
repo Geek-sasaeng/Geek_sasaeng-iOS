@@ -37,6 +37,35 @@ class UrlViewController: UIViewController {
         return textField
     }()
     
+    let urlTextFieldArrow: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "UrlArrow")
+        return imageView
+    }()
+    
+    let urlExplainLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .black
+        label.font = .customFont(.neoMedium, size: 16)
+        label.text = "원하는 식당의 링크를 복사하여\n입력해주세요"
+        return label
+    }()
+    
+    let urlExampleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .customFont(.neoRegular, size: 11)
+        label.text = "ex. 배달의 민족, 요기요"
+        return label
+    }()
+    
+    let urlImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "UrlImage")
+        return imageView
+    }()
+    
     /* 건너뛰기 버튼 */
     lazy var passButton: UIButton = {
         let button = UIButton()
@@ -100,7 +129,8 @@ class UrlViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [titleLabel, backButton, urlTextField, passButton, nextButton, pageLabel].forEach {
+        [titleLabel, backButton, urlTextField, passButton, nextButton, pageLabel,
+         urlTextFieldArrow, urlExplainLabel, urlExampleLabel, urlImageView].forEach {
             view.addSubview($0)
         }
     }
@@ -120,6 +150,28 @@ class UrlViewController: UIViewController {
             make.top.equalTo(titleLabel.snp.bottom).offset(24)
             make.left.equalToSuperview().inset(48)
             make.width.equalTo(210)
+        }
+        
+        urlTextFieldArrow.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(67)
+            make.centerX.equalToSuperview()
+        }
+        
+        urlExplainLabel.snp.makeConstraints { make in
+            make.top.equalTo(urlTextFieldArrow.snp.bottom).offset(4)
+            make.centerX.equalToSuperview()
+        }
+        
+        urlExampleLabel.snp.makeConstraints { make in
+            make.top.equalTo(urlExplainLabel.snp.bottom).offset(4)
+            make.left.equalTo(urlExplainLabel.snp.left)
+        }
+        
+        urlImageView.snp.makeConstraints { make in
+            make.top.equalTo(urlTextField.snp.bottom).offset(38)
+            make.right.equalToSuperview().inset(39)
+            make.width.equalTo(144)
+            make.height.equalTo(124)
         }
         
         passButton.snp.makeConstraints { make in
@@ -154,7 +206,7 @@ class UrlViewController: UIViewController {
         }
         
         if urlTextField.text?.count == 0 {
-            CreateParty.url = "Empty"
+            CreateParty.url = "?"
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -169,7 +221,7 @@ class UrlViewController: UIViewController {
     
     @objc
     private func tapPassButton() {
-        CreateParty.url = "Empty"
+        CreateParty.url = "?"
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = ReceiptPlaceViewController()
             self.addChild(childView)

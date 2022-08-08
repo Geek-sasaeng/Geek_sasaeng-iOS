@@ -1112,10 +1112,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 신청하기 뷰 없애고
         removeRegisterView()
         
-        // let chattingVC = ChattingViewController()
-        // chattingVC.maxMatching = detailData.maxMatching
-        // navigationController?.pushViewController(chattingVC, animated: true)
-        
         // TODO: - 이 유저를 채팅방에 초대하기
         // 초대가 완료되었으면 파티 채팅방 생성 완료 뷰 띄우기
         
@@ -1201,23 +1197,26 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     /* 바로가기 눌렀을 때 채팅탭을 보여주는 함수 */
     @objc
     private func tapGoChatButton() {
-        print("DEBUG: 채팅탭으로 바로가기")
-        // 2번 인덱스인 채팅 탭을 보여준다
-        self.tabBarController?.selectedIndex = 2
-        
-        // 탭바에 아이템이 있고, 선택된 아이템이 있을 때에만 { } 안을 실행
-        if let items = self.tabBarController?.tabBar.items,
-           let selectedItem = self.tabBarController?.tabBar.selectedItem {
-            // 아이콘 아래 띄울 타이틀 설정
-            selectedItem.title = "채팅"
-            
-            // 선택된 아이템(채팅)이 아니면 title 값을 제거해준다
-            items.forEach {
-                if $0 != selectedItem {
-                    $0.title = ""
-                }
-            }
-        }
+         let chattingVC = ChattingViewController()
+         chattingVC.maxMatching = detailData.maxMatching
+         navigationController?.pushViewController(chattingVC, animated: true)
+//        print("DEBUG: 채팅탭으로 바로가기")
+//        // 2번 인덱스인 채팅 탭을 보여준다
+//        self.tabBarController?.selectedIndex = 2
+//
+//        // 탭바에 아이템이 있고, 선택된 아이템이 있을 때에만 { } 안을 실행
+//        if let items = self.tabBarController?.tabBar.items,
+//           let selectedItem = self.tabBarController?.tabBar.selectedItem {
+//            // 아이콘 아래 띄울 타이틀 설정
+//            selectedItem.title = "채팅"
+//
+//            // 선택된 아이템(채팅)이 아니면 title 값을 제거해준다
+//            items.forEach {
+//                if $0 != selectedItem {
+//                    $0.title = ""
+//                }
+//            }
+//        }
     }
 }
 
