@@ -93,6 +93,9 @@ class ChattingViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 사라질 때 다시 탭바 보이게 설정
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     

@@ -18,7 +18,7 @@ class CreatePartyViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 파티생성 성공")
+                    print("DEBUG: 파티생성 성공", result)
                     completion(true)
                 } else {
                     print("DEBUG:", result.message!)

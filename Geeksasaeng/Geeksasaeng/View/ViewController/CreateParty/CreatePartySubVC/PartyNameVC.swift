@@ -77,6 +77,7 @@ class PartyNameViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    
     var dormitoryInfo: DormitoryNameResult?
     
     // MARK: - Life Cycle
@@ -182,6 +183,7 @@ class PartyNameViewController: UIViewController {
                 bank: bank,
                 accountNumber: accountNumber,
                 chatRoomName: chatRoomName)
+            print("DEBUG: 파티 생성 요청 인풋", input)
 
             CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
                 if success {
