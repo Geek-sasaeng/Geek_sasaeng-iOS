@@ -64,7 +64,6 @@ class ChattingListViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xFCFDFE)
         
         setFirestore()
-        loadChattingRoomList()
         
         setAttributes()
         setFilterStackView(filterNameArray: ["배달파티", "심부름", "거래"],
@@ -74,6 +73,11 @@ class ChattingListViewController: UIViewController {
         setLayouts()
         setTableView()
         setLabelTap()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // 채팅탭이 보여질 때마다 채팅방 목록 데이터를 다시 가져온다
+        loadChattingRoomList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,13 +94,29 @@ class ChattingListViewController: UIViewController {
         db.clearPersistence()
     }
     
+    // TODO: - 채팅방 목록 최근 메세지 순으로 정렬
     /* 파티 채팅방 목록 조회 */
     private func loadChattingRoomList() {
-        db.collection("Rooms").getDocuments {
+        // 채팅방 목록에 접근할 레퍼런스 생성
+        let roomsRef = db.collection("Rooms")
+        
+        guard let nickName = LoginModel.nickname else { return }
+        print("DEBUG: 이 유저의 닉네임", nickName)
+        
+        // 유저가 참여하고 있고, 종료되지 않은 채팅방 데이터만 가져올 쿼리 생성
+        let query = roomsRef
+            .whereField("roomInfo.participants", arrayContains: nickName)
+            .whereField("roomInfo.isFinish", isEqualTo: false)
+        
+        // 해당 쿼리문의 결과값을 firestore에서 가져오기
+        query.getDocuments {
             (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
+                    print("DEBUG: firestore를 통해 채팅방 목록 가져오기 성공")
+                    self.chattingRoomList.removeAll()
+                    
                     for document in querySnapshot!.documents {
                         print("\(document.documentID) => \(document.data())")
                         if let data = try? document.data(as: RoomInfoModel.self) {
@@ -105,7 +125,6 @@ class ChattingListViewController: UIViewController {
                             self.chattingRoomList.append(chattingRoom)
                             print("DEBUG:", self.chattingRoomList)
                         }
-                        
                     }
                 }
         }
