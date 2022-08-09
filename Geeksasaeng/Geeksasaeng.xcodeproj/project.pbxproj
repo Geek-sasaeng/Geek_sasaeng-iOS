@@ -1024,9 +1024,6 @@
 		A248D895289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */; };
 		A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */; };
 		A248D897289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */; };
-		A248D899289FBFD3000E2422 /* ChattingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D898289FBFD3000E2422 /* ChattingListModel.swift */; };
-		A248D89A289FBFD3000E2422 /* ChattingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D898289FBFD3000E2422 /* ChattingListModel.swift */; };
-		A248D89B289FBFD3000E2422 /* ChattingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D898289FBFD3000E2422 /* ChattingListModel.swift */; };
 		A248D89D289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
 		A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
 		A248D89F289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
@@ -1519,7 +1516,6 @@
 		A248D88C289FB8E5000E2422 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		A248D890289FB8F1000E2422 /* ParticipantCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantCell.swift; sourceTree = "<group>"; };
 		A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListTableViewCell.swift; sourceTree = "<group>"; };
-		A248D898289FBFD3000E2422 /* ChattingListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListModel.swift; sourceTree = "<group>"; };
 		A248D89C289FF344000E2422 /* BankAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountVC.swift; sourceTree = "<group>"; };
 		A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyNameVC.swift; sourceTree = "<group>"; };
 		A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashPlayerVC.swift; sourceTree = "<group>"; };
@@ -2170,7 +2166,6 @@
 			children = (
 				10223101289E68F600042ACC /* MessageModel.swift */,
 				10EBEFE8289F559300038EFC /* RoomInfoModel.swift */,
-				A248D898289FBFD3000E2422 /* ChattingListModel.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3508,7 +3503,6 @@
 				A248D895289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
 				106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */,
-				A248D899289FBFD3000E2422 /* ChattingListModel.swift in Sources */,
 				10E8E721288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				106D9755287D7C32005CFB85 /* CategoryVC.swift in Sources */,
@@ -3601,7 +3595,6 @@
 				A2513F1E287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				106D9756287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				1040FB9B2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
-				A248D89A289FBFD3000E2422 /* ChattingListModel.swift in Sources */,
 				10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
@@ -3636,7 +3629,6 @@
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				A248D893289FB8F1000E2422 /* ParticipantCell.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
-				A248D89B289FBFD3000E2422 /* ChattingListModel.swift in Sources */,
 				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
 				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
@@ -3863,7 +3855,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3902,7 +3894,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",

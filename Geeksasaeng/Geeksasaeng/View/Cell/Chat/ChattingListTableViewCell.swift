@@ -20,14 +20,6 @@ class ChattingListTableViewCell: UITableViewCell {
     
     // MARK: - SubViews
     
-    /* 셀의 모든 내용을 감싸고 있는 컨테이너 뷰 (cornerRadius 때문에 따로 생성) */
-    let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 10
-        return view
-    }()
-    
     /* 채팅방 이미지 */
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -93,34 +85,28 @@ class ChattingListTableViewCell: UITableViewCell {
     // reuse cell을 사용하기 전에 뷰를 초기화 해주는 것
     override func prepareForReuse() {
         super.prepareForReuse()
-
-        self.containerView.layer.shadowOpacity = 0
     }
 
     // MARK: - Functions
     
-    private func addSubViews() {
-        self.contentView.addSubview(containerView)
-        
-        [
+    private func addSubViews() {[
             profileImageView, titleLabel,
             recentMessageLabel, receivedTimeLabel, unreadMessageCountLabel
-        ].forEach { self.containerView.addSubview($0) }
+        ].forEach { self.contentView.addSubview($0) }
     }
     
     private func setLayouts() {
-        containerView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(12)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(81)
+        contentView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(0)
+            make.left.right.bottom.equalToSuperview()
         }
 
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(12)
+            make.top.equalToSuperview().inset(18)
             make.left.equalToSuperview().inset(10)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(20)
+            make.top.equalTo(profileImageView.snp.top).offset(5)
             make.left.equalTo(profileImageView.snp.right).offset(11)
         }
         recentMessageLabel.snp.makeConstraints { make in
@@ -134,7 +120,7 @@ class ChattingListTableViewCell: UITableViewCell {
         }
         unreadMessageCountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(receivedTimeLabel)
-            make.right.equalToSuperview().inset(19)
+            make.right.equalToSuperview().inset(7)
         }
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 import Alamofire
 
 class CreatePartyViewModel {
-    public static func registerParty(dormitoryId: Int, _ parameter : CreatePartyInput, completion: @escaping (Bool) -> Void) {
+    public static func registerParty(dormitoryId: Int, _ parameter : CreatePartyInput, completion: @escaping (Bool, CreatePartyModel?) -> Void) {
         AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
@@ -19,14 +19,13 @@ class CreatePartyViewModel {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 파티생성 성공", result)
-                    completion(true)
                 } else {
                     print("DEBUG:", result.message!)
-                    completion(false)
                 }
+                completion(result.isSuccess!, result)
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
-                completion(false)
+                completion(false, nil)
             }
         }
     }

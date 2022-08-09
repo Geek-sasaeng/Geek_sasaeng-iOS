@@ -61,6 +61,8 @@ class ChattingViewController: UIViewController {
     var userNickname: String?
     var maxMatching: Int?
     var currentMatching: Int?
+    // 선택한 채팅방의 uuid값
+    var roomUUID: String?
     
     var firstRoomInfo = true
     var firstMessage = true
@@ -162,7 +164,9 @@ class ChattingViewController: UIViewController {
     
     private func addParticipant() {
         // 불러온 걸 배열에 저장했다가 본인 닉네임 append -> update
-        db.collection("Rooms").document("TestRoom1").getDocument { documentSnapshot, error in
+        guard let roomUUID = roomUUID else { return }
+
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
@@ -180,7 +184,8 @@ class ChattingViewController: UIViewController {
     }
     
     private func loadParticipants() {
-        db.collection("Rooms").document("TestRoom1").addSnapshotListener { documentSnapshot, error in
+        guard let roomUUID = roomUUID else { return }
+        db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
@@ -210,7 +215,8 @@ class ChattingViewController: UIViewController {
     }
     
     private func loadMessages() {
-        db.collection("Rooms").document("TestRoom1").collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
+        guard let roomUUID = roomUUID else { return }
+        db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
@@ -269,7 +275,8 @@ class ChattingViewController: UIViewController {
         formatter.locale = Locale(identifier: "ko_KR")
         
         if let message = contentsTextView.text {
-            db.collection("Rooms").document("TestRoom1").collection("Messages").document(UUID().uuidString).setData([
+            guard let roomUUID = roomUUID else { return }
+            db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
                 "content": message,
                 "nickname": LoginModel.nickname ?? "홍길동",
                 "userImgUrl": LoginModel.userImgUrl ?? "https://",
