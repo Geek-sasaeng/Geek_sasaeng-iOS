@@ -183,7 +183,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         return marker
     }()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
-    var detailData: getDetailInfoResult?
+    var detailData: DeliveryListDetailModelResult?
     
     // MARK: - Life Cycle
     

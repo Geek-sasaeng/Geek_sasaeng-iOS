@@ -8,27 +8,6 @@
 import UIKit
 import Alamofire
 
-class getDetailInfoResult {
-    var chief: String?
-    var chiefId: Int?
-    var chiefProfileImgUrl: String?
-    var content: String?
-    var currentMatching: Int?
-    var foodCategory: String?
-    var hashTag: Bool?
-    var id: Int?
-    var latitude: Double?
-    var longitude: Double?
-    var matchingStatus: String?
-    var maxMatching: Int?
-    var orderTime: String?
-    var title: String?
-    var updatedAt: String?
-    var storeUrl: String?
-    var authorStatus: Bool?
-    var dormitory: Int?
-}
-
 class DeliveryListDetailViewModel {
     
     public static func getDetailInfo(partyId : Int, completion: @escaping (DeliveryListDetailModelResult) -> Void) {

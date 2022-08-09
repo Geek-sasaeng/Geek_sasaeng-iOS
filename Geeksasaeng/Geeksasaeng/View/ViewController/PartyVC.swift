@@ -521,7 +521,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     
     var deliveryData: DeliveryListModelResult?
-    var detailData = getDetailInfoResult()
+    var detailData = DeliveryListDetailModelResult()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var mapView: MTMapView? // 카카오맵
     var marker: MTMapPOIItem = {
@@ -572,15 +572,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
                 // detailData에 데이터 넣기
                 if let self = self {
-                    self.detailData.chief = result.chief
-                    self.detailData.chiefId = result.chiefId
-                    self.detailData.content = result.content
-                    self.detailData.currentMatching = result.currentMatching
-                    self.detailData.foodCategory = result.foodCategory
-                    self.detailData.hashTag = result.hashTag
-                    self.detailData.id = result.id
-                    self.detailData.latitude = result.latitude
-                    self.detailData.longitude = result.longitude
+                    self.detailData = result
                     
                     // partyEdit 고려하여 전역에 데이터 넣기 -> edit API 호출 시 nil 값 방지
                     switch result.foodCategory {
@@ -606,18 +598,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
                     self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!)), zoomLevel: 5, animated: true)
                     self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!))
-                    
-                    self.detailData.matchingStatus = result.matchingStatus
-                    self.detailData.maxMatching = result.maxMatching
-                    self.detailData.orderTime = result.orderTime
-                    self.detailData.title = result.title
-                    self.detailData.updatedAt = result.updatedAt
-                    self.detailData.storeUrl = result.storeUrl
-                    self.detailData.authorStatus = result.authorStatus
-                    self.detailData.dormitory = result.dormitory
-                    if let chiefProfileImgUrl = result.chiefProfileImgUrl {
-                        self.detailData.chiefProfileImgUrl = chiefProfileImgUrl
-                    }
                     
                     self.setDefaultValue()
                 }
@@ -1115,6 +1095,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         // TODO: - 이 유저를 채팅방에 초대하기
         // 초대가 완료되었으면 파티 채팅방 생성 완료 뷰 띄우기
+        guard let uuid = detailData.uuid else { return }
+        print("DEBUG: 이 채팅방의 uuid값은", uuid)
         
         /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
         toastView = {
