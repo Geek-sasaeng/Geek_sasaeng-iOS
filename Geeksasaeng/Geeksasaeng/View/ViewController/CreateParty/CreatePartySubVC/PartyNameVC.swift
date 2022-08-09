@@ -201,20 +201,22 @@ class PartyNameViewController: UIViewController {
             /* 배달 파티 생성 API 호출 */
             CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { [self] isSuccess, model in
                 if isSuccess {
-                    guard let model = model else { return }
-                    guard let result = model.result else { return }
-                    guard let uuid = result.uuid else { return }
+                    guard let model = model,
+                          let result = model.result,
+                          let uuid = result.uuid,
+                          let title = result.chatRoomName,
+                          let bank = result.bank,
+                          let accountNumber = result.accountNumber else { return }
                     
-                    // TODO: - API res 변경되면, 데이터 변경 필요
                     // 파티 생성 성공 시, 파티 채팅방도 생성한다!
                     db.collection("Rooms").document(uuid).setData(
                         ["roomInfo" :
                             [
-                                "title": "임시 채팅방 제목!",
-                                "participants": ["방장닉네임"],
+                                "title": title,
+                                "participants": [LoginModel.nickname],
                                 "category": "배달파티",
-                                "bank": "국민",
-                                "accountNumber": "010100010",
+                                "bank": bank,
+                                "accountNumber": accountNumber,
                                 "isFinish": false
                             ]
                         ]) { err in

@@ -510,6 +510,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
         }
         
         return view
