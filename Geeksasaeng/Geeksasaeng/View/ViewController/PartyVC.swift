@@ -296,7 +296,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     var matchingDataWhiteLabel: UILabel = {
         let label = UILabel()
-        label.text = "2/4 명"
         label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
         return label
@@ -639,6 +638,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
+        matchingDataWhiteLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!) 명"
         categoryDataLabel.text = detailData.foodCategory
         storeLinkDataLabel.text = (detailData.storeUrl == "null") ? "???" : detailData.storeUrl
         if detailData.hashTag ?? false {
