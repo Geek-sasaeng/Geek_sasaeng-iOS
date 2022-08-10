@@ -11,4 +11,5 @@ struct MessageModel {
     var content: String?
     var nickname: String?
     var userImgUrl: String?
+    var time: String?
 }
