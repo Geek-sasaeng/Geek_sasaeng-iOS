@@ -1181,7 +1181,7 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
 // MARK: - UpdateDeliveryDelegate
 
 extension DeliveryViewController: UpdateDeliveryDelegate {
-    /* PartyVC에서 배달 파티가 생성/삭제되면,
+    /* PartyVC에서 배달 파티가 생성/수정/삭제되면,
      DeliveryVC의 배달 목록을 새로고침 시키는 함수 */
     func updateDeliveryList() {
         print("DEBUG: 파티가 업데이트됐으니 테이블뷰 리로드 할게요")

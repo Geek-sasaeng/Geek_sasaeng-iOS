@@ -81,6 +81,8 @@ class PartyNameViewController: UIViewController {
     
     // MARK: - Properties
     
+    var delegate: UpdateDeliveryDelegate?
+    
     var dormitoryInfo: DormitoryNameResult?
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
@@ -200,13 +202,15 @@ class PartyNameViewController: UIViewController {
 
             /* 배달 파티 생성 API 호출 */
             CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { [self] isSuccess, model in
+                // 배달파티 생성 성공
                 if isSuccess {
                     guard let model = model,
                           let result = model.result,
                           let uuid = result.uuid,
                           let title = result.chatRoomName,
                           let bank = result.bank,
-                          let accountNumber = result.accountNumber else { return }
+                          let accountNumber = result.accountNumber,
+                          let maxMatching = result.maxMatching else { return }
                     
                     // 파티 생성 성공 시, 파티 채팅방도 생성한다!
                     db.collection("Rooms").document(uuid).setData(
@@ -214,6 +218,7 @@ class PartyNameViewController: UIViewController {
                             [
                                 "title": title,
                                 "participants": [LoginModel.nickname],
+                                "maxMatching": maxMatching,
                                 "category": "배달파티",
                                 "bank": bank,
                                 "accountNumber": accountNumber,
@@ -223,14 +228,20 @@ class PartyNameViewController: UIViewController {
                             if let e = err {
                                 print(e.localizedDescription)
                                 // TODO: 파티 생성은 잘 됐는데, 파티 채팅방 생성이 안 될 경우에는 어떻게 해야하나...?
+                                // 배달 채팅방 생성 실패
                                 self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                             } else {
+                                // 배달 채팅방 생성 성공
                                 print("DEBUG: 배달 채팅방 생성 완료")
+                                
+                                // DeliveryVC에서 배달 목록 새로고침 (생성된 거 반영되게 하려고)
+                                self.delegate?.updateDeliveryList()
                             }
                         }
                     
                     self.navigationController?.popViewController(animated: true)
                 } else {
+                    // 배달파티 생성 실패
                     self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                 }
             }
