@@ -22,6 +22,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var timer: DispatchSourceTimer?
     // 프로토콜의 함수를 실행하기 위해 delegate를 설정
     var delegate: UpdateDeliveryDelegate?
+    // 유저가 초대됐는지 아닌지 여부 확인
+    var isInvited: Bool = false
     
     // MARK: - Subviews
     
@@ -1138,17 +1140,53 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
+    private func addParticipant(roomUUID: String, completion: @escaping () -> ()) {
+        // 해당 채팅방의 participants에 본인 닉네임을 append
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let e = error {
+                print(e.localizedDescription)
+                self.isInvited = false
+            } else {
+                if let document = documentSnapshot {
+                    // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
+                    if document.exists {
+                        guard let nickName = LoginModel.nickname else { return }
+                        /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([nickName])])
+                        print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
+                        self.isInvited = true
+                    }
+                }
+            }
+            // 비동기 처리를 위해 completion 사용 -> 이 함수가 끝난 뒤에 실행되게 하려고
+            completion()
+        }
+    }
+    
     /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapRegisterConfirmButton() {
         // 신청하기 뷰 없애고
         removeRegisterView()
         
-        // TODO: - 이 유저를 채팅방에 초대하기
-        // 초대가 완료되었으면 파티 채팅방 생성 완료 뷰 띄우기
         guard let uuid = detailData.uuid else { return }
         print("DEBUG: 이 채팅방의 uuid값은", uuid)
+        addParticipant(roomUUID: uuid, completion: { [self] in
+            print("DEBUG: 초대 상황은?", isInvited)
+            // 초대하기 성공했을 때만 성공 메세지 띄우기
+            if isInvited {
+                showCompleteRegisterView()
+            } else {
+                // 초대 실패 시 실패 메세지 띄우기
+                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .init(hex: 0x474747, alpha: 0.6))
+            }
+        })
         
+        
+    }
+    
+    private func showCompleteRegisterView() {
         /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
         toastView = {
             let view = UIView()
