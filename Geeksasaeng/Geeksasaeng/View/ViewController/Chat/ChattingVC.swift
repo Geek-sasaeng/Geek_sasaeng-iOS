@@ -555,6 +555,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
 
         print("=======")
         print(labelHeight)
+        print(label.frame.width)
 
         if labelHeight == 19.0 {
             cellSize = CGSize(width: view.bounds.width, height: 55)

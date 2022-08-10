@@ -61,8 +61,8 @@ class MessageCell: UICollectionViewCell {
         return label
     }()
     
-    var leftMessageLabel: PaddingLabel = {
-        let label = PaddingLabel()
+    var leftMessageLabel: UILabel = {
+        let label = UILabel()
         label.font = .customFont(.neoMedium, size: 15)
         label.textColor = .black
         label.numberOfLines = 0
@@ -75,8 +75,8 @@ class MessageCell: UICollectionViewCell {
         return label
     }()
     
-    var rightMessageLabel: PaddingLabel = {
-        let label = PaddingLabel()
+    var rightMessageLabel: UILabel = {
+        let label = UILabel()
         label.font = .customFont(.neoMedium, size: 15)
         label.textColor = .black
         label.numberOfLines = 0
