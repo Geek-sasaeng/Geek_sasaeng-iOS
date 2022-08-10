@@ -574,7 +574,8 @@ struct cellContents {
 // TODO: - UI: 패딩라벨 -> 여러줄일 경우 제대로 안 나옴 / 보낸 사람 같으면 메세지만 띄우기 (프로필, 닉네임 없이) -> 셀 간 간격 조정 필요
 // TODO: - Function: 읽은 사람 수 count, 나가기
 
+// MARK: - cell 높이도 마찬가지로 contents[indexPath.row] == -1 일 때, 높이 조정 (패딩부터 해결하고)
+
 // MARK: - message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력
 
-// MARK: - recentSender 변수를 두고 최근 메시지의 nickname을 넣는다 -> 새로운 메시지의 nickname과 일치하면 해당 방향의 imageView / nickname을 히든한다 ?? -> 로직 생각해보기
-// MARK: - 아니면 ? contents[indexPath.row - 1].message.nickname == contents[indexPath.row].message.nickname -> 히든?
+
