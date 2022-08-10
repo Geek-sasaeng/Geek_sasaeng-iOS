@@ -11,8 +11,8 @@ import SnapKit
 class ParticipantCell: UICollectionViewCell {
     // MARK: - SubViews
     
-    var participantLabel: UILabel = {
-        let label = UILabel()
+    var participantLabel: PaddingLabel = {
+        let label = PaddingLabel()
         label.font = .customFont(.neoMedium, size: 12)
         label.textColor = .init(hex: 0x636363)
         label.backgroundColor = .init(hex: 0xF8F8F8)
@@ -20,12 +20,19 @@ class ParticipantCell: UICollectionViewCell {
         label.clipsToBounds = true
         label.layer.cornerRadius = 5
         label.textAlignment = .center
+        
+        label.paddingTop = 6
+        label.paddingBottom = 6
+        label.paddingLeft = 18
+        label.paddingRight = 18
         return label
     }()
     
     // MARK: - Life Cycle
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        contentView.backgroundColor = .systemPink
         
         addSubViews()
         setLayouts()

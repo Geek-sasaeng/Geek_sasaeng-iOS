@@ -276,6 +276,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         visualEffectView?.removeFromSuperview()
+        visualEffectView = nil
         children.forEach {
             $0.view.removeFromSuperview()
             $0.removeFromParent()
@@ -375,6 +376,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
                 
                 // subVC 제거
                 let viewControllers = self.children
@@ -396,6 +398,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             let result = notification.object as! String
             if result == "true" {
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
             }
         }
         
@@ -528,12 +531,14 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func createBlueView() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        visualEffectView.isUserInteractionEnabled = false
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+        if visualEffectView == nil {
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            visualEffectView.isUserInteractionEnabled = false
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+        }
     }
     
     /* 이전 화면으로 돌아가기 */
