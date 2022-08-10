@@ -33,5 +33,5 @@ struct DeliveryListDetailModelResult: Decodable {
     var storeUrl: String?
     var authorStatus: Bool?
     var dormitory: Int?
-    var uuid: String? // 이거 chatRoomName이랑 똑같은 값임
+    var uuid: String?
 }

@@ -619,9 +619,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                         // TODO: - 파티장이 아니지만 채팅방에 participants로 있는 유저에게도 '채팅방 가기'로 보이게 해야함
 //                        guard let nickName = LoginModel.nickname else { return }
 //                        print("DEBUG: 이 유저의 닉네임", nickName)
-//                        guard let chatRoomName = self.detailData.uuid else { return }
+//                        guard let roomUUID = self.detailData.uuid else { return }
 //
-//                        self.db.collection("Rooms").document(chatRoomName).getDocument { (document, error) in
+//                        self.db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
 //                            if let document = document, document.exists {
 //                                let data = document.data()
 //                                print(data)
@@ -1106,15 +1106,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func tapSignUpButton(_ sender: UIButton) {
         // 파티장이라면 채팅방으로 가는 로직을 연결
         if sender.title(for: .normal) == "채팅방 가기" {
-            guard let chatRoomName = detailData.uuid else { return }
-            db.collection("Rooms").document(chatRoomName).getDocument { (document, error) in
+            guard let roomUUID = detailData.uuid else { return }
+            db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
                 if let document = document {
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Cached document data: \(dataDescription)")
                     
                     // 해당 채팅방으로 이동
                     let chattingVC = ChattingViewController()
-                    chattingVC.roomUUID = chatRoomName
+                    chattingVC.roomUUID = roomUUID
                     chattingVC.maxMatching = self.detailData.maxMatching
                     self.navigationController?.pushViewController(chattingVC, animated: true)
                 } else {
