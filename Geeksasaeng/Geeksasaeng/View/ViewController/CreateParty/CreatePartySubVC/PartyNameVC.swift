@@ -209,7 +209,8 @@ class PartyNameViewController: UIViewController {
                           let uuid = result.uuid,
                           let title = result.chatRoomName,
                           let bank = result.bank,
-                          let accountNumber = result.accountNumber else { return }
+                          let accountNumber = result.accountNumber,
+                          let maxMatching = result.maxMatching else { return }
                     
                     // 파티 생성 성공 시, 파티 채팅방도 생성한다!
                     db.collection("Rooms").document(uuid).setData(
@@ -217,6 +218,7 @@ class PartyNameViewController: UIViewController {
                             [
                                 "title": title,
                                 "participants": [LoginModel.nickname],
+                                "maxMatching": maxMatching,
                                 "category": "배달파티",
                                 "bank": bank,
                                 "accountNumber": accountNumber,

@@ -294,10 +294,12 @@ class ChattingViewController: UIViewController {
                 print("roomInfo 불러오기")
                 if let document = documentSnapshot {
                     if let data = try? document.data(as: RoomInfoModel.self) {
+                        guard let roomInfo = data.roomInfo,
+                              let participants = roomInfo.participants else { return }
                         self.contents.append(cellContents(cellType: .participant, message: nil,
-                                                          participant: data.roomInfo?.participants?.last))
-                        self.currentMatching = data.roomInfo?.participants?.count // 참여자가 늘어나면 currentMatching에 추가
-                        if self.currentMatching == self.maxMatching {
+                                                          participant: participants.last))
+                        self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
+                        if self.currentMatching == roomInfo.maxMatching {
                             self.contents.append(cellContents(cellType: .maxMatching, message: nil, participant: nil))
                         }
                         
