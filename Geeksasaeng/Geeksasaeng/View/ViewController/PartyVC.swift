@@ -615,24 +615,17 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     
                     self.setDefaultValue()
                     
+                    guard let belongStatus = self.detailData.belongStatus else { return }
+                    print("속해있는가", belongStatus)
+                    
                     if self.detailData.authorStatus! {
                         self.signUpButton.setTitle("채팅방 가기", for: .normal)
                     } else {
-                        // TODO: - 파티장이 아니지만 채팅방에 participants로 있는 유저에게도 '채팅방 가기'로 보이게 해야함
-//                        guard let nickName = LoginModel.nickname else { return }
-//                        print("DEBUG: 이 유저의 닉네임", nickName)
-//                        guard let roomUUID = self.detailData.uuid else { return }
-//
-//                        self.db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
-//                            if let document = document, document.exists {
-//                                let data = document.data()
-//                                print(data)
-//                            } else {
-//                                print("Document does not exist in cache")
-//                            }
-//                        }
-                        
-                        self.signUpButton.setTitle("신청하기", for: .normal)
+                        if belongStatus == "Y" {
+                            self.signUpButton.setTitle("채팅방 가기", for: .normal)
+                        } else {
+                            self.signUpButton.setTitle("신청하기", for: .normal)
+                        }
                     }
                 }
             })
@@ -1176,6 +1169,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             print("DEBUG: 초대 상황은?", isInvited)
             // 초대하기 성공했을 때만 성공 메세지 띄우기
             if isInvited {
+                // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
+                // 배달 파티 신청하기 API 호출
+                guard let partyId = self.deliveryData?.id else { return }
+                JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) {
+                    print("DEBUG: 배달 파티멤버로 추가 완료")
+                }
+                
                 showCompleteRegisterView()
             } else {
                 // 초대 실패 시 실패 메세지 띄우기

@@ -53,6 +53,7 @@ struct CreatePartyModel: Decodable {
 }
 
 struct CreatePartyModelResult : Decodable {
+    var partyId: Int?
     var chief: String?
     var dormitory: String?
     var foodCategory: String?

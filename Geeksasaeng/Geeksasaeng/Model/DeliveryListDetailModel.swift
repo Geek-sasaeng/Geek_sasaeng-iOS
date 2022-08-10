@@ -34,4 +34,5 @@ struct DeliveryListDetailModelResult: Decodable {
     var authorStatus: Bool?
     var dormitory: Int?
     var uuid: String?
+    var belongStatus: String?
 }
