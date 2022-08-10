@@ -9,9 +9,13 @@ import Foundation
 
 struct RoomInfoModel: Decodable, Encodable {
     var roomInfo: RoomInfoDetailModel?
-//    var roomTitle: String?
 }
 
 struct RoomInfoDetailModel: Decodable, Encodable {
+    var category: String?
+    var title: String?
     var participants: [String]?
+    var accountNumber: String?
+    var bankName: String?
+    var isFinish: Bool?
 }

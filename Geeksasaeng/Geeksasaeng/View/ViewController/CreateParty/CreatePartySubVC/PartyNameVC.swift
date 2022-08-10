@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import SnapKit
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 class PartyNameViewController: UIViewController {
 
@@ -30,7 +33,7 @@ class PartyNameViewController: UIViewController {
     }()
     
     /* 파티 채팅방 이름 입력하는 텍스트 필드 */
-    let partyNameTextField: UITextField = {
+    lazy var partyNameTextField: UITextField = {
         let textField = UITextField()
         textField.attributedPlaceholder = NSAttributedString(
             string: "10글자 이내로 입력하세요",
@@ -77,7 +80,10 @@ class PartyNameViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    
     var dormitoryInfo: DormitoryNameResult?
+    let db = Firestore.firestore()
+    let settings = FirestoreSettings()
     
     // MARK: - Life Cycle
     
@@ -85,6 +91,7 @@ class PartyNameViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setFirestore()
         setViewLayout()
         addSubViews()
         setLayouts()
@@ -94,6 +101,13 @@ class PartyNameViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+    }
+    
+    private func setFirestore() {
+        settings.isPersistenceEnabled = false
+        db.settings = settings
+        
+        db.clearPersistence()
     }
     
     private func setViewLayout() {
@@ -182,9 +196,39 @@ class PartyNameViewController: UIViewController {
                 bank: bank,
                 accountNumber: accountNumber,
                 chatRoomName: chatRoomName)
+            print("DEBUG: 파티 생성 요청 인풋", input)
 
-            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { success in
-                if success {
+            /* 배달 파티 생성 API 호출 */
+            CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { [self] isSuccess, model in
+                if isSuccess {
+                    guard let model = model,
+                          let result = model.result,
+                          let uuid = result.uuid,
+                          let title = result.chatRoomName,
+                          let bank = result.bank,
+                          let accountNumber = result.accountNumber else { return }
+                    
+                    // 파티 생성 성공 시, 파티 채팅방도 생성한다!
+                    db.collection("Rooms").document(uuid).setData(
+                        ["roomInfo" :
+                            [
+                                "title": title,
+                                "participants": [LoginModel.nickname],
+                                "category": "배달파티",
+                                "bank": bank,
+                                "accountNumber": accountNumber,
+                                "isFinish": false
+                            ]
+                        ]) { err in
+                            if let e = err {
+                                print(e.localizedDescription)
+                                // TODO: 파티 생성은 잘 됐는데, 파티 채팅방 생성이 안 될 경우에는 어떻게 해야하나...?
+                                self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                            } else {
+                                print("DEBUG: 배달 채팅방 생성 완료")
+                            }
+                        }
+                    
                     self.navigationController?.popViewController(animated: true)
                 } else {
                     self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)

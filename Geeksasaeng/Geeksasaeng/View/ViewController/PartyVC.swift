@@ -8,11 +8,16 @@
 import UIKit
 import SnapKit
 import CoreLocation
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
-
+    
+    let db = Firestore.firestore()
+    let settings = FirestoreSettings()
+    
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
     // 프로토콜의 함수를 실행하기 위해 delegate를 설정
@@ -304,7 +309,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var signUpButton: UIButton = {
         let button = UIButton()
-        button.setTitle("신청하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 16)
         button.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
@@ -510,6 +514,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
         }
         
         return view
@@ -520,7 +525,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     
     var deliveryData: DeliveryListModelResult?
-    var detailData = getDetailInfoResult()
+    var detailData = DeliveryListDetailModelResult()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var mapView: MTMapView? // 카카오맵
     var marker: MTMapPOIItem = {
@@ -540,6 +545,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         scrollView.delegate = self
         view.backgroundColor = .white
         
+        setFirestore()
         setMapView()
         setDetailData()
         addSubViews()
@@ -566,20 +572,19 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Functions
     
+    private func setFirestore() {
+        settings.isPersistenceEnabled = false
+        db.settings = settings
+        
+        db.clearPersistence()
+    }
+    
     private func setDetailData() {
         if let partyId = self.deliveryData?.id {
             DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
                 // detailData에 데이터 넣기
                 if let self = self {
-                    self.detailData.chief = result.chief
-                    self.detailData.chiefId = result.chiefId
-                    self.detailData.content = result.content
-                    self.detailData.currentMatching = result.currentMatching
-                    self.detailData.foodCategory = result.foodCategory
-                    self.detailData.hashTag = result.hashTag
-                    self.detailData.id = result.id
-                    self.detailData.latitude = result.latitude
-                    self.detailData.longitude = result.longitude
+                    self.detailData = result
                     
                     // partyEdit 고려하여 전역에 데이터 넣기 -> edit API 호출 시 nil 값 방지
                     switch result.foodCategory {
@@ -606,19 +611,27 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!)), zoomLevel: 5, animated: true)
                     self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!))
                     
-                    self.detailData.matchingStatus = result.matchingStatus
-                    self.detailData.maxMatching = result.maxMatching
-                    self.detailData.orderTime = result.orderTime
-                    self.detailData.title = result.title
-                    self.detailData.updatedAt = result.updatedAt
-                    self.detailData.storeUrl = result.storeUrl
-                    self.detailData.authorStatus = result.authorStatus
-                    self.detailData.dormitory = result.dormitory
-                    if let chiefProfileImgUrl = result.chiefProfileImgUrl {
-                        self.detailData.chiefProfileImgUrl = chiefProfileImgUrl
-                    }
-                    
                     self.setDefaultValue()
+                    
+                    if self.detailData.authorStatus! {
+                        self.signUpButton.setTitle("채팅방 가기", for: .normal)
+                    } else {
+                        // TODO: - 파티장이 아니지만 채팅방에 participants로 있는 유저에게도 '채팅방 가기'로 보이게 해야함
+//                        guard let nickName = LoginModel.nickname else { return }
+//                        print("DEBUG: 이 유저의 닉네임", nickName)
+//                        guard let chatRoomName = self.detailData.uuid else { return }
+//
+//                        self.db.collection("Rooms").document(chatRoomName).getDocument { (document, error) in
+//                            if let document = document, document.exists {
+//                                let data = document.data()
+//                                print(data)
+//                            } else {
+//                                print("Document does not exist in cache")
+//                            }
+//                        }
+                        
+                        self.signUpButton.setTitle("신청하기", for: .normal)
+                    }
                 }
             })
         }
@@ -854,7 +867,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         signUpButton.snp.makeConstraints { make in
             make.right.equalTo(arrowImageView.snp.left).offset(-11)
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
-            make.width.equalTo(59)
         }
         arrowImageView.snp.makeConstraints { make in
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
@@ -1091,18 +1103,38 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     /* 배달 파티 신청하기 버튼 눌렀을 때 실행되는 함수 */
     @objc
-    private func tapSignUpButton() {
-        // 배경을 흐리게, 블러뷰로 설정
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
-        
-        /* 신청하기 뷰 보여줌 */
-        view.addSubview(registerView)
-        registerView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+    private func tapSignUpButton(_ sender: UIButton) {
+        // 파티장이라면 채팅방으로 가는 로직을 연결
+        if sender.title(for: .normal) == "채팅방 가기" {
+            guard let chatRoomName = detailData.uuid else { return }
+            db.collection("Rooms").document(chatRoomName).getDocument { (document, error) in
+                if let document = document {
+                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                    print("Cached document data: \(dataDescription)")
+                    
+                    // 해당 채팅방으로 이동
+                    let chattingVC = ChattingViewController()
+                    chattingVC.roomUUID = chatRoomName
+                    chattingVC.maxMatching = self.detailData.maxMatching
+                    self.navigationController?.pushViewController(chattingVC, animated: true)
+                } else {
+                    print("Document does not exist in cache")
+                }
+            }
+        } else {
+            // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
+            // 배경을 흐리게, 블러뷰로 설정
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+            
+            /* 신청하기 뷰 보여줌 */
+            view.addSubview(registerView)
+            registerView.snp.makeConstraints { make in
+                make.centerX.centerY.equalToSuperview()
+            }
         }
     }
     
@@ -1114,6 +1146,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         // TODO: - 이 유저를 채팅방에 초대하기
         // 초대가 완료되었으면 파티 채팅방 생성 완료 뷰 띄우기
+        guard let uuid = detailData.uuid else { return }
+        print("DEBUG: 이 채팅방의 uuid값은", uuid)
         
         /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
         toastView = {
@@ -1197,26 +1231,23 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     /* 바로가기 눌렀을 때 채팅탭을 보여주는 함수 */
     @objc
     private func tapGoChatButton() {
-         let chattingVC = ChattingViewController()
-         chattingVC.maxMatching = detailData.maxMatching
-         navigationController?.pushViewController(chattingVC, animated: true)
-//        print("DEBUG: 채팅탭으로 바로가기")
-//        // 2번 인덱스인 채팅 탭을 보여준다
-//        self.tabBarController?.selectedIndex = 2
-//
-//        // 탭바에 아이템이 있고, 선택된 아이템이 있을 때에만 { } 안을 실행
-//        if let items = self.tabBarController?.tabBar.items,
-//           let selectedItem = self.tabBarController?.tabBar.selectedItem {
-//            // 아이콘 아래 띄울 타이틀 설정
-//            selectedItem.title = "채팅"
-//
-//            // 선택된 아이템(채팅)이 아니면 title 값을 제거해준다
-//            items.forEach {
-//                if $0 != selectedItem {
-//                    $0.title = ""
-//                }
-//            }
-//        }
+        print("DEBUG: 채팅탭으로 바로가기")
+        // 2번 인덱스인 채팅 탭을 보여준다
+        self.tabBarController?.selectedIndex = 2
+
+        // 탭바에 아이템이 있고, 선택된 아이템이 있을 때에만 { } 안을 실행
+        if let items = self.tabBarController?.tabBar.items,
+           let selectedItem = self.tabBarController?.tabBar.selectedItem {
+            // 아이콘 아래 띄울 타이틀 설정
+            selectedItem.title = "채팅"
+
+            // 선택된 아이템(채팅)이 아니면 title 값을 제거해준다
+            items.forEach {
+                if $0 != selectedItem {
+                    $0.title = ""
+                }
+            }
+        }
     }
 }
 
