@@ -163,7 +163,6 @@ class ChattingViewController: UIViewController {
         view.backgroundColor = .white
         
         setFirestore()
-        addParticipant()
         loadParticipants()
         loadMessages()
         setCollectionView()
@@ -260,26 +259,26 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
-    private func addParticipant() {
-        // 불러온 걸 배열에 저장했다가 본인 닉네임 append -> update
-        guard let roomUUID = roomUUID else { return }
-
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let e = error {
-                print(e.localizedDescription)
-            } else {
-                print("참가자 추가")
-                if let document = documentSnapshot {
-                    if let data = try? document.data(as: RoomInfoModel.self) {
-                        var participants = data.roomInfo?.participants
-                        participants?.append(LoginModel.nickname ?? "")
-
-                        self.db.collection("Rooms").document("TestRoom1").updateData(["roomInfo" : ["participants": participants]])
-                    }
-                }
-            }
-        }
-    }
+//    private func addParticipant() {
+//        // 불러온 걸 배열에 저장했다가 본인 닉네임 append -> update
+//        guard let roomUUID = roomUUID else { return }
+//
+//        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+//            if let e = error {
+//                print(e.localizedDescription)
+//            } else {
+//                print("참가자 추가")
+//                if let document = documentSnapshot {
+//                    if let data = try? document.data(as: RoomInfoModel.self) {
+//                        var participants = data.roomInfo?.participants
+//                        participants?.append(LoginModel.nickname ?? "")
+//
+//                        self.db.collection("Rooms").document("TestRoom1").updateData(["roomInfo" : ["participants": participants]])
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     private func loadParticipants() {
         guard let roomUUID = roomUUID else { return }
@@ -295,10 +294,12 @@ class ChattingViewController: UIViewController {
                 print("roomInfo 불러오기")
                 if let document = documentSnapshot {
                     if let data = try? document.data(as: RoomInfoModel.self) {
+                        guard let roomInfo = data.roomInfo,
+                              let participants = roomInfo.participants else { return }
                         self.contents.append(cellContents(cellType: .participant, message: nil,
-                                                          participant: data.roomInfo?.participants?.last))
-                        self.currentMatching = data.roomInfo?.participants?.count // 참여자가 늘어나면 currentMatching에 추가
-                        if self.currentMatching == self.maxMatching {
+                                                          participant: participants.last))
+                        self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
+                        if self.currentMatching == roomInfo.maxMatching {
                             self.contents.append(cellContents(cellType: .maxMatching, message: nil, participant: nil))
                         }
                         

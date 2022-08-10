@@ -22,6 +22,7 @@ class ChattingListViewController: UIViewController {
             chattingTableView.reloadData()
         }
     }
+    var roomUUIDList: [String] = []
     
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
@@ -116,9 +117,12 @@ class ChattingListViewController: UIViewController {
                 } else {
                     print("DEBUG: firestore를 통해 채팅방 목록 가져오기 성공")
                     self.chattingRoomList.removeAll()
+                    self.roomUUIDList.removeAll()   // 배열 초기화 과정
                     
                     for document in querySnapshot!.documents {
                         print("\(document.documentID) => \(document.data())")
+                        self.roomUUIDList.append(document.documentID)   // 채팅방 uuid값을 배열에 저장
+                        
                         if let data = try? document.data(as: RoomInfoModel.self) {
                             let chattingRoom = data.roomInfo
                             guard let chattingRoom = chattingRoom else { return }
@@ -292,10 +296,9 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         // 선택된 셀 데이터
 //        guard let selectedCell = tableView.cellForRow(at: indexPath) as? ChattingListTableViewCell else { return }
         
-        // 해당 채팅방으로 이동
         let chattingVC = ChattingViewController()
-        // uuid값 더미데이터로 일단 넣어두고 테스트 완료
-        chattingVC.roomUUID = "5e349b9b-549f-4c9b-971e-d00daf0bf24e"
+        // 해당 채팅방 uuid값 받아서 이동
+        chattingVC.roomUUID = roomUUIDList[indexPath.row]
 //        chattingVC.maxMatching = detailData.maxMatching
         navigationController?.pushViewController(chattingVC, animated: true)
     }

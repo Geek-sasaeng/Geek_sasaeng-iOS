@@ -22,6 +22,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var timer: DispatchSourceTimer?
     // 프로토콜의 함수를 실행하기 위해 delegate를 설정
     var delegate: UpdateDeliveryDelegate?
+    // 유저가 초대됐는지 아닌지 여부 확인
+    var isInvited: Bool = false
     
     // MARK: - Subviews
     
@@ -294,7 +296,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     var matchingDataWhiteLabel: UILabel = {
         let label = UILabel()
-        label.text = "2/4 명"
         label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
         return label
@@ -613,24 +614,17 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     
                     self.setDefaultValue()
                     
+                    guard let belongStatus = self.detailData.belongStatus else { return }
+                    print("속해있는가", belongStatus)
+                    
                     if self.detailData.authorStatus! {
                         self.signUpButton.setTitle("채팅방 가기", for: .normal)
                     } else {
-                        // TODO: - 파티장이 아니지만 채팅방에 participants로 있는 유저에게도 '채팅방 가기'로 보이게 해야함
-//                        guard let nickName = LoginModel.nickname else { return }
-//                        print("DEBUG: 이 유저의 닉네임", nickName)
-//                        guard let chatRoomName = self.detailData.uuid else { return }
-//
-//                        self.db.collection("Rooms").document(chatRoomName).getDocument { (document, error) in
-//                            if let document = document, document.exists {
-//                                let data = document.data()
-//                                print(data)
-//                            } else {
-//                                print("Document does not exist in cache")
-//                            }
-//                        }
-                        
-                        self.signUpButton.setTitle("신청하기", for: .normal)
+                        if belongStatus == "Y" {
+                            self.signUpButton.setTitle("채팅방 가기", for: .normal)
+                        } else {
+                            self.signUpButton.setTitle("신청하기", for: .normal)
+                        }
                     }
                 }
             })
@@ -644,6 +638,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
+        matchingDataWhiteLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!) 명"
         categoryDataLabel.text = detailData.foodCategory
         storeLinkDataLabel.text = (detailData.storeUrl == "null") ? "???" : detailData.storeUrl
         if detailData.hashTag ?? false {
@@ -1106,15 +1101,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func tapSignUpButton(_ sender: UIButton) {
         // 파티장이라면 채팅방으로 가는 로직을 연결
         if sender.title(for: .normal) == "채팅방 가기" {
-            guard let chatRoomName = detailData.uuid else { return }
-            db.collection("Rooms").document(chatRoomName).getDocument { (document, error) in
+            guard let roomUUID = detailData.uuid else { return }
+            db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
                 if let document = document {
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Cached document data: \(dataDescription)")
                     
                     // 해당 채팅방으로 이동
                     let chattingVC = ChattingViewController()
-                    chattingVC.roomUUID = chatRoomName
+                    chattingVC.roomUUID = roomUUID
                     chattingVC.maxMatching = self.detailData.maxMatching
                     self.navigationController?.pushViewController(chattingVC, animated: true)
                 } else {
@@ -1138,17 +1133,60 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
+    private func addParticipant(roomUUID: String, completion: @escaping () -> ()) {
+        // 해당 채팅방의 participants에 본인 닉네임을 append
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let e = error {
+                print(e.localizedDescription)
+                self.isInvited = false
+            } else {
+                if let document = documentSnapshot {
+                    // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
+                    if document.exists {
+                        guard let nickName = LoginModel.nickname else { return }
+                        /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([nickName])])
+                        print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
+                        self.isInvited = true
+                    }
+                }
+            }
+            // 비동기 처리를 위해 completion 사용 -> 이 함수가 끝난 뒤에 실행되게 하려고
+            completion()
+        }
+    }
+    
     /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapRegisterConfirmButton() {
         // 신청하기 뷰 없애고
         removeRegisterView()
         
-        // TODO: - 이 유저를 채팅방에 초대하기
-        // 초대가 완료되었으면 파티 채팅방 생성 완료 뷰 띄우기
         guard let uuid = detailData.uuid else { return }
         print("DEBUG: 이 채팅방의 uuid값은", uuid)
+        addParticipant(roomUUID: uuid, completion: { [self] in
+            print("DEBUG: 초대 상황은?", isInvited)
+            // 초대하기 성공했을 때만 성공 메세지 띄우기
+            if isInvited {
+                // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
+                // 배달 파티 신청하기 API 호출
+                guard let partyId = self.deliveryData?.id else { return }
+                JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) {
+                    print("DEBUG: 배달 파티멤버로 추가 완료")
+                }
+                
+                showCompleteRegisterView()
+            } else {
+                // 초대 실패 시 실패 메세지 띄우기
+                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .init(hex: 0x474747, alpha: 0.6))
+            }
+        })
         
+        
+    }
+    
+    private func showCompleteRegisterView() {
         /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
         toastView = {
             let view = UIView()
@@ -1257,6 +1295,9 @@ extension PartyViewController: EdittedDelegate {
     func checkEditted(isEditted: Bool) {
         if isEditted {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+            
+            // DeliveryVC에서 배달 목록 새로고침 (수정된 거 반영되게 하려고)
+            delegate?.updateDeliveryList()
         }
     }
 }
