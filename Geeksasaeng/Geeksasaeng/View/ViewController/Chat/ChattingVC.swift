@@ -778,12 +778,15 @@ struct cellContents {
 }
 
 
-// TODO: - contents[indexPath.row]로 닉네임 비교하니까 후에 없어져버림, 그리고 닉네임을 isHidden으로 하고 없는 게 아니기 때문에 그만큼의 간격이 더 생겨버림
+// TODO: - UI: contents[indexPath.row]로 닉네임 비교하니까 후에 없어져버림, 그리고 닉네임을 isHidden으로 하고 없는 게 아니기 때문에 그만큼의 간격이 더 생겨버림
+// MARK: - 새로운 cell을 만들자, 그러면 일단 nicknameLabel은 해결된다. 이전 index와 nickname을 비교하는 로직은 다시 생각해 봐야,,
+// MARK: - 전역으로 lastSender를 두면 ? cellType이 .message일 경우 nickname을 lastSender에 넣어뒀다가 새로운 메세지마다 nickname을 lastSender와 비교하고, 일치하면 nicknameLabel이 없는 cell을 보여주면 ? 불일치 시, nicknameLabel이 있는 라벨 -> 이러면,,일단 본인이냐 타인이냐를 먼저 나눠서 right, left를 hidden하고 lastSender와 같은지 비교해야겠네
+
 // TODO: - Function: 읽은 사람 수 count, 나가기(방장일 때의 로직 처리만 남았음)
 
 // MARK: - message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력
 
-
-// MARK: - 파티 생성할 때, 참가신청할 때 추가되니까,,,, 새로 들어오는 사람의 자기 닉네임 참가 메세지는 로컬로 contents[0]에 저장해서 띄우면 ,,? -> 저장만 하면 ..?
-// contents.append(cellContents(cellType: .participant, message: nil, roomInfo: nil))
 // 채팅화면 들어올 때 본인 닉네임 뒤로 + 본인 참여 시점 뒤로 메세지 -> 띄워야 하는데 ... -> 참가자별 참여 시점을 ,, 넣어야 할까
+// 참여 시점을 넣었다 -> participants, message 모두 contents 안에 넣어야 하기 때문에 participant time, message time 을 비교해야함
+// 즉, 본인이 참여한 시간 이후의 참여자, 메세지들을 모아 놓고 두 개를 합쳐서 시간을 비교해서 정렬 (배열의 정렬)
+
