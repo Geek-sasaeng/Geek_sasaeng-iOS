@@ -474,6 +474,19 @@ class ChattingViewController: UIViewController {
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    private func getMessageLabelHeight(text: String) -> CGFloat {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+        label.text = text
+        label.font = .customFont(.neoMedium, size: 15)
+        label.numberOfLines = 0
+        label.lineBreakMode = .byCharWrapping
+        label.preferredMaxLayoutWidth = 200
+        label.sizeToFit()
+        label.setNeedsDisplay()
+        
+        return label.frame.height
+    }
 }
 
 extension ChattingViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -541,29 +554,32 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellSize: CGSize
         
-        // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 55 초과 (두 줄 이상) or 55 (한 줄) 비교하여 높이 적용
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
-        label.text = contents[indexPath.row].message?.content
-        label.font = .customFont(.neoMedium, size: 15)
-        label.numberOfLines = 0
-        label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = 200
-        label.sizeToFit()
-        label.setNeedsDisplay()
+        // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
+        let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
 
-        let labelHeight = label.frame.height
-
-        print("=======")
-        print(labelHeight)
-        print(label.frame.width)
-
-        if labelHeight == 19.0 {
-            cellSize = CGSize(width: view.bounds.width, height: 55)
-        } else {
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 36) // 55 - 19
+        if indexPath.row > 0 {
+            if contents[indexPath.row].message?.nickname == contents[indexPath.row - 1].message?.nickname { // 같은 사용자가 연속적으로 보낼 때
+                if labelHeight == 19.0 {
+                    cellSize = CGSize(width: view.bounds.width, height: 55)
+                } else {
+                    cellSize = CGSize(width: view.bounds.width, height: labelHeight + 36) // 55 - 19 = 36
+                }
+            } else { // 다른 사용자가 보냈을 때
+                if labelHeight == 19.0 {
+                    cellSize = CGSize(width: view.bounds.width, height: 40)
+                } else {
+                    cellSize = CGSize(width: view.bounds.width, height: labelHeight + 21) // 40 - 19
+                }
+            }
+        } else { // 첫 번째 메세지일 때
+            if labelHeight == 19.0 {
+                cellSize = CGSize(width: view.bounds.width, height: 40)
+            } else {
+                cellSize = CGSize(width: view.bounds.width, height: labelHeight + 21) // 40 - 19
+            }
         }
         
-//        cellSize = CGSize(width: view.frame.width, height: 100)
+        
         return cellSize
     }
     
@@ -582,10 +598,8 @@ struct cellContents {
 }
 
 
-// TODO: - UI: 패딩라벨 -> 여러줄일 경우 제대로 안 나옴 / 보낸 사람 같으면 메세지만 띄우기 (프로필, 닉네임 없이) -> 셀 간 간격 조정 필요
+// TODO: - contents[indexPath.row]로 닉네임 비교하니까 후에 없어져버림, 그리고 닉네임을 isHidden으로 하고 없는 게 아니기 때문에 그만큼의 간격이 더 생겨버림
 // TODO: - Function: 읽은 사람 수 count, 나가기
-
-// MARK: - cell 높이도 마찬가지로 contents[indexPath.row] == -1 일 때, 높이 조정 (패딩부터 해결하고)
 
 // MARK: - message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력
 

@@ -61,8 +61,8 @@ class MessageCell: UICollectionViewCell {
         return label
     }()
     
-    var leftMessageLabel: UILabel = {
-        let label = UILabel()
+    var leftMessageLabel: PaddingLabel = {
+        let label = PaddingLabel()
         label.font = .customFont(.neoMedium, size: 15)
         label.textColor = .black
         label.numberOfLines = 0
@@ -72,11 +72,16 @@ class MessageCell: UICollectionViewCell {
         label.textAlignment = .left
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 200
+        
+        label.paddingTop = 10
+        label.paddingBottom = 10
+        label.paddingLeft = 18
+        label.paddingRight = 18
         return label
     }()
     
-    var rightMessageLabel: UILabel = {
-        let label = UILabel()
+    var rightMessageLabel: PaddingLabel = {
+        let label = PaddingLabel()
         label.font = .customFont(.neoMedium, size: 15)
         label.textColor = .black
         label.numberOfLines = 0
@@ -86,6 +91,11 @@ class MessageCell: UICollectionViewCell {
         label.textAlignment = .left
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 200
+        
+        label.paddingTop = 10
+        label.paddingBottom = 10
+        label.paddingLeft = 18
+        label.paddingRight = 18
         return label
     }()
     
