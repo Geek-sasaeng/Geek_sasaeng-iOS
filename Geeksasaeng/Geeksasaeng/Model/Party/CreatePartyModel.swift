@@ -69,4 +69,7 @@ struct CreatePartyModelResult : Decodable {
     var longitude: Double?
     var hashTag: Bool?
     var uuid: String?
+    var bank: String?
+    var accountNumber: String?
+    var chatRoomName: String?
 }

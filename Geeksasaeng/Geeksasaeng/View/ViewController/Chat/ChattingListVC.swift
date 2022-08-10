@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
 class ChattingListViewController: UIViewController {
@@ -15,12 +17,14 @@ class ChattingListViewController: UIViewController {
     // 현재 선택되어 있는 필터의 label
     var selectedLabel: UILabel? = nil
     // 채팅 더미 데이터
-//    var chatList = []
-    var isClickedArray: [Bool] = [false, false, false, false, false, false, false, false, false, false] {
+    var chattingRoomList: [RoomInfoDetailModel] = [] {
         didSet {
             chattingTableView.reloadData()
         }
     }
+    
+    let db = Firestore.firestore()
+    let settings = FirestoreSettings()
     
     // MARK: - SubViews
     
@@ -59,6 +63,8 @@ class ChattingListViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .init(hex: 0xFCFDFE)
         
+        setFirestore()
+        
         setAttributes()
         setFilterStackView(filterNameArray: ["배달파티", "심부름", "거래"],
                            width: [80, 67, 54],
@@ -69,12 +75,60 @@ class ChattingListViewController: UIViewController {
         setLabelTap()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        // 채팅탭이 보여질 때마다 채팅방 목록 데이터를 다시 가져온다
+        loadChattingRoomList()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         chattingTableView.reloadData()
     }
     
     // MARK: - Functions
+    
+    /* firestore 설정 */
+    private func setFirestore() {
+        settings.isPersistenceEnabled = false
+        db.settings = settings
+        db.clearPersistence()
+    }
+    
+    // TODO: - 채팅방 목록 최근 메세지 순으로 정렬
+    /* 파티 채팅방 목록 조회 */
+    private func loadChattingRoomList() {
+        // 채팅방 목록에 접근할 레퍼런스 생성
+        let roomsRef = db.collection("Rooms")
+        
+        guard let nickName = LoginModel.nickname else { return }
+        print("DEBUG: 이 유저의 닉네임", nickName)
+        
+        // 유저가 참여하고 있고, 종료되지 않은 채팅방 데이터만 가져올 쿼리 생성
+        let query = roomsRef
+            .whereField("roomInfo.participants", arrayContains: nickName)
+            .whereField("roomInfo.isFinish", isEqualTo: false)
+        
+        // 해당 쿼리문의 결과값을 firestore에서 가져오기
+        query.getDocuments {
+            (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    print("DEBUG: firestore를 통해 채팅방 목록 가져오기 성공")
+                    self.chattingRoomList.removeAll()
+                    
+                    for document in querySnapshot!.documents {
+                        print("\(document.documentID) => \(document.data())")
+                        if let data = try? document.data(as: RoomInfoModel.self) {
+                            let chattingRoom = data.roomInfo
+                            guard let chattingRoom = chattingRoom else { return }
+                            self.chattingRoomList.append(chattingRoom)
+                            print("DEBUG:", self.chattingRoomList)
+                        }
+                    }
+                }
+        }
+    }
     
     private func setAttributes() {
         /* Navigation Bar Attrs */
@@ -116,8 +170,9 @@ class ChattingListViewController: UIViewController {
         }
         
         chattingTableView.snp.makeConstraints { make in
-            make.top.equalTo(filterStackView.snp.bottom).offset(12)
-            make.width.equalToSuperview()
+            make.top.equalTo(filterStackView.snp.bottom).offset(18)
+            make.left.equalToSuperview().inset(18)
+            make.right.equalToSuperview().inset(30)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
@@ -148,7 +203,13 @@ class ChattingListViewController: UIViewController {
                 let label = UILabel()
                 label.text = filterText
                 label.font = .customFont(.neoMedium, size: 14)
-                label.textColor = UIColor(hex: 0xD8D8D8)
+                if filterText == "배달파티" {
+                    // default로 배달파티 필터가 활성화 되어 있도록 설정
+                    label.textColor = .mainColor
+                    selectedLabel = label
+                } else {
+                    label.textColor = UIColor(hex: 0xD8D8D8)
+                }
                 view.addSubview(label)
                 label.snp.makeConstraints { make in
                     make.centerX.centerY.equalToSuperview()
@@ -213,21 +274,16 @@ class ChattingListViewController: UIViewController {
 extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate {
     /* 채팅방 목록 갯수 설정 */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isClickedArray.count
+        print("cell 갯수 판단", chattingRoomList.count)
+        return chattingRoomList.count
     }
 
     /* 채팅방 목록 셀 내용 구성 */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingListTableViewCell.identifier, for: indexPath) as? ChattingListTableViewCell else { return UITableViewCell() }
-        
-        if !isClickedArray[indexPath.row] {
-            print("나는야", indexPath.row)
-            // 그림자 설정
-            cell.containerView.setViewShadow(shadowOpacity: 0.1, shadowRadius: 3)
-            // 배경색 변경
-            cell.containerView.backgroundColor = .init(hex: 0xFCFDFE)
-        }
-        
+        let index = indexPath.row
+        // 채팅방 타이틀 설정
+        cell.titleLabel.text = chattingRoomList[index].title ?? "디폴트 이름"
         return cell
     }
 
@@ -235,14 +291,12 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 선택된 셀 데이터
 //        guard let selectedCell = tableView.cellForRow(at: indexPath) as? ChattingListTableViewCell else { return }
-        isClickedArray[indexPath.row] = true
         
-        self.chattingTableView.moveRow(at: IndexPath(row: indexPath.row, section: 0), to: IndexPath(row: isClickedArray.endIndex-1, section: 0))
-        
-        // TODO: - 해당 채팅방으로 이동
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
+        // 해당 채팅방으로 이동
+        let chattingVC = ChattingViewController()
+        // uuid값 더미데이터로 일단 넣어두고 테스트 완료
+        chattingVC.roomUUID = "5e349b9b-549f-4c9b-971e-d00daf0bf24e"
+//        chattingVC.maxMatching = detailData.maxMatching
+        navigationController?.pushViewController(chattingVC, animated: true)
     }
 }
