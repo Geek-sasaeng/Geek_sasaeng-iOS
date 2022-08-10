@@ -782,3 +782,6 @@ struct cellContents {
 // MARK: - message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력
 
 
+// MARK: - 파티 생성할 때, 참가신청할 때 추가되니까,,,, 새로 들어오는 사람의 자기 닉네임 참가 메세지는 로컬로 contents[0]에 저장해서 띄우면 ,,? -> 저장만 하면 ..?
+// contents.append(cellContents(cellType: .participant, message: nil, roomInfo: nil))
+// 채팅화면 들어올 때 본인 닉네임 뒤로 + 본인 참여 시점 뒤로 메세지 -> 띄워야 하는데 ... -> 참가자별 참여 시점을 ,, 넣어야 할까
