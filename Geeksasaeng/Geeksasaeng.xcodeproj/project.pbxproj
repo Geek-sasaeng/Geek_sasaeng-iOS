@@ -933,6 +933,9 @@
 		10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
+		10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
+		10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
+		10B3822428A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
 		10B75B60289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
 		10B75B61289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
 		10B75B62289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
@@ -1485,6 +1488,7 @@
 		108D5971289AE7B700F2C258 /* DormitoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryAPI.swift; sourceTree = "<group>"; };
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10AC5CA82889269000C8086A /* EditPartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyVC.swift; sourceTree = "<group>"; };
+		10B3822128A2321F00571406 /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		10B75B5F289CDD810002865C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
 		10D4D6B22894F88B00B53AB0 /* EditOrderForecastTimeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOrderForecastTimeVC.swift; sourceTree = "<group>"; };
@@ -2306,6 +2310,7 @@
 				102B35D72879BD050042F691 /* UIButton+Extension.swift */,
 				102B35DB2879BD670042F691 /* UIViewController+Extension.swift */,
 				102B35DF2879BD980042F691 /* String+Extension.swift */,
+				10B3822128A2321F00571406 /* UILabel+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3482,6 +3487,7 @@
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				102230FA289E640700042ACC /* ChattingVC.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
+				10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */,
 				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
@@ -3584,6 +3590,7 @@
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
+				10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
@@ -3642,6 +3649,7 @@
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				108B6332288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A21DB936289D896B00A523F1 /* ChattingListVC.swift in Sources */,
+				10B3822428A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */,
 				105E60AB287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2513ECC28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
