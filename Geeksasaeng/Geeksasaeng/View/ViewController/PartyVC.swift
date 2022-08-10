@@ -1295,6 +1295,9 @@ extension PartyViewController: EdittedDelegate {
     func checkEditted(isEditted: Bool) {
         if isEditted {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+            
+            // DeliveryVC에서 배달 목록 새로고침 (수정된 거 반영되게 하려고)
+            delegate?.updateDeliveryList()
         }
     }
 }

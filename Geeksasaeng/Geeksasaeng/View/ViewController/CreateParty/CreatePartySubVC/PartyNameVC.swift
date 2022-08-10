@@ -81,6 +81,8 @@ class PartyNameViewController: UIViewController {
     
     // MARK: - Properties
     
+    var delegate: UpdateDeliveryDelegate?
+    
     var dormitoryInfo: DormitoryNameResult?
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
@@ -226,6 +228,9 @@ class PartyNameViewController: UIViewController {
                                 self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                             } else {
                                 print("DEBUG: 배달 채팅방 생성 완료")
+                                
+                                // DeliveryVC에서 배달 목록 새로고침 (생성된 거 반영되게 하려고)
+                                self.delegate?.updateDeliveryList()
                             }
                         }
                     
