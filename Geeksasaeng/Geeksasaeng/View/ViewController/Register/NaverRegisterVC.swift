@@ -219,10 +219,11 @@ class NaverRegisterViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        setUniversitySelectView()
         setAttributes()
         setTextFieldTarget()
+        setViewTap()
         setLabelTap()
+        
         addSubViews()
         setLayouts()
         addRightSwipe()
@@ -231,18 +232,27 @@ class NaverRegisterViewController: UIViewController {
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         view.endEditing(true)
+        
+        // 학교 선택 리스트뷰가 확장되었을 때, universityListView 밖의 화면을 클릭 시 뷰가 사라지도록 설정함
+        if let touch = touches.first, touch.view != universityListView, touch.view != universitySelectView {
+            isExpanded = false
+            universityListView.isHidden = true
+            toggleImageView.image = UIImage(named: "ToggleMark")
+        }
     }
     
     private func addSubViews() {
-        [progressBar, remainBar, progressIcon, remainIcon,
-        nickNameLabel, schoolLabel, emailLabel,
-        nickNameTextField, emailTextField, emailAddressTextField,
-        universityListView, universitySelectView,
-        nickNameAvailableLabel,
-         nickNameCheckButton, authSendButton, nextButton].forEach {
-            view.addSubview($0)
-        }
+        [
+            progressBar, remainBar, progressIcon, remainIcon,
+            nickNameLabel, nickNameAvailableLabel, schoolLabel, emailLabel,
+            nickNameTextField, emailTextField, emailAddressTextField,
+            universitySelectView,
+            nickNameCheckButton, authSendButton,
+            nextButton,
+            universityListView  // 맨마지막에 addSubview를 해야 등장 시 맨 앞으로 옴
+        ].forEach { view.addSubview($0) }
     }
     
     private func setLayouts() {
@@ -307,16 +317,16 @@ class NaverRegisterViewController: UIViewController {
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
         }
         
-        universityListView.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(316)
-        }
-        
+        /* select univ */
         universitySelectView.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(41)
+        }
+        universityListView.snp.makeConstraints { make in
+            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(316)
         }
         
         /* nickNameAvailableLabel */
@@ -348,12 +358,6 @@ class NaverRegisterViewController: UIViewController {
             make.width.equalTo(105)
             make.height.equalTo(41)
         }
-    }
-    
-    private func setUniversitySelectView() {
-        let viewTapGesture = UITapGestureRecognizer(target: self,
-                                                    action: #selector(tapSelectUniv))
-        universitySelectView.addGestureRecognizer(viewTapGesture)
     }
     
     private func setAttributes() {
@@ -398,6 +402,13 @@ class NaverRegisterViewController: UIViewController {
         [nickNameTextField, emailTextField, emailAddressTextField].forEach { textField in
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
+    }
+    
+    /* universitySelectView에 탭 제스쳐를 추가 */
+    private func setViewTap() {
+        let viewTapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(tapUnivSelectView))
+        universitySelectView.addGestureRecognizer(viewTapGesture)
     }
     
     private func setLabelTap() {
@@ -463,7 +474,7 @@ class NaverRegisterViewController: UIViewController {
         }
     }
     
-    @objc private func tapSelectUniv() {
+    @objc private func tapUnivSelectView() {
         // TODO: API 연결 필요
 //        UniversityListViewModel.requestGetUnivList(self)
         isExpanded = !isExpanded

@@ -188,27 +188,24 @@ class EmailAuthViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTextFieldTarget()
+        setViewTap()
         setLabelTap()
         addRightSwipe()
-        
-        view.addSubview(universityListView)
-        universityListView.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(316)
-        }
-        // 학교 선택 리스트 탭
-        let viewTapGesture = UITapGestureRecognizer(target: self,
-                                                    action: #selector(tapSelectUniv))
-        universitySelectView.isUserInteractionEnabled = true
-        universitySelectView.addGestureRecognizer(viewTapGesture)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
     }
     
     // MARK: - Functions
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+        
+        // 학교 선택 리스트뷰가 확장되었을 때, universityListView 밖의 화면을 클릭 시 뷰가 사라지도록 설정함
+        if let touch = touches.first, touch.view != universityListView, touch.view != universitySelectView {
+            isExpanded = false
+            universityListView.isHidden = true
+            toggleImageView.image = UIImage(named: "ToggleMark")
+        }
+    }
     
     private func addSubViews() {
         [
@@ -218,7 +215,8 @@ class EmailAuthViewController: UIViewController {
             universitySelectView,
             emailTextField, emailAddressTextField,
             authSendButton,
-            nextButton
+            nextButton,
+            universityListView  // 맨마지막에 addSubview를 해야 등장 시 맨 앞으로 옴
         ].forEach { view.addSubview($0) }
     }
     
@@ -251,29 +249,34 @@ class EmailAuthViewController: UIViewController {
             make.right.equalTo(remainBar.snp.right).offset(3)
         }
         
-        /* schoolLabel */
+        /* labels */
         schoolLabel.snp.makeConstraints { make in
             make.top.equalTo(progressBar.snp.bottom).offset(50)
             make.left.equalToSuperview().inset(27)
         }
-        /* emailLabel */
         emailLabel.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(81)
             make.left.equalToSuperview().inset(27)
         }
         
+        /* universitySelectView */
         universitySelectView.snp.makeConstraints { make in
             make.top.equalTo(schoolLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(41)
         }
+        /* universityListView -> DropDown으로 확장되는 뷰 */
+        universityListView.snp.makeConstraints { make in
+            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(316)
+        }
         
-        /* emailTextField */
+        /* text fields */
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(emailLabel.snp.bottom).offset(15)
             make.left.equalToSuperview().inset(36)
         }
-        /* emailAddressTextField */
         emailAddressTextField.snp.makeConstraints { make in
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
             make.left.equalToSuperview().inset(36)
@@ -346,6 +349,13 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
+    /* universitySelectView에 탭 제스쳐를 추가 */
+    private func setViewTap() {
+        let viewTapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(tapUnivSelectView))
+        universitySelectView.addGestureRecognizer(viewTapGesture)
+    }
+    
     /* 학교 이름 label에 탭 제스쳐 추가 */
     private func setLabelTap() {
         let labelTapGesture = UITapGestureRecognizer(target: self,
@@ -365,10 +375,11 @@ class EmailAuthViewController: UIViewController {
     }
     
     /* 학교 선택 탭하면 리스트 확장 */
-    @objc private func tapSelectUniv() {
+    @objc private func tapUnivSelectView() {
         // TODO: API 연결 필요
 //        UniversityListViewModel.requestGetUnivList(self)
         isExpanded = !isExpanded
+        
         // 확장하는 거면 리스트 보여주기
         if isExpanded {
             universityListView.isHidden = false
