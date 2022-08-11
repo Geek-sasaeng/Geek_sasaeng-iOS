@@ -119,6 +119,7 @@ class AuthNumViewController: UIViewController {
         setLayouts()
         authResendButton.setActivatedButton()
         startTimer()
+        addRightSwipe()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

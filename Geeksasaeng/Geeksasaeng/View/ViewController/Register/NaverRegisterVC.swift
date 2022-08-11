@@ -225,6 +225,7 @@ class NaverRegisterViewController: UIViewController {
         setLabelTap()
         addSubViews()
         setLayouts()
+        addRightSwipe()
     }
     
     // MARK: - Functions

@@ -229,6 +229,7 @@ class PhoneAuthViewController: UIViewController {
         setTextFieldTarget()
         addSubViews()
         setLayouts()
+        addRightSwipe()
     }
     
     // MARK: - Functions

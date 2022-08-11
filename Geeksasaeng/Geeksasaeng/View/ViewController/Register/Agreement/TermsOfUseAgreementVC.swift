@@ -51,6 +51,7 @@ class TermsOfUseAgreementViewController: UIViewController {
         
         addSubViews()
         setLayouts()
+        addRightSwipe()
     }
     
     private func addSubViews() {

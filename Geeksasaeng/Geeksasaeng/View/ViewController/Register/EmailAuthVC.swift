@@ -189,6 +189,7 @@ class EmailAuthViewController: UIViewController {
         setLayouts()
         setTextFieldTarget()
         setLabelTap()
+        addRightSwipe()
         
         view.addSubview(universityListView)
         universityListView.snp.makeConstraints { make in
