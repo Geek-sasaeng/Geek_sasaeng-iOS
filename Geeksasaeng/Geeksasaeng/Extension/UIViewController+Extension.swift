@@ -37,6 +37,15 @@ extension UIViewController {
         })
     }
     
+    /* 배경에 어두운 블러뷰 만드는 함수 */
+    public func setDarkBlurView() -> UIVisualEffectView {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        return visualEffectView
+    }
+    
     /* 왼쪽에서 오른쪽으로 Swipe Gesture Recognizer를 추가하는 함수 */
     public func addRightSwipe() {
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(self.swipeAction(swipe:)))
