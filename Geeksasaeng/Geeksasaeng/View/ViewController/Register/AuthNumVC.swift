@@ -303,9 +303,9 @@ class AuthNumViewController: UIViewController {
                 phoneAuthVC.university = univ
                 phoneAuthVC.emailId = emailId
                 phoneAuthVC.uuid = uuid
+                
+                present(phoneAuthVC, animated: true)
             }
-            
-            present(phoneAuthVC, animated: true)
         }
     }
 }

@@ -203,8 +203,10 @@ class NaverRegisterViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    
     var isNicknameChecked = false
     var isExpanded: Bool! = false
+    let tempEmailAddress = "@gachon.ac.kr"
     
     /* 회원가입 정보 */
     // 밑에 건 이 화면에서 바로 생성하여 전달 -> 변수로 둘 필요 x
@@ -373,9 +375,8 @@ class NaverRegisterViewController: UIViewController {
         emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
         emailTextField.autocapitalizationType = .none
         
-        emailAddressTextField = setTextFieldAttrs(msg: "@gachon.ac.kr", width: 187)
+        emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
         emailAddressTextField.isUserInteractionEnabled = false
-        emailAddressTextField.text = "@gachon.ac.kr"
     }
     
     private func setMainLabelAttrs(_ text: String) -> UILabel {
@@ -386,7 +387,9 @@ class NaverRegisterViewController: UIViewController {
         return label
     }
     
+    /* 텍스트 필드 속성 설정 */
     private func setTextFieldAttrs(msg: String, width: CGFloat) -> UITextField {
+        // placeHolder 설정
         let textField = UITextField()
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
@@ -394,6 +397,7 @@ class NaverRegisterViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoLight, size: 15)]
         )
+        // 밑에 줄 설정
         textField.makeBottomLine(width)
         return textField
     }
@@ -418,7 +422,10 @@ class NaverRegisterViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
     
-    @objc private func tapNickNameCheckButton() {
+    // MARK: - @objc Functions
+    
+    @objc
+    private func tapNickNameCheckButton() {
         if nickNameTextField.text?.isValidNickname() ?? false == false {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
@@ -431,23 +438,8 @@ class NaverRegisterViewController: UIViewController {
         }
     }
     
-    // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
-    @objc private func showNextView() {
-        let authNumVC = AuthNumViewController()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        
-        authNumVC.isFromNaverRegister = true
-        authNumVC.accessToken = accessToken
-        authNumVC.nickNameData = nickNameTextField.text
-        authNumVC.university = selectYourUnivLabel.text
-        authNumVC.email = "\(emailTextField.text!)" + "\(emailAddressTextField.text!)"
-        
-        present(authNumVC, animated: true)
-    }
-    
-    @objc private func didChangeTextField(_ sender: UITextField) {
+    @objc
+    private func didChangeTextField(_ sender: UITextField) {
         if sender == nickNameTextField {
             isNicknameChecked = false
         }
@@ -474,7 +466,8 @@ class NaverRegisterViewController: UIViewController {
         }
     }
     
-    @objc private func tapUnivSelectView() {
+    @objc
+    private func tapUnivSelectView() {
         // TODO: API 연결 필요
 //        UniversityListViewModel.requestGetUnivList(self)
         isExpanded = !isExpanded
@@ -489,13 +482,19 @@ class NaverRegisterViewController: UIViewController {
         self.view.bringSubviewToFront(universitySelectView)
     }
     
-    @objc private func tapUnivName(_ sender: UITapGestureRecognizer) {
+    @objc
+    private func tapUnivName(_ sender: UITapGestureRecognizer) {
         let univName = sender.view as! UILabel
         selectYourUnivLabel.text = univName.text
         selectYourUnivLabel.textColor = .init(hex: 0x636363)
+        
+        // textfield를 가천대의 이메일 address로 채워준다
+        emailAddressTextField.text = tempEmailAddress
+        didChangeTextField(emailAddressTextField)   // 이메일에서 id를 먼저 적고 학교 선택하면 호출 안 되길래 직접 호출
     }
     
-    @objc private func tapAuthSendButton() {
+    @objc
+    private func tapAuthSendButton() {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
@@ -507,6 +506,32 @@ class NaverRegisterViewController: UIViewController {
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(self, input)
+        }
+    }
+    
+    // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
+    @objc
+    private func showNextView() {
+        let authNumVC = AuthNumViewController()
+        
+        authNumVC.modalTransitionStyle = .crossDissolve
+        authNumVC.modalPresentationStyle = .fullScreen
+        
+        // 데이터 전달
+        if let accessToken = accessToken,
+           let nickNameData = nickNameTextField.text,
+           let university = selectYourUnivLabel.text,
+           let emailId = emailTextField.text,
+           let emailAddress = emailAddressTextField.text {
+            /* 값이 존재할 때에만 데이터 전달을 해야 한다 */
+            authNumVC.isFromNaverRegister = true
+            authNumVC.accessToken = accessToken
+            authNumVC.nickNameData = nickNameData
+            authNumVC.university = university
+            authNumVC.email = emailId + emailAddress
+            
+            // 화면 전환
+            present(authNumVC, animated: true)
         }
     }
 }

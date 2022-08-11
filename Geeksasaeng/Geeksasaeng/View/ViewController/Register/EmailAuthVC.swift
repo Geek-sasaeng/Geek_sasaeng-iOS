@@ -309,8 +309,6 @@ class EmailAuthViewController: UIViewController {
         
         emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
         emailAddressTextField.isUserInteractionEnabled = false  // 유저가 입력하는 것이 아니라 학교에 따라 자동 설정되는 것.
-        // TODO: emailAddress -> UILabel로 바뀌어야 할 듯
-        emailAddressTextField.text = "@gachon.ac.kr"   //test
         
         /* buttons attr */
         [authSendButton, nextButton].forEach {
@@ -331,7 +329,9 @@ class EmailAuthViewController: UIViewController {
         return label
     }
     
+    /* 텍스트 필드 속성 설정 */
     private func setTextFieldAttrs(msg: String, width: CGFloat) -> UITextField {
+        // placeHolder 설정
         let textField = UITextField()
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
@@ -339,6 +339,7 @@ class EmailAuthViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoLight, size: 15)]
         )
+        // 밑에 줄 설정
         textField.makeBottomLine(width)
         return textField
     }
@@ -364,7 +365,8 @@ class EmailAuthViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
 
-    @objc private func didChangeTextField(_ sender: UITextField) {
+    @objc
+    private func didChangeTextField(_ sender: UITextField) {
         if emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
             nextButton.setActivatedNextButton()
             authSendButton.setActivatedButton()
@@ -375,7 +377,8 @@ class EmailAuthViewController: UIViewController {
     }
     
     /* 학교 선택 탭하면 리스트 확장 */
-    @objc private func tapUnivSelectView() {
+    @objc
+    private func tapUnivSelectView() {
         // TODO: API 연결 필요
 //        UniversityListViewModel.requestGetUnivList(self)
         isExpanded = !isExpanded
@@ -392,13 +395,19 @@ class EmailAuthViewController: UIViewController {
     }
     
     /* 학교 리스트에서 학교 이름 선택하면 실행 */
-    @objc private func tapUnivName(_ sender: UITapGestureRecognizer) {
+    @objc
+    private func tapUnivName(_ sender: UITapGestureRecognizer) {
         let univName = sender.view as! UILabel
         selectYourUnivLabel.text = univName.text
         selectYourUnivLabel.textColor = .init(hex: 0x636363)
+        
+        // textfield를 가천대의 이메일 address로 채워준다
+        emailAddressTextField.text = tempEmailAddress
+        didChangeTextField(emailAddressTextField)   // 이메일에서 id를 먼저 적고 학교 선택하면 호출 안 되길래 직접 호출
     }
     
-    @objc private func tapAuthSendButton() {
+    @objc
+    private func tapAuthSendButton() {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
@@ -413,7 +422,8 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    @objc private func tapNextButton() {
+    @objc
+    private func tapNextButton() {
         let authNumVC = AuthNumViewController()
         
         authNumVC.modalTransitionStyle = .crossDissolve
@@ -426,6 +436,7 @@ class EmailAuthViewController: UIViewController {
            let nickNameData = self.nickNameData,
            let univ = selectYourUnivLabel.text,
            let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
            let uuid = uuid {
             authNumVC.idData = idData
             authNumVC.pwData = pwData
@@ -434,14 +445,15 @@ class EmailAuthViewController: UIViewController {
             
             // 학교 정보랑 학교 이메일 정보 넘겨줘야 한다 -> 재전송 하기 버튼 때문에
             authNumVC.university = univ
-            // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함
-            authNumVC.email = email + tempEmailAddress
+            // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함 - 일단은 가천대만
+            authNumVC.email = email + emailAddress
+            print(email + emailAddress)
             
             // PhoneAuthVC까지 가지고 가야 한다.
             authNumVC.uuid = uuid
+            
+            present(authNumVC, animated: true)
         }
-        
-        present(authNumVC, animated: true)
     }
     
 }

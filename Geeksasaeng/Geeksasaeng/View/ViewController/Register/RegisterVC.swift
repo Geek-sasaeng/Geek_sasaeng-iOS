@@ -335,9 +335,9 @@ class RegisterViewController: UIViewController {
             emailAuthVC.pwData = pwData
             emailAuthVC.pwCheckData = pwCheckData
             emailAuthVC.nickNameData = nickNameData
+            
+            present(emailAuthVC, animated: true)
         }
-        
-        present(emailAuthVC, animated: true)
     }
     
     @objc private func didChangeTextField(_ sender: UITextField) {
