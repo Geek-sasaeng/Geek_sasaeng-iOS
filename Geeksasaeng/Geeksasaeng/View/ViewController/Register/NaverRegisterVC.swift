@@ -205,6 +205,7 @@ class NaverRegisterViewController: UIViewController {
     // MARK: - Properties
     
     var isNicknameChecked = false
+    var isEmailSended = false
     var isExpanded: Bool! = false
     let tempEmailAddress = "@gachon.ac.kr"
     
@@ -440,8 +441,11 @@ class NaverRegisterViewController: UIViewController {
     
     @objc
     private func didChangeTextField(_ sender: UITextField) {
+        // 초기화
         if sender == nickNameTextField {
             isNicknameChecked = false
+        } else if sender == emailTextField {
+            isEmailSended = false
         }
         
         if nickNameTextField.text?.count ?? 0 >= 1 {
@@ -457,6 +461,7 @@ class NaverRegisterViewController: UIViewController {
         }
 
         if isNicknameChecked
+            && isEmailSended
             && selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
             && emailTextField.text?.count ?? 0 >= 1
         {
@@ -505,7 +510,15 @@ class NaverRegisterViewController: UIViewController {
             let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
-            EmailAuthViewModel.requestSendEmail(self, input)
+            EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in// // 경우에 맞는 토스트 메세지 출력
+                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 15), color: .mainColor)
+                
+                // 닉네임 확인, 이메일 인증번호 전송까지 성공했을 때에 다음 버튼을 활성화
+                if isSuccess, self.isNicknameChecked {
+                    self.nextButton.setActivatedNextButton()
+                    self.isEmailSended = isSuccess
+                }
+            }
         }
     }
     

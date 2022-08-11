@@ -261,7 +261,10 @@ class AuthNumViewController: UIViewController {
             
             let input = EmailAuthInput(email: email, university: univ)
             // 이메일로 인증번호 전송하는 API 호출
-            EmailAuthViewModel.requestSendEmail(self, input)
+            EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in
+                // 경우에 맞는 토스트 메세지 출력
+                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 15), color: .mainColor)
+            }
         }
     }
     
