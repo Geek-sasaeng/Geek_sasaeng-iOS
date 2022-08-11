@@ -1135,6 +1135,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
     private func addParticipant(roomUUID: String, completion: @escaping () -> ()) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
         // 해당 채팅방의 participants에 본인 닉네임을 append
         db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
             if let e = error {
@@ -1146,7 +1150,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     if document.exists {
                         guard let nickName = LoginModel.nickname else { return }
                         /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
-                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([nickName])])
+                        let input = ["participant": nickName, "enterTime": formatter.string(from: Date())]
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
+
+                        // object를 넣어야 함
                         print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
                         self.isInvited = true
                     }

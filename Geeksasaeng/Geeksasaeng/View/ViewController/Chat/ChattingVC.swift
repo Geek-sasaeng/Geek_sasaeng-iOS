@@ -255,6 +255,11 @@ class ChattingViewController: UIViewController {
     var firstRoomInfo = true
     var firstMessage = true
     
+    var lastSender: String?
+    
+    var roomMaster: String? // 내가 현재 방장인지
+    // TODO: - 나중에 방장일 때, 아닐 때 옵션뷰 다르게 보이기
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -301,6 +306,7 @@ class ChattingViewController: UIViewController {
     private func setCollectionView() {
         collectionView.register(ParticipantCell.self, forCellWithReuseIdentifier: "ParticipantCell")
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
+        collectionView.register(SameSenderMessageCell.self, forCellWithReuseIdentifier: "SameSenderMessageCell")
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -396,6 +402,9 @@ class ChattingViewController: UIViewController {
                     if let data = try? document.data(as: RoomInfoModel.self) {
                         guard let roomInfo = data.roomInfo,
                               let participants = roomInfo.participants else { return }
+                        if participants.count > 0 {
+                            self.roomMaster = participants[0].participant
+                        }
                         self.contents.append(cellContents(cellType: .participant, message: nil, roomInfo: data))
                         self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
                         if self.currentMatching == roomInfo.maxMatching {
@@ -430,9 +439,23 @@ class ChattingViewController: UIViewController {
                            let nickname = data["nickname"] as? String,
                            let userImgUrl = data["userImgUrl"] as? String,
                            let time = data["time"] as? String {
-                            self.contents.append(cellContents(cellType: .message,
-                                                              message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time),
-                                                              roomInfo: nil))
+                            if self.lastSender == nil { // 첫 메세지일 때
+                                self.contents.append(cellContents(cellType: .message,
+                                                                  message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time),
+                                                                  roomInfo: nil))
+                                self.lastSender = nickname
+                            } else if self.lastSender == nickname { // 같은 사람이 연속으로 보낼 때
+                                self.contents.append(cellContents(cellType: .sameSenderMessage,
+                                                                  message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time),
+                                                                  roomInfo: nil))
+                                self.lastSender = nickname
+                            } else { // 다른 사람이 보낼 때
+                                self.contents.append(cellContents(cellType: .message,
+                                                                  message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time),
+                                                                  roomInfo: nil))
+                                self.lastSender = nickname
+                            }
+                            
 
                             DispatchQueue.main.async {
                                 self.collectionView.reloadData()
@@ -667,16 +690,41 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .participant:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
-            cell.participantLabel.text =  "\(contents[indexPath.row].roomInfo?.roomInfo?.participants?.last ?? "") 님이 입장하셨습니다"
+            cell.participantLabel.text =  "\(contents[indexPath.row].roomInfo?.roomInfo?.participants?.last?.participant ?? "") 님이 입장하셨습니다"
             return cell
         case .maxMatching:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
             cell.participantLabel.text = "모든 파티원이 입장을 마쳤습니다!\n안내에 따라 메뉴를 입력해주세요"
             return cell
+        case .sameSenderMessage:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
+            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면서 이전과 같은 sender이면
+                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
+                cell.rightMessageLabel.sizeToFit()
+                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+                cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
+                cell.leftTimeLabel.isHidden = true
+                cell.leftUnReadCountLabel.isHidden = true
+                cell.leftMessageLabel.isHidden = true
+                cell.rightTimeLabel.isHidden = false
+                cell.rightUnReadCountLabel.isHidden = false
+                return cell
+            } else {
+                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
+                cell.leftMessageLabel.sizeToFit()
+                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+                cell.leftUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
+                cell.rightTimeLabel.isHidden = true
+                cell.rightUnReadCountLabel.isHidden = true
+                cell.rightMessageLabel.isHidden = true
+                cell.leftTimeLabel.isHidden = false
+                cell.leftUnReadCountLabel.isHidden = false
+                return cell
+            }
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
             cell.nicknameLabel.text = contents[indexPath.row].message?.nickname
-            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 같은 사람이 연속으로 보낼 때
+            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .right
                 cell.rightMessageLabel.sizeToFit()
@@ -686,28 +734,14 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.leftUnReadCountLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.leftImageView.isHidden = true
-                if indexPath.row > 0 {
-                    if contents[indexPath.row].message?.nickname == contents[indexPath.row - 1].message?.nickname {
-                        // nicknameLabel 지워야 함
-//                        for subView in cell.subviews {
-//                            if subView.tag == 22 {
-//                                subView.removeFromSuperview()
-//                            }
-//                        }
-                        cell.rightImageView.isHidden = true
-                    } else {
-                        cell.rightImageView.isHidden = false
-                    }
-                } else {
-                    cell.rightImageView.isHidden = false
-                }
+                cell.rightImageView.isHidden = false
                 cell.rightTimeLabel.isHidden = false
                 cell.rightUnReadCountLabel.isHidden = false
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
-                cell.leftMessageLabel.sizeThatFits(view.frame.size)
-                cell.leftTimeLabel.text = "오후 9:00"
+                cell.leftMessageLabel.sizeToFit()
+                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.leftUnReadCountLabel.text = "3"
                 cell.rightTimeLabel.isHidden = true
                 cell.rightUnReadCountLabel.isHidden = true
@@ -728,34 +762,16 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .message:
             // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-
-            if indexPath.row > 0 {
-                if contents[indexPath.row].message?.nickname == contents[indexPath.row - 1].message?.nickname { // 같은 사용자가 연속적으로 보낼 때
-                    if labelHeight == 19.0 {
-                        cellSize = CGSize(width: view.bounds.width, height: 55)
-                    } else {
-                        cellSize = CGSize(width: view.bounds.width, height: labelHeight + 36) // 55 - 19 = 36
-                    }
-                } else { // 다른 사용자가 보냈을 때
-                    if labelHeight == 19.0 {
-                        cellSize = CGSize(width: view.bounds.width, height: 65)
-                    } else {
-                        cellSize = CGSize(width: view.bounds.width, height: labelHeight + 21) // 40 - 19
-                    }
-                }
-            } else { // 첫 번째 메세지일 때
-                if labelHeight == 19.0 {
-                    cellSize = CGSize(width: view.bounds.width, height: 40)
-                } else {
-                    cellSize = CGSize(width: view.bounds.width, height: labelHeight + 21) // 40 - 19
-                }
-            }
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20 + 16) // 상하 여백 20 + 닉네임 라벨
         case .participant:
-            let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].roomInfo?.roomInfo?.participants?.last ?? "")
+            let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].roomInfo?.roomInfo?.participants?.last?.participant ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 12) // padding top, bottom = 6
         case .maxMatching:
             let labelHeight = getMessageLabelHeight(text: "모든 파티원이 입장을 마쳤습니다!\n안내에 따라 메뉴를 입력해주세요")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 12)
+        case .sameSenderMessage:
+            let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20) // label 상하 여백 20
         default:
             cellSize = CGSize(width: view.bounds.width, height: 40)
         }
@@ -768,6 +784,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
 enum cellType {
     case participant
     case message
+    case sameSenderMessage
     case maxMatching
 }
 
@@ -778,11 +795,8 @@ struct cellContents {
 }
 
 
-// TODO: - UI: contents[indexPath.row]로 닉네임 비교하니까 후에 없어져버림, 그리고 닉네임을 isHidden으로 하고 없는 게 아니기 때문에 그만큼의 간격이 더 생겨버림
-// MARK: - 새로운 cell을 만들자, 그러면 일단 nicknameLabel은 해결된다. 이전 index와 nickname을 비교하는 로직은 다시 생각해 봐야,,
-// MARK: - 전역으로 lastSender를 두면 ? cellType이 .message일 경우 nickname을 lastSender에 넣어뒀다가 새로운 메세지마다 nickname을 lastSender와 비교하고, 일치하면 nicknameLabel이 없는 cell을 보여주면 ? 불일치 시, nicknameLabel이 있는 라벨 -> 이러면,,일단 본인이냐 타인이냐를 먼저 나눠서 right, left를 hidden하고 lastSender와 같은지 비교해야겠네
-
-// TODO: - Function: 읽은 사람 수 count, 나가기(방장일 때의 로직 처리만 남았음)
+// TODO: - UI: getMessageLabelHeight -> 3줄부터 이상 / 방장 imageView Border
+// TODO: - Function: 읽은 사람 수 count, 참여 시점 이전 데이터 불러오기
 
 // MARK: - message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력
 
