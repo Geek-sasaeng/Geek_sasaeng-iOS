@@ -161,6 +161,7 @@ class AgreementViewController: UIViewController {
         
         addSubViews()
         setLayouts()
+        addRightSwipe()
     }
     
     // MARK: - Function

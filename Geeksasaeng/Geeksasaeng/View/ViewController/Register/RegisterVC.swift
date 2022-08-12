@@ -132,7 +132,7 @@ class RegisterViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTextFieldTarget()
-//        addRightSwipe()
+        addRightSwipe()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -323,7 +323,7 @@ class RegisterViewController: UIViewController {
     @objc private func showNextView() {
         let emailAuthVC = EmailAuthViewController()
         
-        emailAuthVC.modalTransitionStyle = .coverVertical
+        emailAuthVC.modalTransitionStyle = .crossDissolve
         emailAuthVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달
@@ -335,9 +335,9 @@ class RegisterViewController: UIViewController {
             emailAuthVC.pwData = pwData
             emailAuthVC.pwCheckData = pwCheckData
             emailAuthVC.nickNameData = nickNameData
+            
+            present(emailAuthVC, animated: true)
         }
-        
-        present(emailAuthVC, animated: true)
     }
     
     @objc private func didChangeTextField(_ sender: UITextField) {

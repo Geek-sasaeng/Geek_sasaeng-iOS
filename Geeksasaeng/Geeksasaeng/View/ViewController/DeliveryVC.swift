@@ -337,7 +337,7 @@ class DeliveryViewController: UIViewController {
         
         makeButtonShadow(createPartyButton)
         if let jwt = LoginModel.jwt {
-            print("====\(jwt)====")
+            print("DEBUG: jwt \(jwt)")
         }
         
         /* 광고 목록 데이터 로딩 */

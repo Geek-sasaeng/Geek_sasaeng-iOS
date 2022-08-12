@@ -229,6 +229,7 @@ class PhoneAuthViewController: UIViewController {
         setTextFieldTarget()
         addSubViews()
         setLayouts()
+        addRightSwipe()
     }
     
     // MARK: - Functions
@@ -439,9 +440,9 @@ class PhoneAuthViewController: UIViewController {
             agreementVC.university = univ
             agreementVC.emailId = emailId
             agreementVC.phoneNumberId = phoneNumberId
+            
+            present(agreementVC, animated: true)
         }
-        
-        present(agreementVC, animated: true)
     }
     
     /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */

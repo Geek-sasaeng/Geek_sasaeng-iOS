@@ -35,7 +35,7 @@ struct ReportModel : Decodable {
 class ReportAPI {
     
     /* 신고하기 버튼을 눌러서 파티 신고 요청 */
-    public static func requestReportParty(_ viewController : UIViewController, _ parameter : ReportPartyInput, completion: @escaping () -> Void) {
+    public static func requestReportParty(_ parameter : ReportPartyInput, completion: @escaping (Bool, String?) -> Void) {
         let url = "https://geeksasaeng.shop/reports/delivery-parties"
         
         AF.request(url, method: .post,
@@ -46,19 +46,20 @@ class ReportAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 파티 신고 성공", result)
-                    viewController.showToast(viewController: viewController, message: "파티 신고가 완료되었습니다.", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                    completion()
+                    completion(result.isSuccess!, nil)
                 } else {
                     print("DEBUG:", result.message!)
+                    completion(result.isSuccess!, result.message!)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+                completion(false, "오류가 발생하여 신고가 제출되지 않았습니다")
             }
         }
     }
     
     /* 신고하기 버튼을 눌러서 멤버 신고 요청 */
-    public static func requestReportMember(_ viewController : UIViewController, _ parameter : ReportMemberInput, completion: @escaping () -> Void) {
+    public static func requestReportMember(_ parameter : ReportMemberInput, completion: @escaping (Bool, String?) -> Void) {
         let url = "https://geeksasaeng.shop/reports/members"
         
         AF.request(url, method: .post,
@@ -69,13 +70,14 @@ class ReportAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 유저 신고 성공", result)
-                    viewController.showToast(viewController: viewController, message: "유저 신고가 완료되었습니다.", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                    completion()
+                    completion(result.isSuccess!, nil)
                 } else {
                     print("DEBUG:", result.message!)
+                    completion(result.isSuccess!, result.message!)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+                completion(false, "오류가 발생하여 신고가 제출되지 않았습니다")
             }
         }
     }

@@ -288,6 +288,26 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         let index = indexPath.row
         // 채팅방 타이틀 설정
         cell.titleLabel.text = chattingRoomList[index].title ?? "디폴트 이름"
+        
+        /* firestore에서 채팅방의 가장 최근 메세지, 전송 시간 데이터 가져오기 */
+        let roomDocRef = db.collection("Rooms").document(roomUUIDList[indexPath.row])
+        // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
+        roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    print("Error retreiving collection: \(error)")
+                }
+                if let querySnapshot = querySnapshot,
+                   let lastDocument = querySnapshot.documents.last {
+                    if let messageContents = lastDocument["content"] as? String,
+                       let messageTime = lastDocument["time"] as? String {
+                        // 채팅방의 최근 메세지 설정
+                        cell.recentMessageLabel.text = messageContents
+                        // 최근 메세지의 전송 시간 설정
+                        cell.receivedTimeLabel.text = messageTime
+                    }
+                }
+            }
+        
         return cell
     }
 
