@@ -212,12 +212,16 @@ class PartyNameViewController: UIViewController {
                           let accountNumber = result.accountNumber,
                           let maxMatching = result.maxMatching else { return }
                     
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    formatter.locale = Locale(identifier: "ko_KR")
+                    
                     // 파티 생성 성공 시, 파티 채팅방도 생성한다!
                     db.collection("Rooms").document(uuid).setData(
                         ["roomInfo" :
                             [
                                 "title": title,
-                                "participants": [LoginModel.nickname],
+                                "participants": [["participant": LoginModel.nickname, "enterTime": formatter.string(from: Date())]],
                                 "maxMatching": maxMatching,
                                 "category": "배달파티",
                                 "bank": bank,
@@ -233,12 +237,12 @@ class PartyNameViewController: UIViewController {
                             } else {
                                 // 배달 채팅방 생성 성공
                                 print("DEBUG: 배달 채팅방 생성 완료")
+                                print(uuid)
                                 
                                 // DeliveryVC에서 배달 목록 새로고침 (생성된 거 반영되게 하려고)
                                 self.delegate?.updateDeliveryList()
                             }
                         }
-                    
                     self.navigationController?.popViewController(animated: true)
                 } else {
                     // 배달파티 생성 실패
