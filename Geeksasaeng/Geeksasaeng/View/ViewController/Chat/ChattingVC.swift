@@ -792,6 +792,7 @@ struct cellContents {
     var cellType: cellType?
     var message: MessageModel?
     var roomInfo: RoomInfoModel?
+//    var time: String?
 }
 
 
