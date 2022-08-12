@@ -981,6 +981,9 @@
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
+		10FECB1A28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
+		10FECB1B28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
+		10FECB1C28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
 		A2035EA128833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
 		A2035EA228833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
@@ -1504,6 +1507,7 @@
 		10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyViewModel.swift; sourceTree = "<group>"; };
 		10EBEFE8289F559300038EFC /* RoomInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoModel.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
+		10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sameSenderMessageCell.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
 		724884CEEFB929FF25B554A0 /* Pods-Geeksasaeng.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.debug.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2196,6 +2200,7 @@
 			isa = PBXGroup;
 			children = (
 				A248D88C289FB8E5000E2422 /* MessageCell.swift */,
+				10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */,
 				A248D890289FB8F1000E2422 /* ParticipantCell.swift */,
 				A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */,
 			);
@@ -3466,6 +3471,7 @@
 				10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
+				10FECB1A28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
 				103F5E47289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
@@ -3572,6 +3578,7 @@
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
 				10D4D6C02894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
+				10FECB1B28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
 				10E6956628885589000B7309 /* LocationAPI.swift in Sources */,
 				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				A248D88E289FB8E5000E2422 /* MessageCell.swift in Sources */,
@@ -3667,6 +3674,7 @@
 				10D4D6B52894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
+				10FECB1C28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A2085AE12870550200D6CF79 /* LoginModel.swift in Sources */,
 				102B35DE2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
@@ -3871,7 +3879,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LM9BKUSL5K;
+				DEVELOPMENT_TEAM = 3QV3QL2LC8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -3910,7 +3918,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LM9BKUSL5K;
+				DEVELOPMENT_TEAM = 3QV3QL2LC8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
