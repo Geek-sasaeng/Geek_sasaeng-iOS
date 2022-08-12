@@ -9,6 +9,11 @@ import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+class FormatCreater {
+    static let shared = DateFormatter()
+    private init() { }
+}
+
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
 class ChattingListViewController: UIViewController {
     
@@ -302,8 +307,52 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                        let messageTime = lastDocument["time"] as? String {
                         // 채팅방의 최근 메세지 설정
                         cell.recentMessageLabel.text = messageContents
-                        // 최근 메세지의 전송 시간 설정
-                        cell.receivedTimeLabel.text = messageTime
+                        
+                        let nowTimeDate = Date()
+                        FormatCreater.shared.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                        FormatCreater.shared.locale = Locale(identifier: "ko_KR")
+                        let messageTimeDate = FormatCreater.shared.date(from: messageTime)!
+                        
+                        FormatCreater.shared.dateFormat = "dd"
+                        // 메세지가 전송된 날(일)을 저장, 오늘인지 구분하기 위해
+                        let messageSendedDay = FormatCreater.shared.string(from: messageTimeDate)
+                        let today = FormatCreater.shared.string(from: nowTimeDate)
+                        
+                        // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                        let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
+                        
+                        // 각각 일, 시간, 분 단위로 변환
+                        let hourTime = intervalSecs / 60 / 60 % 24
+                        let minuteTime = intervalSecs / 60 % 60
+                        
+                        print("\(messageContents) \(messageSendedDay)일 \(hourTime)시간 \(minuteTime)분, 오늘은 \(today)일")
+                        
+                        /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
+                        // 일이 다르면 다른 날로. 어제, 오늘.
+                        if Int(today)! - 1 == Int(messageSendedDay) {
+                            cell.receivedTimeString = "어제"
+                        } else if (Int(today)! - Int(messageSendedDay)!) <= 3, (Int(today)! - Int(messageSendedDay)!) > 0 {
+                            cell.receivedTimeString = "\(Int(today)! - Int(messageSendedDay)!)일 전"
+                        } else if (Int(today)! - Int(messageSendedDay)!) > 3 {
+                            // 22.08.31
+                            FormatCreater.shared.dateFormat = "yy-MM-dd"
+                            let testDate = FormatCreater.shared.string(from: messageTimeDate)
+                            cell.receivedTimeString = testDate
+                        } else {
+                            if hourTime == 0 {
+                                if minuteTime <= 9 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "방금"
+                                } else if minuteTime > 9, minuteTime <= 59 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "\(minuteTime)분 전"
+                                }
+                            } else if hourTime >= 1, hourTime <= 12 {
+                                cell.receivedTimeString = "\(hourTime)시간 전"
+                            } else if messageSendedDay == today {
+                                cell.receivedTimeString = "오늘"
+                            }
+                        }
                     }
                 }
             }
@@ -319,7 +368,6 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         let chattingVC = ChattingViewController()
         // 해당 채팅방 uuid값 받아서 이동
         chattingVC.roomUUID = roomUUIDList[indexPath.row]
-//        chattingVC.maxMatching = detailData.maxMatching
         navigationController?.pushViewController(chattingVC, animated: true)
     }
 }

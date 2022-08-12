@@ -15,6 +15,12 @@ class ChattingListTableViewCell: UITableViewCell {
     
     static let identifier = "ChattingListCell"
     
+    var receivedTimeString = "" {
+        didSet {
+            receivedTimeLabel.text = receivedTimeString
+        }
+    }
+    
     // 셀이 클릭된 적이 있는지/없는지 여부를 알기 위한 변수
     var isClicked = false
     
@@ -33,7 +39,6 @@ class ChattingListTableViewCell: UITableViewCell {
     /* 채팅방 제목 label */
     let titleLabel: UILabel = {
         let label = UILabel()
-        // TODO: - 값 연결
         label.text = "맛있게 같이 먹어요"
         label.textColor = .black
         label.font = .customFont(.neoBold, size: 15)
@@ -43,8 +48,7 @@ class ChattingListTableViewCell: UITableViewCell {
     /* 채팅방 가장 최근 메세지 label */
     let recentMessageLabel: UILabel = {
         let label = UILabel()
-        // TODO: - 값 연결
-        label.text = "간난단란만반산안잔찬칸까지"    // 칸까지 나오면 성공
+        label.text = ""
         label.textColor = .mainColor
         label.font = .customFont(.neoMedium, size: 13)
         return label
@@ -53,7 +57,6 @@ class ChattingListTableViewCell: UITableViewCell {
     /* 메세지를 받은지 얼마나 됐는지 알려주는 시간 label */
     let receivedTimeLabel: UILabel = {
         let label = UILabel()
-        // TODO: - 값 연결
         label.text = "방금"
         label.textColor = .init(hex: 0xA8A8A8)
         label.font = .customFont(.neoMedium, size: 11)
