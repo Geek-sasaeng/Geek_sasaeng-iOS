@@ -483,7 +483,6 @@ class ChattingViewController: UIViewController {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        var enterTime: Date? // 참가자 참가 시간
         
         // 참가자가 참가한 시간 불러오기
         db.collection("Rooms").getDocuments { querySnapshot, error in
@@ -499,7 +498,50 @@ class ChattingViewController: UIViewController {
                                 // 현재 사용자가 참여한 시간을 추출
                                 data.roomInfo?.participants?.forEach {
                                     if $0.participant == LoginModel.nickname {
-                                        enterTime = formatter.date(from: $0.enterTime!)
+                                        guard let enterTime = $0.enterTime else { return }
+                                        guard let enterTimeToDate = formatter.date(from: enterTime) else { return }// 참가자가 참가한 시간 Date Type
+                                        
+                                        // 이전 메세지 모두 불러오기 (systemMessage, message) -> 이거 되면 시간 필터링
+                                        self.db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").getDocuments { querySnapshot, error in
+                                            if let error = error {
+                                                print(error.localizedDescription)
+                                            } else {
+                                                if let documents = querySnapshot?.documents {
+                                                    for doc in documents {
+                                                        do {
+                                                            let message = try doc.data(as: MessageModel.self)
+                                                            if message.isSystemMessage == true { // systemMessage
+                                                                // 시간이 이후인 경우에만
+                                                                guard let sendTime = message.time else { return }
+                                                                guard let sendTimeToDate = formatter.date(from: sendTime) else { return }// 메세지가 전송된 시간 Date Type
+                                                                let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
+                                                                if timeInterval <= 0 { // 음수일 떄 -> 참가 이후의 메세지
+                                                                    self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: true)))
+                                                                }
+                                                                
+                                                                
+                                                            } else { // 일반 message
+                                                                // 시간이 이후인 경우에만
+                                                                guard let sendTime = message.time else { return }
+                                                                guard let sendTimeToDate = formatter.date(from: sendTime) else { return }
+                                                                let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
+                                                                if timeInterval <= 0 {
+                                                                    self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
+                                                                }
+                                                            }
+                                                            
+                                                            DispatchQueue.main.async {
+                                                                self.collectionView.reloadData()
+                                                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+                                                            }
+                                                        } catch {
+                                                            print(error.localizedDescription)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
                                     }
                                 }
                             } catch {
@@ -512,34 +554,7 @@ class ChattingViewController: UIViewController {
         }
         
         
-        // 이전 메세지 모두 불러오기 (systemMessage, message) -> 이거 되면 시간 필터링
-        db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").getDocuments { querySnapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                if let documents = querySnapshot?.documents {
-                    for doc in documents {
-                        do {
-                            let message = try doc.data(as: MessageModel.self)
-                            if message.isSystemMessage == true { // systemMessage
-                                // 시간이 이후인 경우에만
-                                self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: true)))
-                            } else { // 일반 message
-                                // 시간이 이후인 경우에만
-                                self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
-                            }
-                            
-                            DispatchQueue.main.async {
-                                self.collectionView.reloadData()
-                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
-                            }
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-            }
-        }
+        
 
     }
     
