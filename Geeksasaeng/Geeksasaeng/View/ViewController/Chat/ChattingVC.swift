@@ -366,12 +366,26 @@ class ChattingViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        test()
         setFirestore()
+        loadPreMessages()
         loadParticipants()
         loadMessages()
         setCollectionView()
         addSubViews()
         setLayouts()
+    }
+    
+    private func test() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        guard let date1 = formatter.date(from: "2022-08-13 02:46:20") else { return }
+        guard let date2 = formatter.date(from: "2022-08-13 02:46:21") else { return }
+
+        let timeInterval = Int(date1.timeIntervalSince(date2))
+        
+        print(timeInterval)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -464,6 +478,71 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
+    private func loadPreMessages() {
+        guard let roomUUID = roomUUID else { return }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        var enterTime: Date? // 참가자 참가 시간
+        
+        // 참가자가 참가한 시간 불러오기
+        db.collection("Rooms").getDocuments { querySnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                if let documents = querySnapshot?.documents {
+                    for doc in documents {
+                        if doc.documentID == roomUUID {
+                            do {
+                                let data = try doc.data(as: RoomInfoModel.self)
+                                
+                                // 현재 사용자가 참여한 시간을 추출
+                                data.roomInfo?.participants?.forEach {
+                                    if $0.participant == LoginModel.nickname {
+                                        enterTime = formatter.date(from: $0.enterTime!)
+                                    }
+                                }
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        // 이전 메세지 모두 불러오기 (systemMessage, message) -> 이거 되면 시간 필터링
+        db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").getDocuments { querySnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                if let documents = querySnapshot?.documents {
+                    for doc in documents {
+                        do {
+                            let message = try doc.data(as: MessageModel.self)
+                            if message.isSystemMessage == true { // systemMessage
+                                // 시간이 이후인 경우에만
+                                self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: true)))
+                            } else { // 일반 message
+                                // 시간이 이후인 경우에만
+                                self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
+                            }
+                            
+                            DispatchQueue.main.async {
+                                self.collectionView.reloadData()
+                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+                            }
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    
     private func loadParticipants() {
         guard let roomUUID = roomUUID else { return }
         db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
@@ -487,8 +566,12 @@ class ChattingViewController: UIViewController {
                         
                         self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
                         if self.currentMatching == roomInfo.maxMatching {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                            formatter.locale = Locale(identifier: "ko_KR")
+                            
                             // 모든 참가자 참여 완료 시스템 메세지 업로드
-                            db.collection("Rooms").document(roomUUID).collection("Messages").document(uuid).setData([
+                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
                                 "content": "모든 파티원의 메뉴가 입력되었습니다 !\n파티장은 주문을, 파티원들은 송금을 진행해주세요",
                                 "nickname": "SystemMessage",
                                 "userImgUrl": "SystemMessage",
@@ -789,12 +872,12 @@ class ChattingViewController: UIViewController {
     }
     
     private func getSystemLabelHeight(text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
         label.text = text
         label.font = .customFont(.neoMedium, size: 12)
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = 200
+        label.preferredMaxLayoutWidth = 250
         label.sizeToFit()
         label.setNeedsDisplay()
         
@@ -883,6 +966,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .systemMessage:
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 12) // padding top, bottom = 6
+            print("labelHeight: ", labelHeight + 12)
         case .message:
             // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")

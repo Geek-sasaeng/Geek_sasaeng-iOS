@@ -20,6 +20,8 @@ class SystemMessageCell: UICollectionViewCell {
         label.clipsToBounds = true
         label.layer.cornerRadius = 5
         label.textAlignment = .center
+        label.lineBreakMode = .byCharWrapping
+        label.preferredMaxLayoutWidth = 250
         
         label.paddingTop = 6
         label.paddingBottom = 6
@@ -31,6 +33,8 @@ class SystemMessageCell: UICollectionViewCell {
     // MARK: - Life Cycle
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
         contentView.backgroundColor = .systemPink
         

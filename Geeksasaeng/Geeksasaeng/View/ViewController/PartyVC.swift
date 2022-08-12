@@ -1154,8 +1154,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
                         
                         // 참가자 참가 시스템 메세지 업로드
-                        db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                            "content": "\(LoginModel.nickname)님이 입장하셨습니다",
+                        self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                            "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
                             "nickname": LoginModel.nickname ?? "홍길동",
                             "userImgUrl": LoginModel.userImgUrl ?? "https://",
                             "time": formatter.string(from: Date()),

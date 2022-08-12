@@ -240,8 +240,8 @@ class PartyNameViewController: UIViewController {
                                 print(uuid)
                                 
                                 // 방장 참가 시스템 메세지 업로드
-                                db.collection("Rooms").document(uuid).collection("Messages").document(UUID().uuidString).setData([
-                                    "content": "\(LoginModel.nickname)님이 입장하셨습니다",
+                                self.db.collection("Rooms").document(uuid).collection("Messages").document(UUID().uuidString).setData([
+                                    "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
                                     "nickname": LoginModel.nickname ?? "홍길동",
                                     "userImgUrl": LoginModel.userImgUrl ?? "https://",
                                     "time": formatter.string(from: Date()),
