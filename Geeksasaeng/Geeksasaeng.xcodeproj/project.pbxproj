@@ -1027,9 +1027,9 @@
 		A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D88C289FB8E5000E2422 /* MessageCell.swift */; };
 		A248D88E289FB8E5000E2422 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D88C289FB8E5000E2422 /* MessageCell.swift */; };
 		A248D88F289FB8E5000E2422 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D88C289FB8E5000E2422 /* MessageCell.swift */; };
-		A248D891289FB8F1000E2422 /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D890289FB8F1000E2422 /* ParticipantCell.swift */; };
-		A248D892289FB8F1000E2422 /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D890289FB8F1000E2422 /* ParticipantCell.swift */; };
-		A248D893289FB8F1000E2422 /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D890289FB8F1000E2422 /* ParticipantCell.swift */; };
+		A248D891289FB8F1000E2422 /* systemMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D890289FB8F1000E2422 /* systemMessageCell.swift */; };
+		A248D892289FB8F1000E2422 /* systemMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D890289FB8F1000E2422 /* systemMessageCell.swift */; };
+		A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D890289FB8F1000E2422 /* systemMessageCell.swift */; };
 		A248D895289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */; };
 		A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */; };
 		A248D897289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */; };
@@ -1526,7 +1526,7 @@
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPartyAPI.swift; sourceTree = "<group>"; };
 		A248D88C289FB8E5000E2422 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		A248D890289FB8F1000E2422 /* ParticipantCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticipantCell.swift; sourceTree = "<group>"; };
+		A248D890289FB8F1000E2422 /* systemMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = systemMessageCell.swift; sourceTree = "<group>"; };
 		A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListTableViewCell.swift; sourceTree = "<group>"; };
 		A248D89C289FF344000E2422 /* BankAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountVC.swift; sourceTree = "<group>"; };
 		A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyNameVC.swift; sourceTree = "<group>"; };
@@ -2201,7 +2201,7 @@
 			children = (
 				A248D88C289FB8E5000E2422 /* MessageCell.swift */,
 				10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */,
-				A248D890289FB8F1000E2422 /* ParticipantCell.swift */,
+				A248D890289FB8F1000E2422 /* systemMessageCell.swift */,
 				A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */,
 			);
 			path = Chat;
@@ -3513,7 +3513,7 @@
 				A246E58028A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */,
-				A248D891289FB8F1000E2422 /* ParticipantCell.swift in Sources */,
+				A248D891289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				10D4D6C32894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
@@ -3602,7 +3602,7 @@
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
-				A248D892289FB8F1000E2422 /* ParticipantCell.swift in Sources */,
+				A248D892289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
 				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
@@ -3648,7 +3648,7 @@
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
-				A248D893289FB8F1000E2422 /* ParticipantCell.swift in Sources */,
+				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
 				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,

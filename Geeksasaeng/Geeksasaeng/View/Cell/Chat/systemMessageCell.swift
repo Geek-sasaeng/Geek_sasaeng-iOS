@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class ParticipantCell: UICollectionViewCell {
+class SystemMessageCell: UICollectionViewCell {
     // MARK: - SubViews
     
     var participantLabel: PaddingLabel = {

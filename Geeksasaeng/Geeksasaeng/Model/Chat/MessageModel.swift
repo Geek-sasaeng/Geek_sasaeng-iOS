@@ -12,4 +12,5 @@ struct MessageModel {
     var nickname: String?
     var userImgUrl: String?
     var time: String?
+    var isSystemMessage: Bool?
 }
