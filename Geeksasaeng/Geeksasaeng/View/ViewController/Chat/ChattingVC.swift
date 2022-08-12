@@ -1010,12 +1010,7 @@ struct cellContents {
 }
 
 
-// TODO: - UI: getMessageLabelHeight -> 3줄부터 이상 / 방장 imageView Border
-// TODO: - Function: 읽은 사람 수 count, 참여 시점 이전 데이터 불러오기
+// TODO: - UI: getMessageLabelHeight -> 쬐곰 이상 / 방장 imageView Border
+// TODO: - Function: 실시간 읽음 처리
 
-// MARK: - message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력
-
-// 채팅화면 들어올 때 본인 닉네임 뒤로 + 본인 참여 시점 뒤로 메세지 -> 띄워야 하는데 ... -> 참가자별 참여 시점을 ,, 넣어야 할까
-// 참여 시점을 넣었다 -> participants, message 모두 contents 안에 넣어야 하기 때문에 participant time, message time 을 비교해야함
-// 즉, 본인이 참여한 시간 이후의 참여자, 메세지들을 모아 놓고 두 개를 합쳐서 시간을 비교해서 정렬 (배열의 정렬)
-
+// 실시간 읽음 처리: message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력?
