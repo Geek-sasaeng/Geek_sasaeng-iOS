@@ -239,6 +239,21 @@ class PartyNameViewController: UIViewController {
                                 print("DEBUG: 배달 채팅방 생성 완료")
                                 print(uuid)
                                 
+                                // 방장 참가 시스템 메세지 업로드
+                                self.db.collection("Rooms").document(uuid).collection("Messages").document(UUID().uuidString).setData([
+                                    "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
+                                    "nickname": LoginModel.nickname ?? "홍길동",
+                                    "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                                    "time": formatter.string(from: Date()),
+                                    "isSystemMessage": true
+                                ]) { error in
+                                    if let e = error {
+                                        print(e.localizedDescription)
+                                    } else {
+                                        print("Success save data")
+                                    }
+                                }
+                                
                                 // DeliveryVC에서 배달 목록 새로고침 (생성된 거 반영되게 하려고)
                                 self.delegate?.updateDeliveryList()
                             }
