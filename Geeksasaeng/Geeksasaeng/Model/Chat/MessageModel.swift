@@ -7,9 +7,10 @@
 
 import Foundation
 
-struct MessageModel {
+struct MessageModel: Decodable {
     var content: String?
     var nickname: String?
     var userImgUrl: String?
     var time: String?
+    var isSystemMessage: Bool?
 }

@@ -1152,6 +1152,21 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                         /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
                         let input = ["participant": nickName, "enterTime": formatter.string(from: Date())]
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
+                        
+                        // 참가자 참가 시스템 메세지 업로드
+                        self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                            "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
+                            "nickname": LoginModel.nickname ?? "홍길동",
+                            "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                            "time": formatter.string(from: Date()),
+                            "isSystemMessage": true
+                        ]) { error in
+                            if let e = error {
+                                print(e.localizedDescription)
+                            } else {
+                                print("Success save data")
+                            }
+                        }
 
                         // object를 넣어야 함
                         print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
