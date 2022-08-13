@@ -9,6 +9,11 @@ import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+class FormatCreater {
+    static let shared = DateFormatter()
+    private init() { }
+}
+
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
 class ChattingListViewController: UIViewController {
     
@@ -77,13 +82,15 @@ class ChattingListViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear")
         // 채팅탭이 보여질 때마다 채팅방 목록 데이터를 다시 가져온다
         loadChattingRoomList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
         super.viewDidAppear(animated)
-        chattingTableView.reloadData()
+//        chattingTableView.reloadData()
     }
     
     // MARK: - Functions
@@ -104,10 +111,11 @@ class ChattingListViewController: UIViewController {
         guard let nickName = LoginModel.nickname else { return }
         print("DEBUG: 이 유저의 닉네임", nickName)
         
-        // 유저가 참여하고 있고, 종료되지 않은 채팅방 데이터만 가져올 쿼리 생성
+        // 배달파티 카테고리에 속하고, 종료되지 않은 채팅방 데이터만 가져올 쿼리 생성
         let query = roomsRef
-            .whereField("roomInfo.participants", arrayContains: nickName)
+            .whereField("roomInfo.category", isEqualTo: "배달파티")
             .whereField("roomInfo.isFinish", isEqualTo: false)
+            .order(by: "roomInfo.updatedAt", descending: true)    // 채팅방 목록을 메세지 최신순으로 정렬
         
         // 해당 쿼리문의 결과값을 firestore에서 가져오기
         query.getDocuments {
@@ -121,13 +129,19 @@ class ChattingListViewController: UIViewController {
                     
                     for document in querySnapshot!.documents {
                         print("\(document.documentID) => \(document.data())")
-                        self.roomUUIDList.append(document.documentID)   // 채팅방 uuid값을 배열에 저장
                         
                         if let data = try? document.data(as: RoomInfoModel.self) {
                             let chattingRoom = data.roomInfo
                             guard let chattingRoom = chattingRoom else { return }
-                            self.chattingRoomList.append(chattingRoom)
-                            print("DEBUG:", self.chattingRoomList)
+                            
+                            // 그 중에 '이 유저가 속하는' 채팅방 정보만 가져온다!
+                            for participants in data.roomInfo!.participants! {
+                                if participants.participant == nickName {
+                                    self.roomUUIDList.append(document.documentID)   // 이 채팅방의 uuid값을 배열에 추가
+                                    self.chattingRoomList.append(chattingRoom)  // 이 채팅방을 채팅방 목록에 추가
+                                    print("DEBUG:", self.chattingRoomList)
+                                }
+                            }
                         }
                     }
                 }
@@ -291,8 +305,10 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         
         /* firestore에서 채팅방의 가장 최근 메세지, 전송 시간 데이터 가져오기 */
         let roomDocRef = db.collection("Rooms").document(roomUUIDList[indexPath.row])
+        print("1111위치" + roomUUIDList[indexPath.row])
         // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
         roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
+            print("2222위치" + self.roomUUIDList[indexPath.row])
                 if let error = error {
                     print("Error retreiving collection: \(error)")
                 }
@@ -302,12 +318,57 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                        let messageTime = lastDocument["time"] as? String {
                         // 채팅방의 최근 메세지 설정
                         cell.recentMessageLabel.text = messageContents
-                        // 최근 메세지의 전송 시간 설정
-                        cell.receivedTimeLabel.text = messageTime
+                        
+                        let nowTimeDate = Date()
+                        FormatCreater.shared.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                        FormatCreater.shared.locale = Locale(identifier: "ko_KR")
+                        let messageTimeDate = FormatCreater.shared.date(from: messageTime)!
+                        
+                        FormatCreater.shared.dateFormat = "dd"
+                        // 메세지가 전송된 날(일)을 저장, 오늘인지 구분하기 위해
+                        let messageSendedDay = FormatCreater.shared.string(from: messageTimeDate)
+                        let today = FormatCreater.shared.string(from: nowTimeDate)
+                        
+                        // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                        let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
+                        
+                        // 각각 일, 시간, 분 단위로 변환
+                        let hourTime = intervalSecs / 60 / 60 % 24
+                        let minuteTime = intervalSecs / 60 % 60
+                        
+                        print("위치\(self.roomUUIDList[indexPath.row]) \(messageContents) \(messageSendedDay)일 \(hourTime)시간 \(minuteTime)분, 오늘은 \(today)일")
+                        
+                        /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
+                        // 일이 다르면 다른 날로. 어제, 오늘.
+                        if Int(today)! - 1 == Int(messageSendedDay) {
+                            cell.receivedTimeString = "어제"
+                        } else if (Int(today)! - Int(messageSendedDay)!) <= 3, (Int(today)! - Int(messageSendedDay)!) > 0 {
+                            cell.receivedTimeString = "\(Int(today)! - Int(messageSendedDay)!)일 전"
+                        } else if (Int(today)! - Int(messageSendedDay)!) > 3 {
+                            // 22.08.31
+                            FormatCreater.shared.dateFormat = "yy-MM-dd"
+                            let testDate = FormatCreater.shared.string(from: messageTimeDate)
+                            cell.receivedTimeString = testDate
+                        } else {
+                            if hourTime == 0 {
+                                if minuteTime <= 9 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "방금"
+                                } else if minuteTime > 9, minuteTime <= 59 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "\(minuteTime)분 전"
+                                }
+                            } else if hourTime >= 1, hourTime <= 12 {
+                                cell.receivedTimeString = "\(hourTime)시간 전"
+                            } else if messageSendedDay == today {
+                                cell.receivedTimeString = "오늘"
+                            }
+                        }
+                        
+//                        self.chattingTableView.reloadData()
                     }
                 }
             }
-        
         return cell
     }
 
@@ -319,7 +380,6 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         let chattingVC = ChattingViewController()
         // 해당 채팅방 uuid값 받아서 이동
         chattingVC.roomUUID = roomUUIDList[indexPath.row]
-//        chattingVC.maxMatching = detailData.maxMatching
         navigationController?.pushViewController(chattingVC, animated: true)
     }
 }
