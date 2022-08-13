@@ -109,9 +109,9 @@ class ChattingListViewController: UIViewController {
         guard let nickName = LoginModel.nickname else { return }
         print("DEBUG: 이 유저의 닉네임", nickName)
         
-        // 유저가 참여하고 있고, 종료되지 않은 채팅방 데이터만 가져올 쿼리 생성
+        // 배달파티 카테고리에 속하고, 종료되지 않은 채팅방 데이터만 가져올 쿼리 생성
         let query = roomsRef
-            .whereField("roomInfo.participants", arrayContains: nickName)
+            .whereField("roomInfo.category", isEqualTo: "배달파티")
             .whereField("roomInfo.isFinish", isEqualTo: false)
         
         // 해당 쿼리문의 결과값을 firestore에서 가져오기
@@ -126,13 +126,19 @@ class ChattingListViewController: UIViewController {
                     
                     for document in querySnapshot!.documents {
                         print("\(document.documentID) => \(document.data())")
-                        self.roomUUIDList.append(document.documentID)   // 채팅방 uuid값을 배열에 저장
                         
                         if let data = try? document.data(as: RoomInfoModel.self) {
                             let chattingRoom = data.roomInfo
                             guard let chattingRoom = chattingRoom else { return }
-                            self.chattingRoomList.append(chattingRoom)
-                            print("DEBUG:", self.chattingRoomList)
+                            
+                            // 그 중에 '이 유저가 속하는' 채팅방 정보만 가져온다!
+                            for participants in data.roomInfo!.participants! {
+                                if participants.participant == nickName {
+                                    self.roomUUIDList.append(document.documentID)   // 이 채팅방의 uuid값을 배열에 추가
+                                    self.chattingRoomList.append(chattingRoom)  // 이 채팅방을 채팅방 목록에 추가
+                                    print("DEBUG:", self.chattingRoomList)
+                                }
+                            }
                         }
                     }
                 }

@@ -504,7 +504,7 @@ class ChattingViewController: UIViewController {
                         guard let roomInfo = data.roomInfo,
                               let participants = roomInfo.participants else { return }
                         if participants.count > 0 {
-//                            self.roomMaster = participants[0].participant
+                            self.roomMaster = participants[0].participant
                         }
                         self.contents.append(cellContents(cellType: .participant, message: nil, roomInfo: data))
                         self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
@@ -821,7 +821,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .participant:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
-//            cell.participantLabel.text =  "\(contents[indexPath.row].roomInfo?.roomInfo?.participants?.last?.participant ?? "") 님이 입장하셨습니다"
+            cell.participantLabel.text =  "\(contents[indexPath.row].roomInfo?.roomInfo?.participants?.last?.participant ?? "") 님이 입장하셨습니다"
             return cell
         case .maxMatching:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ParticipantCell", for: indexPath) as! ParticipantCell
@@ -895,8 +895,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20 + 16) // 상하 여백 20 + 닉네임 라벨
         case .participant:
-//            let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].roomInfo?.roomInfo?.participants?.last?.participant ?? "")
-            let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].roomInfo?.roomInfo?.participants?.last ?? "")
+            let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].roomInfo?.roomInfo?.participants?.last?.participant ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 12) // padding top, bottom = 6
         case .maxMatching:
             let labelHeight = getMessageLabelHeight(text: "모든 파티원이 입장을 마쳤습니다!\n안내에 따라 메뉴를 입력해주세요")
@@ -924,7 +923,6 @@ struct cellContents {
     var cellType: cellType?
     var message: MessageModel?
     var roomInfo: RoomInfoModel?
-//    var time: String?
 }
 
 
