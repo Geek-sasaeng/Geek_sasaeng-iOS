@@ -739,7 +739,9 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        // TODO: - 매칭 마감하기 API 연동
+        // TODO: - partyId 값 가져오기, 매칭 마감 성공 시 디자인 나오면 구현 예정
+        let input = CloseMatchingInput(partyId: 1)
+        CloseMatchingAPI.requestCloseMatching(input)
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
