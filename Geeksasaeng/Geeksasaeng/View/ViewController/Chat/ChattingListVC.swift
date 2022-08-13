@@ -82,13 +82,15 @@ class ChattingListViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear")
         // 채팅탭이 보여질 때마다 채팅방 목록 데이터를 다시 가져온다
         loadChattingRoomList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
         super.viewDidAppear(animated)
-        chattingTableView.reloadData()
+//        chattingTableView.reloadData()
     }
     
     // MARK: - Functions
@@ -113,6 +115,7 @@ class ChattingListViewController: UIViewController {
         let query = roomsRef
             .whereField("roomInfo.category", isEqualTo: "배달파티")
             .whereField("roomInfo.isFinish", isEqualTo: false)
+            .order(by: "roomInfo.updatedAt", descending: true)    // 채팅방 목록을 메세지 최신순으로 정렬
         
         // 해당 쿼리문의 결과값을 firestore에서 가져오기
         query.getDocuments {
@@ -302,8 +305,10 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         
         /* firestore에서 채팅방의 가장 최근 메세지, 전송 시간 데이터 가져오기 */
         let roomDocRef = db.collection("Rooms").document(roomUUIDList[indexPath.row])
+        print("1111위치" + roomUUIDList[indexPath.row])
         // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
         roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
+            print("2222위치" + self.roomUUIDList[indexPath.row])
                 if let error = error {
                     print("Error retreiving collection: \(error)")
                 }
@@ -331,7 +336,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                         let hourTime = intervalSecs / 60 / 60 % 24
                         let minuteTime = intervalSecs / 60 % 60
                         
-                        print("\(messageContents) \(messageSendedDay)일 \(hourTime)시간 \(minuteTime)분, 오늘은 \(today)일")
+                        print("위치\(self.roomUUIDList[indexPath.row]) \(messageContents) \(messageSendedDay)일 \(hourTime)시간 \(minuteTime)분, 오늘은 \(today)일")
                         
                         /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
                         // 일이 다르면 다른 날로. 어제, 오늘.
@@ -359,10 +364,11 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                                 cell.receivedTimeString = "오늘"
                             }
                         }
+                        
+//                        self.chattingTableView.reloadData()
                     }
                 }
             }
-        
         return cell
     }
 

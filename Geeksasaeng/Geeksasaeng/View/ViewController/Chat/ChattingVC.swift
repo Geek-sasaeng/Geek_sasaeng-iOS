@@ -692,6 +692,16 @@ class ChattingViewController: UIViewController {
                     }
                 }
             }
+            
+            /* 메세지 전송시 roomInfo의 updatedAt값도 바꿔주기 */
+            db.collection("Rooms").document(roomUUID).updateData(["roomInfo.updatedAt" : formatter.string(from: Date())])
+            { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("DEBUG: updatedAt 값 업데이트")
+                }
+            }
         }
     }
     
