@@ -345,7 +345,7 @@ class ChattingViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xF6F9FB)
         view.layer.opacity = 0.9
         
-        let profileImageView: UIImageView = {
+        let coinImageView: UIImageView = {
             let imageView = UIImageView()
             imageView.image = UIImage(systemName: "person.fill")
             return imageView
@@ -371,11 +371,11 @@ class ChattingViewController: UIViewController {
             return button
         }()
         
-        [profileImageView, accountLabel, remittanceConfirmButton].forEach {
+        [coinImageView, accountLabel, remittanceConfirmButton].forEach {
             view.addSubview($0)
         }
         
-        profileImageView.snp.makeConstraints { make in
+        coinImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(29)
             make.width.height.equalTo(24)
@@ -383,7 +383,7 @@ class ChattingViewController: UIViewController {
         
         accountLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(profileImageView.snp.right).offset(8)
+            make.left.equalTo(coinImageView.snp.right).offset(8)
         }
         
         remittanceConfirmButton.snp.makeConstraints { make in
@@ -1010,30 +1010,31 @@ class ChattingViewController: UIViewController {
                     
                     var targetParticipant: String? // 삭제 대상 딕셔너리를 만들기 위해
                     var time: String?
+                    var isRemittance: String?
                     
                     var index = 0
                     participants?.forEach {
                         if $0.participant == LoginModel.nickname {
                             targetParticipant = $0.participant
                             time = $0.enterTime
+                            isRemittance = $0.isRemittance
                         }
                         index += 1
                     }
                     
-                    let input = ["participant": targetParticipant, "enterTime": time]
+                    let input = ["participant": targetParticipant, "enterTime": time, "isRemittance": isRemittance]
                     self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayRemove([input])])
                 } catch {
                     print(error.localizedDescription)
                 }
             }
         }
-        
-        // 룸마스터 본인일 때 -> 데빈 API
-        
-        // 룸마스터 본인 아닐 때 -> 미니 API
-        if roomMaster == LoginModel.nickname {
-            print("방장입니다")
-        } else {
+
+        if roomMaster == LoginModel.nickname { // 본인이 방장일 때
+            // 500 에러
+            let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
+            ChatRoomExitAPI.patchExitCheif(input)
+        } else { // 본인이 방장이 아닐 때
             let input = ChatRoomExitInput(uuid: roomUUID)
             ChatRoomExitAPI.patchExitUser(input)
         }
