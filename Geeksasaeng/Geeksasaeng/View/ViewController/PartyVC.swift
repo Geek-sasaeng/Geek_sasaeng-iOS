@@ -1150,7 +1150,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     if document.exists {
                         guard let nickName = LoginModel.nickname else { return }
                         /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
-                        let input = ["participant": nickName, "enterTime": formatter.string(from: Date())]
+                        let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": "false"]
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
                         
                         // 참가자 참가 시스템 메세지 업로드

@@ -339,6 +339,63 @@ class ChattingViewController: UIViewController {
         return view
     }()
     
+    // 송금하기 상단 뷰 (Firestore의 participant의 isRemittance 값이 false인 경우에만 노출)
+    lazy var remittanceView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF6F9FB)
+        view.layer.opacity = 0.9
+        
+        let profileImageView: UIImageView = {
+            let imageView = UIImageView()
+            imageView.image = UIImage(systemName: "person.fill")
+            return imageView
+        }()
+        
+        let accountLabel: UILabel = {
+            let label = UILabel()
+            label.font = .customFont(.neoMedium, size: 14)
+            label.textColor = .init(hex: 0x2F2F2F)
+            // TODO: - Firestore or Server에서 받아오기
+            label.text = "국민  000000-00-000000"
+            return label
+        }()
+        
+        let remittanceConfirmButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("송금 완료", for: .normal)
+            button.titleLabel?.font = .customFont(.neoMedium, size: 11)
+            button.titleLabel?.textColor = .white
+            button.backgroundColor = .mainColor
+            button.layer.cornerRadius = 5
+            button.addTarget(self, action: #selector(tapRemittanceButton), for: .touchUpInside)
+            return button
+        }()
+        
+        [profileImageView, accountLabel, remittanceConfirmButton].forEach {
+            view.addSubview($0)
+        }
+        
+        profileImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(29)
+            make.width.height.equalTo(24)
+        }
+        
+        accountLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(profileImageView.snp.right).offset(8)
+        }
+        
+        remittanceConfirmButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(28)
+            make.width.equalTo(67)
+            make.height.equalTo(29)
+        }
+        
+        return view
+    }()
+    
     // 블러 뷰
     var visualEffectView: UIVisualEffectView?
     
@@ -366,26 +423,14 @@ class ChattingViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        test()
         setFirestore()
+        checkRemittance()
         loadPreMessages()
         loadParticipants()
         loadMessages()
         setCollectionView()
         addSubViews()
         setLayouts()
-    }
-    
-    private func test() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        guard let date1 = formatter.date(from: "2022-08-13 02:46:20") else { return }
-        guard let date2 = formatter.date(from: "2022-08-13 02:46:21") else { return }
-
-        let timeInterval = Int(date1.timeIntervalSince(date2))
-        
-        print(timeInterval)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -478,6 +523,41 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
+    private func checkRemittance() {
+        // firestore에서 내 participant 불러와서 isRemittance가 false이면 remittanceView add
+        guard let roomUUID = roomUUID else { return }
+
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                do {
+                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+                    guard let roomInfo = data?.roomInfo,
+                          let participants = roomInfo.participants else { return }
+                    
+                    participants.forEach {
+                        // 해당 참여자가 송금을 하지 않을 상태이면 remittanceView 노출
+                        if $0.participant == LoginModel.nickname {
+                            if $0.isRemittance == "false" {
+                                self.view.addSubview(self.remittanceView)
+                                self.remittanceView.snp.makeConstraints { make in
+                                    if let navigationBar = self.navigationController?.navigationBar {
+                                        make.top.equalTo(navigationBar.snp.bottom)
+                                    }
+                                    make.width.equalToSuperview()
+                                    make.height.equalTo(55)
+                                }
+                            }
+                        }
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     private func loadPreMessages() {
         guard let roomUUID = roomUUID else { return }
         
@@ -525,7 +605,16 @@ class ChattingViewController: UIViewController {
                                                 } else { // 일반 message
                                                     let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
                                                     if timeInterval <= 0 {
-                                                        self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
+                                                        if self.lastSender == nil { // 첫 메세지일 때
+                                                            self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
+                                                            self.lastSender = message.nickname
+                                                        } else if self.lastSender == message.nickname { // 같은 사람이 연속으로 보냈을 때
+                                                            self.contents.append(cellContents(cellType: .sameSenderMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
+                                                            self.lastSender = message.nickname
+                                                        } else { // 같은 사람이 보낸 게 아닐 때
+                                                            self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
+                                                            self.lastSender = message.nickname
+                                                        }
                                                     }
                                                 }
 
@@ -790,6 +879,43 @@ class ChattingViewController: UIViewController {
     }
     
     @objc
+    private func tapRemittanceButton() {
+        // 파이어스토어에 isRemittance = true로 바꾸고 remittanceView remove
+        guard let roomUUID = roomUUID else { return }
+
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                do {
+                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+                    guard let roomInfo = data?.roomInfo,
+                          let participants = roomInfo.participants else { return }
+                    
+                    var targetEnterTime: String?
+                    
+                    participants.forEach {
+                        if $0.participant == LoginModel.nickname {
+                            targetEnterTime = $0.enterTime
+                        }
+                    }
+                    
+                    // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
+                    if let nickname = LoginModel.nickname {
+                        let removeData = ["enterTime": targetEnterTime, "isRemittance": "false", "participant": nickname]
+                        let newData = ["enterTime": targetEnterTime, "isRemittance": "true", "participant": nickname]
+                        
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    @objc
     private func tapOptionButtonInView(_ sender: UIButton) {
         // 클릭한 버튼의 superView가 그냥 optionView인지 optionViewForAuthor인지 파라미터로 보내주는 것
         guard let nowView = sender.superview else { return }
@@ -870,7 +996,6 @@ class ChattingViewController: UIViewController {
     private func tapExitConfirmButton() {
         // 파이어 스토어 participants에서 이름 빼고 popVC
         guard let roomUUID = roomUUID else { return }
-//        db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([LoginModel.nickname ?? ""])])
         
         
         // map 삭제로 변경

@@ -21,7 +21,7 @@ struct ChatRoomExitModel: Decodable {
 
 class ChatRoomExitAPI {
     public static func patchExitUser(_ parameter: ChatRoomExitInput) {
-        AF.request("https://geeksasaeng.shop/delivery-party/leave", method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
+        AF.request("https://geeksasaeng.shop/delivery-party/member", method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: ChatRoomExitModel.self) { response in

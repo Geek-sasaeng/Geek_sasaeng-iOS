@@ -221,7 +221,8 @@ class PartyNameViewController: UIViewController {
                         ["roomInfo" :
                             [
                                 "title": title,
-                                "participants": [["participant": LoginModel.nickname, "enterTime": formatter.string(from: Date())]],
+                                "participants": [["participant": LoginModel.nickname, "enterTime": formatter.string(from: Date()),
+                                                  "isRemittance": "true"]],
                                 "maxMatching": maxMatching,
                                 "category": "배달파티",
                                 "bank": bank,
