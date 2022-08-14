@@ -16,6 +16,7 @@ struct RoomInfoDetailModel: Decodable, Encodable {
     var title: String?
     var participants: [Participants]?
     var maxMatching: Int?
+    var updatedAt: String?
     var accountNumber: String?
     var bank: String?
     var isFinish: Bool?
