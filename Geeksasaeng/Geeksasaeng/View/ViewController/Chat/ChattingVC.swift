@@ -756,6 +756,11 @@ class ChattingViewController: UIViewController {
                         print("Success save data")
                     }
                 }
+                
+                // 매칭 마감 버튼 비활성화
+                guard let closeMatchingButton = self.optionViewForOwner.subviews[3] as? UIButton else { return }
+                closeMatchingButton.isUserInteractionEnabled = false
+                closeMatchingButton.setTitleColor(.init(hex: 0xA8A8A8), for: .normal)
             }
         }
         
