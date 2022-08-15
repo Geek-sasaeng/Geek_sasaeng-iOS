@@ -739,9 +739,25 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        // TODO: - partyId 값 가져오기, 매칭 마감 성공 시 디자인 나오면 구현 예정
-        let input = CloseMatchingInput(partyId: 1)
-        CloseMatchingAPI.requestCloseMatching(input)
+        let input = CloseMatchingInput(uuid: roomUUID)
+        CloseMatchingAPI.requestCloseMatching(input) { isSuccess in
+            if isSuccess {
+                // 매칭 마감 시스템 메세지 업로드
+                self.db.collection("Rooms").document(self.roomUUID!).collection("Messages").document(UUID().uuidString).setData([
+                    "content": "매칭이 마감되었습니다",
+                    "nickname": LoginModel.nickname ?? "홍길동",
+                    "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+                    "isSystemMessage": true
+                ]) { error in
+                    if let e = error {
+                        print(e.localizedDescription)
+                    } else {
+                        print("Success save data")
+                    }
+                }
+            }
+        }
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
