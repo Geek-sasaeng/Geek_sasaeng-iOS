@@ -571,6 +571,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         navigationController?.isNavigationBarHidden = false
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        mapView = nil
+    }
+    
     // MARK: - Functions
     
     private func setFirestore() {

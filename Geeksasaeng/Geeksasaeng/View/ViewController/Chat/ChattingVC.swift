@@ -914,6 +914,8 @@ class ChattingViewController: UIViewController {
                 }
             }
         }
+        
+        self.remittanceView.removeFromSuperview()
     }
     
     @objc
