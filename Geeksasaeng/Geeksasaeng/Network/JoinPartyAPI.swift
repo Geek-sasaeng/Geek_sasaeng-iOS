@@ -30,7 +30,7 @@ class JoinPartyAPI {
     
     /* 파티장이 아닌 유저가 신청하기 눌렀을 때 유저를 partyMember로 추가할 때 사용 */
     public static func requestJoinParty(_ parameter : JoinPartyInput, completion: @escaping () -> Void) {
-        let url = "https://geeksasaeng.shop/deliveryPartyMember"
+        let url = "https://geeksasaeng.shop/delivery-party-member"
         
         AF.request(url, method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])

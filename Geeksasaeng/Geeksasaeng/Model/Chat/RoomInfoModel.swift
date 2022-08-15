@@ -25,4 +25,5 @@ struct RoomInfoDetailModel: Decodable, Encodable {
 struct Participants: Decodable, Encodable {
     var participant: String?
     var enterTime: String?
+    var isRemittance: Bool?
 }

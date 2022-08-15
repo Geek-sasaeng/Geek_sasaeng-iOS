@@ -221,12 +221,13 @@ class PartyNameViewController: UIViewController {
                         ["roomInfo" :
                             [
                                 "title": title,
-                                "participants": [["participant": LoginModel.nickname, "enterTime": formatter.string(from: Date())]],
+                                "participants": [["participant": LoginModel.nickname as Any, "enterTime": formatter.string(from: Date()), "isRemittance": true]],  // 방장은 무조건 송금 완료로 둔다.
                                 "maxMatching": maxMatching,
                                 "category": "배달파티",
                                 "bank": bank,
                                 "accountNumber": accountNumber,
-                                "isFinish": false
+                                "isFinish": false,
+                                "updatedAt": formatter.string(from: Date())
                             ]
                         ]) { err in
                             if let e = err {
