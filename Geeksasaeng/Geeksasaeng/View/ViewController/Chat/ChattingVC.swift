@@ -82,26 +82,26 @@ class ChattingViewController: UIViewController {
         var showMenuButton: UIButton = {
             let button = UIButton()
             button.setTitle("메뉴판 보기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
             return button
         }()
         var sendDeliveryConfirmButton: UIButton = {
             let button = UIButton()
             button.setTitle("배달 완료 알림 보내기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
             return button
         }()
         var closeMatchingButton: UIButton = {
             let button = UIButton()
             button.setTitle("매칭 마감하기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
             button.addTarget(self, action: #selector(tapCloseMatchingButton), for: .touchUpInside)
             return button
         }()
         var forcedExitButton: UIButton = {
             let button = UIButton()
             button.setTitle("강제 퇴장시키기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
             return button
         }()
         var endOfChatButton: UIButton = {
@@ -114,30 +114,31 @@ class ChattingViewController: UIViewController {
         [showMenuButton, sendDeliveryConfirmButton, closeMatchingButton, forcedExitButton, endOfChatButton].forEach {
             // attributes
             $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
-            $0.titleLabel?.font =  .customFont(.neoMedium, size: 18)
+            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
             
             // layouts
             view.addSubview($0)
         }
+        
         showMenuButton.snp.makeConstraints { make in
             make.top.equalTo(settingButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         sendDeliveryConfirmButton.snp.makeConstraints { make in
             make.top.equalTo(showMenuButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         closeMatchingButton.snp.makeConstraints { make in
             make.top.equalTo(sendDeliveryConfirmButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         forcedExitButton.snp.makeConstraints { make in
             make.top.equalTo(closeMatchingButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         endOfChatButton.snp.makeConstraints { make in
             make.top.equalTo(forcedExitButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         
         return view
@@ -743,7 +744,7 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapOptionButton() {
-        showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2)
+        showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
     }
     
     private func showOptionMenu(_ nowView: UIView, _ height: CGFloat) {
