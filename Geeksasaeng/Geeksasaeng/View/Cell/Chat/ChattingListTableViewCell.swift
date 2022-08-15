@@ -15,6 +15,7 @@ class ChattingListTableViewCell: UITableViewCell {
     
     static let identifier = "ChattingListCell"
     
+    /* 채팅방의 가장 최신 메세지 내용 */
     var receivedTimeString = "" {
         didSet {
             receivedTimeLabel.text = receivedTimeString
@@ -48,7 +49,7 @@ class ChattingListTableViewCell: UITableViewCell {
     /* 채팅방 가장 최근 메세지 label */
     let recentMessageLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
+        label.text = "채팅을 시작해보세요!"
         label.textColor = .mainColor
         label.font = .customFont(.neoMedium, size: 13)
         return label
