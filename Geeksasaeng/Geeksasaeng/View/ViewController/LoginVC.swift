@@ -13,6 +13,19 @@ class LoginViewController: UIViewController {
     
     // MARK: - SubViews
     
+    /* 회원가입 버튼이 가려지는 작은 디바이스에는 스크롤뷰를 추가 */
+    // 스크롤뷰
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        return scrollView
+    }()
+    let contentView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
     let logoImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "AppLogo"))
         return imageView
@@ -126,20 +139,33 @@ class LoginViewController: UIViewController {
     }
     
     private func addSubViews() {
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
         [
             logoImageView,
             idTextField, passwordTextField,
             loginButton, naverLoginButton,
             automaticLoginButton,autoLoginLabel,
             signUpButton
-        ].forEach { view.addSubview($0) }
+        ].forEach { contentView.addSubview($0) }
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.width.equalTo(view.safeAreaLayoutGuide)
+        }
+        // 스크롤뷰 안에 들어갈 컨텐츠뷰
+        contentView.snp.makeConstraints { make in
+            make.edges.width.equalToSuperview()
+            make.bottom.equalTo(signUpButton.snp.bottom).offset(30)
+        }
+        
         logoImageView.snp.makeConstraints { make in
             make.width.height.equalTo(133)
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(UIScreen.main.bounds.height / 6.83)
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height / 6.83)
         }
         
         idTextField.snp.makeConstraints { make in
