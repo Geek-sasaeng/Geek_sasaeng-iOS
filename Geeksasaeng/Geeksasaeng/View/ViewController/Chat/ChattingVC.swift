@@ -179,6 +179,7 @@ class ChattingViewController: UIViewController {
         var endOfChatButton: UIButton = {
             let button = UIButton()
             button.setTitle("채팅 나가기", for: .normal)
+            button.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
             return button
         }()
         
@@ -469,6 +470,9 @@ class ChattingViewController: UIViewController {
     var currentMatching: Int?
     // 선택한 채팅방의 uuid값
     var roomUUID: String?
+    
+    var presentOptionViewForOwner = false
+    var presentOptionViewForUser = false
     
     var firstRoomInfo = true
     var firstMessage = true
@@ -804,10 +808,13 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapOptionButton() {
+        print("roomMaster: ", roomMaster)
         if roomMaster == LoginModel.nickname {
+            presentOptionViewForOwner = true
             showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
         } else {
-            showOptionMenu(optionViewForUser, UIScreen.main.bounds.height / 3)
+            presentOptionViewForUser = true
+            showOptionMenu(optionViewForUser, UIScreen.main.bounds.height / 4)
         }
         
     }
@@ -920,7 +927,13 @@ class ChattingViewController: UIViewController {
         view.endEditing(true)
         
         if visualEffectView != nil { // nil이 아니라면, 즉 옵션뷰가 노출되어 있다면
-            showChattingRoom(optionViewForOwner)
+            if presentOptionViewForOwner {
+                presentOptionViewForOwner = false
+                showChattingRoom(optionViewForOwner)
+            } else if presentOptionViewForUser {
+                presentOptionViewForUser = false
+                showChattingRoom(optionViewForUser)
+            }
             view.subviews.forEach {
                 if $0 == exitView {
                     $0.removeFromSuperview()
@@ -1076,6 +1089,13 @@ class ChattingViewController: UIViewController {
     private func tapXButton() {
         if visualEffectView != nil { // nil이 아니라면, 즉 나가기뷰가 노출되어 있다면
             visualEffectView?.removeFromSuperview()
+            if presentOptionViewForOwner {
+                presentOptionViewForOwner = false
+                showChattingRoom(optionViewForOwner)
+            } else if presentOptionViewForUser {
+                presentOptionViewForUser = false
+                showChattingRoom(optionViewForUser)
+            }
             view.subviews.forEach {
                 if $0 == exitView {
                     $0.removeFromSuperview()
