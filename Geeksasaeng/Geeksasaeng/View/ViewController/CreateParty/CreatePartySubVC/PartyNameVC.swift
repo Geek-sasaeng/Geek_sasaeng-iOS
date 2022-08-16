@@ -81,8 +81,6 @@ class PartyNameViewController: UIViewController {
     
     // MARK: - Properties
     
-    var delegate: UpdateDeliveryDelegate?
-    
     var dormitoryInfo: DormitoryNameResult?
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
@@ -254,9 +252,6 @@ class PartyNameViewController: UIViewController {
                                         print("Success save data")
                                     }
                                 }
-                                
-                                // DeliveryVC에서 배달 목록 새로고침 (생성된 거 반영되게 하려고)
-                                self.delegate?.updateDeliveryList()
                             }
                         }
                     self.navigationController?.popViewController(animated: true)

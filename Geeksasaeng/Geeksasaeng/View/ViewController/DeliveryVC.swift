@@ -24,6 +24,9 @@ class DeliveryViewController: UIViewController {
     // userImageUrl -> 채팅, 내 프로필 등에서 사용
     var userImageUrl: String?
     
+    // 배달목록, 마켓, 헬퍼 중에 지금 선택된 카테고리가 무엇인지 저장
+    var nowCategory = "배달파티"
+    
     // 광고 배너 이미지 데이터 배열
     var adCellDataArray: [AdModelResult] = [] {
         didSet {
@@ -765,6 +768,17 @@ class DeliveryViewController: UIViewController {
         peopleFilterView.addGestureRecognizer(viewTapGesture)
     }
     
+    /* 카테고리 탭을 한 번 더 누를 때, 목록의 맨 위로 스크롤 이동 */
+    private func scrollToListTop() {
+        partyTableView.beginUpdates()
+        if #available(iOS 11.0, *) {
+            partyTableView.setContentOffset(CGPoint(x: 0, y: -partyTableView.adjustedContentInset.top), animated: true)
+        } else {
+            partyTableView.setContentOffset(CGPoint(x: 0, y: -partyTableView.contentInset.top), animated: true)
+        }
+        partyTableView.endUpdates()
+    }
+    
     /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
     @objc
     private func tapSearchButton() {
@@ -779,54 +793,62 @@ class DeliveryViewController: UIViewController {
         let label = sender.view as! UILabel
 
         if let category = label.text {
-            switch category {
-            case "배달파티":
-                print("DEBUG: 배달파티")
-                // 바 색깔 파란색으로 활성화
-                deliveryPartyBar.backgroundColor = .mainColor
-                marketBar.backgroundColor = .init(hex: 0xCBCBCB)
-                helperBar.backgroundColor = .init(hex: 0xCBCBCB)
-                // 텍스트 색깔 활성화
-                deliveryPartyLabel.textColor = .init(hex: 0x2F2F2F)
-                deliveryPartyLabel.font = .customFont(.neoBold, size: 16)
-                marketLabel.textColor = .init(hex: 0xCBCBCB)
-                marketLabel.font = .customFont(.neoMedium, size: 16)
-                helperLabel.textColor = .init(hex: 0xCBCBCB)
-                helperLabel.font = .customFont(.neoMedium, size: 16)
-                // 배달파티 리스트 보여주기
-                break
-            case "마켓":
-                print("DEBUG: 마켓")
-                // 바 색깔 파란색으로 활성화
-                deliveryPartyBar.backgroundColor = .init(hex: 0xCBCBCB)
-                marketBar.backgroundColor = .mainColor
-                helperBar.backgroundColor = .init(hex: 0xCBCBCB)
-                // 텍스트 색깔 활성화
-                deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
-                deliveryPartyLabel.font = .customFont(.neoMedium, size: 16)
-                marketLabel.textColor = .init(hex: 0x2F2F2F)
-                marketLabel.font = .customFont(.neoBold, size: 16)
-                helperLabel.textColor = .init(hex: 0xCBCBCB)
-                helperLabel.font = .customFont(.neoMedium, size: 16)
-                // 마켓 리스트 보여주기
-                break
-            case "헬퍼":
-                print("DEBUG: 헬퍼")
-                // 바 색깔 파란색으로 활성화
-                deliveryPartyBar.backgroundColor = .init(hex: 0xCBCBCB)
-                marketBar.backgroundColor = .init(hex: 0xCBCBCB)
-                helperBar.backgroundColor = .mainColor
-                // 텍스트 색깔 활성화
-                deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
-                deliveryPartyLabel.font = .customFont(.neoMedium, size: 16)
-                marketLabel.textColor = .init(hex: 0xCBCBCB)
-                marketLabel.font = .customFont(.neoMedium, size: 16)
-                helperLabel.textColor = .init(hex: 0x2F2F2F)
-                helperLabel.font = .customFont(.neoBold, size: 16)
-                // 헬퍼 리스트 보여주기
-                break
-            default:
-                return
+            if category == nowCategory {
+                // 눌렀던 카테고리를 또 누르면 목록의 맨 위로 스크롤 이동
+                scrollToListTop()
+            } else {
+                // 카테고리 값 저장
+                nowCategory = category
+                
+                switch category {
+                case "배달파티":
+                    print("DEBUG: 배달파티")
+                    // 바 색깔 파란색으로 활성화
+                    deliveryPartyBar.backgroundColor = .mainColor
+                    marketBar.backgroundColor = .init(hex: 0xCBCBCB)
+                    helperBar.backgroundColor = .init(hex: 0xCBCBCB)
+                    // 텍스트 색깔 활성화
+                    deliveryPartyLabel.textColor = .init(hex: 0x2F2F2F)
+                    deliveryPartyLabel.font = .customFont(.neoBold, size: 16)
+                    marketLabel.textColor = .init(hex: 0xCBCBCB)
+                    marketLabel.font = .customFont(.neoMedium, size: 16)
+                    helperLabel.textColor = .init(hex: 0xCBCBCB)
+                    helperLabel.font = .customFont(.neoMedium, size: 16)
+                    // 배달파티 리스트 보여주기
+                    break
+                case "마켓":
+                    print("DEBUG: 마켓")
+                    // 바 색깔 파란색으로 활성화
+                    deliveryPartyBar.backgroundColor = .init(hex: 0xCBCBCB)
+                    marketBar.backgroundColor = .mainColor
+                    helperBar.backgroundColor = .init(hex: 0xCBCBCB)
+                    // 텍스트 색깔 활성화
+                    deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
+                    deliveryPartyLabel.font = .customFont(.neoMedium, size: 16)
+                    marketLabel.textColor = .init(hex: 0x2F2F2F)
+                    marketLabel.font = .customFont(.neoBold, size: 16)
+                    helperLabel.textColor = .init(hex: 0xCBCBCB)
+                    helperLabel.font = .customFont(.neoMedium, size: 16)
+                    // TODO: 마켓 리스트 준비 중 화면 보여주기
+                    break
+                case "헬퍼":
+                    print("DEBUG: 헬퍼")
+                    // 바 색깔 파란색으로 활성화
+                    deliveryPartyBar.backgroundColor = .init(hex: 0xCBCBCB)
+                    marketBar.backgroundColor = .init(hex: 0xCBCBCB)
+                    helperBar.backgroundColor = .mainColor
+                    // 텍스트 색깔 활성화
+                    deliveryPartyLabel.textColor = .init(hex: 0xCBCBCB)
+                    deliveryPartyLabel.font = .customFont(.neoMedium, size: 16)
+                    marketLabel.textColor = .init(hex: 0xCBCBCB)
+                    marketLabel.font = .customFont(.neoMedium, size: 16)
+                    helperLabel.textColor = .init(hex: 0x2F2F2F)
+                    helperLabel.font = .customFont(.neoBold, size: 16)
+                    // TODO: 헬퍼 리스트 준비 중 화면 보여주기
+                    break
+                default:
+                    return
+                }
             }
         }
     }
