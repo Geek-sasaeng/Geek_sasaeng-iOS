@@ -1128,7 +1128,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let partyVC = PartyViewController()
         partyVC.dormitoryInfo = dormitoryInfo
-        partyVC.deliveryData = deliveryCellDataArray[indexPath.row]
+        partyVC.partyId = deliveryCellDataArray[indexPath.row].id
         
         // delegate로 자기 자신(DeliveryVC)를 넘겨줌
         partyVC.delegate = self

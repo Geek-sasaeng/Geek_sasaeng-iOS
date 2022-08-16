@@ -15,6 +15,22 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
     
+    var partyId: Int?
+    var detailData = DeliveryListDetailModelResult()
+    var dormitoryInfo: DormitoryNameResult? // dormitory id, name
+    var createdData: DeliveryListDetailModelResult?
+    
+    var mapView: MTMapView? // 카카오맵
+    var marker: MTMapPOIItem = {
+        let marker = MTMapPOIItem()
+        marker.showAnimationType = .dropFromHeaven
+        marker.markerType = .redPin
+        marker.itemName = "요기?"
+        marker.showDisclosureButtonOnCalloutBalloon = false
+        marker.draggable = true
+        return marker
+    }()
+    
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
     
@@ -523,22 +539,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var toastView: UIView? = nil
     
-    // MARK: - Properties
-    
-    var deliveryData: DeliveryListModelResult?
-    var detailData = DeliveryListDetailModelResult()
-    var dormitoryInfo: DormitoryNameResult? // dormitory id, name
-    var mapView: MTMapView? // 카카오맵
-    var marker: MTMapPOIItem = {
-        let marker = MTMapPOIItem()
-        marker.showAnimationType = .dropFromHeaven
-        marker.markerType = .redPin
-        marker.itemName = "요기?"
-        marker.showDisclosureButtonOnCalloutBalloon = false
-        marker.draggable = true
-        return marker
-    }()
-    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -548,7 +548,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         setFirestore()
         setMapView()
-        setDetailData()
+        getDetailData(createdData)
         addSubViews()
         setLayouts()
         setAttributes()
@@ -558,7 +558,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let result = notification.object as! String
             if result == "true" {
                 print("수정 완료 버튼이 눌렸당")
-                self.setDetailData()
+                self.getDetailData(self.createdData)
             }
         }
     }
@@ -573,7 +573,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        mapView = nil
+//        mapView = nil
     }
     
     // MARK: - Functions
@@ -585,58 +585,77 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         db.clearPersistence()
     }
     
-    private func setDetailData() {
-        if let partyId = self.deliveryData?.id {
-            DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
-                // detailData에 데이터 넣기
-                if let self = self {
-                    self.detailData = result
-                    
-                    // partyEdit 고려하여 전역에 데이터 넣기 -> edit API 호출 시 nil 값 방지
-                    switch result.foodCategory {
-                    case "한식": CreateParty.foodCategory = 1
-                    case "양식": CreateParty.foodCategory = 2
-                    case "중식": CreateParty.foodCategory = 3
-                    case "일식": CreateParty.foodCategory = 4
-                    case "분식": CreateParty.foodCategory = 5
-                    case "치킨/피자": CreateParty.foodCategory = 6
-                    case "회/돈까스": CreateParty.foodCategory = 7
-                    case "패스트 푸드": CreateParty.foodCategory = 8
-                    case "디저트/음료": CreateParty.foodCategory = 9
-                    case "기타": CreateParty.foodCategory = 10
-                    default: print("잘못된 카테고리입니다.")
+    /*
+     파티 상세보기의 데이터를 가져온다.
+     1. 파티 생성 후 바로 그 파티의 상세보기를 보여주는 경우
+     2. 배달파티 목록에서 클릭한 파티의 상세보기로 오는 경우
+     */
+    private func getDetailData(_ createdData: DeliveryListDetailModelResult?) {
+        if let partyId = partyId {
+            // 생성된 직후에 바로 상세보기 화면을 보여주는 경우면 생성됐을 때 받은 response로 detailData를 설정
+            if let detailData = createdData {
+                self.detailData = detailData
+                print("5:39 ", detailData)
+                setDetailData()
+            } else {
+                DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
+                    // detailData에 데이터 넣기
+                    if let self = self {
+                        self.detailData = result
+                        print("5:40 ", self.detailData)
+                        self.setDetailData()
                     }
-                    CreateParty.orderTime = result.orderTime
-                    CreateParty.maxMatching = result.maxMatching
-                    CreateParty.url = result.storeUrl
-                    CreateParty.latitude = result.latitude
-                    CreateParty.longitude = result.longitude
-                    CreateParty.hashTag = result.hashTag
-                
-                    // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
-                    self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!)), zoomLevel: 5, animated: true)
-                    self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: result.latitude!, longitude: result.longitude!))
-                    
-                    self.setDefaultValue()
-                    
-                    guard let belongStatus = self.detailData.belongStatus else { return }
-                    print("속해있는가", belongStatus)
-                    
-                    if self.detailData.authorStatus! {
-                        self.signUpButton.setTitle("채팅방 가기", for: .normal)
-                    } else {
-                        if belongStatus == "Y" {
-                            self.signUpButton.setTitle("채팅방 가기", for: .normal)
-                        } else {
-                            self.signUpButton.setTitle("신청하기", for: .normal)
-                        }
-                    }
-                }
-            })
+                })
+            }
         }
     }
     
-    public func setDefaultValue() {
+    /* 상세보기 데이터 세팅 */
+    private func setDetailData() {
+        // partyEdit 고려하여 전역에 데이터 넣기 -> edit API 호출 시 nil 값 방지
+        switch detailData.foodCategory {
+        case "한식": CreateParty.foodCategory = 1
+        case "양식": CreateParty.foodCategory = 2
+        case "중식": CreateParty.foodCategory = 3
+        case "일식": CreateParty.foodCategory = 4
+        case "분식": CreateParty.foodCategory = 5
+        case "치킨/피자": CreateParty.foodCategory = 6
+        case "회/돈까스": CreateParty.foodCategory = 7
+        case "패스트 푸드": CreateParty.foodCategory = 8
+        case "디저트/음료": CreateParty.foodCategory = 9
+        case "기타": CreateParty.foodCategory = 10
+        default: print("잘못된 카테고리입니다.")
+        }
+        
+        CreateParty.orderTime = detailData.orderTime
+        CreateParty.maxMatching = detailData.maxMatching
+        CreateParty.url = detailData.storeUrl
+        CreateParty.latitude = detailData.latitude
+        CreateParty.longitude = detailData.longitude
+        CreateParty.hashTag = detailData.hashTag
+    
+        // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
+        self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude!, longitude: detailData.longitude!)), zoomLevel: 5, animated: true)
+        self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude!, longitude: detailData.longitude!))
+        
+        setDefaultValue()
+        
+        guard let belongStatus = self.detailData.belongStatus else { return }
+        print("속해있는가", belongStatus)
+        
+        if self.detailData.authorStatus! {
+            self.signUpButton.setTitle("채팅방 가기", for: .normal)
+        } else {
+            if belongStatus == "Y" {
+                self.signUpButton.setTitle("채팅방 가기", for: .normal)
+            } else {
+                self.signUpButton.setTitle("신청하기", for: .normal)
+            }
+        }
+    }
+                                                          
+    
+    private func setDefaultValue() {
 //        chiefProfileImgUrl -> default image 추후에
 //        id
 //        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
@@ -1048,7 +1067,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     /* 신고하기 버튼 눌렀을 때 화면 전환 */
     @objc
     private func tapReportButton() {
-        guard let partyId = self.deliveryData?.id,
+        guard let partyId = self.partyId,
               let memberId = self.detailData.chiefId else { return }
         
         let reportVC = ReportViewController()
@@ -1199,7 +1218,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             if isInvited {
                 // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
                 // 배달 파티 신청하기 API 호출
-                guard let partyId = self.deliveryData?.id else { return }
+                guard let partyId = self.partyId else { return }
                 JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) {
                     print("DEBUG: 배달 파티멤버로 추가 완료")
                 }

@@ -254,6 +254,36 @@ class PartyNameViewController: UIViewController {
                                 }
                             }
                         }
+                    
+                    let partyVC = PartyViewController()
+                    partyVC.partyId = result.id
+                    partyVC.dormitoryInfo = dormitoryInfo
+                    partyVC.createdData = DeliveryListDetailModelResult(
+                        chief: result.chief,
+                        chiefId: result.chiefId,
+                        chiefProfileImgUrl: result.chiefProfileImgUrl,
+                        content: result.content,
+                        currentMatching: result.currentMatching,
+                        foodCategory: result.foodCategory,
+                        hashTag: result.hashTag,
+                        id: result.id,
+                        latitude: result.latitude,
+                        longitude: result.longitude,
+                        matchingStatus: result.matchingStatus,
+                        maxMatching: result.maxMatching,
+                        orderTime: result.orderTime,
+                        title: result.title,
+                        updatedAt: result.updatedAt,
+                        storeUrl: result.storeUrl,
+                        authorStatus: result.authorStatus,
+                        dormitory: result.dormitoryId,
+                        uuid: result.uuid,
+                        belongStatus: result.belongStatus)
+                    
+                    var vcArray = self.navigationController?.viewControllers
+                    vcArray!.removeLast()
+                    vcArray!.append(partyVC)
+                    self.navigationController?.setViewControllers(vcArray!, animated: false)
                     self.navigationController?.popViewController(animated: true)
                 } else {
                     // 배달파티 생성 실패
