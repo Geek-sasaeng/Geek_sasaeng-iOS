@@ -144,6 +144,66 @@ class ChattingViewController: UIViewController {
         return view
     }()
     
+    lazy var optionViewForUser: UIView = {
+        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5)))
+        view.backgroundColor = .white
+        
+        // 왼쪽 하단의 코너에만 cornerRadius를 적용
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner]
+        
+        /* 옵션뷰에 있는 ellipsis 버튼
+         -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
+        lazy var settingButton: UIButton = {
+            let button = UIButton()
+            button.setImage(UIImage(named: "Setting"), for: .normal)
+            button.tintColor = .init(hex: 0x2F2F2F)
+            // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
+            button.addTarget(self, action: #selector(tapOptionButtonInView), for: .touchUpInside)
+            return button
+        }()
+        view.addSubview(settingButton)
+        settingButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(49)
+            make.right.equalToSuperview().inset(30)
+            make.width.height.equalTo(23)
+        }
+        
+        /* 옵션뷰에 있는 버튼 */
+        var showMenuButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("메뉴판 보기", for: .normal)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+            return button
+        }()
+        var endOfChatButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("채팅 나가기", for: .normal)
+            button.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
+            return button
+        }()
+        
+        [showMenuButton, endOfChatButton].forEach {
+            // attributes
+            $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
+            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
+            
+            // layouts
+            view.addSubview($0)
+        }
+        
+        showMenuButton.snp.makeConstraints { make in
+            make.top.equalTo(settingButton.snp.bottom).offset(27)
+            make.left.equalToSuperview().inset(20)
+        }
+        endOfChatButton.snp.makeConstraints { make in
+            make.top.equalTo(showMenuButton.snp.bottom).offset(27)
+            make.left.equalToSuperview().inset(20)
+        }
+        
+        return view
+    }()
+    
     // 나가기 뷰
     lazy var exitView: UIView = {
         let view = UIView()
@@ -411,6 +471,9 @@ class ChattingViewController: UIViewController {
     // 선택한 채팅방의 uuid값
     var roomUUID: String?
     
+    var presentOptionViewForOwner = false
+    var presentOptionViewForUser = false
+    
     var firstRoomInfo = true
     var firstMessage = true
     
@@ -432,6 +495,7 @@ class ChattingViewController: UIViewController {
         setCollectionView()
         addSubViews()
         setLayouts()
+        setRoomMaster()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -524,6 +588,30 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
+    private func setRoomMaster() {
+        guard let roomUUID = roomUUID else { return }
+
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                do {
+                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+                    guard let roomInfo = data?.roomInfo,
+                          let participants = roomInfo.participants else { return }
+                    
+                    // 방장 설정
+                    if participants.count >= 1 {
+                        self.roomMaster = participants[0].participant
+                        print("setRoomMaster로 불러온 방장: ", self.roomMaster)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     private func checkRemittance() {
         // firestore에서 내 participant 불러와서 isRemittance가 false이면 remittanceView add
         guard let roomUUID = roomUUID else { return }
@@ -603,6 +691,7 @@ class ChattingViewController: UIViewController {
                                                     let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
                                                     if timeInterval <= 0 { // 음수일 떄 -> 참가 이후의 메세지
                                                         self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: true)))
+                                                        self.lastSender = "system"
                                                     }
                                                 } else { // 일반 message
                                                     let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
@@ -715,9 +804,8 @@ class ChattingViewController: UIViewController {
                            let isSystemMessage = data["isSystemMessage"] as? Bool {
                             if isSystemMessage == true {
                                 self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
-                            }
-                            
-                            if self.lastSender == nil { // 첫 메세지일 때
+                                self.lastSender = "system"
+                            } else if self.lastSender == nil { // 첫 메세지일 때
                                 self.contents.append(cellContents(cellType: .message,
                                                                   message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
                                 self.lastSender = nickname
@@ -745,7 +833,14 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapOptionButton() {
-        showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
+        if roomMaster == LoginModel.nickname {
+            presentOptionViewForOwner = true
+            showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
+        } else {
+            presentOptionViewForUser = true
+            showOptionMenu(optionViewForUser, UIScreen.main.bounds.height / 4)
+        }
+        
     }
     
     private func showOptionMenu(_ nowView: UIView, _ height: CGFloat) {
@@ -789,6 +884,7 @@ class ChattingViewController: UIViewController {
             UIView.animate(
                 withDuration: 0.3, animations: {
                     self.bottomView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
+                    self.collectionView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
                 }
             )
         }
@@ -856,7 +952,13 @@ class ChattingViewController: UIViewController {
         view.endEditing(true)
         
         if visualEffectView != nil { // nil이 아니라면, 즉 옵션뷰가 노출되어 있다면
-            showChattingRoom(optionViewForOwner)
+            if presentOptionViewForOwner {
+                presentOptionViewForOwner = false
+                showChattingRoom(optionViewForOwner)
+            } else if presentOptionViewForUser {
+                presentOptionViewForUser = false
+                showChattingRoom(optionViewForUser)
+            }
             view.subviews.forEach {
                 if $0 == exitView {
                     $0.removeFromSuperview()
@@ -933,6 +1035,24 @@ class ChattingViewController: UIViewController {
                         
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
+                    }
+                    
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    formatter.locale = Locale(identifier: "ko_KR")
+                    
+                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
+                        "nickname": "SystemMessage",
+                        "userImgUrl": "SystemMessage",
+                        "time": formatter.string(from: Date()),
+                        "isSystemMessage": true
+                    ]) { error in
+                        if let e = error {
+                            print(e.localizedDescription)
+                        } else {
+                            print("Success save data")
+                        }
                     }
                 } catch {
                     print(error.localizedDescription)
@@ -1012,6 +1132,13 @@ class ChattingViewController: UIViewController {
     private func tapXButton() {
         if visualEffectView != nil { // nil이 아니라면, 즉 나가기뷰가 노출되어 있다면
             visualEffectView?.removeFromSuperview()
+            if presentOptionViewForOwner {
+                presentOptionViewForOwner = false
+                showChattingRoom(optionViewForOwner)
+            } else if presentOptionViewForUser {
+                presentOptionViewForUser = false
+                showChattingRoom(optionViewForUser)
+            }
             view.subviews.forEach {
                 if $0 == exitView {
                     $0.removeFromSuperview()
@@ -1024,7 +1151,6 @@ class ChattingViewController: UIViewController {
     private func tapExitConfirmButton() {
         // 파이어 스토어 participants에서 이름 빼고 popVC
         guard let roomUUID = roomUUID else { return }
-        
         
         // map 삭제로 변경
         db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
@@ -1040,14 +1166,20 @@ class ChattingViewController: UIViewController {
                     var time: String?
                     var isRemittance: Bool?
                     
-                    var index = 0
+                    if self.roomMaster == LoginModel.nickname { // 본인이 방장이면
+                        if participants?.count ?? 0 >= 2 {
+                            self.roomMaster = participants?[1].participant // 다음 인덱스를 방장으로
+                        } else {
+                            self.db.collection("Rooms").document(roomUUID).delete() // 방에 한 명이라면 채팅방 삭제
+                        }
+                    }
+                
                     participants?.forEach {
                         if $0.participant == LoginModel.nickname {
                             targetParticipant = $0.participant
                             time = $0.enterTime
                             isRemittance = $0.isRemittance
                         }
-                        index += 1
                     }
                     
                     guard let targetParticipant = targetParticipant,
@@ -1061,21 +1193,62 @@ class ChattingViewController: UIViewController {
                 }
             }
         }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
 
         if roomMaster == LoginModel.nickname { // 본인이 방장일 때
-            // 500 에러
             let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
             ChatRoomExitAPI.patchExitCheif(input)
+            
+            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                "content": "방장의 활동 중단에 따라 새로운\n방장으로\'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
+                "nickname": "SystemMessage",
+                "userImgUrl": "SystemMessage",
+                "time": formatter.string(from: Date()),
+                "isSystemMessage": true
+            ]) { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("Success save data")
+                }
+            }
         } else { // 본인이 방장이 아닐 때
             let input = ChatRoomExitInput(uuid: roomUUID)
             ChatRoomExitAPI.patchExitUser(input)
+            
+            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
+                "nickname": "SystemMessage",
+                "userImgUrl": "SystemMessage",
+                "time": formatter.string(from: Date()),
+                "isSystemMessage": true
+            ]) { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("Success save data")
+                }
+            }
         }
-        
+        if var currentMatching = currentMatching {
+            currentMatching -= 1
+        }
         navigationController?.popViewController(animated: true)
     }
     
     private func getMessageLabelHeight(text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+        let label = PaddingLabel()
+        label.paddingLeft = 18
+        label.paddingRight = 18
+        label.paddingTop = 10
+        label.paddingBottom = 10
+        
+        label.frame = CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude)
+        
         label.text = text
         label.font = .customFont(.neoMedium, size: 15)
         label.numberOfLines = 0
@@ -1088,12 +1261,21 @@ class ChattingViewController: UIViewController {
     }
     
     private func getSystemMessageLabelHeight(text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
+        let label = PaddingLabel()
+        label.paddingLeft = 18
+        label.paddingRight = 18
+        label.paddingTop = 6
+        label.paddingBottom = 6
+        
+        label.frame = CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude)
+        
         label.text = text
         label.font = .customFont(.neoMedium, size: 12)
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 250
+        label.textAlignment = .center
         label.sizeToFit()
         label.setNeedsDisplay()
         
@@ -1114,13 +1296,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
-            cell.participantLabel.text =  contents[indexPath.row].message?.content
+            cell.systemMessageLabel.text =  contents[indexPath.row].message?.content
             return cell
         case .sameSenderMessage: // 같은 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
             if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
-                cell.rightMessageLabel.sizeToFit()
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
@@ -1131,7 +1312,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
-                cell.leftMessageLabel.sizeToFit()
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.leftUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.rightTimeLabel.isHidden = true
@@ -1147,7 +1327,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .right
-                cell.rightMessageLabel.sizeToFit()
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
@@ -1160,7 +1339,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
-                cell.leftMessageLabel.sizeToFit()
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.leftUnReadCountLabel.text = "3"
                 cell.rightTimeLabel.isHidden = true
@@ -1181,15 +1359,17 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .systemMessage:
             let labelHeight = getSystemMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 12) // padding top, bottom = 6
-            print("labelHeight: ", labelHeight + 12)
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
+            print("System Label Height: ", labelHeight + 12)
         case .message:
             // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20 + 16) // 상하 여백 20 + 닉네임 라벨
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
+            print("Message Label Height: ", labelHeight + 16)
         case .sameSenderMessage:
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20) // label 상하 여백 20
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
+            print("Same Message Label Height: ", labelHeight)
         default:
             cellSize = CGSize(width: view.bounds.width, height: 40)
         }
