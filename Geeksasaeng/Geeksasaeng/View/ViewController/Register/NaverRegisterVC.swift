@@ -399,7 +399,7 @@ class NaverRegisterViewController: UIViewController {
                          NSAttributedString.Key.font: UIFont.customFont(.neoLight, size: 15)]
         )
         // 밑에 줄 설정
-        textField.makeBottomLine(width)
+        textField.makeBottomLine()
         return textField
     }
     

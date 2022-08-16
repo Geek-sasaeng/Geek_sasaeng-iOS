@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine(UIScreen.main.bounds.width - 23 * 2)
+        textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()
@@ -54,7 +54,7 @@ class LoginViewController: UIViewController {
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine(UIScreen.main.bounds.width - 23 * 2)
+        textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()

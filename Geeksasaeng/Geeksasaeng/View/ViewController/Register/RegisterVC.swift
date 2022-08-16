@@ -188,21 +188,22 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(progressBar.snp.bottom).offset(50)
         }
         
+        idCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(81)
+            make.height.equalTo(41)
+            make.top.equalTo(remainBar.snp.bottom).offset(82)
+        }
+        
         idTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
+            make.left.equalToSuperview().inset(27)
+            make.right.equalTo(idCheckButton.snp.left).offset(-16)
             make.top.equalTo(idLabel.snp.bottom).offset(15)
         }
         
         idAvailableLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(40)
             make.top.equalTo(idTextField.snp.bottom).offset(21)
-        }
-        
-        idCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.top.equalTo(remainBar.snp.bottom).offset(82)
         }
         
         /* password */
@@ -212,7 +213,8 @@ class RegisterViewController: UIViewController {
         }
         
         pwTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
+            make.left.equalToSuperview().inset(27)
+            make.right.equalToSuperview().inset(26)
             make.top.equalTo(passwordLabel.snp.bottom).offset(15)
         }
         
@@ -228,7 +230,8 @@ class RegisterViewController: UIViewController {
         }
         
         pwCheckTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
+            make.left.equalToSuperview().inset(27)
+            make.right.equalToSuperview().inset(26)
             make.top.equalTo(passwordCheckLabel.snp.bottom).offset(15)
         }
         
@@ -243,21 +246,22 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(passwordSameCheckLabel.snp.bottom).offset(31)
         }
         
+        nickNameCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(81)
+            make.height.equalTo(41)
+            make.top.equalTo(pwCheckTextField.snp.bottom).offset(73)
+        }
+        
         nickNameTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
+            make.left.equalToSuperview().inset(27)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
             make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
         }
 
         nickNameAvailableLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(40)
             make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
-        }
-        
-        nickNameCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.top.equalTo(pwCheckTextField.snp.bottom).offset(73)
         }
         
         /* nextButton */
@@ -308,7 +312,7 @@ class RegisterViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
         // 하단에 줄 생성
-        textField.makeBottomLine(width)
+        textField.makeBottomLine()
         // 자동 대문자 해제
         textField.autocapitalizationType = .none
     }

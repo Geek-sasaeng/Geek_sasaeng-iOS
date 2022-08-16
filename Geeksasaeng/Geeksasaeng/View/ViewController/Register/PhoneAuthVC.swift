@@ -384,7 +384,7 @@ class PhoneAuthViewController: UIViewController {
             string: msg,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine(width)
+        textField.makeBottomLine()
         return textField
     }
     

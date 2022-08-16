@@ -37,7 +37,7 @@ class BankAccountViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)]
         )
-        textField.makeBottomLine(248)
+        textField.makeBottomLine()
         textField.font = .customFont(.neoMedium, size: 15)
         textField.textColor = .init(hex: 0x5B5B5B)
         textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
@@ -52,7 +52,7 @@ class BankAccountViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)]
         )
-        textField.makeBottomLine(248)
+        textField.makeBottomLine()
         textField.font = .customFont(.neoMedium, size: 15)
         textField.textColor = .init(hex: 0x5B5B5B)
         textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
