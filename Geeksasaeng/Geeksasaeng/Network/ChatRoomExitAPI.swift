@@ -55,7 +55,7 @@ class ChatRoomExitAPI {
     }
     
     public static func patchExitCheif(_ parameter: ChatRoomExitForCheifInput) {
-        AF.request("https://geeksasaeng.shop/delivery-party/cheif", method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
+        AF.request("https://geeksasaeng.shop/delivery-party/chief", method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: ChatRoomExitForCheifModel.self) { response in

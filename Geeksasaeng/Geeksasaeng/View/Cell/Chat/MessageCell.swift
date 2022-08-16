@@ -73,6 +73,9 @@ class MessageCell: UICollectionViewCell {
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 200
         
+        label.sizeToFit()
+        label.setNeedsLayout()
+        
         label.paddingTop = 10
         label.paddingBottom = 10
         label.paddingLeft = 18
@@ -92,6 +95,9 @@ class MessageCell: UICollectionViewCell {
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 200
         
+        label.sizeToFit()
+        label.setNeedsLayout()
+        
         label.paddingTop = 10
         label.paddingBottom = 10
         label.paddingLeft = 18
@@ -105,7 +111,7 @@ class MessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .systemPink
         
         addSubViews()
         setLayouts()

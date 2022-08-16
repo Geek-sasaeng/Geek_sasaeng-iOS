@@ -495,6 +495,7 @@ class ChattingViewController: UIViewController {
         setCollectionView()
         addSubViews()
         setLayouts()
+        setRoomMaster()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -585,6 +586,30 @@ class ChattingViewController: UIViewController {
         db.settings = settings
         
         db.clearPersistence()
+    }
+    
+    private func setRoomMaster() {
+        guard let roomUUID = roomUUID else { return }
+
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                do {
+                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+                    guard let roomInfo = data?.roomInfo,
+                          let participants = roomInfo.participants else { return }
+                    
+                    // 방장 설정
+                    if participants.count >= 1 {
+                        self.roomMaster = participants[0].participant
+                        print("setRoomMaster로 불러온 방장: ", self.roomMaster)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
     
     private func checkRemittance() {
@@ -780,9 +805,7 @@ class ChattingViewController: UIViewController {
                             if isSystemMessage == true {
                                 self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
                                 self.lastSender = "system"
-                            }
-                            
-                            if self.lastSender == nil { // 첫 메세지일 때
+                            } else if self.lastSender == nil { // 첫 메세지일 때
                                 self.contents.append(cellContents(cellType: .message,
                                                                   message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
                                 self.lastSender = nickname
@@ -1019,7 +1042,7 @@ class ChattingViewController: UIViewController {
                     formatter.locale = Locale(identifier: "ko_KR")
                     
                     self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송급을 완료하였습니다",
+                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
                         "nickname": "SystemMessage",
                         "userImgUrl": "SystemMessage",
                         "time": formatter.string(from: Date()),
@@ -1176,12 +1199,11 @@ class ChattingViewController: UIViewController {
         formatter.locale = Locale(identifier: "ko_KR")
 
         if roomMaster == LoginModel.nickname { // 본인이 방장일 때
-            // 500 에러
             let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
             ChatRoomExitAPI.patchExitCheif(input)
             
             self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                "content": "방장의 활동 중단에 따라\n새로운 방장으로\'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
+                "content": "방장의 활동 중단에 따라 새로운\n방장으로\'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
                 "nickname": "SystemMessage",
                 "userImgUrl": "SystemMessage",
                 "time": formatter.string(from: Date()),
@@ -1211,12 +1233,22 @@ class ChattingViewController: UIViewController {
                 }
             }
         }
-        
+        if var currentMatching = currentMatching {
+            currentMatching -= 1
+        }
         navigationController?.popViewController(animated: true)
     }
     
     private func getMessageLabelHeight(text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
+        let label = PaddingLabel()
+        label.paddingLeft = 18
+        label.paddingRight = 18
+        label.paddingTop = 10
+        label.paddingBottom = 10
+        
+        label.frame = CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude)
+        
         label.text = text
         label.font = .customFont(.neoMedium, size: 15)
         label.numberOfLines = 0
@@ -1229,12 +1261,21 @@ class ChattingViewController: UIViewController {
     }
     
     private func getSystemMessageLabelHeight(text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
+        let label = PaddingLabel()
+        label.paddingLeft = 18
+        label.paddingRight = 18
+        label.paddingTop = 6
+        label.paddingBottom = 6
+        
+        label.frame = CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude)
+        
         label.text = text
         label.font = .customFont(.neoMedium, size: 12)
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 250
+        label.textAlignment = .center
         label.sizeToFit()
         label.setNeedsDisplay()
         
@@ -1255,13 +1296,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
-            cell.participantLabel.text =  contents[indexPath.row].message?.content
+            cell.systemMessageLabel.text =  contents[indexPath.row].message?.content
             return cell
         case .sameSenderMessage: // 같은 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
             if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
-                cell.rightMessageLabel.sizeToFit()
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
@@ -1272,7 +1312,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
-                cell.leftMessageLabel.sizeToFit()
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.leftUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.rightTimeLabel.isHidden = true
@@ -1288,7 +1327,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .right
-                cell.rightMessageLabel.sizeToFit()
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
@@ -1301,7 +1339,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
-                cell.leftMessageLabel.sizeToFit()
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.leftUnReadCountLabel.text = "3"
                 cell.rightTimeLabel.isHidden = true
@@ -1322,15 +1359,17 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .systemMessage:
             let labelHeight = getSystemMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 12) // padding top, bottom = 6
-            print("labelHeight: ", labelHeight + 12)
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
+            print("System Label Height: ", labelHeight + 12)
         case .message:
             // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20 + 16) // 상하 여백 20 + 닉네임 라벨
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
+            print("Message Label Height: ", labelHeight + 16)
         case .sameSenderMessage:
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 20) // label 상하 여백 20
+            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
+            print("Same Message Label Height: ", labelHeight)
         default:
             cellSize = CGSize(width: view.bounds.width, height: 40)
         }

@@ -11,7 +11,7 @@ import SnapKit
 class SystemMessageCell: UICollectionViewCell {
     // MARK: - SubViews
     
-    var participantLabel: PaddingLabel = {
+    var systemMessageLabel: PaddingLabel = {
         let label = PaddingLabel()
         label.font = .customFont(.neoMedium, size: 12)
         label.textColor = .init(hex: 0x636363)
@@ -22,6 +22,9 @@ class SystemMessageCell: UICollectionViewCell {
         label.textAlignment = .center
         label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = 250
+        
+        label.sizeToFit()
+        label.setNeedsLayout()
         
         label.paddingTop = 6
         label.paddingBottom = 6
@@ -36,18 +39,18 @@ class SystemMessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .red
         
         addSubViews()
         setLayouts()
     }
     
     private func addSubViews() {
-        addSubview(participantLabel)
+        addSubview(systemMessageLabel)
     }
     
     private func setLayouts() {
-        participantLabel.snp.makeConstraints { make in
+        systemMessageLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
         }
     }
