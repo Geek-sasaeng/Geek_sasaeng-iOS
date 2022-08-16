@@ -23,7 +23,7 @@ class EditReceiptPlaceViewController: UIViewController {
         let textField = UITextField()
         textField.font = .customFont(.neoRegular, size: 15)
         textField.placeholder = "입력하세요"
-        textField.makeBottomLine(210)
+        textField.makeBottomLine()
         textField.textColor = .black
         return textField
     }()

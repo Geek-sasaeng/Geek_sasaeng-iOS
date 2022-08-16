@@ -58,7 +58,7 @@ class SearchViewController: UIViewController {
                 NSAttributedString.Key.font: UIFont.customFont(.neoMedium, size: 20)
             ]
         )
-        textField.makeBottomLine(323)
+        textField.makeBottomLine()
         textField.delegate = self
         return textField
     }()
