@@ -595,14 +595,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             // 생성된 직후에 바로 상세보기 화면을 보여주는 경우면 생성됐을 때 받은 response로 detailData를 설정
             if let detailData = createdData {
                 self.detailData = detailData
-                print("5:39 ", detailData)
+                // 생성된 파티가 배달파티 목록에 바로 반영되도록 배달파티 목록을 업데이트 한다.
+                delegate?.updateDeliveryList()
                 setDetailData()
             } else {
                 DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
                     // detailData에 데이터 넣기
                     if let self = self {
                         self.detailData = result
-                        print("5:40 ", self.detailData)
                         self.setDetailData()
                     }
                 })

@@ -82,6 +82,9 @@ class PartyNameViewController: UIViewController {
     // MARK: - Properties
     
     var dormitoryInfo: DormitoryNameResult?
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateDeliveryDelegate?
+    
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
     
@@ -255,6 +258,7 @@ class PartyNameViewController: UIViewController {
                             }
                         }
                     
+                    /* 생성된 파티의 상세 조회 화면으로 이동 */
                     let partyVC = PartyViewController()
                     partyVC.partyId = result.id
                     partyVC.dormitoryInfo = dormitoryInfo
@@ -279,6 +283,9 @@ class PartyNameViewController: UIViewController {
                         dormitory: result.dormitoryId,
                         uuid: result.uuid,
                         belongStatus: result.belongStatus)
+                    
+                    // delegate로 DeliveryVC를 넘겨줌
+                    partyVC.delegate = delegate
                     
                     var vcArray = self.navigationController?.viewControllers
                     vcArray!.removeLast()

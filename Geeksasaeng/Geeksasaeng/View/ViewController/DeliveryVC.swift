@@ -938,9 +938,10 @@ class DeliveryViewController: UIViewController {
     /* CreatePartyButton을 누르면 파티 생성 화면으로 전환 */
     @objc
     private func tapCreatePartyButton() {
-        let viewController = CreatePartyViewController()
-        viewController.dormitoryInfo = dormitoryInfo
-        self.navigationController?.pushViewController(viewController, animated: true)
+        let createPartyVC = CreatePartyViewController()
+        createPartyVC.dormitoryInfo = dormitoryInfo
+        createPartyVC.delegate = self
+        self.navigationController?.pushViewController(createPartyVC, animated: true)
     }
     
     /* 광고 배너 자동 스크롤 기능 */
