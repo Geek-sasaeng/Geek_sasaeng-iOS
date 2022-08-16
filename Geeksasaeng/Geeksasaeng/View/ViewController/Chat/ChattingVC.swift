@@ -144,6 +144,65 @@ class ChattingViewController: UIViewController {
         return view
     }()
     
+    lazy var optionViewForUser: UIView = {
+        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5)))
+        view.backgroundColor = .white
+        
+        // 왼쪽 하단의 코너에만 cornerRadius를 적용
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner]
+        
+        /* 옵션뷰에 있는 ellipsis 버튼
+         -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
+        lazy var settingButton: UIButton = {
+            let button = UIButton()
+            button.setImage(UIImage(named: "Setting"), for: .normal)
+            button.tintColor = .init(hex: 0x2F2F2F)
+            // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
+            button.addTarget(self, action: #selector(tapOptionButtonInView), for: .touchUpInside)
+            return button
+        }()
+        view.addSubview(settingButton)
+        settingButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(49)
+            make.right.equalToSuperview().inset(30)
+            make.width.height.equalTo(23)
+        }
+        
+        /* 옵션뷰에 있는 버튼 */
+        var showMenuButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("메뉴판 보기", for: .normal)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+            return button
+        }()
+        var endOfChatButton: UIButton = {
+            let button = UIButton()
+            button.setTitle("채팅 나가기", for: .normal)
+            return button
+        }()
+        
+        [showMenuButton, endOfChatButton].forEach {
+            // attributes
+            $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
+            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
+            
+            // layouts
+            view.addSubview($0)
+        }
+        
+        showMenuButton.snp.makeConstraints { make in
+            make.top.equalTo(settingButton.snp.bottom).offset(27)
+            make.left.equalToSuperview().inset(20)
+        }
+        endOfChatButton.snp.makeConstraints { make in
+            make.top.equalTo(showMenuButton.snp.bottom).offset(27)
+            make.left.equalToSuperview().inset(20)
+        }
+        
+        return view
+    }()
+    
     // 나가기 뷰
     lazy var exitView: UIView = {
         let view = UIView()
@@ -745,7 +804,12 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapOptionButton() {
-        showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
+        if roomMaster == LoginModel.nickname {
+            showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
+        } else {
+            showOptionMenu(optionViewForUser, UIScreen.main.bounds.height / 3)
+        }
+        
     }
     
     private func showOptionMenu(_ nowView: UIView, _ height: CGFloat) {
