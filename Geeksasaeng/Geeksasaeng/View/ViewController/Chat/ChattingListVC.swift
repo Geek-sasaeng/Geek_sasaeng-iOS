@@ -10,7 +10,25 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 class FormatCreater {
-    static let shared = DateFormatter()
+    static let sharedLongFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter
+    }()
+    static let sharedShortFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy-MM-dd"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter
+    }()
+    static let sharedDayFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter
+    }()
+    
     private init() { }
 }
 
@@ -70,6 +88,8 @@ class ChattingListViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xFCFDFE)
         
         setFirestore()
+        // 채팅방 목록 데이터 가져오기 (listener 설치)
+        loadChattingRoomList()
         
         setAttributes()
         setFilterStackView(filterNameArray: ["배달파티", "심부름", "거래"],
@@ -81,18 +101,6 @@ class ChattingListViewController: UIViewController {
         setLabelTap()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("viewWillAppear")
-        // 채팅탭이 보여질 때마다 채팅방 목록 데이터를 다시 가져온다
-        loadChattingRoomList()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        print("viewDidAppear")
-        super.viewDidAppear(animated)
-//        chattingTableView.reloadData()
-    }
-    
     // MARK: - Functions
     
     /* firestore 설정 */
@@ -102,7 +110,6 @@ class ChattingListViewController: UIViewController {
         db.clearPersistence()
     }
     
-    // TODO: - 채팅방 목록 최근 메세지 순으로 정렬
     /* 파티 채팅방 목록 조회 */
     private func loadChattingRoomList() {
         // 채팅방 목록에 접근할 레퍼런스 생성
@@ -118,7 +125,7 @@ class ChattingListViewController: UIViewController {
             .order(by: "roomInfo.updatedAt", descending: true)    // 채팅방 목록을 메세지 최신순으로 정렬
         
         // 해당 쿼리문의 결과값을 firestore에서 가져오기
-        query.getDocuments {
+        query.addSnapshotListener() {   // updatedAt으로 order되는 순서가 바뀌는 걸 감지하도록 listener로 변경
             (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -320,14 +327,11 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                         cell.recentMessageLabel.text = messageContents
                         
                         let nowTimeDate = Date()
-                        FormatCreater.shared.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                        FormatCreater.shared.locale = Locale(identifier: "ko_KR")
-                        let messageTimeDate = FormatCreater.shared.date(from: messageTime)!
+                        let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime)!
                         
-                        FormatCreater.shared.dateFormat = "dd"
                         // 메세지가 전송된 날(일)을 저장, 오늘인지 구분하기 위해
-                        let messageSendedDay = FormatCreater.shared.string(from: messageTimeDate)
-                        let today = FormatCreater.shared.string(from: nowTimeDate)
+                        let messageSendedDay = FormatCreater.sharedDayFormat.string(from: messageTimeDate)
+                        let today = FormatCreater.sharedDayFormat.string(from: nowTimeDate)
                         
                         // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
                         let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
@@ -345,9 +349,8 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                         } else if (Int(today)! - Int(messageSendedDay)!) <= 3, (Int(today)! - Int(messageSendedDay)!) > 0 {
                             cell.receivedTimeString = "\(Int(today)! - Int(messageSendedDay)!)일 전"
                         } else if (Int(today)! - Int(messageSendedDay)!) > 3 {
-                            // 22.08.31
-                            FormatCreater.shared.dateFormat = "yy-MM-dd"
-                            let testDate = FormatCreater.shared.string(from: messageTimeDate)
+                            // ex) 22.08.31
+                            let testDate = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
                             cell.receivedTimeString = testDate
                         } else {
                             if hourTime == 0 {
@@ -364,8 +367,6 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
                                 cell.receivedTimeString = "오늘"
                             }
                         }
-                        
-//                        self.chattingTableView.reloadData()
                     }
                 }
             }

@@ -1024,6 +1024,9 @@
 		A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
+		A2349BA728A8178200449EBE /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2349BA628A8178200449EBE /* CloseMatchingAPI.swift */; };
+		A2349BA828A8178200449EBE /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2349BA628A8178200449EBE /* CloseMatchingAPI.swift */; };
+		A2349BA928A8178200449EBE /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2349BA628A8178200449EBE /* CloseMatchingAPI.swift */; };
 		A246E58028A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
 		A246E58128A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
 		A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
@@ -1528,6 +1531,7 @@
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A21DB933289D896B00A523F1 /* ChattingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListVC.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
+		A2349BA628A8178200449EBE /* CloseMatchingAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CloseMatchingAPI.swift; path = ../../../../../Documents/CloseMatchingAPI.swift; sourceTree = "<group>"; };
 		A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPartyAPI.swift; sourceTree = "<group>"; };
 		A248D88C289FB8E5000E2422 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		A248D890289FB8F1000E2422 /* systemMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = systemMessageCell.swift; sourceTree = "<group>"; };
@@ -2125,6 +2129,7 @@
 				103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */,
 				A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */,
 				106093CF28A81981007FD463 /* ChatRoomExitAPI.swift */,
+				A2349BA628A8178200449EBE /* CloseMatchingAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3464,6 +3469,7 @@
 				10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				A248D8A1289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
+				A2349BA728A8178200449EBE /* CloseMatchingAPI.swift in Sources */,
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
@@ -3573,6 +3579,7 @@
 				10D4D6B42894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				A246E58128A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
+				A2349BA828A8178200449EBE /* CloseMatchingAPI.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A26DA3C528918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				A21DB935289D896B00A523F1 /* ChattingListVC.swift in Sources */,
@@ -3654,6 +3661,7 @@
 				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				106093D228A81981007FD463 /* ChatRoomExitAPI.swift in Sources */,
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
+				A2349BA928A8178200449EBE /* CloseMatchingAPI.swift in Sources */,
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
@@ -3910,7 +3918,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -3949,7 +3957,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
