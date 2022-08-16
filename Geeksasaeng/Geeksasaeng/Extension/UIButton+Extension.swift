@@ -19,7 +19,8 @@ extension UIButton {
             make.top.equalTo(self.snp.bottom).offset(offsetToTop)
             make.width.equalTo(width)
             make.height.equalTo(height)
-            make.centerX.equalTo(self)
+//            make.centerX.equalTo(self)
+            make.left.equalTo(self.snp.left)
         }
     }
     
