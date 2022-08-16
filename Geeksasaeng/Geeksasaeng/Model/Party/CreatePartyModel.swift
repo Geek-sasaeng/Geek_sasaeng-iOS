@@ -53,9 +53,12 @@ struct CreatePartyModel: Decodable {
 }
 
 struct CreatePartyModelResult : Decodable {
-    var partyId: Int?
+    var id: Int?
     var chief: String?
-    var dormitory: String?
+    var chiefId: Int?
+    var chiefProfileImgUrl: String?
+    var dormitoryId: Int?
+    var dormitoryName: String?
     var foodCategory: String?
     var title: String?
     var content: String?
@@ -73,4 +76,7 @@ struct CreatePartyModelResult : Decodable {
     var bank: String?
     var accountNumber: String?
     var chatRoomName: String?
+    var authorStatus: Bool?
+    var belongStatus: String?
+    var updatedAt: String?
 }

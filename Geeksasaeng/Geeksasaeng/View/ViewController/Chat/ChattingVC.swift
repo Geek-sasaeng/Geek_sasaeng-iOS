@@ -666,6 +666,7 @@ class ChattingViewController: UIViewController {
                                                     let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
                                                     if timeInterval <= 0 { // 음수일 떄 -> 참가 이후의 메세지
                                                         self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: true)))
+                                                        self.lastSender = "system"
                                                     }
                                                 } else { // 일반 message
                                                     let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
@@ -778,6 +779,7 @@ class ChattingViewController: UIViewController {
                            let isSystemMessage = data["isSystemMessage"] as? Bool {
                             if isSystemMessage == true {
                                 self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
+                                self.lastSender = "system"
                             }
                             
                             if self.lastSender == nil { // 첫 메세지일 때
@@ -808,7 +810,6 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapOptionButton() {
-        print("roomMaster: ", roomMaster)
         if roomMaster == LoginModel.nickname {
             presentOptionViewForOwner = true
             showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
@@ -860,6 +861,7 @@ class ChattingViewController: UIViewController {
             UIView.animate(
                 withDuration: 0.3, animations: {
                     self.bottomView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
+                    self.collectionView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
                 }
             )
         }
@@ -1011,6 +1013,24 @@ class ChattingViewController: UIViewController {
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
                     }
+                    
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    formatter.locale = Locale(identifier: "ko_KR")
+                    
+                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송급을 완료하였습니다",
+                        "nickname": "SystemMessage",
+                        "userImgUrl": "SystemMessage",
+                        "time": formatter.string(from: Date()),
+                        "isSystemMessage": true
+                    ]) { error in
+                        if let e = error {
+                            print(e.localizedDescription)
+                        } else {
+                            print("Success save data")
+                        }
+                    }
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -1109,7 +1129,6 @@ class ChattingViewController: UIViewController {
         // 파이어 스토어 participants에서 이름 빼고 popVC
         guard let roomUUID = roomUUID else { return }
         
-        
         // map 삭제로 변경
         db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
             if let error = error {
@@ -1124,14 +1143,20 @@ class ChattingViewController: UIViewController {
                     var time: String?
                     var isRemittance: Bool?
                     
-                    var index = 0
+                    if self.roomMaster == LoginModel.nickname { // 본인이 방장이면
+                        if participants?.count ?? 0 >= 2 {
+                            self.roomMaster = participants?[1].participant // 다음 인덱스를 방장으로
+                        } else {
+                            self.db.collection("Rooms").document(roomUUID).delete() // 방에 한 명이라면 채팅방 삭제
+                        }
+                    }
+                
                     participants?.forEach {
                         if $0.participant == LoginModel.nickname {
                             targetParticipant = $0.participant
                             time = $0.enterTime
                             isRemittance = $0.isRemittance
                         }
-                        index += 1
                     }
                     
                     guard let targetParticipant = targetParticipant,
@@ -1145,14 +1170,46 @@ class ChattingViewController: UIViewController {
                 }
             }
         }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
 
         if roomMaster == LoginModel.nickname { // 본인이 방장일 때
             // 500 에러
             let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
             ChatRoomExitAPI.patchExitCheif(input)
+            
+            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                "content": "방장의 활동 중단에 따라\n새로운 방장으로\'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
+                "nickname": "SystemMessage",
+                "userImgUrl": "SystemMessage",
+                "time": formatter.string(from: Date()),
+                "isSystemMessage": true
+            ]) { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("Success save data")
+                }
+            }
         } else { // 본인이 방장이 아닐 때
             let input = ChatRoomExitInput(uuid: roomUUID)
             ChatRoomExitAPI.patchExitUser(input)
+            
+            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
+                "nickname": "SystemMessage",
+                "userImgUrl": "SystemMessage",
+                "time": formatter.string(from: Date()),
+                "isSystemMessage": true
+            ]) { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("Success save data")
+                }
+            }
         }
         
         navigationController?.popViewController(animated: true)
