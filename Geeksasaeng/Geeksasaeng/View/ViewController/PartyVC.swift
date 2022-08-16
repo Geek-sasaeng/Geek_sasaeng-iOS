@@ -77,8 +77,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         var editButton: UIButton = {
             let button = UIButton()
             button.setTitle("수정하기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 13)
             button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
+            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
             return button
         }()
         var deleteButton: UIButton = {
@@ -91,20 +91,20 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         [editButton, deleteButton].forEach {
             // attributes
             $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
-            $0.titleLabel?.font =  .customFont(.neoMedium, size: 18)
+            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
             
             // layouts
             view.addSubview($0)
         }
+        
         editButton.snp.makeConstraints { make in
             make.top.equalTo(ellipsisButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         deleteButton.snp.makeConstraints { make in
             make.top.equalTo(editButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
-        
         return view
     }()
     
@@ -133,7 +133,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let button = UIButton()
             button.setTitle("신고하기", for: .normal)
             button.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
-            button.titleLabel?.font =  .customFont(.neoMedium, size: 18)
+            button.titleLabel?.font =  .customFont(.neoMedium, size: 15)
             button.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
             return button
         }()
@@ -149,7 +149,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         reportButton.snp.makeConstraints { make in
             make.top.equalTo(ellipsisButton.snp.bottom).offset(27)
-            make.centerX.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
         }
         
         return view
@@ -569,6 +569,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         super.viewWillAppear(animated)
         // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
         navigationController?.isNavigationBarHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        mapView = nil
     }
     
     // MARK: - Functions
@@ -1151,6 +1156,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                         guard let nickName = LoginModel.nickname else { return }
                         /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
                         let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
+
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
                         
                         // 참가자 참가 시스템 메세지 업로드
