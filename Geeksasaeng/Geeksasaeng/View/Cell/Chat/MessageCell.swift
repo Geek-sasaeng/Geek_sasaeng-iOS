@@ -19,17 +19,19 @@ class MessageCell: UICollectionViewCell {
     
     var leftImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person")
+        imageView.image = UIImage(named: "DefaultProfile")
+        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 16
-        imageView.tintColor = .black
+//        imageView.tintColor = .black
         return imageView
     }()
     
     var rightImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.fill")
+        imageView.image = UIImage(systemName: "DefaultProfile")
+        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 16
-        imageView.tintColor = .black
+//        imageView.tintColor = .black
         return imageView
     }()
     
@@ -111,7 +113,7 @@ class MessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .systemPink
+        contentView.backgroundColor = .white
         
         addSubViews()
         setLayouts()
