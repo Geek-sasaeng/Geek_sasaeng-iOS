@@ -540,7 +540,8 @@ class ChattingViewController: UIViewController {
                     participants.forEach {
                         // 해당 참여자가 송금을 하지 않을 상태이면 remittanceView 노출
                         if $0.participant == LoginModel.nickname {
-                            if $0.isRemittance == "false" {
+                            guard let isRemittance = $0.isRemittance else { return }
+                            if !isRemittance {
                                 self.view.addSubview(self.remittanceView)
                                 self.remittanceView.snp.makeConstraints { make in
                                     if let navigationBar = self.navigationController?.navigationBar {
@@ -838,6 +839,11 @@ class ChattingViewController: UIViewController {
                         print("Success save data")
                     }
                 }
+                
+                // 매칭 마감 버튼 비활성화
+                guard let closeMatchingButton = self.optionViewForOwner.subviews[3] as? UIButton else { return }
+                closeMatchingButton.isUserInteractionEnabled = false
+                closeMatchingButton.setTitleColor(.init(hex: 0xA8A8A8), for: .normal)
             }
         }
         
@@ -919,10 +925,11 @@ class ChattingViewController: UIViewController {
                         }
                     }
                     
+                    guard let targetEnterTime = targetEnterTime else { return }
                     // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
                     if let nickname = LoginModel.nickname {
-                        let removeData = ["enterTime": targetEnterTime, "isRemittance": "false", "participant": nickname]
-                        let newData = ["enterTime": targetEnterTime, "isRemittance": "true", "participant": nickname]
+                        let removeData = ["enterTime": targetEnterTime, "isRemittance": false, "participant": nickname] as [String : Any]
+                        let newData = ["enterTime": targetEnterTime, "isRemittance": true, "participant": nickname] as [String : Any]
                         
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
                         self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
@@ -1031,7 +1038,7 @@ class ChattingViewController: UIViewController {
                     
                     var targetParticipant: String? // 삭제 대상 딕셔너리를 만들기 위해
                     var time: String?
-                    var isRemittance: String?
+                    var isRemittance: Bool?
                     
                     var index = 0
                     participants?.forEach {
@@ -1043,7 +1050,11 @@ class ChattingViewController: UIViewController {
                         index += 1
                     }
                     
-                    let input = ["participant": targetParticipant, "enterTime": time, "isRemittance": isRemittance]
+                    guard let targetParticipant = targetParticipant,
+                          let time = time,
+                          let isRemittance = isRemittance else { return }
+
+                    let input = ["participant": targetParticipant, "enterTime": time, "isRemittance": isRemittance] as [String : Any]
                     self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayRemove([input])])
                 } catch {
                     print(error.localizedDescription)

@@ -1077,6 +1077,9 @@
 		A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */; };
 		A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */; };
 		A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */; };
+		A25766D328AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
+		A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
+		A25766D528AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25EBDC5289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
 		A25EBDC6289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
 		A25EBDC7289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
@@ -1548,6 +1551,7 @@
 		A2513F1C287872D70029C279 /* EmailAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthModel.swift; sourceTree = "<group>"; };
 		A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckModel.swift; sourceTree = "<group>"; };
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
+		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
 		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
@@ -2311,6 +2315,7 @@
 				10D4D6B02894F84F00B53AB0 /* EditParty */,
 				A2D2047728885A14002350C8 /* Report */,
 				A24F0B29289D88AF007A9C5C /* Chat */,
+				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3449,6 +3454,7 @@
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				A20B53F6288D7F27006C695E /* TimeCollectionViewCell.swift in Sources */,
+				A25766D328AA9F9700ED8DAB /* ProfileVC.swift in Sources */,
 				106D974D287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				10E8E71C288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
@@ -3558,6 +3564,7 @@
 				106D974E287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
+				A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */,
 				A2035EA6288341B00051498A /* AdModel.swift in Sources */,
 				106093D128A81981007FD463 /* ChatRoomExitAPI.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
@@ -3654,6 +3661,7 @@
 				10D4D6C52894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				10D4D6C92894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
+				A25766D528AA9F9700ED8DAB /* ProfileVC.swift in Sources */,
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513F1F287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				A248D89F289FF344000E2422 /* BankAccountVC.swift in Sources */,

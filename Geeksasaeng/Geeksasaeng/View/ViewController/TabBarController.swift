@@ -12,7 +12,7 @@ class TabBarController: UITabBarController {
     // MARK: - Properties
     
     // TabBarItem의 title로 쓸 데이터들을 모아둔 리스트
-    let titleArray = ["홈", "커뮤니티", "채팅", "프로필"]
+    let titleArray = ["홈", "커뮤니티", "채팅", "나의 정보"]
     
     // MARK: - Life Cycle
     
@@ -62,7 +62,7 @@ class TabBarController: UITabBarController {
             createNavController(for: DeliveryViewController(), title: titleArray[0], image: UIImage(named: "Home")!),
             createNavController(for: DeliveryViewController(), title: "", image: UIImage(named: "Community")!),
             createNavController(for: ChattingListViewController(), title: "", image: UIImage.init(named: "Chat")!),
-            createNavController(for: DeliveryViewController(), title: "", image: UIImage.init(named: "Profile")!),
+            createNavController(for: ProfileViewController(), title: "", image: UIImage.init(named: "Profile")!),
         ]
     }
     
