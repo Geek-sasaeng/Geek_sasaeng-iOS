@@ -304,10 +304,10 @@ class EmailAuthViewController: UIViewController {
         emailLabel = setMainLabelAttrs("학교 이메일 입력")
         
         /* textFields attr */
-        emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
+        emailTextField = setTextFieldAttrs(msg: "입력하세요")
         emailTextField.autocapitalizationType = .none
         
-        emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
+        emailAddressTextField = setTextFieldAttrs(msg: "@")
         emailAddressTextField.isUserInteractionEnabled = false  // 유저가 입력하는 것이 아니라 학교에 따라 자동 설정되는 것.
         
         /* buttons attr */
@@ -330,7 +330,7 @@ class EmailAuthViewController: UIViewController {
     }
     
     /* 텍스트 필드 속성 설정 */
-    private func setTextFieldAttrs(msg: String, width: CGFloat) -> UITextField {
+    private func setTextFieldAttrs(msg: String) -> UITextField {
         // placeHolder 설정
         let textField = UITextField()
         textField.textColor = .black
@@ -340,7 +340,7 @@ class EmailAuthViewController: UIViewController {
                          NSAttributedString.Key.font: UIFont.customFont(.neoLight, size: 15)]
         )
         // 밑에 줄 설정
-        textField.makeBottomLine(width)
+        textField.makeBottomLine()
         return textField
     }
     

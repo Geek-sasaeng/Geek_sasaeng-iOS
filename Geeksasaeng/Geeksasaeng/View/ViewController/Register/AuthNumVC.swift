@@ -54,7 +54,7 @@ class AuthNumViewController: UIViewController {
             string: "입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine(187)
+        textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()
