@@ -981,6 +981,9 @@
 		10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
 		10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
 		10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EBEFE8289F559300038EFC /* RoomInfoModel.swift */; };
+		10EC391028AD307700A72DC6 /* MyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EC390F28AD307700A72DC6 /* MyInfoVC.swift */; };
+		10EC391128AD307700A72DC6 /* MyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EC390F28AD307700A72DC6 /* MyInfoVC.swift */; };
+		10EC391228AD307700A72DC6 /* MyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EC390F28AD307700A72DC6 /* MyInfoVC.swift */; };
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
@@ -1516,6 +1519,7 @@
 		10E8E71B288D739100AF4581 /* DeletePartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyModel.swift; sourceTree = "<group>"; };
 		10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyViewModel.swift; sourceTree = "<group>"; };
 		10EBEFE8289F559300038EFC /* RoomInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoModel.swift; sourceTree = "<group>"; };
+		10EC390F28AD307700A72DC6 /* MyInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoVC.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
 		10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sameSenderMessageCell.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
@@ -2197,6 +2201,15 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		10EC390E28AD2B5200A72DC6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
+				10EC390F28AD307700A72DC6 /* MyInfoVC.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		322945F9F8AA5AA5E8FDCB6C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -2315,7 +2328,7 @@
 				10D4D6B02894F84F00B53AB0 /* EditParty */,
 				A2D2047728885A14002350C8 /* Report */,
 				A24F0B29289D88AF007A9C5C /* Chat */,
-				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
+				10EC390E28AD2B5200A72DC6 /* Profile */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3486,6 +3499,7 @@
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */,
+				10EC391028AD307700A72DC6 /* MyInfoVC.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
 				10FECB1A28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
@@ -3554,6 +3568,7 @@
 			files = (
 				A2AF5396289696810052F734 /* ReportAPI.swift in Sources */,
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
+				10EC391128AD307700A72DC6 /* MyInfoVC.swift in Sources */,
 				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				A2513F1A287868070029C279 /* EmailAuthViewModel.swift in Sources */,
@@ -3737,6 +3752,7 @@
 				10D4D6C12894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
+				10EC391228AD307700A72DC6 /* MyInfoVC.swift in Sources */,
 				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				103F5E49289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,

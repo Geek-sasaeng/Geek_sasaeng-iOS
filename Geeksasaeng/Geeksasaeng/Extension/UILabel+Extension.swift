@@ -7,6 +7,22 @@
 
 import Foundation
 
+extension UILabel {
+    // UILabel의 아래 라인 만들어주는 함수
+    func makeBottomLine(color: UInt, width: CGFloat, height: CGFloat, offsetToTop: CGFloat) {
+        let bottomLine = UIView()
+        bottomLine.backgroundColor = UIColor.init(hex: color)
+        
+        self.addSubview(bottomLine)
+        bottomLine.snp.makeConstraints { make in
+            make.top.equalTo(self.snp.bottom).offset(offsetToTop)
+            make.width.equalTo(width)
+            make.height.equalTo(height)
+            make.left.equalTo(self.snp.left).offset(-5)
+        }
+    }
+}
+
 // 패딩이 적용된 라벨
 class PaddingLabel: UILabel {
     var textEdgeInsets = UIEdgeInsets.zero {
