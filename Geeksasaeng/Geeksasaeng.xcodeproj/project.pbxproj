@@ -1083,6 +1083,9 @@
 		A25EBDC5289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
 		A25EBDC6289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
 		A25EBDC7289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
+		A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
+		A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
+		A26780B228AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
@@ -1553,6 +1556,7 @@
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
+		A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OngoingTableViewCell.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
 		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
 		A2AF5394289696810052F734 /* ReportAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAPI.swift; sourceTree = "<group>"; };
@@ -2117,6 +2121,7 @@
 				A20B53F5288D7F27006C695E /* TimeCollectionViewCell.swift */,
 				A248D88B289FB881000E2422 /* Chat */,
 				A29F6F872885461000350744 /* Search */,
+				A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -3511,6 +3516,7 @@
 				102230FA289E640700042ACC /* ChattingVC.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */,
+				A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */,
 				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
@@ -3614,6 +3620,7 @@
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
@@ -3694,6 +3701,7 @@
 				A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
+				A26780B228AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				10D4D6B52894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A218D7BF28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,

@@ -104,7 +104,6 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Category Labels */
-    // TODO: - 배달 파티 탭 누르면 배달 목록 스크롤 젤 위로 돌아가는 기능 구현
     var deliveryPartyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
