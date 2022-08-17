@@ -12,7 +12,7 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Properties
     
-    var ongoingDataArray: [String] = ["1","2","3"]
+    var ongoingPartyIdList: [Int] = []
     
     // MARK: - SubViews
     
@@ -498,18 +498,28 @@ class ProfileViewController: UIViewController {
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ongoingDataArray.count
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OngoingTableViewCell.identifier, for: indexPath) as? OngoingTableViewCell else { return UITableViewCell() }
         
+        let row = indexPath.row
+        /* 가장 최근에 참여한 배달 파티 3개 가져오는 API 호출 */
+        RecentPartyViewModel.requestGetRecentPartyList { result in
+            // 성공 시에만 title, partyId 설정
+            cell.partyTitle = result[row].title
+            
+            guard let partyId = result[row].id else { return }
+            self.ongoingPartyIdList.append(partyId)
+        }
+        
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-////        let partyVC = PartyViewController()
-////        partyVC.partyId = ongoingDataArray[indexPath.row].id
-////        self.navigationController?.pushViewController(partyVC, animated: true)
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let partyVC = PartyViewController()
+        partyVC.partyId = ongoingPartyIdList[indexPath.row]
+        self.navigationController?.pushViewController(partyVC, animated: true)
+    }
 }

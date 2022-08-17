@@ -13,6 +13,11 @@ class OngoingTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let identifier = "OngoingCell"
+    var partyTitle: String? {
+        didSet {
+            partyTitleLabel.text = partyTitle
+        }
+    }
     
     // MARK: - SubViews
     
