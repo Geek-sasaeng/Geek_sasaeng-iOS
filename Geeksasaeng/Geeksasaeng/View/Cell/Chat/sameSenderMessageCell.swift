@@ -10,21 +10,6 @@ import SnapKit
 
 class SameSenderMessageCell: UICollectionViewCell {
     // MARK: - SubViews
-//    var leftImageView: UIImageView = {
-//        let imageView = UIImageView()
-//        imageView.image = UIImage(systemName: "person")
-//        imageView.layer.cornerRadius = 16
-//        imageView.tintColor = .black
-//        return imageView
-//    }()
-//
-//    var rightImageView: UIImageView = {
-//        let imageView = UIImageView()
-//        imageView.image = UIImage(systemName: "person.fill")
-//        imageView.layer.cornerRadius = 16
-//        imageView.tintColor = .black
-//        return imageView
-//    }()
     
     var rightTimeLabel: UILabel = {
         let label = UILabel()
@@ -104,7 +89,7 @@ class SameSenderMessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .systemPink
+        contentView.backgroundColor = .white
         
         addSubViews()
         setLayouts()
