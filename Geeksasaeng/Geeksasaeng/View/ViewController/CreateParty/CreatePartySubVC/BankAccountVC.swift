@@ -93,6 +93,8 @@ class BankAccountViewController: UIViewController {
     
     // MARK: - Properties
     var dormitoryInfo: DormitoryNameResult?
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateDeliveryDelegate?
     
     // MARK: - Life Cycle
     
@@ -185,6 +187,7 @@ class BankAccountViewController: UIViewController {
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = PartyNameViewController()
             childView.dormitoryInfo = self.dormitoryInfo
+            childView.delegate = self.delegate
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in

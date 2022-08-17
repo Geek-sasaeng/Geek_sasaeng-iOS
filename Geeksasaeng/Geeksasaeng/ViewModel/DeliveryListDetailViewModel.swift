@@ -23,10 +23,10 @@ class DeliveryListDetailViewModel {
                     completion(result.result!)
                     
                 } else {
-                    print("DEBUG:", result.message!)
+                    print("DEBUG: 디테일", result.message!)
                 }
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
+                print("DEBUG: 디테일", error.localizedDescription)
             }
         }
     }
