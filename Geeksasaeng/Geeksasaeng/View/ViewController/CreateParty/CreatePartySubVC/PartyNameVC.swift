@@ -82,6 +82,9 @@ class PartyNameViewController: UIViewController {
     // MARK: - Properties
     
     var dormitoryInfo: DormitoryNameResult?
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateDeliveryDelegate?
+    
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
     
@@ -115,7 +118,7 @@ class PartyNameViewController: UIViewController {
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
             make.width.equalTo(304)
-            make.height.equalTo(294)
+            make.height.equalTo(343)
         }
     }
     
@@ -254,6 +257,40 @@ class PartyNameViewController: UIViewController {
                                 }
                             }
                         }
+                    
+                    /* 생성된 파티의 상세 조회 화면으로 이동 */
+                    let partyVC = PartyViewController()
+                    partyVC.partyId = result.id
+                    partyVC.dormitoryInfo = dormitoryInfo
+                    partyVC.createdData = DeliveryListDetailModelResult(
+                        chief: result.chief,
+                        chiefId: result.chiefId,
+                        chiefProfileImgUrl: result.chiefProfileImgUrl,
+                        content: result.content,
+                        currentMatching: result.currentMatching,
+                        foodCategory: result.foodCategory,
+                        hashTag: result.hashTag,
+                        id: result.id,
+                        latitude: result.latitude,
+                        longitude: result.longitude,
+                        matchingStatus: result.matchingStatus,
+                        maxMatching: result.maxMatching,
+                        orderTime: result.orderTime,
+                        title: result.title,
+                        updatedAt: result.updatedAt,
+                        storeUrl: result.storeUrl,
+                        authorStatus: result.authorStatus,
+                        dormitory: result.dormitoryId,
+                        uuid: result.uuid,
+                        belongStatus: result.belongStatus)
+                    
+                    // delegate로 DeliveryVC를 넘겨줌
+                    partyVC.delegate = delegate
+                    
+                    var vcArray = self.navigationController?.viewControllers
+                    vcArray!.removeLast()
+                    vcArray!.append(partyVC)
+                    self.navigationController?.setViewControllers(vcArray!, animated: false)
                     self.navigationController?.popViewController(animated: true)
                 } else {
                     // 배달파티 생성 실패

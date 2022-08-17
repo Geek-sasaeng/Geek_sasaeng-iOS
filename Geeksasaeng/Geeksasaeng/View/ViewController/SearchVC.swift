@@ -1009,7 +1009,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewController = PartyViewController()
-        viewController.deliveryData = deliveryCellDataArray[indexPath.row]
+        viewController.partyId = deliveryCellDataArray[indexPath.row].id
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }

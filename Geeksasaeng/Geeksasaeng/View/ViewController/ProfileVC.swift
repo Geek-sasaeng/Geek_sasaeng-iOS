@@ -108,9 +108,10 @@ class ProfileViewController: UIViewController {
         return view
     }()
     
-    /* 공지사항, 나의 계정, 문의하기, 이용 약관 보기 */
+    /* 공지사항, 나의 활동 보기, 나의 정보, 문의하기, 이용 약관 보기 */
     let noticeLabel = UILabel()
-    let myAccountLabel = UILabel()
+    let myActivityLabel = UILabel()
+    let myInfoLabel = UILabel()
     let contactUsLabel = UILabel()
     let termsOfUseLabel = UILabel()
     
@@ -145,9 +146,10 @@ class ProfileViewController: UIViewController {
         return view
     }()
     
-    // 공지사항, 나의 계정, 문의하기, 이용 약관 보기 옆의 화살표 버튼
+    // 공지사항, 나의 활동 보기, 나의 정보, 문의하기, 이용 약관 보기 옆의 화살표 버튼
     let noticeArrowButton = UIButton()
-    let myAccountArrowButton = UIButton()
+    let myActivityArrowButton = UIButton()
+    let myInfoArrowButton = UIButton()
     let contactUsArrowButton = UIButton()
     let termsOfUseArrowButton = UIButton()
     
@@ -155,6 +157,7 @@ class ProfileViewController: UIViewController {
     let firstLineView = UIView()
     let secondLineView = UIView()
     let thirdLineView = UIView()
+    let fourthLineView = UIView()
     
     // 버전 표시
     let versionLabel: UILabel = {
@@ -199,24 +202,28 @@ class ProfileViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
     
         /* 서비스 labels Attrs 설정 */
-        [ noticeLabel, myAccountLabel, contactUsLabel, termsOfUseLabel].forEach {
+        [ noticeLabel, myActivityLabel, myInfoLabel, contactUsLabel, termsOfUseLabel].forEach {
             $0.font = .customFont(.neoMedium, size: 15)
             $0.textColor = .init(hex: 0x2F2F2F)
         }
         
         noticeLabel.text = "공지사항"
-        myAccountLabel.text = "나의 계정"
+        myActivityLabel.text = "나의 활동 보기"
+        myInfoLabel.text = "나의 정보"
         contactUsLabel.text = "문의하기"
-        termsOfUseLabel.text = "이용 약관 보기"
+        termsOfUseLabel.text = "서비스 이용 약관 보기"
         
-        [firstLineView, secondLineView, thirdLineView].forEach {
+        [firstLineView, secondLineView, fourthLineView].forEach {
             $0.backgroundColor = .init(hex: 0xF8F8F8)
         }
         
         /* 화살표 버튼들 */
-        [ noticeArrowButton, myAccountArrowButton, contactUsArrowButton, termsOfUseArrowButton ].forEach {
+        [ noticeArrowButton, myActivityArrowButton, myInfoArrowButton, contactUsArrowButton, termsOfUseArrowButton ].forEach {
             $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
         }
+        
+        /* 타겟 설정 */
+        myInfoArrowButton.addTarget(self, action: #selector(tapMyInfoButton), for: .touchUpInside)
     }
     
     // 스택뷰 구성
@@ -283,10 +290,12 @@ class ProfileViewController: UIViewController {
             noticeLabel,
             noticeView, noticeArrowButton,
             firstLineView,
-            myAccountLabel, myAccountArrowButton,
+            myActivityLabel, myActivityArrowButton,
             secondLineView,
-            contactUsLabel, contactUsArrowButton,
+            myInfoLabel, myInfoArrowButton,
             thirdLineView,
+            contactUsLabel, contactUsArrowButton,
+            fourthLineView,
             termsOfUseLabel, termsOfUseArrowButton,
             versionLabel
         ].forEach { contentView.addSubview($0) }
@@ -355,55 +364,70 @@ class ProfileViewController: UIViewController {
         
         noticeLabel.snp.makeConstraints { make in
             make.top.equalTo(separateView.snp.bottom).offset(17)
-            make.left.equalToSuperview().inset(23)
+            make.left.equalToSuperview().inset(24)
         }
         noticeView.snp.makeConstraints { make in
             make.top.equalTo(noticeLabel.snp.bottom).offset(13)
-            make.left.right.equalToSuperview().inset(28)
+            make.left.equalToSuperview().inset(29)
+            make.right.equalToSuperview().inset(27)
             make.height.equalTo(42)
         }
         firstLineView.snp.makeConstraints { make in
             make.top.equalTo(noticeView.snp.bottom).offset(12)
+            make.left.right.equalToSuperview().inset(19)
+            make.height.equalTo(1)
+        }
+        myActivityLabel.snp.makeConstraints { make in
+            make.top.equalTo(firstLineView.snp.bottom).offset(19)
+            make.left.equalToSuperview().inset(24)
+        }
+        secondLineView.snp.makeConstraints { make in
+            make.top.equalTo(myActivityLabel.snp.bottom).offset(19)
             make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1)
         }
-        myAccountLabel.snp.makeConstraints { make in
-            make.top.equalTo(firstLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(23)
+        myInfoLabel.snp.makeConstraints { make in
+            make.top.equalTo(secondLineView.snp.bottom).offset(19)
+            make.left.equalToSuperview().inset(24)
         }
-        secondLineView.snp.makeConstraints { make in
-            make.top.equalTo(myAccountLabel.snp.bottom).offset(19)
+        thirdLineView.snp.makeConstraints { make in
+            make.top.equalTo(myInfoLabel.snp.bottom).offset(19)
             make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1)
         }
         contactUsLabel.snp.makeConstraints { make in
-            make.top.equalTo(secondLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(thirdLineView.snp.bottom).offset(19)
+            make.left.equalToSuperview().inset(24)
         }
-        thirdLineView.snp.makeConstraints { make in
+        fourthLineView.snp.makeConstraints { make in
             make.top.equalTo(contactUsLabel.snp.bottom).offset(19)
             make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1)
         }
         termsOfUseLabel.snp.makeConstraints { make in
-            make.top.equalTo(thirdLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(fourthLineView.snp.bottom).offset(19)
+            make.left.equalToSuperview().inset(24)
         }
+        
         noticeArrowButton.snp.makeConstraints { make in
             make.centerY.equalTo(noticeLabel)
-            make.right.equalToSuperview().inset(32)
+            make.right.equalToSuperview().inset(31)
         }
-        myAccountArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(myAccountLabel)
-            make.right.equalToSuperview().inset(32)
+        myActivityArrowButton.snp.makeConstraints { make in
+            make.centerY.equalTo(myActivityLabel)
+            make.right.equalToSuperview().inset(31)
+        }
+        myInfoArrowButton.snp.makeConstraints { make in
+            make.centerY.equalTo(myInfoLabel)
+            make.right.equalToSuperview().inset(31)
         }
         contactUsArrowButton.snp.makeConstraints { make in
             make.centerY.equalTo(contactUsLabel)
-            make.right.equalToSuperview().inset(32)
+            make.right.equalToSuperview().inset(31)
         }
         termsOfUseArrowButton.snp.makeConstraints { make in
             make.centerY.equalTo(termsOfUseLabel)
-            make.right.equalToSuperview().inset(32)
+            make.right.equalToSuperview().inset(31)
         }
         versionLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -421,5 +445,10 @@ class ProfileViewController: UIViewController {
     @objc
     private func tapPencilButton() {
         print("DEBUG: 연필 버튼 클릭")
+    }
+    
+    @objc
+    private func tapMyInfoButton() {
+        print("DEBUG: 나의 정보 화살표 클릭")
     }
 }

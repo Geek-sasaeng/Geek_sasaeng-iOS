@@ -137,6 +137,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
+    
     var isSettedOptions = false // 옵션이 모두 설정되었는지
     var isEditedContentsTextView = false // 내용이 수정되었는지
     var mapView: MTMapView? // 카카오맵
@@ -149,7 +150,10 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         marker.draggable = true
         return marker
     }()
+    
     var dormitoryInfo: DormitoryNameResult?
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateDeliveryDelegate?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -756,6 +760,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = BankAccountViewController()
             childView.dormitoryInfo = self.dormitoryInfo
+            childView.delegate = self.delegate
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in
