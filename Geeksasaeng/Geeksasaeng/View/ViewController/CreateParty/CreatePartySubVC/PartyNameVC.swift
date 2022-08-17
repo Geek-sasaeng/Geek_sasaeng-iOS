@@ -118,7 +118,7 @@ class PartyNameViewController: UIViewController {
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
             make.width.equalTo(304)
-            make.height.equalTo(294)
+            make.height.equalTo(343)
         }
     }
     
