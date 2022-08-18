@@ -603,7 +603,7 @@ class ChattingViewController: UIViewController {
                     // 방장 설정
                     if participants.count >= 1 {
                         self.roomMaster = participants[0].participant
-                        print("setRoomMaster로 불러온 방장: ", self.roomMaster) as Any
+                        print("setRoomMaster로 불러온 방장: ", self.roomMaster)
                     }
                 } catch {
                     print(error.localizedDescription)
