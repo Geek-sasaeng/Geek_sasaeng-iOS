@@ -136,7 +136,6 @@ class SearchViewController: UIViewController {
     /* 배경에 있는 로고 이미지 */
     var logoImageView: UIImageView = {
         let imageView = UIImageView()
-        // TODO: - svg 파일로 하니까 색이 너무너무 연하다... 네오한테 말 해봐야 될 듯
         imageView.image = UIImage(named: "SearchBackLogo")
         return imageView
     }()
@@ -395,9 +394,10 @@ class SearchViewController: UIViewController {
         }
         
         logoImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(110)
-            make.left.right.equalToSuperview().inset(143)
-            make.height.equalTo(80)
+            make.bottom.equalToSuperview().inset(128)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(91)
+            make.height.equalTo(94)
         }
         
         /* 검색 결과 화면 서브뷰들 */
@@ -881,11 +881,6 @@ class SearchViewController: UIViewController {
             }
         }
     }
-    
-    // 이전 화면으로 돌아가기
-//    @objc func back(sender: UIBarButtonItem) {
-//        self.navigationController?.popViewController(animated: true)
-//    }
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate

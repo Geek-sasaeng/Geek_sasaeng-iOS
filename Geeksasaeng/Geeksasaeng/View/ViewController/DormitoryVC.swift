@@ -118,7 +118,7 @@ class DormitoryViewController: UIViewController {
         }
         
         backgroundLogoImageView.snp.makeConstraints { make in
-            make.top.equalTo(guideLabel.snp.bottom).offset(19)
+            make.top.equalTo(guideLabel.snp.bottom).offset(3)
             make.right.equalToSuperview()
         }
         
