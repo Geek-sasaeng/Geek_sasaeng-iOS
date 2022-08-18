@@ -357,10 +357,11 @@ class SearchViewController: UIViewController {
         searchTextField.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.left.equalToSuperview().inset(30)
+            make.right.equalTo(searchButton.snp.left).offset(-10)
         }
         
         searchButton.snp.makeConstraints { make in
-            make.centerY.equalTo(searchTextField)
+            make.centerY.equalTo(searchTextField).offset(-3)
             make.right.equalToSuperview().inset(33)
             make.width.height.equalTo(30)
         }

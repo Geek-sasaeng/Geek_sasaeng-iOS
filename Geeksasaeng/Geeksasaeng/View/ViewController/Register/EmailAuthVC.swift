@@ -275,11 +275,12 @@ class EmailAuthViewController: UIViewController {
         /* text fields */
         emailTextField.snp.makeConstraints { make in
             make.top.equalTo(emailLabel.snp.bottom).offset(15)
-            make.left.equalToSuperview().inset(36)
+            make.left.right.equalToSuperview().inset(28)
         }
         emailAddressTextField.snp.makeConstraints { make in
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
-            make.left.equalToSuperview().inset(36)
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authSendButton.snp.left).offset(-15)
         }
         
         /* authSendButton */

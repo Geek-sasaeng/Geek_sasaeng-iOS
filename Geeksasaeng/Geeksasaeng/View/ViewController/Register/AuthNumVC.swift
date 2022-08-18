@@ -182,8 +182,9 @@ class AuthNumViewController: UIViewController {
         
         /* authNumTextField */
         authNumTextField.snp.makeConstraints { make in
-            make.top.equalTo(authNumLabel.snp.bottom).offset(15)
-            make.left.equalToSuperview().inset(36)
+            make.top.equalTo(authNumLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authResendButton.snp.left).offset(-15)
         }
         
         /* remainTimeLabel */

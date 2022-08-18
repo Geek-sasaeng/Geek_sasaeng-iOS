@@ -294,13 +294,15 @@ class PhoneAuthViewController: UIViewController {
         
         /* phoneNumTextField */
         phoneNumTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
-            make.top.equalTo(phoneNumLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authSendButton.snp.left).offset(-15)
+            make.top.equalTo(phoneNumLabel.snp.bottom).offset(20)
         }
         /* authTextField */
         authTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
-            make.top.equalTo(authLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authCheckButton.snp.left).offset(-15)
+            make.top.equalTo(authLabel.snp.bottom).offset(20)
         }
         
         /* authSendButton */
