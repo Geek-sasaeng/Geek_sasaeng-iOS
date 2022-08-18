@@ -1146,6 +1146,9 @@
 		A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
 		A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
 		A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
+		A2E78B0928AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
+		A2E78B0A28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
+		A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
 		A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
@@ -1588,6 +1591,7 @@
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryNameModel.swift; sourceTree = "<group>"; };
 		A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSplash.mp4; sourceTree = "<group>"; };
+		A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
@@ -2364,6 +2368,7 @@
 				102B35D32879BCF90042F691 /* UITextField+Extension.swift */,
 				102B35D72879BD050042F691 /* UIButton+Extension.swift */,
 				102B35DB2879BD670042F691 /* UIViewController+Extension.swift */,
+				A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3521,6 +3526,7 @@
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */,
+				A2E78B0928AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				10EC391028AD307700A72DC6 /* MyInfoVC.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
@@ -3657,6 +3663,7 @@
 				A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
+				A2E78B0A28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
@@ -3718,6 +3725,7 @@
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				A225E10C28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
+				A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
 				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,

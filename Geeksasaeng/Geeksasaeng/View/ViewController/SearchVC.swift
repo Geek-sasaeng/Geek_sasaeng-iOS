@@ -665,7 +665,7 @@ class SearchViewController: UIViewController {
         if let num = num {
             cursor = 0
             nowPeopleFilter = num
-            print("DEBUG:", nowPeopleFilter, nowTimeFilter)
+            print("DEBUG:", nowPeopleFilter as Any, nowTimeFilter as Any)
             getSearchedDeliveryList()
         }
     }
