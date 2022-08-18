@@ -220,8 +220,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         mapSubView.snp.makeConstraints { make in
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.left.equalToSuperview().offset(28)
-            make.width.equalTo(314)
-            make.height.equalTo(144)
+            make.left.right.equalToSuperview().inset(23)
+            make.height.equalTo(205)
         }
         
         view.layoutSubviews()
@@ -520,8 +520,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         blockedView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.width.equalTo(314)
-            make.height.equalTo(144)
+            make.left.right.equalToSuperview().inset(23)
+            make.height.equalTo(205)
         }
     }
     
