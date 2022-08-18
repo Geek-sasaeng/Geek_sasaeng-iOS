@@ -80,11 +80,11 @@ class DeliveryViewController: UIViewController {
     
     // TODO: - 학교 API 연동 후 학교 사진으로 변경
     lazy var schoolImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "book"))
-        imageView.tintColor = .black
+        let imageView = UIImageView(image: UIImage(named: "GachonLogo"))
         imageView.snp.makeConstraints { make in
             make.width.height.equalTo(31)
         }
+        imageView.layer.cornerRadius = 31 / 2
         return imageView
     }()
     
