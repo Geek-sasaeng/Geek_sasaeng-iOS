@@ -491,6 +491,8 @@ class ProfileViewController: UIViewController {
     @objc
     private func tapMyInfoButton() {
         print("DEBUG: 나의 정보 화살표 클릭")
+        let myInfoVC = MyInfoViewController()
+        navigationController?.pushViewController(myInfoVC, animated: true)
     }
 }
 

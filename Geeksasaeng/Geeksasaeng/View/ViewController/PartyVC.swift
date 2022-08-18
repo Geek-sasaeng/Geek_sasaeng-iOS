@@ -573,7 +573,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        mapView = nil
+        mapView = nil
     }
     
     // MARK: - Functions
@@ -863,7 +863,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         mapSubView.snp.makeConstraints { make in
             make.top.equalTo(pickupLocationLabel.snp.bottom).offset(24)
             make.left.right.equalToSuperview().inset(23)
-            make.height.equalTo(122)
+            make.height.equalTo(205)
         }
         
         matchingStatusView.snp.makeConstraints { make in
