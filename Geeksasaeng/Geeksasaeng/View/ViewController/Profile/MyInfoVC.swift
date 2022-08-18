@@ -11,6 +11,7 @@ import SnapKit
 class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - SubViews
+    
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .white

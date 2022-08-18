@@ -36,7 +36,7 @@ class SplashPlayerViewController: AVPlayerViewController {
         print("func : play video")
         
         // 비디오 path 설정.
-        guard let path = Bundle.main.path(forResource: "Splash", ofType: "mp4") else {
+        guard let path = Bundle.main.path(forResource: "NewSplash", ofType: "mp4") else {
             debugPrint(".mp4 not found")
             return
         }

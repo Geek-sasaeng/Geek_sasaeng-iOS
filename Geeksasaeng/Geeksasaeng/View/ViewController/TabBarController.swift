@@ -60,7 +60,7 @@ class TabBarController: UITabBarController {
     private func setupVCs() {
         viewControllers = [
             createNavController(for: DeliveryViewController(), title: titleArray[0], image: UIImage(named: "Home")!),
-            createNavController(for: DeliveryViewController(), title: "", image: UIImage(named: "Community")!),
+            createNavController(for: CommunityViewController(), title: "", image: UIImage(named: "Community")!),
             createNavController(for: ChattingListViewController(), title: "", image: UIImage.init(named: "Chat")!),
             createNavController(for: ProfileViewController(), title: "", image: UIImage.init(named: "Profile")!),
         ]

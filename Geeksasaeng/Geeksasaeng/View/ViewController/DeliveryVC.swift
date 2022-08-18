@@ -104,7 +104,6 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Category Labels */
-    // TODO: - 배달 파티 탭 누르면 배달 목록 스크롤 젤 위로 돌아가는 기능 구현
     var deliveryPartyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
@@ -318,6 +317,19 @@ class DeliveryViewController: UIViewController {
         // 그라데이션 적용
         view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
         view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
+        return view
+    }()
+    
+    let readyView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        let imageView = UIImageView(image: UIImage(named: "ReadyImage"))
+        view.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.width.equalTo(153)
+            make.height.equalTo(143)
+        }
         return view
     }()
     
@@ -815,6 +827,7 @@ class DeliveryViewController: UIViewController {
                     helperLabel.textColor = .init(hex: 0xCBCBCB)
                     helperLabel.font = .customFont(.neoMedium, size: 16)
                     // 배달파티 리스트 보여주기
+                    removeReadyView()
                     break
                 case "마켓":
                     print("DEBUG: 마켓")
@@ -829,7 +842,7 @@ class DeliveryViewController: UIViewController {
                     marketLabel.font = .customFont(.neoBold, size: 16)
                     helperLabel.textColor = .init(hex: 0xCBCBCB)
                     helperLabel.font = .customFont(.neoMedium, size: 16)
-                    // TODO: 마켓 리스트 준비 중 화면 보여주기
+                    showReadyView()
                     break
                 case "헬퍼":
                     print("DEBUG: 헬퍼")
@@ -844,7 +857,7 @@ class DeliveryViewController: UIViewController {
                     marketLabel.font = .customFont(.neoMedium, size: 16)
                     helperLabel.textColor = .init(hex: 0x2F2F2F)
                     helperLabel.font = .customFont(.neoBold, size: 16)
-                    // TODO: 헬퍼 리스트 준비 중 화면 보여주기
+                    showReadyView()
                     break
                 default:
                     return
@@ -1049,6 +1062,19 @@ class DeliveryViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    private func showReadyView() {
+        view.addSubview(readyView)
+        readyView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+        }
+    }
+    
+    private func removeReadyView() {
+        readyView.removeFromSuperview()
     }
 }
 

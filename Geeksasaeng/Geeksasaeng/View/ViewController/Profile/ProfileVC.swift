@@ -10,6 +10,10 @@ import SnapKit
 
 class ProfileViewController: UIViewController {
 
+    // MARK: - Properties
+    
+    var ongoingPartyIdList: [Int] = []
+    
     // MARK: - SubViews
     
     // 스크롤뷰
@@ -28,6 +32,18 @@ class ProfileViewController: UIViewController {
         let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 118 / 2
+        return imageView
+    }()
+    let levelIconImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "TempLevelIcon"))
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 37 / 2
+        // 테두리 그림자 생성
+        imageView.layer.shadowRadius = 5
+        imageView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        imageView.layer.shadowOpacity = 1
+        imageView.layer.shadowOffset = CGSize(width: 0, height: 0)
+        imageView.layer.masksToBounds = false
         return imageView
     }()
     
@@ -58,53 +74,69 @@ class ProfileViewController: UIViewController {
         return label
     }()
     
-    // 파티 이미지
-    let partyImageView: UIImageView = {
+    // 신입생 lv 이미지
+    let freshmanImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
-        imageView.image = UIImage(named: "TempCategoryImage")
+        imageView.image = UIImage(named: "TempLevelImage")
         return imageView
     }()
-    // 심부름 이미지
-    let errandImageView: UIImageView = {
+    // 복학생 lv 이미지
+    let returningStudentImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
-        imageView.image = UIImage(named: "TempCategoryImage")
+        imageView.image = UIImage(named: "TempLevelImage")
         return imageView
     }()
-    // 거래 이미지
-    let dealImageView: UIImageView = {
+    // 졸업생 lv 이미지
+    let graduateImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
-        imageView.image = UIImage(named: "TempCategoryImage")
+        imageView.image = UIImage(named: "TempLevelImage")
         return imageView
     }()
     
-    // 파티/심부름/거래 카테고리 정보에 관한 스택뷰들
-    let categoryImageStackView = UIStackView()
-    let categoryLabelStackView = UIStackView()
-    let categoryNumStackView = UIStackView()
+    // level 정보에 관한 스택뷰들
+    let levelImageStackView = UIStackView()
+    let levelLabelStackView = UIStackView()
     
-    // 내역 전체 보기
-    let totalDetailLabel: UILabel = {
+    // level 바
+    let freshmanBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainColor
+        view.layer.cornerRadius = 2.5
+        return view
+    }()
+    let totalBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xEFEFEF)
+        view.layer.cornerRadius = 2.5
+        return view
+    }()
+    
+    let ongoingLabel: UILabel = {
         let label = UILabel()
-        label.text = "내역 전체 보기"
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .init(hex: 0xA8A8A8)
+        label.text = "진행 중인 활동"
+        label.font = .customFont(.neoMedium, size: 15)
+        label.textColor = .init(hex: 0x2F2F2F)
         return label
     }()
     
-    // 내역 전체 보기 옆의 화살표 버튼
-    let totalDetailArrowButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "MiniArrow"), for: .normal)
-        return button
-    }()
+    let ongoingTableView = UITableView()
     
     /* 구분선 View */
     let separateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
+        return view
+    }()
+    
+    /* 공지사항 옆에 파란색 동그라미 */
+    let noticeCheckAlarmView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainColor
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 5 / 2
         return view
     }()
     
@@ -176,12 +208,12 @@ class ProfileViewController: UIViewController {
         setAttributes()
         
         /* 스택뷰 설정 */
-        setStackView(passedArray: [partyImageView, errandImageView, dealImageView], stackView: categoryImageStackView)
-        setStackView(passedArray: ["파티", "심부름", "거래"], stackView: categoryLabelStackView)
-        setStackView(passedArray: [3, 2, 1], stackView: categoryNumStackView)
+        setStackView(passedArray: [freshmanImageView, returningStudentImageView, graduateImageView], stackView: levelImageStackView)
+        setStackView(passedArray: ["신입생", "복학생", "졸업생"], stackView: levelLabelStackView)
         
         addSubViews()
         setLayouts()
+        setTableView()
     }
     
     // MARK: - Functions
@@ -189,14 +221,8 @@ class ProfileViewController: UIViewController {
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
-        self.navigationItem.setLeftBarButton(
-            UIBarButtonItem(image: UIImage(named: "Bell"), style: .plain, target: self, action: #selector(tapBellButton)
-                           ), animated: true)
-        self.navigationItem.leftBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
-        self.navigationItem.leftBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-        
         self.navigationItem.setRightBarButton(
-            UIBarButtonItem(image: UIImage(named: "Pencil"), style: .plain, target: self, action: #selector(tapPencilButton)
+            UIBarButtonItem(image: UIImage(named: "Bell"), style: .plain, target: self, action: #selector(tapBellButton)
                            ), animated: true)
         self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
@@ -234,41 +260,25 @@ class ProfileViewController: UIViewController {
             stackView.layoutIfNeeded()
             stackView.distribution = .fillProportionally
             stackView.alignment = .center
-            stackView.spacing = 38
+            stackView.spacing = 95
             
             for imageView in imageArray {
                 stackView.addArrangedSubview(imageView)
             }
-        } else if let stringArray = passedArray as? [String] {
+        } else {
+            let stringArray = passedArray as! [String]
             stackView.axis = .horizontal
             stackView.sizeToFit()
             stackView.layoutIfNeeded()
             stackView.distribution = .fillProportionally
             stackView.alignment = .center
-            stackView.spacing = 58
+            stackView.spacing = 75
             
             for string in stringArray {
                 let label = UILabel()
-                label.font = .customFont(.neoMedium, size: 15)
-                label.textColor = .init(hex: 0x2F2F2F)
+                label.font = .customFont(.neoMedium, size: 12)
+                label.textColor = .init(hex: 0x636363)
                 label.text = string
-                stackView.addArrangedSubview(label)
-            }
-        } else {
-            let numberArray = passedArray as! [Int]
-            
-            stackView.axis = .horizontal
-            stackView.sizeToFit()
-            stackView.layoutIfNeeded()
-            stackView.distribution = .fillProportionally
-            stackView.alignment = .center
-            stackView.spacing = 84
-            
-            for num in numberArray {
-                let label = UILabel()
-                label.font = .customFont(.neoBold, size: 15)
-                label.textColor = .mainColor
-                label.text = String(num)
                 stackView.addArrangedSubview(label)
             }
         }
@@ -280,13 +290,16 @@ class ProfileViewController: UIViewController {
         
         [
             profileImageView,
+            levelIconImageView,
             degreeLabel, dotImageView, univLabel,
             nickNameLabel,
-            categoryImageStackView,
-            categoryLabelStackView,
-            categoryNumStackView,
-            totalDetailLabel, totalDetailArrowButton,
+            levelImageStackView,
+            totalBar, freshmanBar,
+            levelLabelStackView,
+            ongoingLabel,
+            ongoingTableView,
             separateView,
+            noticeCheckAlarmView,
             noticeLabel,
             noticeView, noticeArrowButton,
             firstLineView,
@@ -313,10 +326,16 @@ class ProfileViewController: UIViewController {
         }
         
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().inset(28)
             make.centerX.equalToSuperview()
             make.width.height.equalTo(118)
         }
+        levelIconImageView.snp.makeConstraints { make in
+            make.top.equalTo(profileImageView.snp.top).offset(3)
+            make.left.equalTo(profileImageView.snp.left).offset(-6)
+            make.width.height.equalTo(37)
+        }
+        
         dotImageView.snp.makeConstraints { make in
             make.centerX.equalTo(profileImageView)
             make.top.equalTo(profileImageView.snp.bottom).offset(18)
@@ -334,36 +353,47 @@ class ProfileViewController: UIViewController {
             make.centerX.equalTo(profileImageView)
             make.top.equalTo(univLabel.snp.bottom).offset(4)
         }
-        categoryImageStackView.snp.makeConstraints { make in
+        levelImageStackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(22)
         }
-        categoryLabelStackView.snp.makeConstraints { make in
-            make.centerX.equalTo(categoryImageStackView)
-            make.top.equalTo(categoryImageStackView.snp.bottom).offset(15)
+        totalBar.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(44)
+            make.top.equalTo(levelImageStackView.snp.bottom).offset(9)
+            make.height.equalTo(5)
         }
-        categoryNumStackView.snp.makeConstraints { make in
-            make.centerX.equalTo(categoryImageStackView)
-            make.top.equalTo(categoryLabelStackView.snp.bottom).offset(9)
+        freshmanBar.snp.makeConstraints { make in
+            make.top.left.equalTo(totalBar)
+            make.width.equalTo((UIScreen.main.bounds.width - 44 - 44) / 3)
+            make.height.equalTo(5)
         }
-        totalDetailLabel.snp.makeConstraints { make in
-            make.top.equalTo(categoryNumStackView.snp.bottom).offset(21)
-            make.centerX.equalTo(categoryNumStackView).offset(-6)
+        levelLabelStackView.snp.makeConstraints { make in
+            make.centerX.equalTo(totalBar)
+            make.top.equalTo(totalBar.snp.bottom).offset(12)
         }
-        totalDetailArrowButton.snp.makeConstraints { make in
-            make.left.equalTo(totalDetailLabel.snp.right).offset(4)
-            make.centerY.equalTo(totalDetailLabel)
-            make.width.equalTo(9)
-            make.height.equalTo(7)
+        
+        ongoingLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(levelLabelStackView.snp.bottom).offset(49)
+        }
+        ongoingTableView.snp.makeConstraints { make in
+            make.top.equalTo(ongoingLabel.snp.bottom).offset(27-9)
+            make.left.right.equalToSuperview().inset(42)
+            make.height.equalTo(9 + 44 + 9 + 44 + 9 + 44)
         }
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(totalDetailLabel.snp.bottom).offset(20)
+            make.top.equalTo(ongoingTableView.snp.bottom).offset(31)
             make.width.equalToSuperview()
             make.height.equalTo(8)
         }
         
+        noticeCheckAlarmView.snp.makeConstraints { make in
+            make.top.equalTo(separateView.snp.bottom).offset(11)
+            make.left.equalToSuperview().inset(81)
+            make.width.height.equalTo(5)
+        }
         noticeLabel.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(17)
+            make.top.equalTo(noticeCheckAlarmView.snp.bottom).offset(1)
             make.left.equalToSuperview().inset(24)
         }
         noticeView.snp.makeConstraints { make in
@@ -435,6 +465,17 @@ class ProfileViewController: UIViewController {
         }
     }
     
+    private func setTableView() {
+        ongoingTableView.dataSource = self
+        ongoingTableView.delegate = self
+        ongoingTableView.register(OngoingTableViewCell.self, forCellReuseIdentifier: OngoingTableViewCell.identifier)
+        
+        ongoingTableView.rowHeight = 53
+        ongoingTableView.separatorColor = .none
+        ongoingTableView.separatorStyle = .none
+//        ongoingTableView.
+    }
+    
     // MARK: - @objc Functions
     
     @objc
@@ -452,5 +493,35 @@ class ProfileViewController: UIViewController {
         print("DEBUG: 나의 정보 화살표 클릭")
         let myInfoVC = MyInfoViewController()
         navigationController?.pushViewController(myInfoVC, animated: true)
+    }
+}
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
+
+extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: OngoingTableViewCell.identifier, for: indexPath) as? OngoingTableViewCell else { return UITableViewCell() }
+        
+        let row = indexPath.row
+        /* 가장 최근에 참여한 배달 파티 3개 가져오는 API 호출 */
+        RecentPartyViewModel.requestGetRecentPartyList { result in
+            // 성공 시에만 title, partyId 설정
+            cell.partyTitle = result[row].title
+            
+            guard let partyId = result[row].id else { return }
+            self.ongoingPartyIdList.append(partyId)
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let partyVC = PartyViewController()
+        partyVC.partyId = ongoingPartyIdList[indexPath.row]
+        self.navigationController?.pushViewController(partyVC, animated: true)
     }
 }
