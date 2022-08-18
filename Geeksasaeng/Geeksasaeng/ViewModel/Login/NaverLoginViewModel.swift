@@ -44,7 +44,7 @@ class naverLoginViewModel {
         
         let req = AF.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: ["Authorization": authorization])
         
-        req.responseJSON { response in
+        req.responseData { response in
             
             guard let body = response.value as? [String: Any] else { return }
             
