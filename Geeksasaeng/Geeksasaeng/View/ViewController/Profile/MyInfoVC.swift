@@ -26,7 +26,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     let userImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.fill")
+        imageView.image = UIImage(named: "EditUserImage")
         return imageView
     }()
     
@@ -123,6 +123,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         button.clipsToBounds = true
         button.layer.cornerRadius = 5
         button.setTitle("로그아웃", for: .normal)
+        button.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
         return button
     }()
     
@@ -258,5 +259,14 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc
+    private func tapLogoutButton() {
+        print("tapLogoutButton")
+        UserDefaults.standard.set("nil", forKey: "jwt")
+        let rootVC = LoginViewController()
+        UIApplication.shared.windows.first?.rootViewController = rootVC
+        self.view.window?.rootViewController?.dismiss(animated: true)
     }
 }
