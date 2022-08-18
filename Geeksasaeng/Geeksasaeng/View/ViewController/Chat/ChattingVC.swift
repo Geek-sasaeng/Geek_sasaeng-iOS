@@ -1336,6 +1336,9 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightImageView.isHidden = false
                 cell.rightTimeLabel.isHidden = false
                 cell.rightUnReadCountLabel.isHidden = false
+                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+                }
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
@@ -1348,6 +1351,9 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.leftImageView.isHidden = false
                 cell.leftTimeLabel.isHidden = false
                 cell.leftUnReadCountLabel.isHidden = false
+                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+                }
             }
             return cell
         }
