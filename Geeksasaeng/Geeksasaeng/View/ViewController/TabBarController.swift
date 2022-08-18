@@ -59,10 +59,10 @@ class TabBarController: UITabBarController {
     /* TabBar에 들어갈 VC들을 구성하는 함수 */
     private func setupVCs() {
         viewControllers = [
-            createNavController(for: DeliveryViewController(), title: titleArray[0], image: UIImage(named: "Home")!),
-            createNavController(for: CommunityViewController(), title: "", image: UIImage(named: "Community")!),
-            createNavController(for: ChattingListViewController(), title: "", image: UIImage.init(named: "Chat")!),
-            createNavController(for: ProfileViewController(), title: "", image: UIImage.init(named: "Profile")!),
+            createNavController(for: DeliveryViewController(), title: titleArray[0], image: UIImage(named: "Home")!.imageResized(to: CGSize(width: 22, height: 25)).withRenderingMode(.alwaysOriginal)),
+            createNavController(for: CommunityViewController(), title: "", image: UIImage(named: "Community")!.imageResized(to: CGSize(width: 25, height: 25)).withRenderingMode(.alwaysOriginal)),
+            createNavController(for: ChattingListViewController(), title: "", image: UIImage.init(named: "Chat")!.imageResized(to: CGSize(width: 25, height: 25)).withRenderingMode(.alwaysOriginal)),
+            createNavController(for: ProfileViewController(), title: "", image: UIImage.init(named: "Profile")!.imageResized(to: CGSize(width: 25, height: 25)).withRenderingMode(.alwaysOriginal)),
         ]
     }
     
@@ -106,5 +106,13 @@ extension UIViewController: UIGestureRecognizerDelegate {
     /* 스와이프 제스쳐로 VC를 pop할 수 있게 설정 */
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+}
+
+extension UIImage {
+    func imageResized(to size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            draw(in: CGRect(origin: .zero, size: size))
+        }
     }
 }

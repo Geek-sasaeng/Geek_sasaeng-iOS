@@ -29,7 +29,7 @@ class ProfileViewController: UIViewController {
     }()
     
     let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
+        let imageView = UIImageView(image: UIImage(named: "ProfileImage"))
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 118 / 2
         return imageView
