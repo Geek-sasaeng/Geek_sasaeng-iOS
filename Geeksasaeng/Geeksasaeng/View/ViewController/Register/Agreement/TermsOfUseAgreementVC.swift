@@ -44,6 +44,8 @@ class TermsOfUseAgreementViewController: UIViewController {
     lazy var collectionItemContentLabel = createNeoRegularFourteen(text: "회사는 서비스 제공을 위해 다음 항목 중 최소한의 개인정보를 수집합니다.")
     lazy var collectionItemFirstDotLabel = createNeoMediumFifteen(text: "· 회원가입 시 수집되는 개인정보")
     lazy var collectionItemUnderFirstDotLabel = createNeoRegularFourteen(text: "학교, 기숙사, 아이디, 이메일, 이름, 휴대전화 번호, 생년월일, 성별, 입학연도, 닉네임, 연계정보(CI, DI)")
+    lazy var collectionItemSecondDotLabel = createNeoMediumFifteen(text: "· 별도로 수집되는 개인정보")
+    lazy var collectionItemLabelOne = createNeoMediumFourteen(text: "1. 학교 인증을 한 경우")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +59,7 @@ class TermsOfUseAgreementViewController: UIViewController {
     private func addSubViews() {
         [
             processingPolicyTitleLabel, processingPolicyContentLabel, separateViewBetweenOneTwo,
-            collectionItemTitleLabel, collectionItemContentLabel, collectionItemFirstDotLabel, collectionItemUnderFirstDotLabel
+            collectionItemTitleLabel, collectionItemContentLabel, collectionItemFirstDotLabel, collectionItemUnderFirstDotLabel, collectionItemSecondDotLabel, collectionItemLabelOne
         ].forEach {
             contentsView.addSubview($0)
         }
@@ -89,9 +91,9 @@ class TermsOfUseAgreementViewController: UIViewController {
             make.left.equalToSuperview().inset(23)
         }
         processingPolicyContentLabel.snp.makeConstraints { make in
-            make.width.equalTo(292)
             make.top.equalTo(processingPolicyTitleLabel.snp.bottom).offset(16)
             make.left.equalToSuperview().inset(42)
+            make.right.equalToSuperview().inset(26)
         }
         separateViewBetweenOneTwo.snp.makeConstraints { make in
             make.top.equalTo(processingPolicyContentLabel.snp.bottom).offset(16)
@@ -105,18 +107,26 @@ class TermsOfUseAgreementViewController: UIViewController {
             make.left.equalToSuperview().inset(23)
         }
         collectionItemContentLabel.snp.makeConstraints { make in
-            make.width.equalTo(292)
             make.top.equalTo(collectionItemTitleLabel.snp.bottom).offset(16)
             make.left.equalToSuperview().inset(42)
+            make.right.equalToSuperview().inset(26)
         }
         collectionItemFirstDotLabel.snp.makeConstraints { make in
             make.top.equalTo(collectionItemContentLabel.snp.bottom).offset(27)
             make.left.equalToSuperview().inset(42)
         }
         collectionItemUnderFirstDotLabel.snp.makeConstraints { make in
-            make.width.equalTo(274)
             make.top.equalTo(collectionItemFirstDotLabel.snp.bottom).offset(9)
             make.left.equalToSuperview().inset(60)
+            make.right.equalToSuperview().inset(26)
+        }
+        collectionItemSecondDotLabel.snp.makeConstraints { make in
+            make.top.equalTo(collectionItemUnderFirstDotLabel.snp.bottom).offset(22)
+            make.left.equalToSuperview().inset(42)
+        }
+        collectionItemLabelOne.snp.makeConstraints { make in
+            make.top.equalTo(collectionItemSecondDotLabel.snp.bottom).offset(9)
+            make.left.equalToSuperview().inset(66)
         }
         
         
@@ -151,6 +161,18 @@ class TermsOfUseAgreementViewController: UIViewController {
     private func createNeoMediumFifteen(text: String) -> UILabel {
         let label = UILabel()
         label.font = .customFont(.neoMedium, size: 15)
+        label.numberOfLines = 0
+        let attrString = NSMutableAttributedString(string: text)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 10
+        attrString.addAttributes([.paragraphStyle: paragraphStyle], range: NSMakeRange(0, attrString.length))
+        label.attributedText = attrString
+        return label
+    }
+    
+    private func createNeoMediumFourteen(text: String) -> UILabel {
+        let label = UILabel()
+        label.font = .customFont(.neoMedium, size: 14)
         label.numberOfLines = 0
         let attrString = NSMutableAttributedString(string: text)
         let paragraphStyle = NSMutableParagraphStyle()

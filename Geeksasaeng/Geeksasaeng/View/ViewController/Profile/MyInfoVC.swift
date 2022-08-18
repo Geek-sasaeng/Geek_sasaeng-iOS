@@ -148,6 +148,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         setNavigationBar()
         addSubViews()
         setLayouts()
+        setUserInfo()
     }
     
     // MARK: - Functions
@@ -253,6 +254,16 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         withdrawalMembershipButton.snp.makeConstraints { make in
             make.top.equalTo(logoutButton.snp.bottom).offset(19)
             make.centerX.equalToSuperview()
+        }
+    }
+    
+    private func setUserInfo() {
+        UserInfoAPI.getUserInfo { isSuccess, result in
+            self.dormitoryDataLabel.text = result.dormitoryName
+            self.nicknameDataLabel.text = result.nickname
+            self.idDataLabel.text = result.loginId
+            self.emailDataLabel.text = result.emailAddress
+            self.phoneNumDataLabel.text = result.phoneNumber
         }
     }
     
