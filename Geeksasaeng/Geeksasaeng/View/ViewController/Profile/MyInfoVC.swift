@@ -194,7 +194,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         userImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(97)
+            make.top.equalToSuperview().inset(40)
             make.width.height.equalTo(166)
             make.centerX.equalToSuperview()
         }
