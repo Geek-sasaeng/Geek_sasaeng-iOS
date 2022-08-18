@@ -799,6 +799,9 @@ class SearchViewController: UIViewController {
                 label.textColor = .init(hex: 0xD8D8D8)
             }
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* 시간 필터를 탭하면 mainColor로 색깔 바뀌도록 */
@@ -832,6 +835,9 @@ class SearchViewController: UIViewController {
             print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
             getSearchedDeliveryList()
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* 새로고침 기능 */

@@ -908,6 +908,9 @@ class DeliveryViewController: UIViewController {
                 label.textColor = .init(hex: 0xD8D8D8)
             }
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* 시간 필터를 탭하면 mainColor로 색깔 바뀌도록 */
@@ -946,6 +949,9 @@ class DeliveryViewController: UIViewController {
                 getDeliveryList(maxMatching: nowPeopleFilter)
             }
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* CreatePartyButton을 누르면 파티 생성 화면으로 전환 */
