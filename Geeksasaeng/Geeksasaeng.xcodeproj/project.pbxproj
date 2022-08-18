@@ -1024,8 +1024,6 @@
 		A218D7BD28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */; };
 		A218D7BE28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */; };
 		A218D7BF28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */; };
-		A21D3EE628AE52A8000F96DC /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A21D3EE528AE52A8000F96DC /* NewSplash.mp4 */; };
-		A21D3EE728AE52A8000F96DC /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A21D3EE528AE52A8000F96DC /* NewSplash.mp4 */; };
 		A21DB934289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
 		A21DB935289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
 		A21DB936289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
@@ -1145,6 +1143,9 @@
 		A2E6EADE2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
+		A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
+		A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
+		A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
 		A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
@@ -1548,7 +1549,6 @@
 		A20FC0F0287F30C40095224C /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseMatchingAPI.swift; sourceTree = "<group>"; };
-		A21D3EE528AE52A8000F96DC /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = NewSplash.mp4; path = Geeksasaeng/NewSplash.mp4; sourceTree = SOURCE_ROOT; };
 		A21DB933289D896B00A523F1 /* ChattingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListVC.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A225E10928ADE06A00029686 /* CommunityVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityVC.swift; sourceTree = "<group>"; };
@@ -1587,6 +1587,7 @@
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryNameModel.swift; sourceTree = "<group>"; };
+		A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSplash.mp4; sourceTree = "<group>"; };
 		A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
@@ -1723,12 +1724,12 @@
 				100FB99528745BE3008947DD /* View */,
 				100FB99428745AAC008947DD /* ViewModel */,
 				A2B4208E286F1F0500278F92 /* Extension */,
-				A21D3EE528AE52A8000F96DC /* NewSplash.mp4 */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
 				10B75B5F289CDD810002865C /* GoogleService-Info.plist */,
 				105442B8287F0083003B8799 /* Kakao-Map-Bridge-Header.h */,
+				A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */,
 			);
 			path = Geeksasaeng;
 			sourceTree = "<group>";
@@ -2786,6 +2787,7 @@
 				10543FFD287F0055003B8799 /* annotated_dup.js in Resources */,
 				1054409F287F0055003B8799 /* bdwn.png in Resources */,
 				1054414A287F0056003B8799 /* properties_1.js in Resources */,
+				A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105440B7287F0056003B8799 /* functions_d.js in Resources */,
 				1054424F287F0057003B8799 /* _m_t_map_view_8h_source.html in Resources */,
 				105441F2287F0056003B8799 /* pages_0.html in Resources */,
@@ -2850,7 +2852,6 @@
 				105441BA287F0056003B8799 /* properties_8.js in Resources */,
 				1054409D287F0055003B8799 /* tab_b.png in Resources */,
 				10544187287F0056003B8799 /* all_1.html in Resources */,
-				A21D3EE628AE52A8000F96DC /* NewSplash.mp4 in Resources */,
 				1054416F287F0056003B8799 /* all_13.html in Resources */,
 				10544112287F0056003B8799 /* functions_9.js in Resources */,
 				10544295287F0057003B8799 /* _m_t_map_circle_8h.html in Resources */,
@@ -2964,6 +2965,7 @@
 				105440A3287F0056003B8799 /* navtree.css in Resources */,
 				1054410F287F0056003B8799 /* all_e.html in Resources */,
 				10543F8F287F0055003B8799 /* DaumMap.embeddedframework.zip in Resources */,
+				A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105441C6287F0056003B8799 /* variables_5.js in Resources */,
 				1054424A287F0057003B8799 /* struct_m_t_map_point_plain.js in Resources */,
 				105440FD287F0056003B8799 /* properties_2.html in Resources */,
@@ -3137,7 +3139,6 @@
 				105441BB287F0056003B8799 /* properties_8.js in Resources */,
 				1054409E287F0055003B8799 /* tab_b.png in Resources */,
 				10544188287F0056003B8799 /* all_1.html in Resources */,
-				A21D3EE728AE52A8000F96DC /* NewSplash.mp4 in Resources */,
 				10544170287F0056003B8799 /* all_13.html in Resources */,
 				10544113287F0056003B8799 /* functions_9.js in Resources */,
 				10544296287F0057003B8799 /* _m_t_map_circle_8h.html in Resources */,
@@ -3251,6 +3252,7 @@
 				105440A4287F0056003B8799 /* navtree.css in Resources */,
 				10544110287F0056003B8799 /* all_e.html in Resources */,
 				10543F90287F0055003B8799 /* DaumMap.embeddedframework.zip in Resources */,
+				A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105441C7287F0056003B8799 /* variables_5.js in Resources */,
 				1054424B287F0057003B8799 /* struct_m_t_map_point_plain.js in Resources */,
 				105440FE287F0056003B8799 /* properties_2.html in Resources */,

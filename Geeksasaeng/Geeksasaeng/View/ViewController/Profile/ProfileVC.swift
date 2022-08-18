@@ -473,7 +473,6 @@ class ProfileViewController: UIViewController {
         ongoingTableView.rowHeight = 53
         ongoingTableView.separatorColor = .none
         ongoingTableView.separatorStyle = .none
-//        ongoingTableView.
     }
     
     // MARK: - @objc Functions
