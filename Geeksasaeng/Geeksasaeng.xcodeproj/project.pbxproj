@@ -2229,6 +2229,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		A225E10D28ADEBF700029686 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		A248D88B289FB881000E2422 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
@@ -2334,7 +2342,7 @@
 				10D4D6B02894F84F00B53AB0 /* EditParty */,
 				A2D2047728885A14002350C8 /* Report */,
 				A24F0B29289D88AF007A9C5C /* Chat */,
-				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
+				A225E10D28ADEBF700029686 /* Profile */,
 				A225E10928ADE06A00029686 /* CommunityVC.swift */,
 			);
 			path = ViewController;
