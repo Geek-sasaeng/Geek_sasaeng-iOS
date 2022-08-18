@@ -38,7 +38,14 @@ class ChattingListViewController: UIViewController {
     // MARK: - Properties
     
     // 현재 선택되어 있는 필터의 label
-    var selectedLabel: UILabel? = nil
+    var selectedLabel: UILabel? = nil {
+        didSet {
+            if selectedLabel?.text != "배달파티" {
+                showReadyView()
+            }
+        }
+    }
+    
     // 채팅 더미 데이터
     var chattingRoomList: [RoomInfoDetailModel] = [] {
         didSet {
@@ -46,6 +53,9 @@ class ChattingListViewController: UIViewController {
         }
     }
     var roomUUIDList: [String] = []
+    
+    // 채팅 보관함 버튼 눌렀는지/안 눌렀는지 확인을 위해
+    var isStorageOn: Bool = false
     
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
@@ -80,6 +90,20 @@ class ChattingListViewController: UIViewController {
     }()
     
     let chattingTableView = UITableView()
+    
+    // 준비 중입니다 화면
+    let readyView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        let imageView = UIImageView(image: UIImage(named: "ReadyImage"))
+        view.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.width.equalTo(153)
+            make.height.equalTo(143)
+        }
+        return view
+    }()
     
     // MARK: - Life Cycle
     
@@ -264,6 +288,22 @@ class ChattingListViewController: UIViewController {
         }
     }
     
+    /* 준비 중입니다 화면 띄우기 */
+    private func showReadyView() {
+        view.addSubview(readyView)
+        readyView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(filterStackView.snp.bottom).offset(8)
+        }
+    }
+    
+    private func removeReadyView() {
+        readyView.removeFromSuperview()
+    }
+    
+    // MARK: - @objc Functions
+    
     /* 필터를 탭하면 텍스트 색깔이 바뀌도록 */
     @objc
     private func tapFilterLabel(sender: UITapGestureRecognizer) {
@@ -276,20 +316,34 @@ class ChattingListViewController: UIViewController {
             if selectedLabel != nil {
                 // 색깔 원상복귀
                 selectedLabel?.textColor = .init(hex: 0xD8D8D8)
+                // 이전에 선택돼있던 게 심부름/거래 였으면 준비 중입니다 뷰 삭제
+                if selectedLabel?.text != "배달파티" {
+                    removeReadyView()
+                }
             }
             label.textColor = .mainColor
             selectedLabel = label
-        } else {
-            // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 필터 0개
-            label.textColor = .init(hex: 0xD8D8D8)
-            selectedLabel = nil
         }
     }
     
     @objc
     private func tapStorageBox() {
-        // TODO: - 채팅 보관함으로 이동
+        isStorageOn = !isStorageOn
         print("DEBUG: 채팅 보관함 아이콘 클릭")
+        if isStorageOn {
+            view.addSubview(readyView)
+            readyView.snp.makeConstraints { make in
+                make.width.equalToSuperview()
+                make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            }
+        } else {
+            if selectedLabel?.text == "배달파티" {
+                removeReadyView()
+            } else {
+                removeReadyView()
+                showReadyView()
+            }
+        }
     }
     
 }

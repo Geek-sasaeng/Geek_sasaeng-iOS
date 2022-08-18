@@ -1030,6 +1030,9 @@
 		A225E10628ADDA5400029686 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A225E10528ADDA5400029686 /* NewSplash.mp4 */; };
 		A225E10728ADDA5400029686 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A225E10528ADDA5400029686 /* NewSplash.mp4 */; };
 		A225E10828ADDA5400029686 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A225E10528ADDA5400029686 /* NewSplash.mp4 */; };
+		A225E10A28ADE06A00029686 /* CommunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A225E10928ADE06A00029686 /* CommunityVC.swift */; };
+		A225E10B28ADE06A00029686 /* CommunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A225E10928ADE06A00029686 /* CommunityVC.swift */; };
+		A225E10C28ADE06A00029686 /* CommunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A225E10928ADE06A00029686 /* CommunityVC.swift */; };
 		A246E58028A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
 		A246E58128A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
 		A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
@@ -1545,6 +1548,7 @@
 		A21DB933289D896B00A523F1 /* ChattingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListVC.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A225E10528ADDA5400029686 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = NewSplash.mp4; path = ../../../../Downloads/splash/NewSplash.mp4; sourceTree = "<group>"; };
+		A225E10928ADE06A00029686 /* CommunityVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityVC.swift; sourceTree = "<group>"; };
 		A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPartyAPI.swift; sourceTree = "<group>"; };
 		A248D88C289FB8E5000E2422 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		A248D890289FB8F1000E2422 /* systemMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = systemMessageCell.swift; sourceTree = "<group>"; };
@@ -2331,6 +2335,7 @@
 				A2D2047728885A14002350C8 /* Report */,
 				A24F0B29289D88AF007A9C5C /* Chat */,
 				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
+				A225E10928ADE06A00029686 /* CommunityVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3484,6 +3489,7 @@
 				10D4D6BB2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				108D5972289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
+				A225E10A28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A218D7BD28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				1031AA9E28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
@@ -3632,6 +3638,7 @@
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				A225E10B28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
@@ -3694,6 +3701,7 @@
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
+				A225E10C28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
