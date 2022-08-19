@@ -895,8 +895,8 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func keyboardDown() {
-        // reportBarView 위치 제자리로
         self.bottomView.transform = .identity
+        self.collectionView.transform = .identity
     }
     
     /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
