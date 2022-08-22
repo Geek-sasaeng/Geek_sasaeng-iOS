@@ -133,6 +133,7 @@ class UrlViewController: UIViewController {
          urlTextFieldArrow, urlExplainLabel, urlExampleLabel, urlImageView].forEach {
             view.addSubview($0)
         }
+        view.sendSubviewToBack(urlImageView)
     }
     
     private func setLayouts() {

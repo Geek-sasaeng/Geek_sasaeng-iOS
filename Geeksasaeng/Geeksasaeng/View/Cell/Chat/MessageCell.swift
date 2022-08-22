@@ -48,21 +48,7 @@ class MessageCell: UICollectionViewCell {
         label.textColor = .init(hex: 0xA8A8A8)
         return label
     }()
-    
-    var rightUnReadCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .mainColor
-        return label
-    }()
-    
-    var leftUnReadCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .mainColor
-        return label
-    }()
-    
+
     var leftMessageLabel: PaddingLabel = {
         let label = PaddingLabel()
         label.font = .customFont(.neoMedium, size: 15)
@@ -113,7 +99,7 @@ class MessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .orange
         
         addSubViews()
         setLayouts()
@@ -122,7 +108,7 @@ class MessageCell: UICollectionViewCell {
     // MARK: - Functions
     private func addSubViews() {
         [nicknameLabel, leftMessageLabel, rightMessageLabel,
-         rightTimeLabel, rightUnReadCountLabel, leftTimeLabel, leftUnReadCountLabel,
+         rightTimeLabel, leftTimeLabel,
          leftImageView, rightImageView,].forEach {
             addSubview($0)
         }
@@ -146,19 +132,9 @@ class MessageCell: UICollectionViewCell {
             make.left.equalTo(leftMessageLabel.snp.right).offset(3)
         }
         
-        leftUnReadCountLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(leftMessageLabel.snp.bottom)
-            make.left.equalTo(leftTimeLabel.snp.right).offset(6)
-        }
-        
         rightTimeLabel.snp.makeConstraints { make in
             make.bottom.equalTo(rightMessageLabel.snp.bottom)
             make.right.equalTo(rightMessageLabel.snp.left).offset(-3)
-        }
-        
-        rightUnReadCountLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(rightMessageLabel.snp.bottom)
-            make.right.equalTo(rightTimeLabel.snp.left).offset(-6)
         }
         
         leftImageView.snp.makeConstraints { make in

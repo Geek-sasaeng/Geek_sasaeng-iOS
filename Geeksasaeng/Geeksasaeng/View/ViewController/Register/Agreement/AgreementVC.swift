@@ -83,7 +83,7 @@ class AgreementViewController: UIViewController {
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = .customFont(.neoRegular, size: 18)
         // custom text
-        let text = " (필수) 이용약관 동의"
+        let text = " (필수) 서비스 이용약관 동의"
         let attributeString = NSMutableAttributedString(string: text)
         attributeString.addAttribute(.foregroundColor, value: UIColor.mainColor, range: (text as NSString).range(of: "(필수)"))
         button.setAttributedTitle(attributeString, for: .normal)

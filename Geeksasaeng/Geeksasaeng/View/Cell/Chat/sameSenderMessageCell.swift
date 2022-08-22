@@ -25,20 +25,6 @@ class SameSenderMessageCell: UICollectionViewCell {
         return label
     }()
     
-    var rightUnReadCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .mainColor
-        return label
-    }()
-    
-    var leftUnReadCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .mainColor
-        return label
-    }()
-    
     var leftMessageLabel: PaddingLabel = {
         let label = PaddingLabel()
         label.font = .customFont(.neoMedium, size: 15)
@@ -89,7 +75,7 @@ class SameSenderMessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .yellow
         
         addSubViews()
         setLayouts()
@@ -98,7 +84,7 @@ class SameSenderMessageCell: UICollectionViewCell {
     // MARK: - Functions
     private func addSubViews() {
         [leftMessageLabel, rightMessageLabel,
-         rightTimeLabel, rightUnReadCountLabel, leftTimeLabel, leftUnReadCountLabel].forEach {
+         rightTimeLabel, leftTimeLabel].forEach {
             addSubview($0)
         }
     }
@@ -119,19 +105,9 @@ class SameSenderMessageCell: UICollectionViewCell {
             make.left.equalTo(leftMessageLabel.snp.right).offset(3)
         }
         
-        leftUnReadCountLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(leftMessageLabel.snp.bottom)
-            make.left.equalTo(leftTimeLabel.snp.right).offset(6)
-        }
-        
         rightTimeLabel.snp.makeConstraints { make in
             make.bottom.equalTo(rightMessageLabel.snp.bottom)
             make.right.equalTo(rightMessageLabel.snp.left).offset(-3)
-        }
-        
-        rightUnReadCountLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(rightMessageLabel.snp.bottom)
-            make.right.equalTo(rightTimeLabel.snp.left).offset(-6)
         }
     }
 }

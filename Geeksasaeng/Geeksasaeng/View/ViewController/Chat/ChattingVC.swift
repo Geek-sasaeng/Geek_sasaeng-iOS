@@ -41,13 +41,16 @@ class ChattingViewController: UIViewController {
         textView.textColor = .black
         textView.textAlignment = .left
         textView.isEditable = true
+        textView.text = "입력하세요"
+        textView.textColor = .init(hex: 0xD8D8D8)
         return textView
     }()
     lazy var sendButton: UIButton = {
         let button = UIButton()
         button.setTitle("전송", for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 16)
-        button.setTitleColor(.mainColor, for: .normal)
+        button.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
+        button.isEnabled = false
         button.addTarget(self, action: #selector(tapSendButton), for: .touchUpInside)
         return button
     }()
@@ -408,7 +411,7 @@ class ChattingViewController: UIViewController {
         
         let coinImageView: UIImageView = {
             let imageView = UIImageView()
-            imageView.image = UIImage(systemName: "person.fill")
+            imageView.image = UIImage(named: "RemittanceIcon")
             return imageView
         }()
         
@@ -486,11 +489,12 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        contentsTextView.delegate = self
         
         setFirestore()
         checkRemittance()
         loadPreMessages()
-        loadParticipants()
+//        loadParticipants()
         loadMessages()
         setCollectionView()
         addSubViews()
@@ -603,7 +607,6 @@ class ChattingViewController: UIViewController {
                     // 방장 설정
                     if participants.count >= 1 {
                         self.roomMaster = participants[0].participant
-                        print("setRoomMaster로 불러온 방장: ", self.roomMaster)
                     }
                 } catch {
                     print(error.localizedDescription)
@@ -827,6 +830,7 @@ class ChattingViewController: UIViewController {
                         }
                     }
                 }
+                print("contents when sendButton loadMessages called", self.contents)
             }
         }
     }
@@ -892,8 +896,8 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func keyboardDown() {
-        // reportBarView 위치 제자리로
         self.bottomView.transform = .identity
+        self.collectionView.transform = .identity
     }
     
     /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
@@ -969,6 +973,9 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapSendButton() {
+        sendButton.isEnabled = false
+        sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         formatter.locale = Locale(identifier: "ko_KR")
@@ -1240,7 +1247,6 @@ class ChattingViewController: UIViewController {
     }
     
     private func getMessageLabelHeight(text: String) -> CGFloat {
-//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
         let label = PaddingLabel()
         label.paddingLeft = 18
         label.paddingRight = 18
@@ -1261,7 +1267,6 @@ class ChattingViewController: UIViewController {
     }
     
     private func getSystemMessageLabelHeight(text: String) -> CGFloat {
-//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
         let label = PaddingLabel()
         label.paddingLeft = 18
         label.paddingRight = 18
@@ -1303,22 +1308,16 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
-                cell.leftUnReadCountLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.rightTimeLabel.isHidden = false
-                cell.rightUnReadCountLabel.isHidden = false
                 return cell
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.rightTimeLabel.isHidden = true
-                cell.rightUnReadCountLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
                 cell.leftTimeLabel.isHidden = false
-                cell.leftUnReadCountLabel.isHidden = false
                 return cell
             }
         default: // 다른 사람이 전송
@@ -1328,26 +1327,26 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .right
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
-                cell.leftUnReadCountLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.leftImageView.isHidden = true
                 cell.rightImageView.isHidden = false
                 cell.rightTimeLabel.isHidden = false
-                cell.rightUnReadCountLabel.isHidden = false
+                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+                }
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftUnReadCountLabel.text = "3"
                 cell.rightTimeLabel.isHidden = true
-                cell.rightUnReadCountLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
                 cell.rightImageView.isHidden = true
                 cell.leftImageView.isHidden = false
                 cell.leftTimeLabel.isHidden = false
-                cell.leftUnReadCountLabel.isHidden = false
+                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+                }
             }
             return cell
         }
@@ -1390,8 +1389,28 @@ struct cellContents {
     var message: MessageModel?
 }
 
-
-// TODO: - UI: getMessageLabelHeight -> 쬐곰 이상 / 방장 imageView Border
-// TODO: - Function: 실시간 읽음 처리
-
-// 실시간 읽음 처리: message 보낼 때 현재 채팅방 안에 들어와 있는 사람 수를 체크하고, 총 인원에 비해 안 들어와 있는 사람 수를 저장(메세지 보낼 때 같이)했다가 cell의 unReadLabel에 출력?
+extension ChattingViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.count > 0 {
+            sendButton.isEnabled = true
+            sendButton.setTitleColor(.mainColor, for: .normal)
+        } else {
+            sendButton.isEnabled = false
+            sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == "입력하세요" {
+            textView.text = nil
+            textView.textColor = .black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = "입력하세요"
+            textView.textColor = UIColor(hex: 0xD8D8D8)
+        }
+    }
+}
