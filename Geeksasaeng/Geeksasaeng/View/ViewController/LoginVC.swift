@@ -130,6 +130,7 @@ class LoginViewController: UIViewController {
         attemptAutoLogin()
         addSubViews()
         setLayouts()
+        setKeyboardDown()
     }
     
     // MARK: - Functions
@@ -207,7 +208,6 @@ class LoginViewController: UIViewController {
             make.width.height.equalTo(15)
         }
         
-        // TODO: - 아이팟 터치에서는 다른 버튼 크기를 비율 맞춰 줄여봐도 이 버튼이 가려짐. 스크롤뷰 추가해야 할 듯
         signUpButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
             make.top.equalTo(automaticLoginButton.snp.bottom).offset(UIScreen.main.bounds.height / 18.7)
@@ -240,11 +240,16 @@ class LoginViewController: UIViewController {
         }
     }
     
+    /* 배경 누르면 토글된 키보드 내려가게 하기 */
+    private func setKeyboardDown() {
+        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
     @objc private func tapSignUpButton() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
         
-        // TODO: - 회원가입 과정 중에 모달 방식 고민 필요
         registerVC.modalTransitionStyle = .crossDissolve
         registerVC.modalPresentationStyle = .fullScreen
         
