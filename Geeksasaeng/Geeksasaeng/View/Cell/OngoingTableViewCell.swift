@@ -22,7 +22,7 @@ class OngoingTableViewCell: UITableViewCell {
     // MARK: - SubViews
     
     let masterProfileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
+        let imageView = UIImageView(image: UIImage(named: "ProfileImage"))
         imageView.layer.cornerRadius = 26 / 2
         return imageView
     }()

@@ -31,6 +31,9 @@ class SearchViewController: UIViewController {
     // 현재 설정되어 있는 시간 필터값
     var nowTimeFilter: String? = nil
     
+    // 현재 설정되어 있는 시간 필터 label
+    var selectedTimeLabel: UILabel? = nil
+    
     // 기숙사 정보 -> id랑 name 다 있음
     var dormitoryInfo: DormitoryNameResult?
     // 목록에서 현재 커서 위치
@@ -133,7 +136,6 @@ class SearchViewController: UIViewController {
     /* 배경에 있는 로고 이미지 */
     var logoImageView: UIImageView = {
         let imageView = UIImageView()
-        // TODO: - svg 파일로 하니까 색이 너무너무 연하다... 네오한테 말 해봐야 될 듯
         imageView.image = UIImage(named: "SearchBackLogo")
         return imageView
     }()
@@ -354,10 +356,11 @@ class SearchViewController: UIViewController {
         searchTextField.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.left.equalToSuperview().inset(30)
+            make.right.equalTo(searchButton.snp.left).offset(-10)
         }
         
         searchButton.snp.makeConstraints { make in
-            make.centerY.equalTo(searchTextField)
+            make.centerY.equalTo(searchTextField).offset(-3)
             make.right.equalToSuperview().inset(33)
             make.width.height.equalTo(30)
         }
@@ -391,9 +394,10 @@ class SearchViewController: UIViewController {
         }
         
         logoImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(110)
-            make.left.right.equalToSuperview().inset(143)
-            make.height.equalTo(80)
+            make.bottom.equalToSuperview().inset(128)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(91)
+            make.height.equalTo(94)
         }
         
         /* 검색 결과 화면 서브뷰들 */
@@ -661,18 +665,16 @@ class SearchViewController: UIViewController {
         if let num = num {
             cursor = 0
             nowPeopleFilter = num
-            print("DEBUG:", nowPeopleFilter, nowTimeFilter)
+            print("DEBUG:", nowPeopleFilter as Any, nowTimeFilter as Any)
             getSearchedDeliveryList()
         }
     }
 
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
-        if !isTimeFilterOn {
-            deliveryCellDataArray.removeAll()
-            isTimeFilterOn = true
-            cursor = 0
-        }
+        deliveryCellDataArray.removeAll()
+        isTimeFilterOn = true
+        cursor = 0
 
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
         enum TimeOption: String {
@@ -697,7 +699,6 @@ class SearchViewController: UIViewController {
         }
         
         if let orderTimeCategory = orderTimeCategory {
-            cursor = 0
             nowTimeFilter = orderTimeCategory
             print("DEBUG:", nowPeopleFilter, nowTimeFilter)
             getSearchedDeliveryList()
@@ -799,6 +800,9 @@ class SearchViewController: UIViewController {
                 label.textColor = .init(hex: 0xD8D8D8)
             }
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* 시간 필터를 탭하면 mainColor로 색깔 바뀌도록 */
@@ -806,23 +810,35 @@ class SearchViewController: UIViewController {
     private func tapTimeOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
-        // label 색 변경 - mainColor로 -> 필터가 선택된 것
+        // label 색 변경
+        // 선택돼있던 label이 아니었다면, mainColor로 바꿔준다
         if label.textColor != .mainColor {
+            // 원래 선택돼있던 label 색깔은 해제한다. -> 시간 필터 1개만 선택 가능
+            if selectedTimeLabel != nil {
+                // 색깔 원상복귀
+                selectedTimeLabel?.textColor = .init(hex: 0xD8D8D8)
+            }
             label.textColor = .mainColor
+            selectedTimeLabel = label
             // 시간 필터링 호출
             getTimeFilterList(text: label.text)
         } else {
-            // 원래 색깔로 되돌려 놓는다
+            // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
             label.textColor = .init(hex: 0xD8D8D8)
             
             // 시간 필터 해제
             isTimeFilterOn = false
             nowTimeFilter = nil
             
+            // 초기화
+            deliveryCellDataArray.removeAll()
             cursor = 0
             print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
             getSearchedDeliveryList()
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* 새로고침 기능 */
@@ -865,11 +881,6 @@ class SearchViewController: UIViewController {
             }
         }
     }
-    
-    // 이전 화면으로 돌아가기
-//    @objc func back(sender: UIBarButtonItem) {
-//        self.navigationController?.popViewController(animated: true)
-//    }
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate

@@ -58,6 +58,8 @@ class DeliveryViewController: UIViewController {
     // 현재 설정되어 있는 시간 필터값
     var nowTimeFilter: String? = nil
     
+    // 현재 설정되어 있는 인원수 필터 label
+    var selectedPeopleLabel: UILabel? = nil
     // 현재 설정되어 있는 시간 필터 label
     var selectedTimeLabel: UILabel? = nil
 
@@ -80,11 +82,11 @@ class DeliveryViewController: UIViewController {
     
     // TODO: - 학교 API 연동 후 학교 사진으로 변경
     lazy var schoolImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "book"))
-        imageView.tintColor = .black
+        let imageView = UIImageView(image: UIImage(named: "GachonLogo"))
         imageView.snp.makeConstraints { make in
             make.width.height.equalTo(31)
         }
+        imageView.layer.cornerRadius = 31 / 2
         return imageView
     }()
     
@@ -185,7 +187,7 @@ class DeliveryViewController: UIViewController {
     }()
     var peopleFilterToggleImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-        imageView.tintColor = UIColor(hex: 0xD8D8D8)
+        imageView.tintColor = UIColor(hex: 0xA8A8A8)
         return imageView
     }()
     lazy var peopleFilterView: UIView = {
@@ -630,7 +632,6 @@ class DeliveryViewController: UIViewController {
     
     /* peopleFilter를 사용하여 데이터 가져오기 */
     private func getPeopleFilterList(text: String?) {
-        // TODO: - Bool값 false가 되는 때도 설정 필요
         deliveryCellDataArray.removeAll()
         isPeopleFilterOn = true
         cursor = 0
@@ -894,20 +895,48 @@ class DeliveryViewController: UIViewController {
     private func tapPeopleOption(sender: UIGestureRecognizer) {
         let label = sender.view as! UILabel
         
-        // label 색 변경 - 진하게
-        label.textColor = .init(hex: 0x636363)
-        // peopleFilterView의 텍스트를 label로 변경함
-        peopleFilterLabel.text = label.text
-        
-        // 인원수 필터링 호출
-        self.getPeopleFilterList(text: label.text)
+        // 눌렀던 거 또 눌렀을 때
+        if label == selectedPeopleLabel {
+            // 색깔 원상복귀
+            label.textColor = .init(hex: 0xA8A8A8)
+            // peopleFilterView의 텍스트도 원상복귀
+            peopleFilterLabel.text = "인원 선택"
+            peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
+            
+            // 필터 해제
+            selectedPeopleLabel = nil
+            nowPeopleFilter = nil
+            
+            // 초기화
+            deliveryCellDataArray.removeAll()
+            cursor = 0
+            
+            // 상태에 따라 함수 호출
+            if nowPeopleFilter == nil {
+                getDeliveryList()
+            } else {
+                getDeliveryList(maxMatching: nowPeopleFilter)
+            }
+        } else {
+            selectedPeopleLabel = label
+            // label 색 변경 - 진하게
+            label.textColor = .init(hex: 0x636363)
+            // peopleFilterView의 텍스트를 label로 변경함
+            peopleFilterLabel.text = label.text
+            // 인원수 필터링 호출
+            self.getPeopleFilterList(text: label.text)
+        }
         
         for view in peopleOptionStackView.subviews {
             let label = view as! UILabel
             if label.text != peopleFilterLabel.text {
-                label.textColor = .init(hex: 0xD8D8D8)
+                label.textColor = .init(hex: 0xA8A8A8)
             }
         }
+        tapPeopleFilterView()
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* 시간 필터를 탭하면 mainColor로 색깔 바뀌도록 */
@@ -946,6 +975,9 @@ class DeliveryViewController: UIViewController {
                 getDeliveryList(maxMatching: nowPeopleFilter)
             }
         }
+        
+        // 필터가 변경되면 스크롤 맨 위로
+        partyTableView.reloadData()
     }
     
     /* CreatePartyButton을 누르면 파티 생성 화면으로 전환 */

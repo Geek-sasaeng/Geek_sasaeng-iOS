@@ -198,7 +198,7 @@ class RegisterViewController: UIViewController {
         idTextField.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(27)
             make.right.equalTo(idCheckButton.snp.left).offset(-16)
-            make.top.equalTo(idLabel.snp.bottom).offset(15)
+            make.top.equalTo(idLabel.snp.bottom).offset(20)
         }
         
         idAvailableLabel.snp.makeConstraints { make in
@@ -215,7 +215,7 @@ class RegisterViewController: UIViewController {
         pwTextField.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(27)
             make.right.equalToSuperview().inset(26)
-            make.top.equalTo(passwordLabel.snp.bottom).offset(15)
+            make.top.equalTo(passwordLabel.snp.bottom).offset(20)
         }
         
         passwordAvailableLabel.snp.makeConstraints { make in
@@ -232,7 +232,7 @@ class RegisterViewController: UIViewController {
         pwCheckTextField.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(27)
             make.right.equalToSuperview().inset(26)
-            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(15)
+            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(20)
         }
         
         passwordSameCheckLabel.snp.makeConstraints { make in
@@ -256,7 +256,7 @@ class RegisterViewController: UIViewController {
         nickNameTextField.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(27)
             make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
         }
 
         nickNameAvailableLabel.snp.makeConstraints { make in

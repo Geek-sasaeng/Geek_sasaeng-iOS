@@ -29,7 +29,7 @@ class ProfileViewController: UIViewController {
     }()
     
     let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
+        let imageView = UIImageView(image: UIImage(named: "ProfileImage"))
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 118 / 2
         return imageView
@@ -473,7 +473,6 @@ class ProfileViewController: UIViewController {
         ongoingTableView.rowHeight = 53
         ongoingTableView.separatorColor = .none
         ongoingTableView.separatorStyle = .none
-//        ongoingTableView.
     }
     
     // MARK: - @objc Functions

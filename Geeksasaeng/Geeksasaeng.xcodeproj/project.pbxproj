@@ -1149,6 +1149,12 @@
 		A2E6EADE2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
+		A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
+		A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
+		A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
+		A2E78B0928AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
+		A2E78B0A28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
+		A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
 		A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
 		A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */; };
@@ -1592,6 +1598,8 @@
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryNameModel.swift; sourceTree = "<group>"; };
+		A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSplash.mp4; sourceTree = "<group>"; };
+		A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
@@ -1728,12 +1736,12 @@
 				100FB99528745BE3008947DD /* View */,
 				100FB99428745AAC008947DD /* ViewModel */,
 				A2B4208E286F1F0500278F92 /* Extension */,
-				1041ADD928AE5782003DCB26 /* NewSplash.mp4 */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
 				103F1461286ACA86004B637B /* Info.plist */,
 				10B75B5F289CDD810002865C /* GoogleService-Info.plist */,
 				105442B8287F0083003B8799 /* Kakao-Map-Bridge-Header.h */,
+				A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */,
 			);
 			path = Geeksasaeng;
 			sourceTree = "<group>";
@@ -2369,6 +2377,7 @@
 				102B35D32879BCF90042F691 /* UITextField+Extension.swift */,
 				102B35D72879BD050042F691 /* UIButton+Extension.swift */,
 				102B35DB2879BD670042F691 /* UIViewController+Extension.swift */,
+				A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2793,6 +2802,7 @@
 				10543FFD287F0055003B8799 /* annotated_dup.js in Resources */,
 				1054409F287F0055003B8799 /* bdwn.png in Resources */,
 				1054414A287F0056003B8799 /* properties_1.js in Resources */,
+				A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105440B7287F0056003B8799 /* functions_d.js in Resources */,
 				1054424F287F0057003B8799 /* _m_t_map_view_8h_source.html in Resources */,
 				105441F2287F0056003B8799 /* pages_0.html in Resources */,
@@ -2970,6 +2980,7 @@
 				105440A3287F0056003B8799 /* navtree.css in Resources */,
 				1054410F287F0056003B8799 /* all_e.html in Resources */,
 				10543F8F287F0055003B8799 /* DaumMap.embeddedframework.zip in Resources */,
+				A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105441C6287F0056003B8799 /* variables_5.js in Resources */,
 				1054424A287F0057003B8799 /* struct_m_t_map_point_plain.js in Resources */,
 				105440FD287F0056003B8799 /* properties_2.html in Resources */,
@@ -3257,6 +3268,7 @@
 				105440A4287F0056003B8799 /* navtree.css in Resources */,
 				10544110287F0056003B8799 /* all_e.html in Resources */,
 				10543F90287F0055003B8799 /* DaumMap.embeddedframework.zip in Resources */,
+				A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105441C7287F0056003B8799 /* variables_5.js in Resources */,
 				1054424B287F0057003B8799 /* struct_m_t_map_point_plain.js in Resources */,
 				105440FE287F0056003B8799 /* properties_2.html in Resources */,
@@ -3526,6 +3538,7 @@
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				10EBEFE9289F559300038EFC /* RoomInfoModel.swift in Sources */,
+				A2E78B0928AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				10EC391028AD307700A72DC6 /* MyInfoVC.swift in Sources */,
 				A2513F1D287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				100FB99728745DA3008947DD /* NaverLoginViewModel.swift in Sources */,
@@ -3664,6 +3677,7 @@
 				A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
+				A2E78B0A28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
@@ -3725,6 +3739,7 @@
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
 				A225E10C28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
+				A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
 				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
@@ -3885,7 +3900,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3940,7 +3955,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
