@@ -483,7 +483,6 @@ class ChattingViewController: UIViewController {
     var lastSender: String?
     
     var roomMaster: String? // 내가 현재 방장인지
-    // TODO: - 나중에 방장일 때, 아닐 때 옵션뷰 다르게 보이기
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -1105,6 +1104,12 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func back(sender: UIBarButtonItem) {
+        if presentOptionViewForOwner {
+            showChattingRoom(optionViewForOwner)
+        } else if presentOptionViewForUser {
+            showChattingRoom(optionViewForUser)
+        }
+        
         self.navigationController?.popViewController(animated: true)
     }
     
