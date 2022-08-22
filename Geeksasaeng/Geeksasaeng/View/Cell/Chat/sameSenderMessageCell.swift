@@ -81,6 +81,19 @@ class SameSenderMessageCell: UICollectionViewCell {
         setLayouts()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        leftMessageLabel.text = ""
+        rightMessageLabel.text = ""
+        
+        leftMessageLabel.isHidden = false
+        rightMessageLabel.isHidden = false
+        
+        leftTimeLabel.isHidden = false
+        rightTimeLabel.isHidden = false
+    }
+    
     // MARK: - Functions
     private func addSubViews() {
         [leftMessageLabel, rightMessageLabel,
