@@ -53,9 +53,6 @@
 		1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */; };
 		1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
 		1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
-		1041ADDA28AE5782003DCB26 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1041ADD928AE5782003DCB26 /* NewSplash.mp4 */; };
-		1041ADDB28AE5782003DCB26 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1041ADD928AE5782003DCB26 /* NewSplash.mp4 */; };
-		1041ADDC28AE5782003DCB26 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1041ADD928AE5782003DCB26 /* NewSplash.mp4 */; };
 		1041ADDE28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
 		1041ADDF28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
 		1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
@@ -946,8 +943,6 @@
 		10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
 		10B3822428A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
 		10B75B60289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
-		10B75B61289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
-		10B75B62289CDD810002865C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
 		10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
 		10C8D26A28770D310044552A /* NaverRegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C8D26728770D310044552A /* NaverRegisterVC.swift */; };
@@ -1161,6 +1156,8 @@
 		A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
+		A2FA18B128B3743B0079AC36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
+		A2FA18B228B3743B0079AC36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
 		A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
@@ -1217,7 +1214,6 @@
 		103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLoginAPI.swift; sourceTree = "<group>"; };
 		1040FB972875C06D0060A3E4 /* AgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementVC.swift; sourceTree = "<group>"; };
 		1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthVC.swift; sourceTree = "<group>"; };
-		1041ADD928AE5782003DCB26 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSplash.mp4; sourceTree = "<group>"; };
 		1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoAPI.swift; sourceTree = "<group>"; };
 		10543D60287EFECE003B8799 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		10543D62287EFED5003B8799 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -2578,7 +2574,6 @@
 				10544246287F0057003B8799 /* interface_m_t_map_p_o_i_item.js in Resources */,
 				10544180287F0056003B8799 /* properties_6.js in Resources */,
 				105440A2287F0056003B8799 /* navtree.css in Resources */,
-				1041ADDA28AE5782003DCB26 /* NewSplash.mp4 in Resources */,
 				10544270287F0057003B8799 /* open.png in Resources */,
 				105442B2287F0057003B8799 /* jquery.js in Resources */,
 				105441C8287F0056003B8799 /* functions_1.js in Resources */,
@@ -2913,6 +2908,7 @@
 				105442A7287F0057003B8799 /* _m_t_map_circle_8h_source.html in Resources */,
 				10544001287F0055003B8799 /* interface_m_t_map_circle.html in Resources */,
 				1054427A287F0057003B8799 /* functions_type.html in Resources */,
+				A2FA18B228B3743B0079AC36 /* GoogleService-Info.plist in Resources */,
 				1054428F287F0057003B8799 /* _m_t_map_view_8h.html in Resources */,
 				105440C1287F0056003B8799 /* functions_7.js in Resources */,
 				10543F89287F0055003B8799 /* setupDocsetDocument.rb in Resources */,
@@ -3002,7 +2998,6 @@
 				10544040287F0055003B8799 /* interface_m_t_map_polyline-members.html in Resources */,
 				10544271287F0057003B8799 /* open.png in Resources */,
 				105442B0287F0057003B8799 /* interface_m_t_map_point-members.html in Resources */,
-				1041ADDB28AE5782003DCB26 /* NewSplash.mp4 in Resources */,
 				105442B6287F0057003B8799 /* changelog.txt in Resources */,
 				1054400D287F0055003B8799 /* pages.html in Resources */,
 				1054412D287F0056003B8799 /* all_2.html in Resources */,
@@ -3094,7 +3089,6 @@
 				10543FB0287F0055003B8799 /* map_pin_red@3x.png in Resources */,
 				10543FAD287F0055003B8799 /* th_line.png in Resources */,
 				1054423E287F0057003B8799 /* nav_h.png in Resources */,
-				10B75B61289CDD810002865C /* GoogleService-Info.plist in Resources */,
 				10544154287F0056003B8799 /* properties_b.js in Resources */,
 				10543FE9287F0055003B8799 /* dir_e176454b22f670c69197578a11d04323.js in Resources */,
 			);
@@ -3201,6 +3195,7 @@
 				105442A8287F0057003B8799 /* _m_t_map_circle_8h_source.html in Resources */,
 				10544002287F0055003B8799 /* interface_m_t_map_circle.html in Resources */,
 				1054427B287F0057003B8799 /* functions_type.html in Resources */,
+				A2FA18B128B3743B0079AC36 /* GoogleService-Info.plist in Resources */,
 				10544290287F0057003B8799 /* _m_t_map_view_8h.html in Resources */,
 				105440C2287F0056003B8799 /* functions_7.js in Resources */,
 				10543F8A287F0055003B8799 /* setupDocsetDocument.rb in Resources */,
@@ -3290,7 +3285,6 @@
 				10544041287F0055003B8799 /* interface_m_t_map_polyline-members.html in Resources */,
 				10544272287F0057003B8799 /* open.png in Resources */,
 				105442B1287F0057003B8799 /* interface_m_t_map_point-members.html in Resources */,
-				1041ADDC28AE5782003DCB26 /* NewSplash.mp4 in Resources */,
 				105442B7287F0057003B8799 /* changelog.txt in Resources */,
 				1054400E287F0055003B8799 /* pages.html in Resources */,
 				1054412E287F0056003B8799 /* all_2.html in Resources */,
@@ -3382,7 +3376,6 @@
 				10543FB1287F0055003B8799 /* map_pin_red@3x.png in Resources */,
 				10543FAE287F0055003B8799 /* th_line.png in Resources */,
 				1054423F287F0057003B8799 /* nav_h.png in Resources */,
-				10B75B62289CDD810002865C /* GoogleService-Info.plist in Resources */,
 				10544155287F0056003B8799 /* properties_b.js in Resources */,
 				10543FEA287F0055003B8799 /* dir_e176454b22f670c69197578a11d04323.js in Resources */,
 			);
