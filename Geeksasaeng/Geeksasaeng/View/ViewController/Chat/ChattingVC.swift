@@ -493,7 +493,6 @@ class ChattingViewController: UIViewController {
         
         setFirestore()
         checkRemittance()
-        loadPreMessages()
 //        loadParticipants()
         loadMessages()
         setCollectionView()
@@ -504,7 +503,7 @@ class ChattingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
-        self.navigationItem.title = "채팅방 이름"
+        self.navigationItem.title = ""
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -514,6 +513,9 @@ class ChattingViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 뷰 나타나기 전에 이전 메세지 불러오기
+        loadPreMessages()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -664,6 +666,9 @@ class ChattingViewController: UIViewController {
             } else {
                 do {
                     let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+                    // 채팅방 이름 설정
+                    self.navigationItem.title = data?.roomInfo?.title
+                    
                     guard let roomInfo = data?.roomInfo,
                           let participants = roomInfo.participants else { return }
                     if participants.count > 0 {
