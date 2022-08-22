@@ -60,6 +60,9 @@ class ChattingListViewController: UIViewController {
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
     
+    var listListener: ListenerRegistration?
+    var recentMsgListener: ListenerRegistration?
+    
     // MARK: - SubViews
     
     /* Filter Icon */
@@ -112,8 +115,6 @@ class ChattingListViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xFCFDFE)
         
         setFirestore()
-        // 채팅방 목록 데이터 가져오기 (listener 설치)
-        loadChattingRoomList()
         
         setAttributes()
         setFilterStackView(filterNameArray: ["배달파티", "심부름", "거래"],
@@ -123,6 +124,24 @@ class ChattingListViewController: UIViewController {
         setLayouts()
         setTableView()
         setLabelTap()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 채팅방 목록 데이터 가져오기 (listener 설치)
+        loadChattingRoomList()
+    }
+    
+    /* 이 화면 나갈 때 리스너 해제 */
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        guard let listListener = listListener,
+              let recentMsgListener = recentMsgListener else { return }
+
+        listListener.remove()
+        recentMsgListener.remove()
     }
     
     // MARK: - Functions
@@ -149,7 +168,7 @@ class ChattingListViewController: UIViewController {
             .order(by: "roomInfo.updatedAt", descending: true)    // 채팅방 목록을 메세지 최신순으로 정렬
         
         // 해당 쿼리문의 결과값을 firestore에서 가져오기
-        query.addSnapshotListener() {   // updatedAt으로 order되는 순서가 바뀌는 걸 감지하도록 listener로 변경
+        listListener = query.addSnapshotListener() {   // updatedAt으로 order되는 순서가 바뀌는 걸 감지하도록 listener로 변경
             (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -368,7 +387,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         let roomDocRef = db.collection("Rooms").document(roomUUIDList[indexPath.row])
 //        print("1111위치" + roomUUIDList[indexPath.row])
         // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
-        roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
+        recentMsgListener = roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
 //            print("2222위치" + self.roomUUIDList[indexPath.row])
                 if let error = error {
                     print("Error retreiving collection: \(error)")

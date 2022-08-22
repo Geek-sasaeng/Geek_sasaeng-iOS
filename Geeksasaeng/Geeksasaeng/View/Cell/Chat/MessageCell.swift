@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 class MessageCell: UICollectionViewCell {
+    
     // MARK: - SubViews
+    
     var nicknameLabel : UILabel = {
         let label = UILabel()
         label.font = .customFont(.neoBold, size: 11)
@@ -103,6 +105,23 @@ class MessageCell: UICollectionViewCell {
         
         addSubViews()
         setLayouts()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // reuse 전에 값들을 다 초기화
+        leftMessageLabel.text = ""
+        rightMessageLabel.text = ""
+        
+        leftMessageLabel.isHidden = false
+        rightMessageLabel.isHidden = false
+        
+        leftTimeLabel.isHidden = false
+        rightTimeLabel.isHidden = false
+        
+        leftImageView.isHidden = false
+        rightImageView.isHidden = false
     }
     
     // MARK: - Functions

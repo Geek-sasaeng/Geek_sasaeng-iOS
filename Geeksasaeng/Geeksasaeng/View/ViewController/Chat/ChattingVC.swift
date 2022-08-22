@@ -720,6 +720,7 @@ class ChattingViewController: UIViewController {
                                                 }
 
                                                 DispatchQueue.main.async {
+                                                    print("이전 메세지 불러오기")
                                                     self.collectionView.reloadData()
                                                     self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
                                                 }
@@ -831,7 +832,9 @@ class ChattingViewController: UIViewController {
                             
 
                             DispatchQueue.main.async {
-                                self.collectionView.reloadData()
+                                let indexPath = IndexPath(row: self.contents.count - 1, section: 0)
+                                self.collectionView.insertItems(at: [indexPath])
+//                                self.collectionView.reloadData()
                                 self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
                             }
                         }
@@ -1314,7 +1317,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         switch contents[indexPath.row].cellType {
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
-            cell.systemMessageLabel.text =  contents[indexPath.row].message?.content
+            cell.systemMessageLabel.text = contents[indexPath.row].message?.content
             return cell
         case .sameSenderMessage: // 같은 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
@@ -1372,16 +1375,16 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .systemMessage:
             let labelHeight = getSystemMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
-            print("System Label Height: ", labelHeight + 12)
+//            print("System Label Height: ", labelHeight + 12)
         case .message:
             // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
-            print("Message Label Height: ", labelHeight + 16)
+//            print("Message Label Height: ", labelHeight + 16)
         case .sameSenderMessage:
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
-            print("Same Message Label Height: ", labelHeight)
+//            print("Same Message Label Height: ", labelHeight)
         default:
             cellSize = CGSize(width: view.bounds.width, height: 40)
         }
