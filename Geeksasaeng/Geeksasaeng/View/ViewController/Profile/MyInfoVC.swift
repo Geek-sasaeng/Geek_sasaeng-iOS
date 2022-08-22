@@ -26,7 +26,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     let userImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.fill")
+        imageView.image = UIImage(named: "EditUserImage")
         return imageView
     }()
     
@@ -123,6 +123,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         button.clipsToBounds = true
         button.layer.cornerRadius = 5
         button.setTitle("로그아웃", for: .normal)
+        button.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
         return button
     }()
     
@@ -147,6 +148,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         setNavigationBar()
         addSubViews()
         setLayouts()
+        setUserInfo()
     }
     
     // MARK: - Functions
@@ -192,7 +194,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         userImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(97)
+            make.top.equalToSuperview().inset(40)
             make.width.height.equalTo(166)
             make.centerX.equalToSuperview()
         }
@@ -255,8 +257,27 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func setUserInfo() {
+        UserInfoAPI.getUserInfo { isSuccess, result in
+            self.dormitoryDataLabel.text = result.dormitoryName
+            self.nicknameDataLabel.text = result.nickname
+            self.idDataLabel.text = result.loginId
+            self.emailDataLabel.text = result.emailAddress
+            self.phoneNumDataLabel.text = result.phoneNumber
+        }
+    }
+    
     @objc
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc
+    private func tapLogoutButton() {
+        print("tapLogoutButton")
+        UserDefaults.standard.set("nil", forKey: "jwt")
+        let rootVC = LoginViewController()
+        UIApplication.shared.windows.first?.rootViewController = rootVC
+        self.view.window?.rootViewController?.dismiss(animated: true)
     }
 }
