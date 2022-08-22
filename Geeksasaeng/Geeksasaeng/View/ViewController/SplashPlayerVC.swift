@@ -6,59 +6,37 @@
 //
 
 import UIKit
-import AVKit
-import AVFoundation
+import Lottie
 
 /* 스플래쉬 애니메이션 */
-class SplashPlayerViewController: AVPlayerViewController {
+class SplashPlayerViewController: UIViewController {
     
-    // MARK: - viewDidLoad()
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 배경색 설정
-        view.backgroundColor = .init(hex: 0x29b7e2)
-        // 유저가 동영상 컨트롤 할 수 있는 거 다 없앰
-        self.showsPlaybackControls = false
-        self.showsTimecodes = false
-        // 비디오 사이즈가 화면에 꽉 차게 설정
-        self.videoGravity = .resizeAspectFill
-        
-        // 스플래쉬 애니메이션 재생
-        playVideo()
+        // Lottie AnimationView 생성
+        let animationView = AnimationView(name: "splash")
+
+        // 메인 뷰에 삽입
+        view.addSubview(animationView)
+        animationView.frame = animationView.superview!.bounds
+        animationView.contentMode = .scaleAspectFit
+
+        // 애니메이션 재생 (애니메이션 재생모드 미 설정시 1회)
+        animationView.play { (finished) in
+            // 끝나면 로그인뷰로 이동
+            self.showLoginView()
+        }
     }
     
     // MARK: - Functions
     
-    /* 스플래쉬 애니메이션 재생 */
-    private func playVideo() {
-        print("func : play video")
-        
-        // 비디오 path 설정.
-        guard let path = Bundle.main.path(forResource: "NewSplash", ofType: "mp4") else {
-            debugPrint(".mp4 not found")
-            return
-        }
-
-        // player 생성.
-        let player = AVPlayer(url: URL(fileURLWithPath: path))
-        self.player = player
-        
-        // 비디오가 끝났는지 확인하는 옵저버 생성.
-        NotificationCenter.default.addObserver(self, selector: #selector(finishVideo), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        
-        player.play()
-    }
-    
-    /* 애니메이션 다 끝났으면 playerController를 dismiss 시키고 LoginVC로 이동 */
-    @objc private func finishVideo() {
-        print("func : finishVideo")
-        dismiss(animated: false) {
-            let loginVC = LoginViewController()
-            loginVC.modalPresentationStyle = .fullScreen
-            loginVC.modalTransitionStyle = .crossDissolve
-            self.present(loginVC, animated: true)
-        }
+    private func showLoginView() {
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .fullScreen
+        loginVC.modalTransitionStyle = .crossDissolve
+        present(loginVC, animated: true)
     }
 }
