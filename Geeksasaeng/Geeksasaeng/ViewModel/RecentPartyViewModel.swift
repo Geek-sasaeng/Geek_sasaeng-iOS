@@ -26,9 +26,12 @@ class RecentPartyViewModel {
                         
                         // 가장 위의 3개만 잘라와서 전달
                         var passedResult = result
-                        let count = passedResult.count
-                        passedResult.removeSubrange(3..<count)
                         
+                        if passedResult.count > 3 {
+                            let count = passedResult.count
+                            passedResult.removeSubrange(3..<count)
+                        }
+                       
                         print("DEBUG: 최신 3개 불러오기 성공", passedResult)
                         completion(passedResult)
                     } else {
