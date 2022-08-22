@@ -106,7 +106,7 @@ class PartyTableViewCell: UITableViewCell {
         
         categoryLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
-            make.left.equalToSuperview().offset(29)
+            make.left.equalToSuperview().offset(23)
         }
         
         hashtagLabel.snp.makeConstraints { make in
