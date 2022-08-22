@@ -420,7 +420,7 @@ class ChattingViewController: UIViewController {
             label.font = .customFont(.neoMedium, size: 14)
             label.textColor = .init(hex: 0x2F2F2F)
             // TODO: - Firestore or Server에서 받아오기
-            label.text = "국민  000000-00-000000"
+            label.text = "\(self.bank ?? "은행")  \(self.accountNumber ?? "000-0000-0000-00")"
             return label
         }()
         
@@ -483,6 +483,8 @@ class ChattingViewController: UIViewController {
     var lastSender: String?
     
     var roomMaster: String? // 내가 현재 방장인지
+    var bank: String?
+    var accountNumber: String?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -491,6 +493,7 @@ class ChattingViewController: UIViewController {
         contentsTextView.delegate = self
         
         setFirestore()
+        setRoomMasterAndAccount()
         checkRemittance()
         loadPreMessages()
 //        loadParticipants()
@@ -498,7 +501,6 @@ class ChattingViewController: UIViewController {
         setCollectionView()
         addSubViews()
         setLayouts()
-        setRoomMaster()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -591,7 +593,7 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
-    private func setRoomMaster() {
+    private func setRoomMasterAndAccount() {
         guard let roomUUID = roomUUID else { return }
 
         db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
@@ -601,12 +603,18 @@ class ChattingViewController: UIViewController {
                 do {
                     let data = try documentSnapshot?.data(as: RoomInfoModel.self)
                     guard let roomInfo = data?.roomInfo,
-                          let participants = roomInfo.participants else { return }
+                          let participants = roomInfo.participants,
+                          let bank = roomInfo.bank,
+                          let accountNumber = roomInfo.accountNumber else { return }
                     
                     // 방장 설정
                     if participants.count >= 1 {
                         self.roomMaster = participants[0].participant
                     }
+                    
+                    // 은행 & 계좌 설정
+                    self.bank = bank
+                    self.accountNumber = accountNumber
                 } catch {
                     print(error.localizedDescription)
                 }
