@@ -39,7 +39,7 @@ class SystemMessageCell: UICollectionViewCell {
         
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
         
-        contentView.backgroundColor = .red
+        contentView.backgroundColor = .white
         
         addSubViews()
         setLayouts()

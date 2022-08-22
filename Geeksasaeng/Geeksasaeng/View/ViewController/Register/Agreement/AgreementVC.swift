@@ -107,12 +107,6 @@ class AgreementViewController: UIViewController {
         return view
     }()
     
-    lazy var wholeAgreementArrow: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
-        return button
-    }()
-    
     lazy var termsOfUseAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
@@ -175,7 +169,7 @@ class AgreementViewController: UIViewController {
             separateView,
             termsOfUseAgreementCheckBox, termsOfUseAgreementButton,
             personalInfoAgreementCheckBox, personalInfoAgreementButton,
-            wholeAgreementArrow, termsOfUseAgreementArrow, personalInfoAgreementArrow,
+            termsOfUseAgreementArrow, personalInfoAgreementArrow,
             completeButton
         ].forEach { view.addSubview($0) }
     }
@@ -253,11 +247,6 @@ class AgreementViewController: UIViewController {
             make.left.equalTo(personalInfoAgreementCheckBox.snp.right).offset(9)
         }
         
-        wholeAgreementArrow.snp.makeConstraints { make in
-            make.top.equalTo(wholeAgreementButton.snp.top).offset(5)
-            make.right.equalToSuperview().inset(32)
-        }
-        
         termsOfUseAgreementArrow.snp.makeConstraints { make in
             make.top.equalTo(termsOfUseAgreementButton.snp.top).offset(5)
             make.right.equalToSuperview().inset(32)
@@ -319,8 +308,12 @@ class AgreementViewController: UIViewController {
     private func tapCheckButton(_ sender: UIButton) {
         if sender.currentImage == UIImage(systemName: "square") {
             sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
         } else {
             sender.setImage(UIImage(systemName: "square"), for: .normal)
+            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
         }
     }
     
