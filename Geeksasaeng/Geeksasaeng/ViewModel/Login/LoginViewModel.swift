@@ -39,7 +39,6 @@ class LoginViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-//                    UserDefaults.standard.set(result.result?.jwt, forKey: "jwt") -> 네이버 회원가입 시 등록됨
                     LoginModel.jwt = result.result?.jwt
                     LoginModel.nickname = result.result?.nickName
                     LoginModel.userImgUrl = result.result?.userImageUrl
