@@ -494,7 +494,7 @@ class ChattingViewController: UIViewController {
         setFirestore()
         checkRemittance()
         loadPreMessages()
-        loadParticipants()
+//        loadParticipants()
         loadMessages()
         setCollectionView()
         addSubViews()
@@ -830,6 +830,7 @@ class ChattingViewController: UIViewController {
                         }
                     }
                 }
+                print("contents when sendButton loadMessages called", self.contents)
             }
         }
     }
@@ -1246,7 +1247,6 @@ class ChattingViewController: UIViewController {
     }
     
     private func getMessageLabelHeight(text: String) -> CGFloat {
-//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude))
         let label = PaddingLabel()
         label.paddingLeft = 18
         label.paddingRight = 18
@@ -1267,7 +1267,6 @@ class ChattingViewController: UIViewController {
     }
     
     private func getSystemMessageLabelHeight(text: String) -> CGFloat {
-//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude))
         let label = PaddingLabel()
         label.paddingLeft = 18
         label.paddingRight = 18
@@ -1309,22 +1308,16 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
-                cell.leftUnReadCountLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.rightTimeLabel.isHidden = false
-                cell.rightUnReadCountLabel.isHidden = false
                 return cell
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.rightTimeLabel.isHidden = true
-                cell.rightUnReadCountLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
                 cell.leftTimeLabel.isHidden = false
-                cell.leftUnReadCountLabel.isHidden = false
                 return cell
             }
         default: // 다른 사람이 전송
@@ -1334,14 +1327,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .right
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightUnReadCountLabel.text = "3" // 안 읽은 사람 수 넣기
                 cell.leftTimeLabel.isHidden = true
-                cell.leftUnReadCountLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.leftImageView.isHidden = true
                 cell.rightImageView.isHidden = false
                 cell.rightTimeLabel.isHidden = false
-                cell.rightUnReadCountLabel.isHidden = false
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
                     cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
                 }
@@ -1349,14 +1339,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftUnReadCountLabel.text = "3"
                 cell.rightTimeLabel.isHidden = true
-                cell.rightUnReadCountLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
                 cell.rightImageView.isHidden = true
                 cell.leftImageView.isHidden = false
                 cell.leftTimeLabel.isHidden = false
-                cell.leftUnReadCountLabel.isHidden = false
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
                     cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
                 }
