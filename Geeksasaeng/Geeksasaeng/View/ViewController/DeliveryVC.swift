@@ -237,7 +237,7 @@ class DeliveryViewController: UIViewController {
         
         // 왼쪽, 오른쪽 하단의 코너에만 cornerRadius를 적용
         view.layer.masksToBounds = true
-        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMaxYCorner]
+        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         view.layer.cornerRadius = 5
         view.isHidden = true
         
