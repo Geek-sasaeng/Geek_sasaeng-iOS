@@ -56,6 +56,7 @@ class LoginViewController: UIViewController {
         )
         textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
+        textField.isSecureTextEntry = true
         return textField
     }()
     
