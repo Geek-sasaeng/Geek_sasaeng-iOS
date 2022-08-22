@@ -53,6 +53,12 @@
 		1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */; };
 		1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
 		1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
+		1041ADDA28AE5782003DCB26 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1041ADD928AE5782003DCB26 /* NewSplash.mp4 */; };
+		1041ADDB28AE5782003DCB26 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1041ADD928AE5782003DCB26 /* NewSplash.mp4 */; };
+		1041ADDC28AE5782003DCB26 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1041ADD928AE5782003DCB26 /* NewSplash.mp4 */; };
+		1041ADDE28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
+		1041ADDF28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
+		1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
 		10543D61287EFECE003B8799 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10543D60287EFECE003B8799 /* CoreLocation.framework */; };
 		10543D63287EFEDB003B8799 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 10543D62287EFED5003B8799 /* libc++.tbd */; };
 		10543D65287EFEE9003B8799 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 10543D64287EFEE7003B8799 /* libsqlite3.tbd */; };
@@ -1211,6 +1217,8 @@
 		103F5E46289D3C0E000E7B9A /* AutoLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLoginAPI.swift; sourceTree = "<group>"; };
 		1040FB972875C06D0060A3E4 /* AgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementVC.swift; sourceTree = "<group>"; };
 		1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthVC.swift; sourceTree = "<group>"; };
+		1041ADD928AE5782003DCB26 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSplash.mp4; sourceTree = "<group>"; };
+		1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoAPI.swift; sourceTree = "<group>"; };
 		10543D60287EFECE003B8799 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		10543D62287EFED5003B8799 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		10543D64287EFEE7003B8799 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -2160,6 +2168,7 @@
 				A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */,
 				106093CF28A81981007FD463 /* ChatRoomExitAPI.swift */,
 				A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */,
+				1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -2569,6 +2578,7 @@
 				10544246287F0057003B8799 /* interface_m_t_map_p_o_i_item.js in Resources */,
 				10544180287F0056003B8799 /* properties_6.js in Resources */,
 				105440A2287F0056003B8799 /* navtree.css in Resources */,
+				1041ADDA28AE5782003DCB26 /* NewSplash.mp4 in Resources */,
 				10544270287F0057003B8799 /* open.png in Resources */,
 				105442B2287F0057003B8799 /* jquery.js in Resources */,
 				105441C8287F0056003B8799 /* functions_1.js in Resources */,
@@ -2992,6 +3002,7 @@
 				10544040287F0055003B8799 /* interface_m_t_map_polyline-members.html in Resources */,
 				10544271287F0057003B8799 /* open.png in Resources */,
 				105442B0287F0057003B8799 /* interface_m_t_map_point-members.html in Resources */,
+				1041ADDB28AE5782003DCB26 /* NewSplash.mp4 in Resources */,
 				105442B6287F0057003B8799 /* changelog.txt in Resources */,
 				1054400D287F0055003B8799 /* pages.html in Resources */,
 				1054412D287F0056003B8799 /* all_2.html in Resources */,
@@ -3279,6 +3290,7 @@
 				10544041287F0055003B8799 /* interface_m_t_map_polyline-members.html in Resources */,
 				10544272287F0057003B8799 /* open.png in Resources */,
 				105442B1287F0057003B8799 /* interface_m_t_map_point-members.html in Resources */,
+				1041ADDC28AE5782003DCB26 /* NewSplash.mp4 in Resources */,
 				105442B7287F0057003B8799 /* changelog.txt in Resources */,
 				1054400E287F0055003B8799 /* pages.html in Resources */,
 				1054412E287F0056003B8799 /* all_2.html in Resources */,
@@ -3555,6 +3567,7 @@
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
+				1041ADDE28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
 				A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */,
 				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
@@ -3621,6 +3634,7 @@
 				102B35E12879BD980042F691 /* String+Extension.swift in Sources */,
 				A2FA89AB286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				1031AAA328981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
+				1041ADDF28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				103F5E48289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A218D7BE28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
@@ -3767,6 +3781,7 @@
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
+				1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A248D8A3289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
@@ -3982,7 +3997,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -4021,7 +4036,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
