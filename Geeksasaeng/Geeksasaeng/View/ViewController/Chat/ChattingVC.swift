@@ -1326,14 +1326,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.leftTimeLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
-                cell.rightTimeLabel.isHidden = false
                 return cell
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
                 cell.rightTimeLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
-                cell.leftTimeLabel.isHidden = false
                 return cell
             }
         default: // 다른 사람이 전송
@@ -1346,8 +1344,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.leftTimeLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.leftImageView.isHidden = true
-                cell.rightImageView.isHidden = false
-                cell.rightTimeLabel.isHidden = false
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
                     cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
                 }
@@ -1358,8 +1354,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightTimeLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
                 cell.rightImageView.isHidden = true
-                cell.leftImageView.isHidden = false
-                cell.leftTimeLabel.isHidden = false
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
                     cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
                 }
@@ -1375,16 +1369,13 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .systemMessage:
             let labelHeight = getSystemMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
-//            print("System Label Height: ", labelHeight + 12)
         case .message:
             // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
-//            print("Message Label Height: ", labelHeight + 16)
         case .sameSenderMessage:
             let labelHeight = getMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
-//            print("Same Message Label Height: ", labelHeight)
         default:
             cellSize = CGSize(width: view.bounds.width, height: 40)
         }
