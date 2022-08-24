@@ -17,7 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
         self.window = UIWindow(windowScene: windowScene)
         
-        let rootViewController = SplashPlayerViewController()
+//        let rootViewController = SplashPlayerViewController()
+        let rootViewController = TermsOfUseAgreementViewController()
         self.window?.rootViewController = rootViewController
         self.window?.makeKeyAndVisible()
     }

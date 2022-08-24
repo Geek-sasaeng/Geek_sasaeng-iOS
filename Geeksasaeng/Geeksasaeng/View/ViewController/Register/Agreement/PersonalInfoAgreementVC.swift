@@ -113,10 +113,11 @@ class PersonalInfoAgreementViewController: UIViewController {
     private func addSubViews() {
         contentsView.addSubview(contentImageView)
         scrollView.addSubview(contentsView)
-        view.addSubview(scrollView)
+        
+        containerView.addSubview(scrollView)
+        containerView.addSubview(agreementView)
         
         view.addSubview(containerView)
-        containerView.addSubview(agreementView)
     }
     
     private func setLayouts() {
@@ -140,7 +141,7 @@ class PersonalInfoAgreementViewController: UIViewController {
         }
         
         contentImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(30)
+            make.top.equalToSuperview().inset(10)
             make.width.equalToSuperview()
             make.height.equalTo(UIScreen.main.bounds.width * 12.7)
         }

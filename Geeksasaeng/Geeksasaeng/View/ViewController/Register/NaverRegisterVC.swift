@@ -304,20 +304,10 @@ class NaverRegisterViewController: UIViewController {
             make.left.equalToSuperview().inset(27)
         }
         
-        /* text fields */
-        nickNameTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
-        }
-        
         emailTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
+            make.left.equalToSuperview().inset(27)
+            make.right.equalToSuperview().inset(25)
             make.top.equalTo(emailLabel.snp.bottom).offset(15)
-        }
-        
-        emailAddressTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(36)
-            make.top.equalTo(emailTextField.snp.bottom).offset(35)
         }
         
         /* select univ */
@@ -330,12 +320,6 @@ class NaverRegisterViewController: UIViewController {
             make.top.equalTo(schoolLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(316)
-        }
-        
-        /* nickNameAvailableLabel */
-        nickNameAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
         }
         
         /* nextButton */
@@ -354,12 +338,33 @@ class NaverRegisterViewController: UIViewController {
             make.height.equalTo(41)
         }
         
+        /* text fields */
+        nickNameTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(27)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
+        }
+        
+        /* nickNameAvailableLabel */
+        nickNameAvailableLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
+            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
+        }
+        
         /* authSendButton */
         authSendButton.snp.makeConstraints { make in
-            make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(10)
+//            make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(10)
+            make.top.equalTo(emailTextField.snp.bottom).offset(28)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
             make.height.equalTo(41)
+        }
+        
+        emailAddressTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authSendButton.snp.left).offset(-15)
+            make.top.equalTo(emailTextField.snp.bottom).offset(35)
         }
     }
     
