@@ -33,7 +33,7 @@ class ProfileViewController: UIViewController {
     }()
     
     let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "ProfileImage"))
+        let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 118 / 2
         return imageView
@@ -75,6 +75,14 @@ class ProfileViewController: UIViewController {
         label.text = "NEO1"
         label.font = .customFont(.neoBold, size: 17)
         label.textColor = .init(hex: 0x2F2F2F)
+        return label
+    }()
+    
+    let levelGuideLabel: UILabel = {
+        let label = UILabel()
+        label.text = "복학까지 2학기 남았어요"
+        label.font = .customFont(.neoMedium, size: 14)
+        label.textColor = .mainColor
         return label
     }()
     
@@ -121,7 +129,7 @@ class ProfileViewController: UIViewController {
     let ongoingLabel: UILabel = {
         let label = UILabel()
         label.text = "진행 중인 활동"
-        label.font = .customFont(.neoMedium, size: 15)
+        label.font = .customFont(.neoMedium, size: 16)
         label.textColor = .init(hex: 0x2F2F2F)
         return label
     }()
@@ -305,6 +313,7 @@ class ProfileViewController: UIViewController {
             levelIconImageView,
             degreeLabel, dotImageView, univLabel,
             nickNameLabel,
+            levelGuideLabel,
             levelImageStackView,
             totalBar, freshmanBar,
             levelLabelStackView,
@@ -365,9 +374,13 @@ class ProfileViewController: UIViewController {
             make.centerX.equalTo(profileImageView)
             make.top.equalTo(univLabel.snp.bottom).offset(4)
         }
+        levelGuideLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(nickNameLabel)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(28)
+        }
         levelImageStackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(22)
+            make.top.equalTo(levelGuideLabel.snp.bottom).offset(17)
         }
         totalBar.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(44)
@@ -386,10 +399,10 @@ class ProfileViewController: UIViewController {
         
         ongoingLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(levelLabelStackView.snp.bottom).offset(49)
+            make.top.equalTo(levelLabelStackView.snp.bottom).offset(38)
         }
         ongoingTableView.snp.makeConstraints { make in
-            make.top.equalTo(ongoingLabel.snp.bottom).offset(27-9)
+            make.top.equalTo(ongoingLabel.snp.bottom).offset(27)
             make.left.right.equalToSuperview().inset(42)
             make.height.equalTo(9 + 44 + 9 + 44 + 9 + 44)
         }
