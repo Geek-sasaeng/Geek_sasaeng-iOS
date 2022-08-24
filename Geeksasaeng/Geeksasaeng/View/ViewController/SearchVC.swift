@@ -324,6 +324,14 @@ class SearchViewController: UIViewController {
         
         // Back 버튼 숨기기 & 상단에 위치한 텍스트 필드에 탭이 가능하게 하기 위해
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        // 하단 탭바 숨기기
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Functions
