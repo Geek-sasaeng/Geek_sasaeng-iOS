@@ -110,7 +110,6 @@ class UrlViewController: UIViewController {
         setViewLayout()
         addSubViews()
         setLayouts()
-        setDefaultValueOfTextField()
     }
     
     // MARK: - Functions
@@ -193,20 +192,11 @@ class UrlViewController: UIViewController {
         }
     }
     
-    private func setDefaultValueOfTextField() {
-        if let url = CreateParty.url {
-            urlTextField.text = url
-            return
-        }
-    }
-    
     @objc
     private func tapNextButton() {
-        if let url = urlTextField.text {
+        if let url = urlTextField.text, !url.isEmpty {
             CreateParty.url = url
-        }
-        
-        if urlTextField.text?.count == 0 {
+        } else {
             CreateParty.url = "?"
         }
         
