@@ -61,7 +61,7 @@ class MessageCell: UICollectionViewCell {
         label.layer.cornerRadius = 5
         label.textAlignment = .left
         label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = 200
+        label.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.569
         
         label.sizeToFit()
         label.setNeedsLayout()
@@ -83,7 +83,7 @@ class MessageCell: UICollectionViewCell {
         label.layer.cornerRadius = 5
         label.textAlignment = .left
         label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = 200
+        label.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.569
         
         label.sizeToFit()
         label.setNeedsLayout()
