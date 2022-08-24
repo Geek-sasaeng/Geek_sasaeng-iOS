@@ -371,7 +371,9 @@ class DeliveryViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
-        navigationController?.isNavigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
+        // 하단 탭바가 나타나게 해야한다
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - viewDidLayoutSubviews()

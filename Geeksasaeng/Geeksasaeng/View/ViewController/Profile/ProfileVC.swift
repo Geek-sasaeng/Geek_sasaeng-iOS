@@ -72,7 +72,7 @@ class ProfileViewController: UIViewController {
     
     let nickNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "NEO1"
+        label.text = LoginModel.nickname
         label.font = .customFont(.neoBold, size: 17)
         label.textColor = .init(hex: 0x2F2F2F)
         return label

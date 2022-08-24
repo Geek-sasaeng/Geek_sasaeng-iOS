@@ -234,6 +234,7 @@ class PartyNameViewController: UIViewController {
                             if let e = err {
                                 print(e.localizedDescription)
                                 // TODO: 파티 생성은 잘 됐는데, 파티 채팅방 생성이 안 될 경우에는 어떻게 해야하나...?
+                                print("Seori Test: 채팅방 생성 실패")
                                 // 배달 채팅방 생성 실패
                                 self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                             } else {
