@@ -642,15 +642,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         guard let belongStatus = self.detailData.belongStatus else { return }
         print("속해있는가", belongStatus)
+        print("방장인가", self.detailData.authorStatus)
         
-        if self.detailData.authorStatus! {
+        if belongStatus == "Y" {
             self.signUpButton.setTitle("채팅방 가기", for: .normal)
         } else {
-            if belongStatus == "Y" {
-                self.signUpButton.setTitle("채팅방 가기", for: .normal)
-            } else {
-                self.signUpButton.setTitle("신청하기", for: .normal)
-            }
+            self.signUpButton.setTitle("신청하기", for: .normal)
         }
     }
                                                           

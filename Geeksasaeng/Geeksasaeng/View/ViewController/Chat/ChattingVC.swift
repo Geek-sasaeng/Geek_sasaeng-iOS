@@ -1016,7 +1016,65 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapExitConfirmButton() {
-        // 파이어 스토어 participants에서 이름 빼고 popVC
+        guard let roomUUID = roomUUID else { return }
+        
+        // 본인이 방장일 때
+        if roomMaster == LoginModel.nickname {
+            // 파이어 스토어 participants에서도 이름 제거
+            updateExitedMember { [self] in
+                /* 파베에서 새 방장 선정 완료되면 실행 */
+                
+                // 서버에 알려줘서 서버의 방장도 바꿔줌
+                let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
+                ChatRoomExitAPI.patchExitCheif(input)
+                
+                // 새 방장 선정 시스템 메세지 출력
+                print("Seori Test 선정 메세지 나옴", roomMaster)
+                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                    "content": "방장의 활동 중단에 따라 새로운\n방장으로 \'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
+                    "nickname": "SystemMessage",
+                    "userImgUrl": "SystemMessage",
+                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+                    "isSystemMessage": true
+                ]) { error in
+                    if let e = error {
+                        print(e.localizedDescription)
+                    } else {
+                        print("Success save data")
+                    }
+                }
+            }
+        } else { // 본인이 방장이 아닐 때
+            // 파이어 스토어 participants에서도 이름 제거
+            updateExitedMember { [self] in
+                /* 파베에서 이름 지우는 거 완료되면 실행 */
+                // 서버에 나간 사람 알려줌
+                let input = ChatRoomExitInput(uuid: roomUUID)
+                ChatRoomExitAPI.patchExitUser(input)
+                
+                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                    "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
+                    "nickname": "SystemMessage",
+                    "userImgUrl": "SystemMessage",
+                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+                    "isSystemMessage": true
+                ]) { error in
+                    if let e = error {
+                        print(e.localizedDescription)
+                    } else {
+                        print("Success save data")
+                    }
+                }
+            }
+        }
+        if var currentMatching = currentMatching {
+            currentMatching -= 1
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
+    /* 나간 유저의 데이터를 firestore에 업데이트(삭제), 방장이 나간 거면 새 방장까지 선정 */
+    private func updateExitedMember(completion: @escaping ()->Void) {
         guard let roomUUID = roomUUID else { return }
         
         // map 삭제로 변경
@@ -1057,59 +1115,13 @@ class ChattingViewController: UIViewController {
 
                     let input = ["participant": targetParticipant, "enterTime": time, "isRemittance": isRemittance] as [String : Any]
                     self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayRemove([input])])
+                    
+                    completion()
                 } catch {
                     print(error.localizedDescription)
                 }
             }
         }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.locale = Locale(identifier: "ko_KR")
-
-        if roomMaster == LoginModel.nickname { // 본인이 방장일 때
-            let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
-            // 서버의 방장도 바꿔줌
-            ChatRoomExitAPI.patchExitCheif(input)
-            
-            // 새 방장 선정 시스템 메세지 출력
-            print("Seori Test 선정 메세지 나옴", roomMaster, self.roomMaster)
-            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                "content": "방장의 활동 중단에 따라 새로운\n방장으로\'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
-                "nickname": "SystemMessage",
-                "userImgUrl": "SystemMessage",
-                "time": formatter.string(from: Date()),
-                "isSystemMessage": true
-            ]) { error in
-                if let e = error {
-                    print(e.localizedDescription)
-                } else {
-                    print("Success save data")
-                }
-            }
-        } else { // 본인이 방장이 아닐 때
-            let input = ChatRoomExitInput(uuid: roomUUID)
-            // 서버에 나간 사람 알려줌
-            ChatRoomExitAPI.patchExitUser(input)
-            
-            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
-                "nickname": "SystemMessage",
-                "userImgUrl": "SystemMessage",
-                "time": formatter.string(from: Date()),
-                "isSystemMessage": true
-            ]) { error in
-                if let e = error {
-                    print(e.localizedDescription)
-                } else {
-                    print("Success save data")
-                }
-            }
-        }
-        if var currentMatching = currentMatching {
-            currentMatching -= 1
-        }
-        navigationController?.popViewController(animated: true)
     }
     
     private func getMessageLabelHeight(text: String) -> CGFloat {
