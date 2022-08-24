@@ -305,9 +305,9 @@ class PhoneAuthViewController: UIViewController {
     public func showNextView() {
         // 일치했을 때에만 화면 전환
         let agreementVC = AgreementViewController()
-
-        agreementVC.modalTransitionStyle = .crossDissolve
-        agreementVC.modalPresentationStyle = .fullScreen
+        let navVC = UINavigationController(rootViewController: agreementVC)
+        navVC.modalTransitionStyle = .crossDissolve
+        navVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일, 폰번호) 총 7개
         // 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
@@ -326,7 +326,7 @@ class PhoneAuthViewController: UIViewController {
             agreementVC.emailId = emailId
             agreementVC.phoneNumberId = phoneNumberId
             
-            present(agreementVC, animated: true)
+            present(navVC, animated: true)
         }
     }
     

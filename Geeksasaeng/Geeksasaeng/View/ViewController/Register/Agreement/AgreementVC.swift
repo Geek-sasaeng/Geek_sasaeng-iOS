@@ -48,7 +48,7 @@ class AgreementViewController: UIViewController {
     
     lazy var wholeAgreementCheckBox: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.setImage(UIImage(systemName: "square"), for: .normal)
         button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
         button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
         return button
@@ -56,7 +56,7 @@ class AgreementViewController: UIViewController {
     
     lazy var termsOfUseAgreementCheckBox: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.setImage(UIImage(systemName: "square"), for: .normal)
         button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
         button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
         return button
@@ -64,7 +64,7 @@ class AgreementViewController: UIViewController {
     
     lazy var personalInfoAgreementCheckBox: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "rectangle"), for: .normal)
+        button.setImage(UIImage(systemName: "square"), for: .normal)
         button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
         button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
         return button
@@ -107,12 +107,6 @@ class AgreementViewController: UIViewController {
         return view
     }()
     
-    lazy var wholeAgreementArrow: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
-        return button
-    }()
-    
     lazy var termsOfUseAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
@@ -120,9 +114,10 @@ class AgreementViewController: UIViewController {
         return button
     }()
     
-    let personalInfoAgreementArrow: UIButton = {
+    lazy var personalInfoAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
+        button.addTarget(self, action: #selector(tapPersonalInfoAgreementArrow), for: .touchUpInside)
         return button
     }()
     
@@ -174,7 +169,7 @@ class AgreementViewController: UIViewController {
             separateView,
             termsOfUseAgreementCheckBox, termsOfUseAgreementButton,
             personalInfoAgreementCheckBox, personalInfoAgreementButton,
-            wholeAgreementArrow, termsOfUseAgreementArrow, personalInfoAgreementArrow,
+            termsOfUseAgreementArrow, personalInfoAgreementArrow,
             completeButton
         ].forEach { view.addSubview($0) }
     }
@@ -252,11 +247,6 @@ class AgreementViewController: UIViewController {
             make.left.equalTo(personalInfoAgreementCheckBox.snp.right).offset(9)
         }
         
-        wholeAgreementArrow.snp.makeConstraints { make in
-            make.top.equalTo(wholeAgreementButton.snp.top).offset(5)
-            make.right.equalToSuperview().inset(32)
-        }
-        
         termsOfUseAgreementArrow.snp.makeConstraints { make in
             make.top.equalTo(termsOfUseAgreementButton.snp.top).offset(5)
             make.right.equalToSuperview().inset(32)
@@ -316,20 +306,29 @@ class AgreementViewController: UIViewController {
     
     @objc
     private func tapCheckButton(_ sender: UIButton) {
-        if sender.currentImage == UIImage(named: "CheckBox") {
-            sender.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
+        if sender.currentImage == UIImage(systemName: "square") {
+            sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
         } else {
-            sender.setImage(UIImage(named: "CheckBox"), for: .normal)
+            sender.setImage(UIImage(systemName: "square"), for: .normal)
+            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
         }
     }
     
     @objc
     private func tapTermsOfUseAgreementArrow() {
         let termsOfUseAgreementVC = TermsOfUseAgreementViewController()
-        termsOfUseAgreementVC.modalTransitionStyle = .crossDissolve
-        termsOfUseAgreementVC.modalPresentationStyle = .fullScreen
-        
-        present(termsOfUseAgreementVC, animated: true)
+        termsOfUseAgreementVC.TermsOfUseAgreementDelegate = self
+        navigationController?.pushViewController(termsOfUseAgreementVC, animated: true)
+    }
+    
+    @objc
+    private func tapPersonalInfoAgreementArrow() {
+        let personalInfoAgreementVC = PersonalInfoAgreementViewController()
+        personalInfoAgreementVC.personalInfoAgreementDelegate = self
+        navigationController?.pushViewController(personalInfoAgreementVC, animated: true)
     }
     
     /* 일반 회원가입 끝났으면 로그인 화면으로 돌아가도록 */
@@ -346,5 +345,21 @@ class AgreementViewController: UIViewController {
         dormitoryVC.modalTransitionStyle = .crossDissolve
         dormitoryVC.modalPresentationStyle = .fullScreen
         present(dormitoryVC, animated: true)
+    }
+}
+
+extension AgreementViewController: TermsOfUseAgreementDelegate, PersonalInfoAgreementDelegate {
+    func termsOfUseAgreement(isTrue: Bool) {
+        print("delegate func called")
+        if isTrue {
+            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+        }
+    }
+    
+    func personalInfoAgreement(isTrue: Bool) {
+        print("delegate func called")
+        if isTrue {
+            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+        }
     }
 }

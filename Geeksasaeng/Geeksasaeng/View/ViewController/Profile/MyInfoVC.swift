@@ -21,6 +21,9 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     lazy var contentView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
+        view.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapContentView))
+        view.addGestureRecognizer(gesture)
         return view
     }()
     
@@ -118,11 +121,12 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var logoutButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIColor(hex: 0x2F2F2f), for: .normal)
+        button.setTitleColor(UIColor(hex: 0x2F2F2F), for: .normal)
         button.backgroundColor = .init(hex: 0xEFEFEF)
         button.clipsToBounds = true
         button.layer.cornerRadius = 5
         button.setTitle("로그아웃", for: .normal)
+        button.titleLabel?.font = .customFont(.neoMedium, size: 15)
         button.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
         return button
     }()
@@ -135,6 +139,103 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         button.setTitle("회원탈퇴", for: .normal)
         return button
     }()
+    
+    lazy var logoutView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 7
+  
+        let topSubView = UIView()
+        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        view.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel()
+        titleLabel.text = "로그아웃"
+        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
+        titleLabel.font = .customFont(.neoMedium, size: 14)
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton()
+        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
+        cancelButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView()
+        bottomSubView.backgroundColor = UIColor.white
+        view.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(162)
+        }
+        
+        let contentLabel = UILabel()
+        let lineView = UIView()
+        lazy var confirmButton = UIButton()
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        
+        /* set contentLabel */
+        contentLabel.text = "로그아웃 시 서비스 사용이 제한\n되며, 로그인이 필요합니다.\n계속하시겠습니까?"
+        contentLabel.numberOfLines = 0
+        contentLabel.textColor = .init(hex: 0x2F2F2F)
+        contentLabel.font = .customFont(.neoMedium, size: 14)
+        let attrString = NSMutableAttributedString(string: contentLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        paragraphStyle.alignment = .center
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        contentLabel.attributedText = attrString
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(25)
+        }
+        
+        /* set lineView */
+        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        
+        /* set confirmButton */
+        confirmButton.setTitleColor(.mainColor, for: .normal)
+        confirmButton.setTitle("확인", for: .normal)
+        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
+        confirmButton.addTarget(self, action: #selector(tapLogoutConfirmButton), for: .touchUpInside)
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
+        }
+        
+        return view
+    }()
+    
+    var visualEffectView: UIVisualEffectView?
+    
     
     // MARK: - Properties
     
@@ -267,6 +368,17 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func createBlueView() {
+        if visualEffectView == nil {
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            visualEffectView.isUserInteractionEnabled = false
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+        }
+    }
+    
     @objc
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -274,10 +386,40 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
 
     @objc
     private func tapLogoutButton() {
-        print("tapLogoutButton")
+        if visualEffectView == nil {
+            createBlueView()
+            view.addSubview(logoutView)
+            logoutView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(256)
+                make.height.equalTo(236)
+            }
+        }
+    }
+    
+    @objc
+    private func tapXButton() {
+        visualEffectView?.removeFromSuperview()
+        visualEffectView = nil
+        logoutView.removeFromSuperview()
+    }
+    
+    @objc
+    private func tapLogoutConfirmButton() {
         UserDefaults.standard.set("nil", forKey: "jwt")
+        
         let rootVC = LoginViewController()
         UIApplication.shared.windows.first?.rootViewController = rootVC
         self.view.window?.rootViewController?.dismiss(animated: true)
+    }
+    
+    @objc
+    private func tapContentView() {
+        print("contentView Tapped")
+        if visualEffectView != nil {
+            visualEffectView?.removeFromSuperview()
+            visualEffectView = nil
+            logoutView.removeFromSuperview()
+        }
     }
 }
