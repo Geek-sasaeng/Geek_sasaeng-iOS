@@ -308,10 +308,18 @@ class AgreementViewController: UIViewController {
     private func tapCheckButton(_ sender: UIButton) {
         if sender.currentImage == UIImage(systemName: "square") {
             sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+//            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+//            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
         } else {
             sender.setImage(UIImage(systemName: "square"), for: .normal)
+//            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+//            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+        }
+        
+        if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "checkmark.square") {
+            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+        } else if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "square") {
             termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
             personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
         }

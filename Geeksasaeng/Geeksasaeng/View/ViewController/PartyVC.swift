@@ -558,6 +558,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let result = notification.object as! String
             if result == "true" {
                 print("수정 완료 버튼이 눌렸당")
+                self.setMapView()
                 self.getDetailData(self.createdData)
             }
         }
@@ -635,6 +636,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         CreateParty.hashTag = detailData.hashTag
     
         // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
+        
+        // MARK: - nil bounding error
         self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude!, longitude: detailData.longitude!)), zoomLevel: 5, animated: true)
         self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude!, longitude: detailData.longitude!))
         

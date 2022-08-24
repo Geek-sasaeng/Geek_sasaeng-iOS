@@ -1234,7 +1234,7 @@ class ChattingViewController: UIViewController {
         label.paddingTop = 10
         label.paddingBottom = 10
         
-        label.frame = CGRect(x: 0, y: 0, width: 200, height: CGFloat.greatestFiniteMagnitude)
+        label.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.569, height: CGFloat.greatestFiniteMagnitude)
         
         label.text = text
         label.font = .customFont(.neoMedium, size: 15)
@@ -1254,7 +1254,7 @@ class ChattingViewController: UIViewController {
         label.paddingTop = 6
         label.paddingBottom = 6
         
-        label.frame = CGRect(x: 0, y: 0, width: 250, height: CGFloat.greatestFiniteMagnitude)
+        label.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.572, height: CGFloat.greatestFiniteMagnitude)
         
         label.text = text
         label.font = .customFont(.neoMedium, size: 12)

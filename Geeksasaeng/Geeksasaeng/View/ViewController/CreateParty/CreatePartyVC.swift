@@ -285,6 +285,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             $0.view.removeFromSuperview()
             $0.removeFromParent()
         }
+        selectedUrlLabel.isUserInteractionEnabled = true
+        selectedLocationLabel.isUserInteractionEnabled = true
     }
     
     private func setAttributeOfOptionLabel() {
@@ -388,6 +390,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                     $0.view.removeFromSuperview()
                     $0.removeFromParent()
                 }
+                self.selectedLocationLabel.isUserInteractionEnabled = true
                 
                 self.isSettedOptions = true
                 if self.titleTextField.text?.count ?? 0 >= 1 && self.contentsTextView.text.count >= 1 {
@@ -571,6 +574,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     private func tapOrderForecastTimeButton() {
         view.endEditing(true)
         createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -603,6 +607,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapSelectedPersonLabel() {
         createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = OrderForecastTimeViewController()
@@ -626,6 +631,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapSelectedCategoryLabel() {
         createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = OrderForecastTimeViewController()
@@ -658,6 +664,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapSelectedUrlLabel() {
         createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
         // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = OrderForecastTimeViewController()
@@ -761,6 +768,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             let childView = BankAccountViewController()
             childView.dormitoryInfo = self.dormitoryInfo
             childView.delegate = self.delegate
+            self.selectedUrlLabel.isUserInteractionEnabled = false
+            self.selectedLocationLabel.isUserInteractionEnabled = false
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in

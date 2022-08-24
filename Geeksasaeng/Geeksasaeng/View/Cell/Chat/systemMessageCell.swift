@@ -21,7 +21,7 @@ class SystemMessageCell: UICollectionViewCell {
         label.layer.cornerRadius = 5
         label.textAlignment = .center
         label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = 250
+        label.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.572
         
         label.sizeToFit()
         label.setNeedsLayout()
