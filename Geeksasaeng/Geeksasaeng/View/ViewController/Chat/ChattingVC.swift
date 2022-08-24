@@ -486,6 +486,9 @@ class ChattingViewController: UIViewController {
     var bank: String?
     var accountNumber: String?
     
+    var loadMessageListener: ListenerRegistration?
+    var loadParticipantsListener: ListenerRegistration?
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -493,8 +496,6 @@ class ChattingViewController: UIViewController {
         contentsTextView.delegate = self
         
         setFirestore()
-        setRoomMasterAndAccount()
-        checkRemittance()
         loadPreMessages()
 //        loadParticipants()
         loadMessages()
@@ -523,6 +524,9 @@ class ChattingViewController: UIViewController {
         
         // 사라질 때 다시 탭바 보이게 설정
         self.tabBarController?.tabBar.isHidden = false
+        
+        self.loadMessageListener?.remove()
+        self.loadParticipantsListener?.remove()
     }
     
     
@@ -593,13 +597,14 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
-    private func setRoomMasterAndAccount() {
+    private func loadPreMessages() {
         guard let roomUUID = roomUUID else { return }
-
+        
         db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
             if let error = error {
                 print(error.localizedDescription)
             } else {
+                print("loadPreMessages called ==============")
                 do {
                     let data = try documentSnapshot?.data(as: RoomInfoModel.self)
                     guard let roomInfo = data?.roomInfo,
@@ -607,36 +612,18 @@ class ChattingViewController: UIViewController {
                           let bank = roomInfo.bank,
                           let accountNumber = roomInfo.accountNumber else { return }
                     
-                    // 방장 설정
+                    // 방장, 현재 매칭 유저 수 설정
                     if participants.count >= 1 {
                         self.roomMaster = participants[0].participant
+                        self.currentMatching = participants.count
                     }
                     
                     // 은행 & 계좌 설정
                     self.bank = bank
                     self.accountNumber = accountNumber
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-    
-    private func checkRemittance() {
-        // firestore에서 내 participant 불러와서 isRemittance가 false이면 remittanceView add
-        guard let roomUUID = roomUUID else { return }
-
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                do {
-                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
-                    guard let roomInfo = data?.roomInfo,
-                          let participants = roomInfo.participants else { return }
                     
+                    // 해당 참여자가 송금을 하지 않을 상태이면 remittanceView 노출
                     participants.forEach {
-                        // 해당 참여자가 송금을 하지 않을 상태이면 remittanceView 노출
                         if $0.participant == LoginModel.nickname {
                             guard let isRemittance = $0.isRemittance else { return }
                             if !isRemittance {
@@ -651,41 +638,16 @@ class ChattingViewController: UIViewController {
                             }
                         }
                     }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-    
-    private func loadPreMessages() {
-        guard let roomUUID = roomUUID else { return }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        // 참가자가 참가한 시간 불러오기
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                do {
-                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
-                    guard let roomInfo = data?.roomInfo,
-                          let participants = roomInfo.participants else { return }
-                    if participants.count > 0 {
-                        // 채팅방 로드할 때 방장, 현재 인원 정보 불러오기 (방장은 나가기 API 호출 위해 필요)
-                        self.roomMaster = participants[0].participant
-                        self.currentMatching = participants.count
-                    }
-
-                    // 현재 사용자가 참여한 시간을 추출
+                    
+                    // 사용자가 참가한 시간 이후의 메세지 불러오기
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                     data?.roomInfo?.participants?.forEach {
                         if $0.participant == LoginModel.nickname {
                             guard let enterTime = $0.enterTime else { return }
-                            guard let enterTimeToDate = formatter.date(from: enterTime) else { return }// 참가자가 참가한 시간 Date Type
+                            guard let enterTimeToDate = formatter.date(from: enterTime) else { return } // 참가자가 참가한 시간 Date Type
 
-                            // 이전 메세지 모두 불러오기 (systemMessage, message) -> 이거 되면 시간 필터링
+                            // 이전 메세지 모두 불러오기 (systemMessage, message)
                             self.db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").getDocuments { querySnapshot, error in
                                 if let error = error {
                                     print(error.localizedDescription)
@@ -696,34 +658,33 @@ class ChattingViewController: UIViewController {
                                                 let message = try doc.data(as: MessageModel.self)
                                                 guard let sendTime = message.time else { return }
                                                 guard let sendTimeToDate = formatter.date(from: sendTime) else { return }
-                                                if message.isSystemMessage == true { // systemMessage
-                                                    // 시간이 이후인 경우에만
-                                                    let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
-                                                    if timeInterval <= 0 { // 음수일 떄 -> 참가 이후의 메세지
+                                                let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
+                                                if timeInterval <= 0 {
+                                                    if message.isSystemMessage == true {
                                                         self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: true)))
                                                         self.lastSender = "system"
-                                                    }
-                                                } else { // 일반 message
-                                                    let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
-                                                    if timeInterval <= 0 {
-                                                        if self.lastSender == nil { // 첫 메세지일 때
+                                                    } else {
+                                                        if self.lastSender == nil {
                                                             self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
                                                             self.lastSender = message.nickname
-                                                        } else if self.lastSender == message.nickname { // 같은 사람이 연속으로 보냈을 때
+                                                        } else if self.lastSender == message.nickname {
                                                             self.contents.append(cellContents(cellType: .sameSenderMessage, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
                                                             self.lastSender = message.nickname
-                                                        } else { // 같은 사람이 보낸 게 아닐 때
+                                                        } else {
                                                             self.contents.append(cellContents(cellType: .message, message: MessageModel(content: message.content, nickname: message.nickname, userImgUrl: message.userImgUrl, time: message.time, isSystemMessage: false)))
                                                             self.lastSender = message.nickname
                                                         }
                                                     }
                                                 }
+                                                
+                                                print("contents: ", self.contents)
+                                                print(self.collectionView.numberOfItems(inSection: 0))
 
-                                                DispatchQueue.main.async {
-                                                    print("이전 메세지 불러오기")
-                                                    self.collectionView.reloadData()
-                                                    self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
-                                                }
+                                                let indexPath = IndexPath(row: self.contents.count - 1, section: 0)
+                                                self.collectionView.insertItems(at: [indexPath])
+                                                self.collectionView.reloadData()
+                                                self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+                                                
                                             } catch {
                                                 print(error.localizedDescription)
                                             }
@@ -731,9 +692,9 @@ class ChattingViewController: UIViewController {
                                     }
                                 }
                             }
-
                         }
                     }
+//                    print("contents when sendButton PreLoadMessage called", self.contents)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -743,7 +704,7 @@ class ChattingViewController: UIViewController {
     
     private func loadParticipants() {
         guard let roomUUID = roomUUID else { return }
-        db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
+        loadParticipantsListener = db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
@@ -762,32 +723,32 @@ class ChattingViewController: UIViewController {
                             self.roomMaster = participants[0].participant
                         }
                         
-                        self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
-                        if self.currentMatching == roomInfo.maxMatching {
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            formatter.locale = Locale(identifier: "ko_KR")
-                            
-                            // 모든 참가자 참여 완료 시스템 메세지 업로드
-                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                                "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
-                                "nickname": "SystemMessage",
-                                "userImgUrl": "SystemMessage",
-                                "time": formatter.string(from: Date()),
-                                "isSystemMessage": true
-                            ]) { error in
-                                if let e = error {
-                                    print(e.localizedDescription)
-                                } else {
-                                    print("Success save data")
-                                }
-                            }
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self.collectionView.reloadData()
-                            self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
-                        }
+//                        self.currentMatching = participants.count // 참여자가 늘어나면 currentMatching에 추가
+//                        if self.currentMatching == roomInfo.maxMatching {
+//                            let formatter = DateFormatter()
+//                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//                            formatter.locale = Locale(identifier: "ko_KR")
+//
+//                            // 모든 참가자 참여 완료 시스템 메세지 업로드
+//                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+//                                "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
+//                                "nickname": "SystemMessage",
+//                                "userImgUrl": "SystemMessage",
+//                                "time": formatter.string(from: Date()),
+//                                "isSystemMessage": true
+//                            ]) { error in
+//                                if let e = error {
+//                                    print(e.localizedDescription)
+//                                } else {
+//                                    print("Success save data")
+//                                }
+//                            }
+//                        }
+//
+//                        DispatchQueue.main.async {
+//                            self.collectionView.reloadData()
+//                            self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+//                        }
                     }
                 }
             }
@@ -796,7 +757,7 @@ class ChattingViewController: UIViewController {
     
     private func loadMessages() {
         guard let roomUUID = roomUUID else { return }
-        db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
+        loadMessageListener =  db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
