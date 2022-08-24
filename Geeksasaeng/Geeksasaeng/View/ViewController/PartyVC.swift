@@ -1172,29 +1172,58 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 if let document = documentSnapshot {
                     // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
                     if document.exists {
-                        guard let nickName = LoginModel.nickname else { return }
-                        /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
-                        let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
+                        do {
+                            let data = try document.data(as: RoomInfoModel.self)
+                            guard let roomInfo = data.roomInfo,
+                                  let participants = roomInfo.participants else { return }
+                            
+                            guard let nickName = LoginModel.nickname else { return }
+                            /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
+                            let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
 
-                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
-                        
-                        // 참가자 참가 시스템 메세지 업로드
-                        self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                            "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
-                            "nickname": LoginModel.nickname ?? "홍길동",
-                            "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                            "time": formatter.string(from: Date()),
-                            "isSystemMessage": true
-                        ]) { error in
-                            if let e = error {
-                                print(e.localizedDescription)
-                            } else {
-                                print("Success save data")
+                            self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
+                            
+                            // 참가자 참가 시스템 메세지 업로드
+                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                                "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
+                                "nickname": LoginModel.nickname ?? "홍길동",
+                                "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                                "time": formatter.string(from: Date()),
+                                "isSystemMessage": true
+                            ]) { error in
+                                if let e = error {
+                                    print(e.localizedDescription)
+                                } else {
+                                    print("Success save data")
+                                }
                             }
+                            
+                            if participants.count == roomInfo.maxMatching! - 1 {
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                formatter.locale = Locale(identifier: "ko_KR")
+                                
+                                // 모든 참가자 참여 완료 시스템 메세지 업로드
+                                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                                    "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
+                                    "nickname": "SystemMessage",
+                                    "userImgUrl": "SystemMessage",
+                                    "time": formatter.string(from: Date()),
+                                    "isSystemMessage": true
+                                ]) { error in
+                                    if let e = error {
+                                        print(e.localizedDescription)
+                                    } else {
+                                        print("Success save data")
+                                    }
+                                }
+                            }
+                            
+                            print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
+                        } catch {
+                            print(error.localizedDescription)
                         }
-
-                        // object를 넣어야 함
-                        print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
+                        
                         self.isInvited = true
                     }
                 }
