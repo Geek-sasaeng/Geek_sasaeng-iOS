@@ -473,6 +473,7 @@ class ChattingViewController: UIViewController {
     var currentMatching: Int?
     // 선택한 채팅방의 uuid값
     var roomUUID: String?
+    var roomName: String?
     
     var presentOptionViewForOwner = false
     var presentOptionViewForUser = false
@@ -505,7 +506,7 @@ class ChattingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
-        self.navigationItem.title = ""
+        self.navigationItem.title = roomName
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
