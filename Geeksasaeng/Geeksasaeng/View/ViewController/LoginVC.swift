@@ -40,6 +40,7 @@ class LoginViewController: UIViewController {
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        textField.delegate = self
         textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
@@ -54,6 +55,7 @@ class LoginViewController: UIViewController {
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        textField.delegate = self
         textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         textField.isSecureTextEntry = true
@@ -136,6 +138,7 @@ class LoginViewController: UIViewController {
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         view.endEditing(true)
     }
     
@@ -408,3 +411,15 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
         print("에러 = \(error.localizedDescription)")
     }
 }
+
+// MARK: - UITextFieldDelegate
+
+extension LoginViewController: UITextFieldDelegate {
+    
+    // 키보드의 return 버튼 누르면 키보드 내려가게
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
