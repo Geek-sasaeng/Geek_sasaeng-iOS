@@ -28,12 +28,11 @@ class ChattingListTableViewCell: UITableViewCell {
     // MARK: - SubViews
     
     /* 채팅방 이미지 */
-    let profileImageView: UIImageView = {
+    let partyChatImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame = CGRect(x: 0, y: 0, width: 33, height: 33)
         imageView.layer.cornerRadius = imageView.frame.width / 2
-        // TODO: - 추후에 채팅방 이미지 나오면 연결하기! 지금은 임시 이미지
-        imageView.image = UIImage(named: "TempChattingImage")
+        imageView.image = UIImage(named: "PartyChatImage")
         return imageView
     }()
     
@@ -94,7 +93,7 @@ class ChattingListTableViewCell: UITableViewCell {
     // MARK: - Functions
     
     private func addSubViews() {[
-            profileImageView, titleLabel,
+            partyChatImageView, titleLabel,
             recentMessageLabel, receivedTimeLabel, unreadMessageCountLabel
         ].forEach { self.contentView.addSubview($0) }
     }
@@ -105,16 +104,17 @@ class ChattingListTableViewCell: UITableViewCell {
             make.left.right.bottom.equalToSuperview()
         }
 
-        profileImageView.snp.makeConstraints { make in
+        partyChatImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(18)
             make.left.equalToSuperview().inset(10)
+            make.width.height.equalTo(33)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.top).offset(5)
-            make.left.equalTo(profileImageView.snp.right).offset(11)
+            make.top.equalTo(partyChatImageView.snp.top).offset(5)
+            make.left.equalTo(partyChatImageView.snp.right).offset(11)
         }
         recentMessageLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(13)
+            make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.left.equalTo(titleLabel)
             make.width.equalTo(150) // 넓이 제한 필요 (최대 글자수 11개에 맞게)
         }
