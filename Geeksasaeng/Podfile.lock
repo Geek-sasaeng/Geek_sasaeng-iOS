@@ -763,6 +763,7 @@ PODS:
   - Libuv-gRPC/Implementation (0.0.10):
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
+  - lottie-ios (3.4.2)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -778,6 +779,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - FirebaseFirestoreSwift
   - Kingfisher
+  - lottie-ios
   - naveridlogin-sdk-ios
   - SnapKit
 
@@ -802,6 +804,7 @@ SPEC REPOS:
     - Kingfisher
     - leveldb-library
     - Libuv-gRPC
+    - lottie-ios
     - nanopb
     - naveridlogin-sdk-ios
     - PromisesObjC
@@ -827,11 +830,12 @@ SPEC CHECKSUMS:
   Kingfisher: f411ab4902e733fc0c40522920fb5a236d7a7334
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
+  lottie-ios: 6bbc53eef6957e4744a50321507015fba72d8ca6
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   naveridlogin-sdk-ios: b9d7c20677981177ed994ecb1c8c2b49f223277d
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: da4dc734e20717e6229727bb3be01c4a8188bb0b
+PODFILE CHECKSUM: 3ae1f65846d451ee752543dd5997091d2955b0a3
 
 COCOAPODS: 1.11.3

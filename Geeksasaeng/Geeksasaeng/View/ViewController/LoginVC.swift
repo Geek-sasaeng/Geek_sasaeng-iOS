@@ -40,6 +40,7 @@ class LoginViewController: UIViewController {
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        textField.delegate = self
         textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
@@ -54,8 +55,10 @@ class LoginViewController: UIViewController {
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        textField.delegate = self
         textField.makeBottomLine()
         textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
+        textField.isSecureTextEntry = true
         return textField
     }()
     
@@ -114,7 +117,6 @@ class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-    let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
     var accessToken: String?
     var dormitoryInfo: DormitoryNameResult?
@@ -130,11 +132,13 @@ class LoginViewController: UIViewController {
         attemptAutoLogin()
         addSubViews()
         setLayouts()
+        setKeyboardDown()
     }
     
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         view.endEditing(true)
     }
     
@@ -207,7 +211,6 @@ class LoginViewController: UIViewController {
             make.width.height.equalTo(15)
         }
         
-        // TODO: - 아이팟 터치에서는 다른 버튼 크기를 비율 맞춰 줄여봐도 이 버튼이 가려짐. 스크롤뷰 추가해야 할 듯
         signUpButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
             make.top.equalTo(automaticLoginButton.snp.bottom).offset(UIScreen.main.bounds.height / 18.7)
@@ -240,11 +243,16 @@ class LoginViewController: UIViewController {
         }
     }
     
+    /* 배경 누르면 토글된 키보드 내려가게 하기 */
+    private func setKeyboardDown() {
+        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
     @objc private func tapSignUpButton() {
         // registerVC로 화면 전환.
         let registerVC = RegisterViewController()
         
-        // TODO: - 회원가입 과정 중에 모달 방식 고민 필요
         registerVC.modalTransitionStyle = .crossDissolve
         registerVC.modalPresentationStyle = .fullScreen
         
@@ -256,7 +264,7 @@ class LoginViewController: UIViewController {
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
             let input = LoginInput(loginId: id, password: pw)
-            loginVM.login(input) { result in
+            LoginViewModel.login(self, input) { result in
                 // 자동로그인 체크 시 UserDefaults에 jwt 저장
                 if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
                     UserDefaults.standard.set(result.jwt, forKey: "jwt")
@@ -403,3 +411,15 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
         print("에러 = \(error.localizedDescription)")
     }
 }
+
+// MARK: - UITextFieldDelegate
+
+extension LoginViewController: UITextFieldDelegate {
+    
+    // 키보드의 return 버튼 누르면 키보드 내려가게
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+

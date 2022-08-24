@@ -37,6 +37,46 @@ extension UIViewController {
         })
     }
     
+    /* 밑에 작은 토스트 메세지 띄워주는 함수 */
+    public func showBottomToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor) {
+        let toastView: UIView = {
+            let view = UIView()
+            view.backgroundColor = color
+            view.layer.cornerRadius = 15
+            return view
+        }()
+        let toastLabel: UILabel = {
+            let label = UILabel()
+            label.text = message
+            label.font = font
+            label.textColor = UIColor.white
+            label.numberOfLines = 0
+            label.lineBreakMode = .byCharWrapping
+            let newSize = label.sizeThatFits(view.frame.size)
+            label.frame.size = newSize
+            return label
+        }()
+        
+        toastView.addSubview(toastLabel)
+        toastLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+        
+        viewController.view.addSubview(toastView)
+        toastView.snp.makeConstraints { make in
+            make.centerX.equalTo(viewController.view.center)
+            make.width.equalTo(toastLabel.bounds.width + 20)
+            make.height.equalTo(toastLabel.bounds.height + 20)
+            make.bottom.equalTo(viewController.view.safeAreaLayoutGuide).offset(-40)
+        }
+        
+        UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {
+            toastView.alpha = 0.0
+        }, completion: {(isCompleted) in
+            toastView.removeFromSuperview()
+        })
+    }
+    
     /* 배경에 어두운 블러뷰 만드는 함수 */
     public func setDarkBlurView() -> UIVisualEffectView {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))

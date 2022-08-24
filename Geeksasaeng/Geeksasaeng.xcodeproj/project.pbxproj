@@ -1144,9 +1144,6 @@
 		A2E6EADE2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
 		A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */; };
-		A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
-		A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
-		A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */; };
 		A2E78B0928AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
 		A2E78B0A28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
 		A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */; };
@@ -1158,6 +1155,9 @@
 		A2F54FD928757CDF0094C18D /* AdCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */; };
 		A2FA18B128B3743B0079AC36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
 		A2FA18B228B3743B0079AC36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10B75B5F289CDD810002865C /* GoogleService-Info.plist */; };
+		A2FA18B928B3FDFA0079AC36 /* splash.json in Resources */ = {isa = PBXBuildFile; fileRef = A2FA18B828B3FDF80079AC36 /* splash.json */; };
+		A2FA18BA28B3FDFA0079AC36 /* splash.json in Resources */ = {isa = PBXBuildFile; fileRef = A2FA18B828B3FDF80079AC36 /* splash.json */; };
+		A2FA18BB28B3FDFA0079AC36 /* splash.json in Resources */ = {isa = PBXBuildFile; fileRef = A2FA18B828B3FDF80079AC36 /* splash.json */; };
 		A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
 		A2FA89A8286EC9E900CB3B55 /* RegisterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */; };
@@ -1594,10 +1594,10 @@
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
 		A2E6EADD2893D95F0011D3BD /* DormitoryNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryNameModel.swift; sourceTree = "<group>"; };
-		A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSplash.mp4; sourceTree = "<group>"; };
 		A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		A2EC623C288C0784000FD6CB /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
 		A2F54FD628757CDF0094C18D /* AdCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdCollectionViewCell.swift; sourceTree = "<group>"; };
+		A2FA18B828B3FDF80079AC36 /* splash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = splash.json; sourceTree = "<group>"; };
 		A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterVC.swift; sourceTree = "<group>"; };
 		A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
@@ -1737,7 +1737,7 @@
 				103F1461286ACA86004B637B /* Info.plist */,
 				10B75B5F289CDD810002865C /* GoogleService-Info.plist */,
 				105442B8287F0083003B8799 /* Kakao-Map-Bridge-Header.h */,
-				A2E78B0428AE56E0001292E1 /* NewSplash.mp4 */,
+				A2FA18B828B3FDF80079AC36 /* splash.json */,
 			);
 			path = Geeksasaeng;
 			sourceTree = "<group>";
@@ -2679,6 +2679,7 @@
 				1054402A287F0055003B8799 /* struct_m_t_map_image_offset-members.html in Resources */,
 				105440BA287F0056003B8799 /* all_a.js in Resources */,
 				10544045287F0055003B8799 /* struct_m_t_map_point_geo.js in Resources */,
+				A2FA18B928B3FDFA0079AC36 /* splash.json in Resources */,
 				105441C5287F0056003B8799 /* variables_5.js in Resources */,
 				1054415F287F0056003B8799 /* properties_5.js in Resources */,
 				10544018287F0055003B8799 /* struct_m_t_map_point_plain.html in Resources */,
@@ -2797,7 +2798,6 @@
 				10543FFD287F0055003B8799 /* annotated_dup.js in Resources */,
 				1054409F287F0055003B8799 /* bdwn.png in Resources */,
 				1054414A287F0056003B8799 /* properties_1.js in Resources */,
-				A2E78B0528AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105440B7287F0056003B8799 /* functions_d.js in Resources */,
 				1054424F287F0057003B8799 /* _m_t_map_view_8h_source.html in Resources */,
 				105441F2287F0056003B8799 /* pages_0.html in Resources */,
@@ -2912,6 +2912,7 @@
 				1054428F287F0057003B8799 /* _m_t_map_view_8h.html in Resources */,
 				105440C1287F0056003B8799 /* functions_7.js in Resources */,
 				10543F89287F0055003B8799 /* setupDocsetDocument.rb in Resources */,
+				A2FA18BA28B3FDFA0079AC36 /* splash.json in Resources */,
 				105440D6287F0056003B8799 /* variables_4.html in Resources */,
 				1054422F287F0057003B8799 /* navtreeindex0.js in Resources */,
 				10543FCB287F0055003B8799 /* noimage256.png in Resources */,
@@ -2976,7 +2977,6 @@
 				105440A3287F0056003B8799 /* navtree.css in Resources */,
 				1054410F287F0056003B8799 /* all_e.html in Resources */,
 				10543F8F287F0055003B8799 /* DaumMap.embeddedframework.zip in Resources */,
-				A2E78B0628AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105441C6287F0056003B8799 /* variables_5.js in Resources */,
 				1054424A287F0057003B8799 /* struct_m_t_map_point_plain.js in Resources */,
 				105440FD287F0056003B8799 /* properties_2.html in Resources */,
@@ -3199,6 +3199,7 @@
 				10544290287F0057003B8799 /* _m_t_map_view_8h.html in Resources */,
 				105440C2287F0056003B8799 /* functions_7.js in Resources */,
 				10543F8A287F0055003B8799 /* setupDocsetDocument.rb in Resources */,
+				A2FA18BB28B3FDFA0079AC36 /* splash.json in Resources */,
 				105440D7287F0056003B8799 /* variables_4.html in Resources */,
 				10544230287F0057003B8799 /* navtreeindex0.js in Resources */,
 				10543FCC287F0055003B8799 /* noimage256.png in Resources */,
@@ -3263,7 +3264,6 @@
 				105440A4287F0056003B8799 /* navtree.css in Resources */,
 				10544110287F0056003B8799 /* all_e.html in Resources */,
 				10543F90287F0055003B8799 /* DaumMap.embeddedframework.zip in Resources */,
-				A2E78B0728AE56E0001292E1 /* NewSplash.mp4 in Resources */,
 				105441C7287F0056003B8799 /* variables_5.js in Resources */,
 				1054424B287F0057003B8799 /* struct_m_t_map_point_plain.js in Resources */,
 				105440FE287F0056003B8799 /* properties_2.html in Resources */,
@@ -3951,6 +3951,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3967,13 +3968,14 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = LM9BKUSL5K;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geeksasaeng/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Geeksasaeng;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 좀 쓸게용";
@@ -3987,10 +3989,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaengg;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -4013,6 +4015,7 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geeksasaeng/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Geeksasaeng;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 좀 쓸게용";
@@ -4029,7 +4032,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.geeksasaeng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;

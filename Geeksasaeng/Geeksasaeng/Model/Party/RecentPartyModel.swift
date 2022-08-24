@@ -18,5 +18,5 @@ struct RecentPartyModel: Decodable {
 struct RecentPartyModelResult: Decodable {
     var id: Int?
     var title: String?
-    var storeUrl: String?
+    var createdAt: String?  // TODO: 추후에 나의 활동 보기 할 때 사용 예정
 }

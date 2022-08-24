@@ -11,7 +11,7 @@ import Alamofire
 
 // 로그인 API 연동
 class LoginViewModel {
-    public func login(_ parameter : LoginInput, completion: @escaping (LoginModelResult) -> Void) {
+    public static func login(_ viewController: LoginViewController, _ parameter : LoginInput, completion: @escaping (LoginModelResult) -> Void) {
         AF.request("https://geeksasaeng.shop/login", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -19,11 +19,12 @@ class LoginViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
+                    guard let passedResult = result.result else { return }
                     print("DEBUG: 성공")
-                    completion(result.result ?? LoginModelResult())
-                    
+                    completion(passedResult)
                 } else {
                     print("DEBUG:", result.message!)
+                    viewController.showBottomToast(viewController: viewController, message: result.message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)

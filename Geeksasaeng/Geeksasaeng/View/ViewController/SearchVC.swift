@@ -1041,4 +1041,16 @@ extension SearchViewController: UITextFieldDelegate {
         
         return newLength <= 20
     }
+    
+    // 키보드의 return 버튼 누르면 내려가게, 검색 실행되게
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        tapSearchButton()
+        return true
+    }
+    
+    // 스크린의 어디든 터치하면 키보드가 내려가게
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true);
+    }
 }

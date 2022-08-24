@@ -506,7 +506,7 @@ class ChattingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
-        self.navigationItem.title = "채팅방 이름"
+        self.navigationItem.title = ""
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -516,6 +516,9 @@ class ChattingViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 뷰 나타나기 전에 이전 메세지 불러오기
+        loadPreMessages()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -642,6 +645,7 @@ class ChattingViewController: UIViewController {
                     // 사용자가 참가한 시간 이후의 메세지 불러오기
                     let formatter = DateFormatter()
                     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    
                     data?.roomInfo?.participants?.forEach {
                         if $0.participant == LoginModel.nickname {
                             guard let enterTime = $0.enterTime else { return }
