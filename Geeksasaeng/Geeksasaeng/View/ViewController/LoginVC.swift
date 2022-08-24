@@ -115,7 +115,6 @@ class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-    let loginVM = LoginViewModel()
     let naverLoginVM = naverLoginViewModel()
     var accessToken: String?
     var dormitoryInfo: DormitoryNameResult?
@@ -262,7 +261,7 @@ class LoginViewController: UIViewController {
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
             let input = LoginInput(loginId: id, password: pw)
-            loginVM.login(input) { result in
+            LoginViewModel.login(self, input) { result in
                 // 자동로그인 체크 시 UserDefaults에 jwt 저장
                 if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
                     UserDefaults.standard.set(result.jwt, forKey: "jwt")
