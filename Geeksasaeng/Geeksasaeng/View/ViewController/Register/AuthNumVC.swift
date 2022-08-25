@@ -272,7 +272,6 @@ class AuthNumViewController: UIViewController {
     // 다음 버튼을 누르면 -> 회원 가입 완료 & 로그인 화면 띄우기
     // VM에서 호출하는 함수이다
     public func showNextView() {
-        // TODO: 네이버 로그인을 통해 등록한 사람들의 정보도 AgreementVC 까지 데이터 전달해 줘야 함.
         if isFromNaverRegister {
             let agreementVC = AgreementViewController()
             agreementVC.modalTransitionStyle = .crossDissolve
