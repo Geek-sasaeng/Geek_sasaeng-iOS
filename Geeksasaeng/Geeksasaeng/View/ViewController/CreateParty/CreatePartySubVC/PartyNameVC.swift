@@ -248,7 +248,8 @@ class PartyNameViewController: UIViewController {
                                     "nickname": LoginModel.nickname ?? "홍길동",
                                     "userImgUrl": LoginModel.userImgUrl ?? "https://",
                                     "time": formatter.string(from: Date()),
-                                    "isSystemMessage": true
+                                    "isSystemMessage": true,
+                                    "readUsers": [LoginModel.nickname ?? "홍길동"]
                                 ]) { error in
                                     if let e = error {
                                         print(e.localizedDescription)
