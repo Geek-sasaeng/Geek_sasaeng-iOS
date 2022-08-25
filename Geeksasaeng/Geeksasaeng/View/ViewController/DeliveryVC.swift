@@ -908,16 +908,17 @@ class DeliveryViewController: UIViewController {
             // 필터 해제
             selectedPeopleLabel = nil
             nowPeopleFilter = nil
+            isPeopleFilterOn = false
             
             // 초기화
             deliveryCellDataArray.removeAll()
             cursor = 0
             
             // 상태에 따라 함수 호출
-            if nowPeopleFilter == nil {
+            if nowTimeFilter == nil {
                 getDeliveryList()
             } else {
-                getDeliveryList(maxMatching: nowPeopleFilter)
+                getDeliveryList(orderTimeCategory: nowTimeFilter)
             }
         } else {
             selectedPeopleLabel = label

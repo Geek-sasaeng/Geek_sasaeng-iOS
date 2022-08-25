@@ -22,10 +22,6 @@ class SearchViewController: UIViewController {
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
     
-    // 필터링이 설정되어 있는지/아닌지 여부 확인
-    var isPeopleFilterOn = false
-    var isTimeFilterOn = false
-    
     // 현재 설정되어 있는 인원수 필터값이 뭔지 가져오기 위해
     var nowPeopleFilter: Int? = nil
     // 현재 설정되어 있는 시간 필터값
@@ -642,9 +638,7 @@ class SearchViewController: UIViewController {
     
     /* peopleFilter를 사용하여 데이터 가져오기 */
     private func getPeopleFilterList(text: String?) {
-        // TODO: - Bool값 false가 되는 때도 설정 필요
         deliveryCellDataArray.removeAll()
-        isPeopleFilterOn = true
         
         enum peopleOption: String {
             case two = "2명 이하"
@@ -683,7 +677,6 @@ class SearchViewController: UIViewController {
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
         deliveryCellDataArray.removeAll()
-        isTimeFilterOn = true
         cursor = 0
 
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
@@ -829,6 +822,7 @@ class SearchViewController: UIViewController {
                 label.textColor = .init(hex: 0xA8A8A8)
             }
         }
+        // DropDown뷰 접기
         tapPeopleFilterView()
         
         // 필터가 변경되면 스크롤 맨 위로
@@ -857,7 +851,6 @@ class SearchViewController: UIViewController {
             label.textColor = .init(hex: 0xD8D8D8)
             
             // 시간 필터 해제
-            isTimeFilterOn = false
             nowTimeFilter = nil
             
             // 초기화
@@ -994,11 +987,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
            let maxMatching = nowData.maxMatching,
            let orderTime = nowData.orderTime,
            let title = nowData.title,
-           let id = nowData.id,    // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
            let hasHashTag = nowData.hasHashTag,
            let foodCategory = nowData.foodCategory {
             cell.peopleLabel.text = String(currentMatching)+"/"+String(maxMatching)
-            cell.titleLabel.text = title + String(id)
+            cell.titleLabel.text = title
             cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
             cell.categoryLabel.text = foodCategory
             
