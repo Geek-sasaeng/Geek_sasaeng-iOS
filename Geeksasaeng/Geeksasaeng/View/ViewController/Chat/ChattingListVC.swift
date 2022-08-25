@@ -455,6 +455,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         
         let chattingVC = ChattingViewController()
         // 해당 채팅방 uuid값 받아서 이동
+        chattingVC.roomName = chattingRoomList[indexPath.row].title
         chattingVC.roomUUID = roomUUIDList[indexPath.row]
         navigationController?.pushViewController(chattingVC, animated: true)
     }

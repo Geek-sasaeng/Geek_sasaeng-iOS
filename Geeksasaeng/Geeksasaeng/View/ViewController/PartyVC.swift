@@ -19,6 +19,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var detailData = DeliveryListDetailModelResult()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var createdData: DeliveryListDetailModelResult?
+    var ChatRoomName: String?
     
     var mapView: MTMapView? // 카카오맵
     var marker: MTMapPOIItem = {
@@ -1131,8 +1132,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Cached document data: \(dataDescription)")
                     
+                    do {
+                        let data = try document.data(as: RoomInfoModel.self)
+                        guard let roomInfo = data.roomInfo else { return }
+                        
+                        self.ChatRoomName = roomInfo.title
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                    
                     // 해당 채팅방으로 이동
                     let chattingVC = ChattingViewController()
+                    chattingVC.roomName = self.ChatRoomName
                     chattingVC.roomUUID = roomUUID
                     chattingVC.maxMatching = self.detailData.maxMatching
                     self.navigationController?.pushViewController(chattingVC, animated: true)
