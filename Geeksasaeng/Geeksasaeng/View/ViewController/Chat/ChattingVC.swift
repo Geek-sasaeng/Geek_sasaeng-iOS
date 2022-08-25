@@ -485,6 +485,7 @@ class ChattingViewController: UIViewController {
     var roomMaster: String? // 내가 현재 방장인지
     var bank: String?
     var accountNumber: String?
+    var enterTimeToDate: Date?    // 내가 이 방에 들어온 시간
     
     var loadMessageListener: ListenerRegistration?
     var loadParticipantsListener: ListenerRegistration?
@@ -496,8 +497,7 @@ class ChattingViewController: UIViewController {
         contentsTextView.delegate = self
         
         setFirestore()
-        loadParticipants()
-        loadMessages()
+        setEnterTime()
         setCollectionView()
         addSubViews()
         setLayouts()
@@ -596,13 +596,44 @@ class ChattingViewController: UIViewController {
         db.clearPersistence()
     }
     
+    /* 참여자가 채팅방에 처음 입장한 시간 설정 */
+    private func setEnterTime() {
+        guard let roomUUID = roomUUID else { return }
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let e = error {
+                print(e.localizedDescription)
+            } else {
+                print("DEBUG: setEnterTime")
+                if let document = documentSnapshot {
+                    let roomInfo = try? document.data(as: RoomInfoModel.self)
+                    guard let roomInfo = roomInfo,
+                          let roomDetailInfo = roomInfo.roomInfo,
+                          let participants = roomDetailInfo.participants else { return }
+                    
+                    participants.forEach {
+                        if $0.participant == LoginModel.nickname {
+                            guard let enterTime = $0.enterTime else { return }
+                            guard let enterTimeToDate = FormatCreater.sharedLongFormat.date(from: enterTime) else { return } // 참가자가 참가한 시간 Date Type
+                            self.enterTimeToDate = enterTimeToDate  // 로컬 변수에 저장
+                        }
+                    }
+                    
+                    /* 입장 시간 세팅 끝난 후에 리스너 세팅 */
+                    self.loadParticipants()
+                    self.loadMessages()
+                }
+            }
+        }
+    }
+    
+    /* Rooms에 리스너 설정 */
     private func loadParticipants() {
         guard let roomUUID = roomUUID else { return }
         loadParticipantsListener = db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
-                print("roomInfo 불러오기")
+                print("DEBUG: loadParticipants")
                 if let document = documentSnapshot {
                     if let data = try? document.data(as: RoomInfoModel.self) {
                         guard let roomInfo = data.roomInfo,
@@ -642,44 +673,57 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    /* messages에 리스너 설정 */
     private func loadMessages() {
         guard let roomUUID = roomUUID else { return }
         loadMessageListener =  db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
             if let e = error {
                 print(e.localizedDescription)
             } else {
-                print("Messages Documents 불러오기")
+                // 캐시된 데이터 버리기
+                if self.firstRoomInfo {
+                    self.firstRoomInfo = false
+                    return
+                }
+                print("DEBUG: loadMessages")
                 self.contents.removeAll()
                 if let snapshotDocuments = querySnapshot?.documents {
                     // Document 하나씩 확인하면서 보낸 사람이 누구냐에 따라 다른 셀 타입으로 contents에 추가
                     for document in snapshotDocuments {
                         if let data = try? document.data(as: MessageModel.self) {
-                            if let content = data.content,
-                               let nickname = data.nickname,
-                               let userImgUrl = data.userImgUrl,
-                               let time = data.time,
-                               let isSystemMessage = data.isSystemMessage {
-                                if isSystemMessage == true {
-                                    self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
-                                    self.lastSender = "system"
-                                } else if self.lastSender == nil { // 첫 메세지일 때
-                                    self.contents.append(cellContents(cellType: .message,
-                                                                      message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
-                                    self.lastSender = nickname
-                                } else if self.lastSender == nickname { // 같은 사람이 연속으로 보낼 때
-                                    self.contents.append(cellContents(cellType: .sameSenderMessage,
-                                                                      message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
-                                    self.lastSender = nickname
-                                } else { // 다른 사람이 보낼 때
-                                    self.contents.append(cellContents(cellType: .message,
-                                                                      message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
-                                    self.lastSender = nickname
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    let indexPath = IndexPath(row: self.contents.count - 1, section: 0)
-                                    self.collectionView.insertItems(at: [indexPath])
-                                    self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+                            guard let sendTime = data.time,
+                                  let sendTimeToDate = FormatCreater.sharedLongFormat.date(from: sendTime),
+                                  let enterTimeToDate = self.enterTimeToDate else { return }
+                            
+                            let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
+                            if timeInterval <= 0 {
+                                if let content = data.content,
+                                   let nickname = data.nickname,
+                                   let userImgUrl = data.userImgUrl,
+                                   let time = data.time,
+                                   let isSystemMessage = data.isSystemMessage {
+                                    
+                                    if isSystemMessage == true {
+                                        self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
+                                        self.lastSender = "system"
+                                    } else if self.lastSender == nil { // 첫 메세지일 때
+                                        self.contents.append(cellContents(cellType: .message,
+                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
+                                        self.lastSender = nickname
+                                    } else if self.lastSender == nickname { // 같은 사람이 연속으로 보낼 때
+                                        self.contents.append(cellContents(cellType: .sameSenderMessage,
+                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
+                                        self.lastSender = nickname
+                                    } else { // 다른 사람이 보낼 때
+                                        self.contents.append(cellContents(cellType: .message,
+                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
+                                        self.lastSender = nickname
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.collectionView.reloadData()
+                                        self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+                                    }
                                 }
                             }
                         }
@@ -1180,7 +1224,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
             cell.systemMessageLabel.text = contents[indexPath.row].message?.content
-            print("Seori Test: #\(indexPath.item)", cell)
+            print("Seori Test: sys #\(indexPath.item)", cell)
             return cell
         case .sameSenderMessage: // 같은 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
@@ -1195,7 +1239,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightTimeLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
             }
-            print("Seori Test: #\(indexPath.item)", cell)
+            print("Seori Test: same #\(indexPath.item)", cell)
             return cell
         default: // 다른 사람이 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
@@ -1209,7 +1253,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.leftImageView.isHidden = true
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
                     cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+                } else {// 방장이 아니면 기본 프로필로 설정
+                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
                 }
+                
+                print("Seori Test: me #\(indexPath.item)", cell)
             } else {
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
@@ -1219,9 +1267,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightImageView.isHidden = true
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
                     cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+                } else {// 방장이 아니면 기본 프로필로 설정
+                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
                 }
+                
+                print("Seori Test: other #\(indexPath.item)", cell)
             }
-            print("Seori Test: #\(indexPath.item)", cell)
             return cell
         }
     }

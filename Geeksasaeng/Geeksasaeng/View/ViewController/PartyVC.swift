@@ -1194,7 +1194,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                                 if let e = error {
                                     print(e.localizedDescription)
                                 } else {
-                                    print("Success save data")
+                                    print("DEBUG: 입장 메세지 띄우기 완료")
                                 }
                             }
                             

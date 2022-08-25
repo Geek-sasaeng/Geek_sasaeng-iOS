@@ -45,6 +45,12 @@ class SystemMessageCell: UICollectionViewCell {
         setLayouts()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        systemMessageLabel.text = ""
+    }
+    
     private func addSubViews() {
         addSubview(systemMessageLabel)
     }
