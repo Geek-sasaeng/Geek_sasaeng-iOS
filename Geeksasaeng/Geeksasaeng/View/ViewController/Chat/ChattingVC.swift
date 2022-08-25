@@ -681,11 +681,6 @@ class ChattingViewController: UIViewController {
             if let e = error {
                 print(e.localizedDescription)
             } else {
-                // 캐시된 데이터 버리기
-                if self.firstRoomInfo {
-                    self.firstRoomInfo = false
-                    return
-                }
                 print("DEBUG: loadMessages")
                 self.contents.removeAll()
                 if let snapshotDocuments = querySnapshot?.documents {
