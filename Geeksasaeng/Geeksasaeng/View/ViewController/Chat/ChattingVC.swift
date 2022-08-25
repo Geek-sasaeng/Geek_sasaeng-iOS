@@ -473,6 +473,7 @@ class ChattingViewController: UIViewController {
     var currentMatching: Int?
     // 선택한 채팅방의 uuid값
     var roomUUID: String?
+    var roomName: String?
     
     var presentOptionViewForOwner = false
     var presentOptionViewForUser = false
@@ -505,7 +506,7 @@ class ChattingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
-        self.navigationItem.title = ""
+        self.navigationItem.title = roomName
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -971,20 +972,38 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapEndOfChatButton() {
         // 옵션뷰 제거, 블러뷰는 그대로
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0.1,
-            options: .curveEaseOut,
-            animations: { () -> Void in
-                // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
-                self.optionViewForOwner.center.y -= self.optionViewForOwner.bounds.height
-                self.optionViewForOwner.center.x += self.optionViewForOwner.bounds.width
-                self.optionViewForOwner.layoutIfNeeded()
-            },
-            completion: { _ in ()
-                self.optionViewForOwner.removeFromSuperview()
-            }
-        )
+        if presentOptionViewForOwner {
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0.1,
+                options: .curveEaseOut,
+                animations: { () -> Void in
+                    // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
+                    self.optionViewForOwner.center.y -= self.optionViewForOwner.bounds.height
+                    self.optionViewForOwner.center.x += self.optionViewForOwner.bounds.width
+                    self.optionViewForOwner.layoutIfNeeded()
+                },
+                completion: { _ in ()
+                    self.optionViewForOwner.removeFromSuperview()
+                }
+            )
+        } else if presentOptionViewForUser {
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0.1,
+                options: .curveEaseOut,
+                animations: { () -> Void in
+                    // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
+                    self.optionViewForUser.center.y -= self.optionViewForOwner.bounds.height
+                    self.optionViewForUser.center.x += self.optionViewForOwner.bounds.width
+                    self.optionViewForUser.layoutIfNeeded()
+                },
+                completion: { _ in ()
+                    self.optionViewForUser.removeFromSuperview()
+                }
+            )
+        }
+        
         
         // exitView 추가
         view.addSubview(exitView)
@@ -1067,9 +1086,9 @@ class ChattingViewController: UIViewController {
                 }
             }
         }
-        if var currentMatching = currentMatching {
-            currentMatching -= 1
-        }
+//        if var currentMatching = currentMatching {
+//            currentMatching -= 1
+//        }
         navigationController?.popViewController(animated: true)
     }
     
@@ -1151,7 +1170,7 @@ class ChattingViewController: UIViewController {
         label.paddingTop = 6
         label.paddingBottom = 6
         
-        label.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.572, height: CGFloat.greatestFiniteMagnitude)
+        label.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width * 0.783, height: CGFloat.greatestFiniteMagnitude)
         
         label.text = text
         label.font = .customFont(.neoMedium, size: 12)
