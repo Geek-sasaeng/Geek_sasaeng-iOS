@@ -1066,6 +1066,10 @@ extension SearchViewController: UITextFieldDelegate {
         // 검색 결과 보고난 후에 검색어를 다 지우면 원래 검색 화면을 다시 보여준다
         if newLength == 0 {
             nowSearchKeyword = ""   // 초기화
+            // 필터 dropdown뷰가 확장 돼있으면 접고 원래 화면으로
+            if isDropDownPeople {
+                tapPeopleFilterView()
+            }
             showSearchMainView()
         }
         
