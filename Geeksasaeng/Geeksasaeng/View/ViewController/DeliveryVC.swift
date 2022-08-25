@@ -1133,10 +1133,9 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
            let orderTime = nowData.orderTime,
            let title = nowData.title,
            let hasHashTag = nowData.hasHashTag,
-           let foodCategory = nowData.foodCategory,
-           let id = nowData.id {  // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+           let foodCategory = nowData.foodCategory {
             cell.peopleLabel.text = String(currentMatching) + "/" + String(maxMatching)
-            cell.titleLabel.text = title + String(id)
+            cell.titleLabel.text = title
             cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
             cell.categoryLabel.text = foodCategory
             
