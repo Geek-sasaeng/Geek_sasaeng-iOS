@@ -34,6 +34,7 @@ struct LoginModelResult : Decodable {
 struct LoginInput : Encodable {
     var loginId: String?
     var password: String?
+    var fcmToken: String?
 }
 
 struct NaverLoginCheck {

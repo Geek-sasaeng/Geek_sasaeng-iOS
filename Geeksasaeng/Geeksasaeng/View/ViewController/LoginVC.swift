@@ -263,7 +263,7 @@ class LoginViewController: UIViewController {
         // 로그인 시도
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
-            let input = LoginInput(loginId: id, password: pw)
+            let input = LoginInput(loginId: id, password: pw, fcmToken: nil)
             LoginViewModel.login(self, input) { result in
                 // 자동로그인 체크 시 UserDefaults에 jwt 저장
                 if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
