@@ -3969,7 +3969,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = 67BH3YNZWS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -4011,7 +4011,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3QV3QL2LC8;
+				DEVELOPMENT_TEAM = 67BH3YNZWS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
