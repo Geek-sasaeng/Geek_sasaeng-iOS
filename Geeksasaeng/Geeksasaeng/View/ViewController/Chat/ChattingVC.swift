@@ -824,7 +824,8 @@ class ChattingViewController: UIViewController {
                     "nickname": LoginModel.nickname ?? "홍길동",
                     "userImgUrl": LoginModel.userImgUrl ?? "https://",
                     "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true
+                    "isSystemMessage": true,
+                    "readUsers": [LoginModel.nickname ?? "홍길동"]
                 ]) { error in
                     if let e = error {
                         print(e.localizedDescription)
@@ -880,7 +881,8 @@ class ChattingViewController: UIViewController {
                 "nickname": LoginModel.nickname ?? "홍길동",
                 "userImgUrl": LoginModel.userImgUrl ?? "https://",
                 "time": formatter.string(from: Date()),
-                "isSystemMessage": false
+                "isSystemMessage": false,
+                "readUsers": [LoginModel.nickname ?? "홍길동"]
             ]) { error in
                 if let e = error {
                     print(e.localizedDescription)
@@ -946,7 +948,8 @@ class ChattingViewController: UIViewController {
                         "nickname": "SystemMessage",
                         "userImgUrl": "SystemMessage",
                         "time": formatter.string(from: Date()),
-                        "isSystemMessage": true
+                        "isSystemMessage": true,
+                        "readUsers": [LoginModel.nickname ?? "홍길동"]
                     ]) { error in
                         if let e = error {
                             print(e.localizedDescription)
@@ -1092,7 +1095,8 @@ class ChattingViewController: UIViewController {
                     "nickname": "SystemMessage",
                     "userImgUrl": "SystemMessage",
                     "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true
+                    "isSystemMessage": true,
+                    "readUsers": [LoginModel.nickname ?? "홍길동"]
                 ]) { error in
                     if let e = error {
                         print(e.localizedDescription)
@@ -1114,7 +1118,8 @@ class ChattingViewController: UIViewController {
                     "nickname": "SystemMessage",
                     "userImgUrl": "SystemMessage",
                     "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true
+                    "isSystemMessage": true,
+                    "readUsers": [LoginModel.nickname ?? "홍길동"]
                 ]) { error in
                     if let e = error {
                         print(e.localizedDescription)
