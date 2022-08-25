@@ -43,6 +43,7 @@ struct NaverLoginCheck {
 
 struct NaverLoginInput: Encodable {
     var accessToken: String?
+    var fcmToken: String?
 }
 
 struct NaverLoginOutput: Decodable {
