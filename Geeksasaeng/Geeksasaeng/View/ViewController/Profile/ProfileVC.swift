@@ -247,6 +247,8 @@ class ProfileViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
     
+        ongoingTableView.backgroundColor = .white
+        
         /* 서비스 labels Attrs 설정 */
         [ noticeLabel, myActivityLabel, myInfoLabel, contactUsLabel, termsOfUseLabel].forEach {
             $0.font = .customFont(.neoMedium, size: 15)
