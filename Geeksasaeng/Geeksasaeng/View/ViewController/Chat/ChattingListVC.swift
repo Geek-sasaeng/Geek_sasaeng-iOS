@@ -206,6 +206,8 @@ class ChattingListViewController: UIViewController {
                            ), animated: true)
         self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+        
+        chattingTableView.backgroundColor = .white
     }
     
     private func addSubViews() {

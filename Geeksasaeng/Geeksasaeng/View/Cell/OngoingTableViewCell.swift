@@ -45,6 +45,7 @@ class OngoingTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        self.backgroundColor = .white
         contentView.backgroundColor = .white
         
         setAttributes()
