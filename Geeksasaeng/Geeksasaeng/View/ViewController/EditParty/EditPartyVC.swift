@@ -433,9 +433,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
             orderForecastTimeButton.setTitle("      \(dateStr)        \(timeStr)", for: .normal)
             
-            // TODO: - location 카카오맵 결정되면 추가, ReceiptPlaceVC default value도 설정
-//            selectedLocationLabel.text =  -> latitude, longitude으로 지역 검색 후 적용
-            
             /* 서브뷰에 default value를 띄우기 위함 */
             CreateParty.orderForecastTime = "\(dateStr)        \(timeStr)"
             CreateParty.matchingPerson = "\(detailData.maxMatching!)명"
