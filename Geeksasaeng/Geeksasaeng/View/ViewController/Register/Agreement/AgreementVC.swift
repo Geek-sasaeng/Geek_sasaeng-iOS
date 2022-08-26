@@ -279,8 +279,7 @@ class AgreementViewController: UIViewController {
             }
         } else { // naver 회원가입이 아닌 경우
             // Request 생성.
-            // 최종적으로 데이터 전달 (확인비번, 이메일, 동의여부, 아이디, 닉네임, pw, 폰번호, 학교이름) 총 8개
-            /// 순서가 이런 이유는 나도 모름... 회원가입 API Req 바디 모양대로 넣었어
+            // 최종적으로 데이터 전달
             if let idData = self.idData,
                let pwData = self.pwData,
                let pwCheckData = self.pwCheckData,
@@ -308,12 +307,8 @@ class AgreementViewController: UIViewController {
     private func tapCheckButton(_ sender: UIButton) {
         if sender.currentImage == UIImage(systemName: "square") {
             sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-//            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-//            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
         } else {
             sender.setImage(UIImage(systemName: "square"), for: .normal)
-//            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
-//            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
         }
         
         if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "checkmark.square") {

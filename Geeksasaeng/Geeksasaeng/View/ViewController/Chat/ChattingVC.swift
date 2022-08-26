@@ -419,7 +419,6 @@ class ChattingViewController: UIViewController {
             let label = UILabel()
             label.font = .customFont(.neoMedium, size: 14)
             label.textColor = .init(hex: 0x2F2F2F)
-            // TODO: - Firestore or Server에서 받아오기
             label.text = "\(self.bank ?? "은행")  \(self.accountNumber ?? "000-0000-0000-00")"
             return label
         }()
@@ -681,11 +680,6 @@ class ChattingViewController: UIViewController {
             if let e = error {
                 print(e.localizedDescription)
             } else {
-                // 캐시된 데이터 버리기
-                if self.firstRoomInfo {
-                    self.firstRoomInfo = false
-                    return
-                }
                 print("DEBUG: loadMessages")
                 self.contents.removeAll()
                 if let snapshotDocuments = querySnapshot?.documents {

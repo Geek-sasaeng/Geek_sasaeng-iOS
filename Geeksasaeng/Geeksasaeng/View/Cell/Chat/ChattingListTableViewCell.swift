@@ -67,7 +67,7 @@ class ChattingListTableViewCell: UITableViewCell {
     let unreadMessageCountLabel: UILabel = {
         let label = UILabel()
         // TODO: - 값 연결
-        label.text = "+999"
+        label.text = "+1"
         label.textColor = .mainColor
         label.font = .customFont(.neoBold, size: 11)
         return label
