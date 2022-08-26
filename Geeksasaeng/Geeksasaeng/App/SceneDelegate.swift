@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         
         let rootViewController = SplashPlayerViewController()
-//        let rootViewController = TermsOfUseAgreementViewController()
+//        let rootViewController = ChattingViewController()
         self.window?.rootViewController = rootViewController
         self.window?.makeKeyAndVisible()
     }

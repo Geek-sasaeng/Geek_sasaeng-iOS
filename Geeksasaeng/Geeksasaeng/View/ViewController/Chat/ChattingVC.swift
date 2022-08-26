@@ -499,14 +499,16 @@ class ChattingViewController: UIViewController {
         setFirestore()
         loadParticipants()
         loadMessages()
-        setCollectionView()
+//        setCollectionView()
         addSubViews()
         setLayouts()
+        setCollectionView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.title = roomName
+        self.navigationController?.navigationBar.barTintColor = .white
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -747,6 +749,7 @@ class ChattingViewController: UIViewController {
                     self.collectionView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
                 }
             )
+            
         }
     }
     
