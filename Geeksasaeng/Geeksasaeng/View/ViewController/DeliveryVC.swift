@@ -908,16 +908,17 @@ class DeliveryViewController: UIViewController {
             // 필터 해제
             selectedPeopleLabel = nil
             nowPeopleFilter = nil
+            isPeopleFilterOn = false
             
             // 초기화
             deliveryCellDataArray.removeAll()
             cursor = 0
             
             // 상태에 따라 함수 호출
-            if nowPeopleFilter == nil {
+            if nowTimeFilter == nil {
                 getDeliveryList()
             } else {
-                getDeliveryList(maxMatching: nowPeopleFilter)
+                getDeliveryList(orderTimeCategory: nowTimeFilter)
             }
         } else {
             selectedPeopleLabel = label
@@ -1133,10 +1134,9 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
            let orderTime = nowData.orderTime,
            let title = nowData.title,
            let hasHashTag = nowData.hasHashTag,
-           let foodCategory = nowData.foodCategory,
-           let id = nowData.id {  // TODO: id는 테스트를 위해 넣음. 추후에 삭제 필요
+           let foodCategory = nowData.foodCategory {
             cell.peopleLabel.text = String(currentMatching) + "/" + String(maxMatching)
-            cell.titleLabel.text = title + String(id)
+            cell.titleLabel.text = title
             cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
             cell.categoryLabel.text = foodCategory
             

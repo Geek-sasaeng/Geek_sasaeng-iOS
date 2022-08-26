@@ -77,6 +77,7 @@ class TabBarController: UITabBarController {
         
         tabBar.backgroundColor = .white
         navController.navigationBar.barTintColor = .white
+//        navController.navigationBar.isTranslucent = false
         
         navController.tabBarItem.title = title
         // 네비게이션 타이틀 속성 설정.

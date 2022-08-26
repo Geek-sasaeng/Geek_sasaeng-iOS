@@ -39,7 +39,8 @@ class ProfileViewController: UIViewController {
         return imageView
     }()
     let levelIconImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "TempLevelIcon"))
+        let imageView = UIImageView(image: UIImage(named: "LevelIcon"))
+        imageView.backgroundColor = .white
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 37 / 2
         // 테두리 그림자 생성
@@ -78,38 +79,57 @@ class ProfileViewController: UIViewController {
         return label
     }()
     
-    let levelGuideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "복학까지 2학기 남았어요"
-        label.font = .customFont(.neoMedium, size: 14)
-        label.textColor = .mainColor
-        return label
+    let levelGuideView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .init(hex: 0xF1F5F9)
+        view.layer.cornerRadius = 39 / 2
+        let label: UILabel = {
+            let label = UILabel()
+            label.text = "복학까지 2학기 남았어요"
+            label.font = .customFont(.neoMedium, size: 14)
+            label.textColor = .mainColor
+            return label
+        }()
+        view.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+        return view
     }()
     
     // 신입생 lv 이미지
-    let freshmanImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
-        imageView.image = UIImage(named: "TempLevelImage")
-        return imageView
+    let freshmanView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 11 / 2
+        view.snp.makeConstraints { make in
+            make.width.height.equalTo(11)
+        }
+        view.backgroundColor = .mainColor
+        return view
     }()
     // 복학생 lv 이미지
-    let returningStudentImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
-        imageView.image = UIImage(named: "TempLevelImage")
-        return imageView
+    let returningStudentView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 7 / 2
+        view.snp.makeConstraints { make in
+            make.width.height.equalTo(7)
+        }
+        view.backgroundColor = .init(hex: 0xD9D9D9)
+        return view
     }()
     // 졸업생 lv 이미지
-    let graduateImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame = CGRect(x: 0, y: 0, width: 55, height: 55)
-        imageView.image = UIImage(named: "TempLevelImage")
-        return imageView
+    let graduateView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 7 / 2
+        view.snp.makeConstraints { make in
+            make.width.height.equalTo(7)
+        }
+        view.backgroundColor = .init(hex: 0xD9D9D9)
+        return view
     }()
     
     // level 정보에 관한 스택뷰들
-    let levelImageStackView = UIStackView()
+    let levelViewStackView = UIStackView()
     let levelLabelStackView = UIStackView()
     
     // level 바
@@ -220,7 +240,7 @@ class ProfileViewController: UIViewController {
         setAttributes()
         
         /* 스택뷰 설정 */
-        setStackView(passedArray: [freshmanImageView, returningStudentImageView, graduateImageView], stackView: levelImageStackView)
+        setStackView(passedArray: [freshmanView, returningStudentView, graduateView], stackView: levelViewStackView)
         setStackView(passedArray: ["신입생", "복학생", "졸업생"], stackView: levelLabelStackView)
         
         addSubViews()
@@ -247,6 +267,8 @@ class ProfileViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
     
+        ongoingTableView.backgroundColor = .white
+        
         /* 서비스 labels Attrs 설정 */
         [ noticeLabel, myActivityLabel, myInfoLabel, contactUsLabel, termsOfUseLabel].forEach {
             $0.font = .customFont(.neoMedium, size: 15)
@@ -274,16 +296,16 @@ class ProfileViewController: UIViewController {
     
     // 스택뷰 구성
     private func setStackView(passedArray: [Any], stackView: UIStackView) {
-        if let imageArray = passedArray as? [UIImageView] {
+        if let viewArray = passedArray as? [UIView] {
             stackView.axis = .horizontal
             stackView.sizeToFit()
             stackView.layoutIfNeeded()
             stackView.distribution = .fillProportionally
             stackView.alignment = .center
-            stackView.spacing = 95
+            stackView.spacing = 110
             
-            for imageView in imageArray {
-                stackView.addArrangedSubview(imageView)
+            for view in viewArray {
+                stackView.addArrangedSubview(view)
             }
         } else {
             let stringArray = passedArray as! [String]
@@ -292,7 +314,7 @@ class ProfileViewController: UIViewController {
             stackView.layoutIfNeeded()
             stackView.distribution = .fillProportionally
             stackView.alignment = .center
-            stackView.spacing = 75
+            stackView.spacing = 85
             
             for string in stringArray {
                 let label = UILabel()
@@ -313,8 +335,8 @@ class ProfileViewController: UIViewController {
             levelIconImageView,
             degreeLabel, dotImageView, univLabel,
             nickNameLabel,
-            levelGuideLabel,
-            levelImageStackView,
+            levelGuideView,
+            levelViewStackView,
             totalBar, freshmanBar,
             levelLabelStackView,
             ongoingLabel,
@@ -374,17 +396,20 @@ class ProfileViewController: UIViewController {
             make.centerX.equalTo(profileImageView)
             make.top.equalTo(univLabel.snp.bottom).offset(4)
         }
-        levelGuideLabel.snp.makeConstraints { make in
+        levelGuideView.snp.makeConstraints { make in
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(13)
             make.centerX.equalTo(nickNameLabel)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(28)
+            make.width.equalTo(180)
+            make.height.equalTo(39)
         }
-        levelImageStackView.snp.makeConstraints { make in
+        levelViewStackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(levelGuideLabel.snp.bottom).offset(17)
+            make.top.equalTo(levelGuideView.snp.bottom).offset(17)
+            make.height.equalTo(11)
         }
         totalBar.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(44)
-            make.top.equalTo(levelImageStackView.snp.bottom).offset(9)
+            make.top.equalTo(levelViewStackView.snp.bottom).offset(9)
             make.height.equalTo(5)
         }
         freshmanBar.snp.makeConstraints { make in
@@ -394,7 +419,7 @@ class ProfileViewController: UIViewController {
         }
         levelLabelStackView.snp.makeConstraints { make in
             make.centerX.equalTo(totalBar)
-            make.top.equalTo(totalBar.snp.bottom).offset(12)
+            make.top.equalTo(totalBar.snp.bottom).offset(11)
         }
         
         ongoingLabel.snp.makeConstraints { make in

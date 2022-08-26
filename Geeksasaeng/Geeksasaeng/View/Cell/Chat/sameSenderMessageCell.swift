@@ -87,6 +87,9 @@ class SameSenderMessageCell: UICollectionViewCell {
         leftMessageLabel.text = ""
         rightMessageLabel.text = ""
         
+        leftTimeLabel.text = ""
+        rightTimeLabel.text = ""
+        
         leftMessageLabel.isHidden = false
         rightMessageLabel.isHidden = false
         

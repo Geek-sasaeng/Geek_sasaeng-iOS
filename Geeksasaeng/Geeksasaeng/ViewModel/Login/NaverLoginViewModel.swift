@@ -64,7 +64,7 @@ class naverLoginViewModel {
                     
                     /* 토큰으로 서버에 네이버 로그인 시도 */
                     print("==========", accessToken)
-                    let input = NaverLoginInput(accessToken: accessToken)
+                    let input = NaverLoginInput(accessToken: accessToken, fcmToken: "")
                     LoginViewModel.loginNaver(viewController: viewController, input)
                 }
                 else { // 실패

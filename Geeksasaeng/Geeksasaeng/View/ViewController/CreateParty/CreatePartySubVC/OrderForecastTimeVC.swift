@@ -5,7 +5,7 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
-// TODO: - datePicker에서 year 지우기
+// TODO: - datePicker에서 year 지우기 -> 는 좀 어려워서 최소/최대 날짜 설정하는 건 어때?
 
 import UIKit
 import SnapKit
@@ -102,6 +102,8 @@ class OrderForecastTimeViewController: UIViewController {
     private func setDatePicker() {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
+        datePicker.minimumDate = Calendar.current.startOfDay(for: Date())
+        datePicker.maximumDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())
         datePicker.addTarget(self, action: #selector(changedDatePickerValue), for: .valueChanged)
         datePicker.locale = Locale(identifier: "ko_KR")
         dateTextField.inputView = datePicker
