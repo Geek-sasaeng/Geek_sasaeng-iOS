@@ -517,8 +517,8 @@ class ChattingViewController: UIViewController {
         navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(named: "Setting"), style: .plain, target: self, action: #selector(tapOptionButton)), animated: true)
         navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -565,7 +565,7 @@ class ChattingViewController: UIViewController {
     private func setLayouts() {
         collectionView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
-            make.bottom.equalToSuperview().inset(69)
+            make.bottom.equalTo(bottomView.snp.top).offset(-15)
         }
         
         bottomView.snp.makeConstraints { make in
@@ -778,26 +778,28 @@ class ChattingViewController: UIViewController {
         self.visualEffectView = visualEffectView
     }
     
+    /* 키보드가 올라올 때 실행되는 함수 */
     @objc
-    private func keyboardUp(notification: NSNotification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-           let keyboardRectangle = keyboardFrame.cgRectValue
-
-            UIView.animate(
-                withDuration: 0.3, animations: {
-                    self.bottomView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
-                    self.collectionView.transform = CGAffineTransform(translationX: 0, y: -keyboardRectangle.height)
-                    self.collectionView.topAnchor.constraint(equalTo: (self.navigationController?.navigationBar.bottomAnchor)!).isActive = true
-                }
-            )
+    private func keyboardWillShow(sender: NSNotification) {
+        // 1. 키보드의 높이를 구함
+        if let info = sender.userInfo,
+           let keyboardHeight = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+            // 2. collectionView의 contentInset bottom 값을 변경하여 키보드 위로 content가 올라갈 수 있도록 함
+            collectionView.contentInset.bottom = keyboardHeight
+            // 3. 키보드 높이만큼 bottomView의 y값을 변경
+            bottomView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
             
+            // 4. 맨 마지막 아이템으로 스크롤을 해줌으로써 마지막 채팅이 키보드의 위에 뜨도록 함
+            self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
         }
     }
-    
+
+    /* 키보드가 내려갈 때 실행되는 함수 */
     @objc
-    private func keyboardDown() {
-        self.bottomView.transform = .identity
-        self.collectionView.transform = .identity
+    private func keyboardWillHide(sender: NSNotification) {
+        // collectionView의 contentInset 값과 bottomView의 transform을 원래대로 변경
+        collectionView.contentInset.bottom = 0
+        bottomView.transform = .identity
     }
     
     /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
