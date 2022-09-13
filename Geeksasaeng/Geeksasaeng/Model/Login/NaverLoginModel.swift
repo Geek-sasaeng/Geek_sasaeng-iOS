@@ -10,12 +10,4 @@ import NaverThirdPartyLogin
 
 class NaverLoginModel {
     let naverLoginInstance = NaverThirdPartyLoginConnection.getSharedInstance()
-    
-    func isExistToken() -> Bool {
-        if (naverLoginInstance?.accessToken) != nil {
-            return true
-        } else {
-            return false
-        }
-    }
 }

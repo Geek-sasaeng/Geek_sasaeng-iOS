@@ -40,10 +40,6 @@ class naverLoginViewModel {
         return naverLoginModel.naverLoginInstance?.accessToken ?? ""
     }
     
-    func isExistToken() -> Bool {
-        return naverLoginModel.isExistToken()
-    }
-    
     func naverLoginPaser(_ viewController: LoginViewController) {
         guard let accessToken = naverLoginModel.naverLoginInstance?.isValidAccessTokenExpireTimeNow() else { return }
         
