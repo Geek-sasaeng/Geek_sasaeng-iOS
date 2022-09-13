@@ -9,14 +9,6 @@ import UIKit
 
 extension UIView {
     
-    // ?? 얜 어디에 쓰는 거지
-    func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
-        let border = CALayer()
-        border.backgroundColor = color.cgColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width: self.frame.size.width, height: width)
-        self.layer.addSublayer(border)
-    }
-    
     /* view에 그라데이션 적용 -> vertical style */
     func setGradient(startColor: UIColor, endColor: UIColor){
         let gradient = CAGradientLayer()
