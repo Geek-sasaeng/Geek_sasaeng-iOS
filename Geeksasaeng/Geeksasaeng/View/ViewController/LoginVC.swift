@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import NaverThirdPartyLogin
+import AuthenticationServices
 
 class LoginViewController: UIViewController {
     
@@ -38,7 +39,7 @@ class LoginViewController: UIViewController {
         textField.textColor = .init(hex: 0x2F2F2F)
         textField.attributedPlaceholder = NSAttributedString(
             string: "아이디",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xB5B5B5)]
         )
         textField.delegate = self
         textField.makeBottomLine()
@@ -53,7 +54,7 @@ class LoginViewController: UIViewController {
         textField.textColor = .init(hex: 0x2F2F2F)
         textField.attributedPlaceholder = NSAttributedString(
             string: "비밀번호",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xB5B5B5)]
         )
         textField.delegate = self
         textField.makeBottomLine()
@@ -79,13 +80,26 @@ class LoginViewController: UIViewController {
         button.setImage(UIImage(named: "NaverLogo"), for: .normal)
         button.adjustsImageWhenHighlighted = false
         button.setTitle("  네이버 로그인", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.titleLabel?.textColor = .white
         button.backgroundColor = UIColor.init(hex: 0x00C73C)
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(tapNaverloginButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapNaverLoginButton), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var appleLoginButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "AppleLogo"), for: .normal)
+        button.adjustsImageWhenHighlighted = false
+        button.setTitle("  Apple 로그인", for: .normal)
+        button.titleLabel?.font = .customFont(.neoBold, size: 20)
+        button.titleLabel?.textColor = .white
+        button.backgroundColor = .black
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(tapAppleLoginButton), for: .touchUpInside)
         return button
     }()
     
@@ -149,7 +163,7 @@ class LoginViewController: UIViewController {
         [
             logoImageView,
             idTextField, passwordTextField,
-            loginButton, naverLoginButton,
+            loginButton, naverLoginButton, appleLoginButton,
             automaticLoginButton,autoLoginLabel,
             signUpButton
         ].forEach { contentView.addSubview($0) }
@@ -200,8 +214,15 @@ class LoginViewController: UIViewController {
             make.height.equalTo(51)
         }
         
+        appleLoginButton.snp.makeConstraints { make in
+            make.centerX.equalTo(logoImageView)
+            make.top.equalTo(naverLoginButton.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(51)
+        }
+        
         autoLoginLabel.snp.makeConstraints { make in
-            make.top.equalTo(naverLoginButton.snp.bottom).offset(21)
+            make.top.equalTo(appleLoginButton.snp.bottom).offset(21)
             make.centerX.equalTo(logoImageView).offset(9.5)
         }
         
@@ -291,13 +312,24 @@ class LoginViewController: UIViewController {
     }
     
     // MARK: 네이버 아이디 로그아웃 -> 토큰 삭제 (아이디 비밀번호 재입력 하게) => 나중에 차례되면 구현
-    @objc private func tapNaverloginButton() {
+    @objc private func tapNaverLoginButton() {
         naverLoginVM.requestLogin()
 //        if naverLoginVM.isExistToken() {
 //            showHomeView()
 //        } else {
 //            print("===Not exist token===")
 //        } -> 네이버 회원가입 때 어차피 자동 로그인 자동 활성화 하니까 토큰 여부 확인할 필요 없을 듯 ?
+    }
+    
+    @objc private func tapAppleLoginButton() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
     }
     
     @objc private func tapAutomaticLoginButton() {
@@ -420,6 +452,37 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    // 로그인 진행하는 화면 표출
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+    
+    // Apple ID 연동 성공 시
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        switch authorization.credential {
+            // Apple ID
+        case let appleIDCredential as ASAuthorizationAppleIDCredential:
+            
+            let userIdentifier = appleIDCredential.user
+            let fullName = appleIDCredential.fullName
+            let email = appleIDCredential.email
+            
+            print("User ID : \(userIdentifier)")
+            print("User Email : \(email ?? "")")
+            print("User Name : \((fullName?.givenName ?? "") + (fullName?.familyName ?? ""))")
+            
+        default:
+            break
+        }
+    }
+    
+    // Apple ID 연동 실패 시
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("Apple ID 연동 실패")
     }
 }
 
