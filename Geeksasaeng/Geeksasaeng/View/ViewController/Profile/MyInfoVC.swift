@@ -238,6 +238,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     
     // MARK: - Properties
+    var naverLoginVM = naverLoginViewModel()
     
     
     // MARK: - Life Cycles
@@ -406,7 +407,8 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapLogoutConfirmButton() {
-        UserDefaults.standard.set("nil", forKey: "jwt")
+        UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
+        naverLoginVM.resetToken() // delete naver login token
         
         let rootVC = LoginViewController()
         UIApplication.shared.windows.first?.rootViewController = rootVC

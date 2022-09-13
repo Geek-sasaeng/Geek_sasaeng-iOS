@@ -311,14 +311,12 @@ class LoginViewController: UIViewController {
         }
     }
     
-    // MARK: 네이버 아이디 로그아웃 -> 토큰 삭제 (아이디 비밀번호 재입력 하게) => 나중에 차례되면 구현
     @objc private func tapNaverLoginButton() {
+        // 토큰 존재하면 재발급 받아서 로그인 시도
+        if naverLoginVM.isValidAccessTokenExpireTimeNow() {
+            naverLoginVM.requestAccessTokenWithRefreshToken()
+        }
         naverLoginVM.requestLogin()
-//        if naverLoginVM.isExistToken() {
-//            showHomeView()
-//        } else {
-//            print("===Not exist token===")
-//        } -> 네이버 회원가입 때 어차피 자동 로그인 자동 활성화 하니까 토큰 여부 확인할 필요 없을 듯 ?
     }
     
     @objc private func tapAppleLoginButton() {
