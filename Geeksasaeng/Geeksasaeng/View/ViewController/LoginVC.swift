@@ -12,7 +12,7 @@ import AuthenticationServices
 
 class LoginViewController: UIViewController {
     
-    // MARK: - SubViews
+    // MARK: - SubView
     
     /* 회원가입 버튼이 가려지는 작은 디바이스에는 스크롤뷰를 추가 */
     // 스크롤뷰
