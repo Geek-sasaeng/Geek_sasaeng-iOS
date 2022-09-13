@@ -1109,16 +1109,19 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        if let partyId = detailData.id {
-            // 파티 삭제
-            DeletePartyViewModel.deleteParty(partyId: partyId)
+        guard let partyId = partyId else { return }
+
+        // 파티 삭제
+        DeletePartyViewModel.deleteParty(partyId: partyId) { success in
+            if success {
+                // 삭제하기 뷰 없애고
+                self.removeDeleteView()
+                // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
+                self.delegate?.updateDeliveryList()
+                // 이전화면으로 이동
+                self.navigationController?.popViewController(animated: true)
+            }
         }
-        // 삭제하기 뷰 없애고
-        removeDeleteView()
-        // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
-        delegate?.updateDeliveryList()
-        // 이전화면으로 이동
-        navigationController?.popViewController(animated: true)
     }
     
     /* 배달 파티 신청하기 버튼 눌렀을 때 실행되는 함수 */
