@@ -156,7 +156,7 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
-
+        
         remainBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -252,7 +252,7 @@ class RegisterViewController: UIViewController {
             make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
             make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
         }
-
+        
         nickNameAvailableLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(40)
             make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
@@ -278,7 +278,7 @@ class RegisterViewController: UIViewController {
         setTextFieldAttrs(textField: pwTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
         setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
         setTextFieldAttrs(textField: nickNameTextField, msg: "3-8자 영문 혹은 한글로 입력", width: 210)
-    
+        
         /* 중복확인 buttons attr */
         [idCheckButton, nickNameCheckButton].forEach {
             $0.setTitle("중복 확인", for: .normal)
@@ -397,11 +397,11 @@ class RegisterViewController: UIViewController {
     // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
     @objc private func isValidPwTextField() {
         guard let isValidPassword = pwTextField.text?.isValidPassword() else { return }
-        passwordAvailableLabel.isHidden = !isValidPassword
+        passwordAvailableLabel.isHidden = isValidPassword
     }
     
     // pw validation 검사
     @objc private func isValidPwCheckTextField() {
-        passwordSameCheckLabel.isHidden = !(pwCheckTextField.text != pwTextField.text)
+        passwordSameCheckLabel.isHidden = (pwCheckTextField.text == pwTextField.text)
     }
 }
