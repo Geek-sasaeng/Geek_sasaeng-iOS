@@ -35,7 +35,7 @@ class DormitoryViewController: UIViewController {
         return label
     }()
     
-    var questionLabel: UILabel = {
+    let questionLabel: UILabel = {
         let label = UILabel()
         label.text = "현재 어느 기숙사에 거주하고 계신가요?"
         label.numberOfLines = 2
@@ -44,7 +44,7 @@ class DormitoryViewController: UIViewController {
         return label
     }()
     
-    var guideLabel: UILabel = {
+    let guideLabel: UILabel = {
         let label = UILabel()
         label.text = "*추후 프로필에서 기숙사를 변경하실 수 있습니다"
         label.font = .customFont(.neoMedium, size: 13)
@@ -52,13 +52,13 @@ class DormitoryViewController: UIViewController {
         return label
     }()
     
-    var backgroundLogoImageView: UIImageView = {
+    let backgroundLogoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "BackgroundLogo")
         return imageView
     }()
     
-    var dormitoryPickerView: UIPickerView = {
+    let dormitoryPickerView: UIPickerView = {
         let pickerView = UIPickerView()
         return pickerView
     }()
@@ -70,7 +70,6 @@ class DormitoryViewController: UIViewController {
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.layer.cornerRadius = 5
         button.backgroundColor = .mainColor
-        button.clipsToBounds = true
         button.addTarget(self, action: #selector(tapStartButton), for: .touchUpInside)
         return button
     }()
