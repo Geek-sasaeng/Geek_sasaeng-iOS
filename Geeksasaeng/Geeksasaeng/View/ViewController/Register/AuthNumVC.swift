@@ -13,33 +13,31 @@ class AuthNumViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var progressBar: UIView = {
+    let progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
     
-    var remainBar: UIView = {
+    let remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
     
-    var progressIcon: UIImageView = {
+    let progressIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoTop"))
         return imageView
     }()
     
-    var remainIcon: UIImageView = {
+    let remainIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
         return imageView
     }()
     
-    var authNumLabel: UILabel = {
+    let authNumLabel: UILabel = {
         let label = UILabel()
         label.text = "인증번호 입력"
         label.font = .customFont(.neoMedium, size: 18)
@@ -64,12 +62,11 @@ class AuthNumViewController: UIViewController {
         button.setTitle("재전송 하기", for: .normal)
         button.titleLabel?.font = .customFont(.neoMedium, size: 13)
         button.layer.cornerRadius = 5
-        button.clipsToBounds = true
         button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
         return button
     }()
     
-    var remainTimeLabel: UILabel = {
+    let remainTimeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .mainColor
         label.font = .customFont(.neoMedium, size: 13)
@@ -83,7 +80,6 @@ class AuthNumViewController: UIViewController {
         button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.layer.cornerRadius = 5
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
         button.isEnabled = false
         button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         return button
@@ -231,8 +227,7 @@ class AuthNumViewController: UIViewController {
         
         /* nextButton */
         nextButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(28)
+            make.left.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
         }

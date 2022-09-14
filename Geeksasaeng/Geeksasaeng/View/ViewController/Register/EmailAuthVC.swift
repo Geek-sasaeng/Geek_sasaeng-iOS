@@ -328,7 +328,6 @@ class EmailAuthViewController: UIViewController {
             $0.layer.cornerRadius = 5
             $0.backgroundColor = UIColor(hex: 0xEFEFEF)
             $0.isEnabled = false
-            $0.clipsToBounds = true
         }
     }
     
