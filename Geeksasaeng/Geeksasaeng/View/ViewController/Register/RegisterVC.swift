@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import Alamofire
 
 class RegisterViewController: UIViewController {
     
@@ -16,7 +15,6 @@ class RegisterViewController: UIViewController {
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
@@ -24,7 +22,6 @@ class RegisterViewController: UIViewController {
     var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
@@ -273,10 +270,10 @@ class RegisterViewController: UIViewController {
     
     private func setAttributes() {
         /* label attr */
-        idLabel = setMainLabelAttrs("아이디")
-        passwordLabel = setMainLabelAttrs("비밀번호")
-        passwordCheckLabel = setMainLabelAttrs("비밀번호 확인")
-        nickNameLabel = setMainLabelAttrs("닉네임")
+        setMainLabelAttrs(idLabel, "아이디")
+        setMainLabelAttrs(passwordLabel, "비밀번호")
+        setMainLabelAttrs(passwordCheckLabel, "비밀번호 확인")
+        setMainLabelAttrs(nickNameLabel, "닉네임")
         
         /* textFields attr */
         setTextFieldAttrs(textField: idTextField, msg: "6-20자 영문+숫자로 입력", width: 210)
@@ -295,12 +292,10 @@ class RegisterViewController: UIViewController {
     }
     
     // 공통 속성을 묶어놓은 함수
-    private func setMainLabelAttrs(_ text: String) -> UILabel {
-        let label = UILabel()
+    private func setMainLabelAttrs(_ label: UILabel, _ text: String) {
         label.text = text
         label.font = .customFont(.neoMedium, size: 18)
         label.textColor = .black
-        return label
     }
     
     private func setTextFieldAttrs(textField: UITextField, msg: String, width: CGFloat){
