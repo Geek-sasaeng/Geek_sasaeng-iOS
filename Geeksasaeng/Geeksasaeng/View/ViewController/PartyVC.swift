@@ -91,14 +91,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* 옵션뷰에 있는 버튼 */
-        var editButton: UIButton = {
+        lazy var editButton: UIButton = {
             let button = UIButton()
             button.setTitle("수정하기", for: .normal)
             button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
             return button
         }()
-        var deleteButton: UIButton = {
+        lazy var deleteButton: UIButton = {
             let button = UIButton()
             button.setTitle("삭제하기", for: .normal)
             button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
@@ -175,28 +175,28 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     /* 배경 블러 처리를 위해 추가한 visualEffectView */
     var visualEffectView: UIVisualEffectView?
     
-    var profileImageView: UIImageView = {
+    let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image =  UIImage(named: "ProfileImage")
         imageView.layer.cornerRadius = 13
         return imageView
     }()
     
-    lazy var nickNameLabel: UILabel = {
+    let nickNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
     
-    var postingTime: UILabel = {
+    let postingTime: UILabel = {
         let label = UILabel()
         label.font = .customFont(.neoRegular, size: 11)
         label.textColor = .init(hex: 0xD8D8D8)
         return label
     }()
     
-    var hashTagLabel: UILabel = {
+    let hashTagLabel: UILabel = {
         let label = UILabel()
         label.text = "# 같이 먹고 싶어요"
         label.font = .customFont(.neoMedium, size: 13)
@@ -204,14 +204,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
-    var titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .customFont(.neoBold, size: 20)
         label.textColor = .black
         return label
     }()
     
-    var contentLabel: UILabel = {
+    let contentLabel: UILabel = {
         let label = UILabel()
         label.font = .customFont(.neoLight, size: 15)
         label.textColor = .init(hex: 0x5B5B5B)
@@ -219,62 +219,62 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
-    var separateView: UIView = {
+    let separateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
 
-    var orderLabel: UILabel = {
+    let orderLabel: UILabel = {
         let label = UILabel()
         label.text = "주문 예정 시간"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
-    var orderReserveLabel: UILabel = {
+    let orderReserveLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
     
-    var matchingLabel: UILabel = {
+    let matchingLabel: UILabel = {
         let label = UILabel()
         label.text = "매칭 현황"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
-    var matchingDataLabel: UILabel = {
+    let matchingDataLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
     
-    var categoryLabel: UILabel = {
+    let categoryLabel: UILabel = {
         let label = UILabel()
         label.text = "카테고리"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
-    var categoryDataLabel: UILabel = {
+    let categoryDataLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
     
-    var storeLinkLabel: UILabel = {
+    let storeLinkLabel: UILabel = {
         let label = UILabel()
         label.text = "식당 링크"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
-    var storeLinkDataLabel: UILabel = {
+    let storeLinkDataLabel: UILabel = {
         let label = UILabel()
         label.text = "???"
         label.numberOfLines = 1
@@ -284,14 +284,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return label
     }()
     
-    var pickupLocationLabel: UILabel = {
+    let pickupLocationLabel: UILabel = {
         let label = UILabel()
         label.text = "수령 장소"
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
         return label
     }()
-    var pickupLocationDataLabel: UILabel = {
+    let pickupLocationDataLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoMedium, size: 13)
@@ -305,20 +305,20 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    var matchingStatusView: UIView = {
+    let matchingStatusView: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
         return view
     }()
     
-    var matchingDataWhiteLabel: UILabel = {
+    let matchingDataWhiteLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
         return label
     }()
     
-    var remainTimeLabel: UILabel = {
+    let remainTimeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.customFont(.neoMedium, size: 16)
         label.textColor = .white
@@ -333,7 +333,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         return button
     }()
     
-    var arrowImageView: UIImageView = {
+    let arrowImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Arrow")
         return imageView
