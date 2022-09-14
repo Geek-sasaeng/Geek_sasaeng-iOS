@@ -209,8 +209,7 @@ class RegisterViewController: UIViewController {
         }
         
         pwTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(26)
+            make.left.right.equalToSuperview().inset(27)
             make.top.equalTo(passwordLabel.snp.bottom).offset(20)
         }
         
@@ -226,8 +225,7 @@ class RegisterViewController: UIViewController {
         }
         
         pwCheckTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(26)
+            make.left.right.equalToSuperview().inset(27)
             make.top.equalTo(passwordCheckLabel.snp.bottom).offset(20)
         }
         
@@ -335,26 +333,31 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func didChangeTextField(_ sender: UITextField) {
+        guard let idCount = idTextField.text?.count,
+              let nickNameCount = nickNameTextField.text?.count,
+              let isValidPassword = pwTextField.text?.isValidPassword()
+        else { return }
+        
+        /* 변경될 때마다 중복확인 다시 하기 위해 false로 */
         if sender == idTextField {
             idCheck = false
         } else if sender == nickNameTextField {
             nicknameCheck = false
         }
         
-        if idTextField.text?.count ?? 0 >= 1 {
+        if idCount >= 1 {
             idCheckButton.setActivatedButton()
-        } else if idTextField.text?.count ?? 0 < 1 {
+        } else if idCount < 1 {
             idCheckButton.setDeactivatedButton()
         }
-        if nickNameTextField.text?.count ?? 0 >= 1 {
+        
+        if nickNameCount >= 1 {
             nickNameCheckButton.setActivatedButton()
-        } else if nickNameTextField.text?.count ?? 0 < 1 {
+        } else if nickNameCount < 1 {
             nickNameCheckButton.setDeactivatedButton()
         }
         
-        if pwTextField.text?.isValidPassword() ?? false && pwCheckTextField.text == pwTextField.text
-            && idCheck && nicknameCheck
-        {
+        if idCheck && nicknameCheck && isValidPassword && pwCheckTextField.text == pwTextField.text {
             nextButton.setActivatedNextButton()
         } else {
             nextButton.setDeactivatedNextButton()
@@ -362,7 +365,9 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func tapIdCheckButton() {
-        if idTextField.text?.isValidId() ?? false == false {
+        guard let isValidId = idTextField.text?.isValidId() else { return }
+        
+        if !isValidId {
             idAvailableLabel.text = "6-20자 영문+숫자로 입력"
             idAvailableLabel.textColor = .red
             idAvailableLabel.isHidden = false
@@ -375,7 +380,9 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func tapNickNameCheckButton() {
-        if nickNameTextField.text?.isValidNickname() ?? false == false {
+        guard let isValidNickname = nickNameTextField.text?.isValidNickname() else { return }
+        
+        if !isValidNickname {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
             nickNameAvailableLabel.isHidden = false
@@ -389,19 +396,12 @@ class RegisterViewController: UIViewController {
     
     // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
     @objc private func isValidPwTextField() {
-        if !(pwTextField.text?.isValidPassword() ?? false) {
-            passwordAvailableLabel.isHidden = false
-        } else {
-            passwordAvailableLabel.isHidden = true
-        }
+        guard let isValidPassword = pwTextField.text?.isValidPassword() else { return }
+        passwordAvailableLabel.isHidden = !isValidPassword
     }
     
     // pw validation 검사
     @objc private func isValidPwCheckTextField() {
-        if pwCheckTextField.text != pwTextField.text {
-            passwordSameCheckLabel.isHidden = false
-        } else {
-            passwordSameCheckLabel.isHidden = true
-        }
+        passwordSameCheckLabel.isHidden = !(pwCheckTextField.text != pwTextField.text)
     }
 }
