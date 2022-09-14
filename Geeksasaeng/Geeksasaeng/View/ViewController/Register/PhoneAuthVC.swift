@@ -120,6 +120,23 @@ class PhoneAuthViewController: UIViewController {
         addRightSwipe()
     }
     
+    // MARK: - Initialization
+    
+    init(idData: String, pwData: String, pwCheckData: String, nickNameData: String, university: String, emailId: Int, uuid: UUID) {
+        super.init(nibName: nil, bundle: nil)
+        self.idData = idData
+        self.pwData = pwData
+        self.pwCheckData = pwCheckData
+        self.nickNameData = nickNameData
+        self.university = university
+        self.emailId = emailId
+        self.uuid = uuid
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -304,27 +321,18 @@ class PhoneAuthViewController: UIViewController {
     @objc
     public func showNextView() {
         // 일치했을 때에만 화면 전환
-        let agreementVC = AgreementViewController()
-        let navVC = UINavigationController(rootViewController: agreementVC)
-        navVC.modalTransitionStyle = .crossDissolve
-        navVC.modalPresentationStyle = .fullScreen
-        
-        // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일, 폰번호) 총 7개
-        // 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
         if let idData = self.idData,
            let pwData = self.pwData,
            let pwCheckData = self.pwCheckData,
            let nickNameData = self.nickNameData,
-           let univ = self.university,
+           let university = self.university,
            let emailId = self.emailId,
            let phoneNumberId = self.phoneNumberId {
-            agreementVC.idData = idData
-            agreementVC.pwData = pwData
-            agreementVC.pwCheckData = pwCheckData
-            agreementVC.nickNameData = nickNameData
-            agreementVC.university = univ
-            agreementVC.emailId = emailId
-            agreementVC.phoneNumberId = phoneNumberId
+            let agreementVC = AgreementViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: university, emailId: emailId, phoneNumberId: phoneNumberId)
+            
+            let navVC = UINavigationController(rootViewController: agreementVC)
+            navVC.modalTransitionStyle = .crossDissolve
+            navVC.modalPresentationStyle = .fullScreen
             
             present(navVC, animated: true)
         }

@@ -319,21 +319,17 @@ class RegisterViewController: UIViewController {
     
     // EmailAuthVC로 화면 전환.
     @objc private func showNextView() {
-        let emailAuthVC = EmailAuthViewController()
-        
-        emailAuthVC.modalTransitionStyle = .crossDissolve
-        emailAuthVC.modalPresentationStyle = .fullScreen
-        
-        // 데이터 전달
         if let idData = self.idTextField.text,
            let pwData = self.pwTextField.text,
            let pwCheckData = self.pwCheckTextField.text,
            let nickNameData = self.nickNameTextField.text {
-            emailAuthVC.idData = idData
-            emailAuthVC.pwData = pwData
-            emailAuthVC.pwCheckData = pwCheckData
-            emailAuthVC.nickNameData = nickNameData
+            // 생성자를 통한 필수 데이터 전달
+            let emailAuthVC = EmailAuthViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData)
             
+            emailAuthVC.modalTransitionStyle = .crossDissolve
+            emailAuthVC.modalPresentationStyle = .fullScreen
+            
+            // 화면 전환
             present(emailAuthVC, animated: true)
         }
     }

@@ -193,6 +193,20 @@ class EmailAuthViewController: UIViewController {
         addRightSwipe()
     }
     
+    // MARK: - Initialization
+    
+    init(idData: String, pwData: String, pwCheckData: String, nickNameData: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.idData = idData
+        self.pwData = pwData
+        self.pwCheckData = pwCheckData
+        self.nickNameData = nickNameData
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -431,12 +445,7 @@ class EmailAuthViewController: UIViewController {
     
     @objc
     private func tapNextButton() {
-        let authNumVC = AuthNumViewController()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        
-        // id, pw, nickName 데이터 전달 -> 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
+        //
         if let idData = self.idData,
            let pwData = self.pwData,
            let pwCheckData = self.pwCheckData,
@@ -445,19 +454,11 @@ class EmailAuthViewController: UIViewController {
            let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let uuid = uuid {
-            authNumVC.idData = idData
-            authNumVC.pwData = pwData
-            authNumVC.pwCheckData = pwCheckData
-            authNumVC.nickNameData = nickNameData
-            
-            // 학교 정보랑 학교 이메일 정보 넘겨줘야 한다 -> 재전송 하기 버튼 때문에
-            authNumVC.university = univ
             // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함 - 일단은 가천대만
-            authNumVC.email = email + emailAddress
-            print(email + emailAddress)
+            let authNumVC = AuthNumViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: univ, email: email + emailAddress, uuid: uuid)
             
-            // PhoneAuthVC까지 가지고 가야 한다.
-            authNumVC.uuid = uuid
+            authNumVC.modalTransitionStyle = .crossDissolve
+            authNumVC.modalPresentationStyle = .fullScreen
             
             present(authNumVC, animated: true)
         }

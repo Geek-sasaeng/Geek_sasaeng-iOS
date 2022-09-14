@@ -530,23 +530,16 @@ class NaverRegisterViewController: UIViewController {
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
     @objc
     private func showNextView() {
-        let authNumVC = AuthNumViewController()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        
-        // 데이터 전달
         if let accessToken = accessToken,
            let nickNameData = nickNameTextField.text,
            let university = selectYourUnivLabel.text,
            let emailId = emailTextField.text,
            let emailAddress = emailAddressTextField.text {
-            /* 값이 존재할 때에만 데이터 전달을 해야 한다 */
-            authNumVC.isFromNaverRegister = true
-            authNumVC.accessToken = accessToken
-            authNumVC.nickNameData = nickNameData
-            authNumVC.university = university
-            authNumVC.email = emailId + emailAddress
+            // 생성자를 통해 데이터 전달
+            let authNumVC = AuthNumViewController(isFromNaverRegister: true, accessToken: accessToken, nickNameData: nickNameData, university: university, email: emailId + emailAddress)
+            
+            authNumVC.modalTransitionStyle = .crossDissolve
+            authNumVC.modalPresentationStyle = .fullScreen
             
             // 화면 전환
             present(authNumVC, animated: true)

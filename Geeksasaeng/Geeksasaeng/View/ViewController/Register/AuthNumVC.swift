@@ -126,6 +126,34 @@ class AuthNumViewController: UIViewController {
         view.endEditing(true)
     }
     
+    // MARK: - Initialization
+    
+    /* 일반 회원가입용 */
+    init(idData: String, pwData: String, pwCheckData: String, nickNameData: String, university: String, email: String, uuid: UUID) {
+        super.init(nibName: nil, bundle: nil)
+        self.idData = idData
+        self.pwData = pwData
+        self.pwCheckData = pwCheckData
+        self.nickNameData = nickNameData
+        self.university = university
+        self.email = email
+        self.uuid = uuid
+    }
+    
+    /* 네이버 회원가입용 */
+    init(isFromNaverRegister: Bool, accessToken: String, nickNameData: String, university: String, email: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.isFromNaverRegister = isFromNaverRegister
+        self.accessToken = accessToken
+        self.nickNameData = nickNameData
+        self.university = university
+        self.email = email
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Functions
     
     private func addSubViews() {
@@ -273,39 +301,24 @@ class AuthNumViewController: UIViewController {
     // VM에서 호출하는 함수이다
     public func showNextView() {
         if isFromNaverRegister {
-            let agreementVC = AgreementViewController()
+            let agreementVC = AgreementViewController(isFromNaverRegister: true, accessToken: accessToken!, nickNameData: nickNameData!, university: university!, email: email!)
             agreementVC.modalTransitionStyle = .crossDissolve
             agreementVC.modalPresentationStyle = .fullScreen
             
-            agreementVC.accessToken = accessToken
-            agreementVC.nickNameData = nickNameData
-            agreementVC.email = email
-            agreementVC.university = university
-            agreementVC.isFromNaverRegister = true
-            
             present(agreementVC, animated: true)
         } else {
-            /* 인증번호 일치했을 때에만 휴대폰 번호 인증하는 화면 띄우기 */
-            let phoneAuthVC = PhoneAuthViewController()
-            phoneAuthVC.modalTransitionStyle = .crossDissolve
-            phoneAuthVC.modalPresentationStyle = .fullScreen
-            
-            // 데이터 전달 (아이디, 비번, 확인비번, 닉네임, 학교이름, 이메일id) 총 6개
-            // 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
             if let idData = self.idData,
                let pwData = self.pwData,
                let pwCheckData = self.pwCheckData,
                let nickNameData = self.nickNameData,
-               let univ = self.university,
+               let university = self.university,
                let emailId = self.emailId,
                let uuid = self.uuid {
-                phoneAuthVC.idData = idData
-                phoneAuthVC.pwData = pwData
-                phoneAuthVC.pwCheckData = pwCheckData
-                phoneAuthVC.nickNameData = nickNameData
-                phoneAuthVC.university = univ
-                phoneAuthVC.emailId = emailId
-                phoneAuthVC.uuid = uuid
+                /* 인증번호 일치했을 때에만 휴대폰 번호 인증하는 화면 띄우기 */
+                let phoneAuthVC = PhoneAuthViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: university, emailId: emailId, uuid: uuid)
+                
+                phoneAuthVC.modalTransitionStyle = .crossDissolve
+                phoneAuthVC.modalPresentationStyle = .fullScreen
                 
                 present(phoneAuthVC, animated: true)
             }
