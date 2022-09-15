@@ -39,7 +39,7 @@ class DeliveryViewController: UIViewController {
     var nowPage: Int = 0
     
     // 시간 필터 배열
-    var timeDataArray = ["아침", "점심", "저녁", "야식"]
+    let timeDataArray = ["아침", "점심", "저녁", "야식"]
     
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
@@ -106,21 +106,21 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Category Labels */
-    var deliveryPartyLabel: UILabel = {
+    let deliveryPartyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0x2F2F2F)
         label.font = .customFont(.neoBold, size: 16)
         label.text = "배달파티"
         return label
     }()
-    var marketLabel: UILabel = {
+    let marketLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0xCBCBCB)
         label.font = .customFont(.neoMedium, size: 16)
         label.text = "마켓"
         return label
     }()
-    var helperLabel: UILabel = {
+    let helperLabel: UILabel = {
         let label = UILabel()
         label.textColor = .init(hex: 0xCBCBCB)
         label.font = .customFont(.neoMedium, size: 16)
@@ -129,24 +129,24 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Category Bars */
-    var deliveryPartyBar: UIView = {
+    let deliveryPartyBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
         return view
     }()
-    var marketBar: UIView = {
+    let marketBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xCBCBCB)
         return view
     }()
-    var helperBar: UIView = {
+    let helperBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xCBCBCB)
         return view
     }()
     
     /* Ad Collection View */
-    private lazy var adCollectionView: UICollectionView = {
+    lazy var adCollectionView: UICollectionView = {
         // 셀 레이아웃 설정
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -178,14 +178,14 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* People Filter */
-    var peopleFilterLabel: UILabel = {
+    let peopleFilterLabel: UILabel = {
         let label = UILabel()
         label.text = "인원 선택"
         label.font = .customFont(.neoMedium, size: 14)
         label.textColor = UIColor(hex: 0xA8A8A8)
         return label
     }()
-    var peopleFilterToggleImageView: UIImageView = {
+    let peopleFilterToggleImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
         imageView.tintColor = UIColor(hex: 0xA8A8A8)
         return imageView
@@ -271,7 +271,7 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Time Filter -> 컬렉션뷰로 */
-    var timeCollectionView: UICollectionView = {
+    let timeCollectionView: UICollectionView = {
         // 레이아웃 설정
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -292,7 +292,7 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* Table View */
-    var partyTableView: UITableView = {
+    let partyTableView: UITableView = {
         var tableView = UITableView()
         tableView.backgroundColor = .white
         return tableView
@@ -314,7 +314,7 @@ class DeliveryViewController: UIViewController {
     }()
     
     /* 테이블뷰 셀 하단에 블러뷰 */
-    lazy var blurView: UIView = {
+    let blurView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140))
         // 그라데이션 적용
         view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))

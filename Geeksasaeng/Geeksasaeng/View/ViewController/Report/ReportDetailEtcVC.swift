@@ -22,7 +22,7 @@ class ReportDetailEtcViewController: UIViewController {
     
     // MARK: - SubViews
     
-    var reportCategoryLabel: UILabel = {
+    let reportCategoryLabel: UILabel = {
         let label = UILabel()
         label.text = "기타 사유 선택"
         label.font = .customFont(.neoMedium, size: 16)
@@ -42,7 +42,7 @@ class ReportDetailEtcViewController: UIViewController {
         return textView
     }()
     
-    var separateView: UIView = {
+    let separateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
@@ -56,7 +56,7 @@ class ReportDetailEtcViewController: UIViewController {
         return button
     }()
     
-    var blockUserLabel: UILabel = {
+    let blockUserLabel: UILabel = {
         let label = UILabel()
         label.text = "이 사용자 차단하기"
         label.font = .customFont(.neoMedium, size: 15)
@@ -64,7 +64,7 @@ class ReportDetailEtcViewController: UIViewController {
         return label
     }()
     
-    var guideLabel: UILabel = {
+    let guideLabel: UILabel = {
         let label = UILabel()
         label.text = "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다."
         label.numberOfLines = 0
@@ -199,7 +199,7 @@ class ReportDetailEtcViewController: UIViewController {
     }()
     
     /* 신고실패 안내뷰의 contents label */
-    var failContentLabel = UILabel()
+    let failContentLabel = UILabel()
     
     /* 신고하기 실패 시 나오는 신고실패 안내 뷰 */
     lazy var reportFailView: UIView = {

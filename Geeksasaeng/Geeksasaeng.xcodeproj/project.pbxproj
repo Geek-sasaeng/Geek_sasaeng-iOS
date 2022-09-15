@@ -1577,6 +1577,7 @@
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
+		A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geeksasaeng.entitlements; sourceTree = "<group>"; };
 		A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OngoingTableViewCell.swift; sourceTree = "<group>"; };
 		A26780B328AD64050078350D /* RecentPartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPartyViewModel.swift; sourceTree = "<group>"; };
 		A26780B728AD64D90078350D /* RecentPartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPartyModel.swift; sourceTree = "<group>"; };
@@ -1726,7 +1727,7 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
-				106655DA28D076FD006C6DAD /* Geeksasaeng.entitlements */,
+				A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */,
 				10543E64287F0054003B8799 /* IOS_DaumMap_SDK_1.4.0 */,
 				10C8D26F287735E60044552A /* Network */,
 				A2B4208F286F1F1300278F92 /* App */,
@@ -3973,6 +3974,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 67BH3YNZWS;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator15.5]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",
@@ -4016,6 +4018,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 67BH3YNZWS;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator15.5]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Geeksasaeng/IOS_DaumMap_SDK_1.4.0/lib/DaumMap.embeddedframework",

@@ -72,7 +72,7 @@ class SearchViewController: UIViewController {
         return button
     }()
     
-    var recentSearchLabel: UILabel = {
+    let recentSearchLabel: UILabel = {
         let label = UILabel()
         label.text = "최근 검색어"
         return label
@@ -87,7 +87,7 @@ class SearchViewController: UIViewController {
     }()
     
     /* 최근 검색어 기록 Collection View */
-    var recentSearchCollectionView: UICollectionView = {
+    let recentSearchCollectionView: UICollectionView = {
         // 레이아웃 설정
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -105,7 +105,7 @@ class SearchViewController: UIViewController {
         return collectionView
     }()
     /* Weekly Top 10 Collection View */
-    var weeklyTopCollectionView: UICollectionView = {
+    let weeklyTopCollectionView: UICollectionView = {
         // 레이아웃 설정
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -125,14 +125,14 @@ class SearchViewController: UIViewController {
     }()
     
     /* 구분선 View */
-    var firstSeparateView: UIView = {
+    let firstSeparateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
     
     /* 배경에 있는 로고 이미지 */
-    var logoImageView: UIImageView = {
+    let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "SearchBackLogo")
         return imageView
@@ -148,7 +148,7 @@ class SearchViewController: UIViewController {
     }()
     
     /* People Filter */
-    var peopleFilterLabel: UILabel = {
+    let peopleFilterLabel: UILabel = {
         let label = UILabel()
         label.text = "인원 선택"
         label.font = .customFont(.neoMedium, size: 14)
@@ -156,7 +156,7 @@ class SearchViewController: UIViewController {
         label.isHidden = true
         return label
     }()
-    var peopleFilterToggleImageView: UIImageView = {
+    let peopleFilterToggleImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
         imageView.tintColor = UIColor(hex: 0xA8A8A8)
         imageView.isHidden = true
@@ -244,7 +244,7 @@ class SearchViewController: UIViewController {
     }()
    
     /* Time Filter -> 컬렉션뷰로 */
-    var timeCollectionView: UICollectionView = {
+    let timeCollectionView: UICollectionView = {
         // 레이아웃 설정
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -263,7 +263,7 @@ class SearchViewController: UIViewController {
     }()
     
     /* Table View */
-    var partyTableView: UITableView = {
+    lazy var partyTableView: UITableView = {
         var tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.isHidden = true

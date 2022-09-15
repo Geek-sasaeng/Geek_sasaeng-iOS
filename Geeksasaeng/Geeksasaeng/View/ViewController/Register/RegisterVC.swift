@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import Alamofire
 
 class RegisterViewController: UIViewController {
     
@@ -16,7 +15,6 @@ class RegisterViewController: UIViewController {
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
@@ -24,7 +22,6 @@ class RegisterViewController: UIViewController {
     var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
@@ -159,7 +156,7 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.left.equalToSuperview().inset(25)
         }
-
+        
         remainBar.snp.makeConstraints { make in
             make.height.equalTo(3)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -212,8 +209,7 @@ class RegisterViewController: UIViewController {
         }
         
         pwTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(26)
+            make.left.right.equalToSuperview().inset(27)
             make.top.equalTo(passwordLabel.snp.bottom).offset(20)
         }
         
@@ -229,8 +225,7 @@ class RegisterViewController: UIViewController {
         }
         
         pwCheckTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(26)
+            make.left.right.equalToSuperview().inset(27)
             make.top.equalTo(passwordCheckLabel.snp.bottom).offset(20)
         }
         
@@ -257,7 +252,7 @@ class RegisterViewController: UIViewController {
             make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
             make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
         }
-
+        
         nickNameAvailableLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(40)
             make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
@@ -273,17 +268,17 @@ class RegisterViewController: UIViewController {
     
     private func setAttributes() {
         /* label attr */
-        idLabel = setMainLabelAttrs("아이디")
-        passwordLabel = setMainLabelAttrs("비밀번호")
-        passwordCheckLabel = setMainLabelAttrs("비밀번호 확인")
-        nickNameLabel = setMainLabelAttrs("닉네임")
+        setMainLabelAttrs(idLabel, "아이디")
+        setMainLabelAttrs(passwordLabel, "비밀번호")
+        setMainLabelAttrs(passwordCheckLabel, "비밀번호 확인")
+        setMainLabelAttrs(nickNameLabel, "닉네임")
         
         /* textFields attr */
         setTextFieldAttrs(textField: idTextField, msg: "6-20자 영문+숫자로 입력", width: 210)
         setTextFieldAttrs(textField: pwTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
         setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
         setTextFieldAttrs(textField: nickNameTextField, msg: "3-8자 영문 혹은 한글로 입력", width: 210)
-    
+        
         /* 중복확인 buttons attr */
         [idCheckButton, nickNameCheckButton].forEach {
             $0.setTitle("중복 확인", for: .normal)
@@ -295,12 +290,10 @@ class RegisterViewController: UIViewController {
     }
     
     // 공통 속성을 묶어놓은 함수
-    private func setMainLabelAttrs(_ text: String) -> UILabel {
-        let label = UILabel()
+    private func setMainLabelAttrs(_ label: UILabel, _ text: String) {
         label.text = text
         label.font = .customFont(.neoMedium, size: 18)
         label.textColor = .black
-        return label
     }
     
     private func setTextFieldAttrs(textField: UITextField, msg: String, width: CGFloat){
@@ -324,46 +317,47 @@ class RegisterViewController: UIViewController {
     
     // EmailAuthVC로 화면 전환.
     @objc private func showNextView() {
-        let emailAuthVC = EmailAuthViewController()
-        
-        emailAuthVC.modalTransitionStyle = .crossDissolve
-        emailAuthVC.modalPresentationStyle = .fullScreen
-        
-        // 데이터 전달
         if let idData = self.idTextField.text,
            let pwData = self.pwTextField.text,
            let pwCheckData = self.pwCheckTextField.text,
            let nickNameData = self.nickNameTextField.text {
-            emailAuthVC.idData = idData
-            emailAuthVC.pwData = pwData
-            emailAuthVC.pwCheckData = pwCheckData
-            emailAuthVC.nickNameData = nickNameData
+            // 생성자를 통한 필수 데이터 전달
+            let emailAuthVC = EmailAuthViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData)
             
+            emailAuthVC.modalTransitionStyle = .crossDissolve
+            emailAuthVC.modalPresentationStyle = .fullScreen
+            
+            // 화면 전환
             present(emailAuthVC, animated: true)
         }
     }
     
     @objc private func didChangeTextField(_ sender: UITextField) {
+        guard let idCount = idTextField.text?.count,
+              let nickNameCount = nickNameTextField.text?.count,
+              let isValidPassword = pwTextField.text?.isValidPassword()
+        else { return }
+        
+        /* 변경될 때마다 중복확인 다시 하기 위해 false로 */
         if sender == idTextField {
             idCheck = false
         } else if sender == nickNameTextField {
             nicknameCheck = false
         }
         
-        if idTextField.text?.count ?? 0 >= 1 {
+        if idCount >= 1 {
             idCheckButton.setActivatedButton()
-        } else if idTextField.text?.count ?? 0 < 1 {
+        } else if idCount < 1 {
             idCheckButton.setDeactivatedButton()
         }
-        if nickNameTextField.text?.count ?? 0 >= 1 {
+        
+        if nickNameCount >= 1 {
             nickNameCheckButton.setActivatedButton()
-        } else if nickNameTextField.text?.count ?? 0 < 1 {
+        } else if nickNameCount < 1 {
             nickNameCheckButton.setDeactivatedButton()
         }
         
-        if pwTextField.text?.isValidPassword() ?? false && pwCheckTextField.text == pwTextField.text
-            && idCheck && nicknameCheck
-        {
+        if idCheck && nicknameCheck && isValidPassword && pwCheckTextField.text == pwTextField.text {
             nextButton.setActivatedNextButton()
         } else {
             nextButton.setDeactivatedNextButton()
@@ -371,7 +365,9 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func tapIdCheckButton() {
-        if idTextField.text?.isValidId() ?? false == false {
+        guard let isValidId = idTextField.text?.isValidId() else { return }
+        
+        if !isValidId {
             idAvailableLabel.text = "6-20자 영문+숫자로 입력"
             idAvailableLabel.textColor = .red
             idAvailableLabel.isHidden = false
@@ -384,7 +380,9 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func tapNickNameCheckButton() {
-        if nickNameTextField.text?.isValidNickname() ?? false == false {
+        guard let isValidNickname = nickNameTextField.text?.isValidNickname() else { return }
+        
+        if !isValidNickname {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
             nickNameAvailableLabel.isHidden = false
@@ -398,19 +396,12 @@ class RegisterViewController: UIViewController {
     
     // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
     @objc private func isValidPwTextField() {
-        if !(pwTextField.text?.isValidPassword() ?? false) {
-            passwordAvailableLabel.isHidden = false
-        } else {
-            passwordAvailableLabel.isHidden = true
-        }
+        guard let isValidPassword = pwTextField.text?.isValidPassword() else { return }
+        passwordAvailableLabel.isHidden = isValidPassword
     }
     
     // pw validation 검사
     @objc private func isValidPwCheckTextField() {
-        if pwCheckTextField.text != pwTextField.text {
-            passwordSameCheckLabel.isHidden = false
-        } else {
-            passwordSameCheckLabel.isHidden = true
-        }
+        passwordSameCheckLabel.isHidden = (pwCheckTextField.text == pwTextField.text)
     }
 }

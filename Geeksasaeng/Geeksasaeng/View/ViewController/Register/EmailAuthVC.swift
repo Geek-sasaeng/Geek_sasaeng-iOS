@@ -12,28 +12,26 @@ class EmailAuthViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var progressBar: UIView = {
+    let progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
     
-    var remainBar: UIView = {
+    let remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
         view.layer.cornerRadius = 1.5
         return view
     }()
     
-    var progressIcon: UIImageView = {
+    let progressIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoTop"))
         return imageView
     }()
     
-    var remainIcon: UIImageView = {
+    let remainIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
         return imageView
     }()
@@ -77,13 +75,14 @@ class EmailAuthViewController: UIViewController {
     }()
     
     // Label Tap Gesture 적용을 위해 따로 꺼내놓음
-    var univNameLabel: UILabel = {
+    let univNameLabel: UILabel = {
         let label = UILabel()
         label.text = "가천대학교"
         label.font = .customFont(.neoLight, size: 15)
         label.textColor = .init(hex: 0x636363)
         return label
     }()
+    
     /* 자신의 학교를 선택해주세요 눌렀을 때 확장되는 뷰
         -> 학교 리스트를 보여줌 */
     lazy var universityListView: UIView = {
@@ -94,19 +93,19 @@ class EmailAuthViewController: UIViewController {
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
         
-        var selectYourUnivLabel: UILabel = {
+        let selectYourUnivLabel: UILabel = {
             let label = UILabel()
             label.text = "자신의 학교를 선택해주세요"
             label.font = .customFont(.neoLight, size: 15)
             label.textColor = .init(hex: 0xD8D8D8)
             return label
         }()
-        var toggleImageView: UIImageView = {
+        let toggleImageView: UIImageView = {
             let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
             imageView.tintColor = .init(hex: 0xD8D8D8)
             return imageView
         }()
-        var markUnivLabel: UILabel = {
+        let markUnivLabel: UILabel = {
             let label = UILabel()
             label.text = "ㄱ"
             label.font = .customFont(.neoLight, size: 12)
@@ -144,11 +143,10 @@ class EmailAuthViewController: UIViewController {
         return view
     }()
     
-    var schoolLabel = UILabel()
-    var emailLabel = UILabel()
-    
-    var emailTextField = UITextField()
-    var emailAddressTextField = UITextField()
+    let schoolLabel = UILabel()
+    let emailLabel = UILabel()
+    let emailTextField = UITextField()
+    let emailAddressTextField = UITextField()
     
     lazy var authSendButton: UIButton = {
         var button = UIButton()
@@ -188,9 +186,22 @@ class EmailAuthViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTextFieldTarget()
-        setViewTap()
-        setLabelTap()
+        setTapGesture()
         addRightSwipe()
+    }
+    
+    // MARK: - Initialization
+    
+    init(idData: String, pwData: String, pwCheckData: String, nickNameData: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.idData = idData
+        self.pwData = pwData
+        self.pwCheckData = pwCheckData
+        self.nickNameData = nickNameData
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Functions
@@ -301,14 +312,14 @@ class EmailAuthViewController: UIViewController {
     
     private func setAttributes() {
         /* labels attr */
-        schoolLabel = setMainLabelAttrs("학교 선택")
-        emailLabel = setMainLabelAttrs("학교 이메일 입력")
+        setMainLabelAttrs(schoolLabel, "학교 선택")
+        setMainLabelAttrs(emailLabel, "학교 이메일 입력")
         
         /* textFields attr */
-        emailTextField = setTextFieldAttrs(msg: "입력하세요")
+        setTextFieldAttrs(emailTextField, "입력하세요")
         emailTextField.autocapitalizationType = .none
         
-        emailAddressTextField = setTextFieldAttrs(msg: "@")
+        setTextFieldAttrs(emailAddressTextField, "@")
         emailAddressTextField.isUserInteractionEnabled = false  // 유저가 입력하는 것이 아니라 학교에 따라 자동 설정되는 것.
         
         /* buttons attr */
@@ -317,23 +328,19 @@ class EmailAuthViewController: UIViewController {
             $0.layer.cornerRadius = 5
             $0.backgroundColor = UIColor(hex: 0xEFEFEF)
             $0.isEnabled = false
-            $0.clipsToBounds = true
         }
     }
     
     // 공통 속성을 묶어놓은 함수
-    private func setMainLabelAttrs(_ text: String) -> UILabel {
-        let label = UILabel()
+    private func setMainLabelAttrs(_ label: UILabel, _ text: String) {
         label.text = text
         label.font = .customFont(.neoMedium, size: 18)
         label.textColor = .black
-        return label
     }
     
     /* 텍스트 필드 속성 설정 */
-    private func setTextFieldAttrs(msg: String) -> UITextField {
+    private func setTextFieldAttrs(_ textField: UITextField, _ msg: String) {
         // placeHolder 설정
-        let textField = UITextField()
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
             string: msg,
@@ -342,7 +349,6 @@ class EmailAuthViewController: UIViewController {
         )
         // 밑에 줄 설정
         textField.makeBottomLine()
-        return textField
     }
     
     private func setTextFieldTarget() {
@@ -351,15 +357,13 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    /* universitySelectView에 탭 제스쳐를 추가 */
-    private func setViewTap() {
+    private func setTapGesture() {
+        /* universitySelectView에 탭 제스쳐를 추가 */
         let viewTapGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(tapUnivSelectView))
         universitySelectView.addGestureRecognizer(viewTapGesture)
-    }
-    
-    /* 학교 이름 label에 탭 제스쳐 추가 */
-    private func setLabelTap() {
+        
+        /* 학교 이름 label에 탭 제스쳐 추가 */
         let labelTapGesture = UITapGestureRecognizer(target: self,
                                                      action: #selector(tapUnivName(_:)))
         univNameLabel.isUserInteractionEnabled = true
@@ -431,12 +435,7 @@ class EmailAuthViewController: UIViewController {
     
     @objc
     private func tapNextButton() {
-        let authNumVC = AuthNumViewController()
-        
-        authNumVC.modalTransitionStyle = .crossDissolve
-        authNumVC.modalPresentationStyle = .fullScreen
-        
-        // id, pw, nickName 데이터 전달 -> 최종적으로 회원가입 Req를 보내는 AgreementVC까지 끌고 가야함
+        //
         if let idData = self.idData,
            let pwData = self.pwData,
            let pwCheckData = self.pwCheckData,
@@ -445,19 +444,11 @@ class EmailAuthViewController: UIViewController {
            let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let uuid = uuid {
-            authNumVC.idData = idData
-            authNumVC.pwData = pwData
-            authNumVC.pwCheckData = pwCheckData
-            authNumVC.nickNameData = nickNameData
-            
-            // 학교 정보랑 학교 이메일 정보 넘겨줘야 한다 -> 재전송 하기 버튼 때문에
-            authNumVC.university = univ
             // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함 - 일단은 가천대만
-            authNumVC.email = email + emailAddress
-            print(email + emailAddress)
+            let authNumVC = AuthNumViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: univ, email: email + emailAddress, uuid: uuid)
             
-            // PhoneAuthVC까지 가지고 가야 한다.
-            authNumVC.uuid = uuid
+            authNumVC.modalTransitionStyle = .crossDissolve
+            authNumVC.modalPresentationStyle = .fullScreen
             
             present(authNumVC, animated: true)
         }
