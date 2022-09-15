@@ -284,7 +284,11 @@ class LoginViewController: UIViewController {
         // 로그인 시도
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
-            let input = LoginInput(loginId: id, password: pw, fcmToken: nil)
+            // fcm 등록토큰 값 불러오기
+            let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
+            print("DEBUG: fcmToken in LoginVC", fcmToken)
+            let input = LoginInput(loginId: id, password: pw, fcmToken: fcmToken)
+            
             LoginViewModel.login(self, input) { result in
                 // 자동로그인 체크 시 UserDefaults에 jwt 저장
                 if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
