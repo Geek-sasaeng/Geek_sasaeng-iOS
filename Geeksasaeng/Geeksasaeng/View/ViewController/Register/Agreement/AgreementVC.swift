@@ -159,6 +159,34 @@ class AgreementViewController: UIViewController {
         addRightSwipe()
     }
     
+    // MARK: - Initialization
+    
+    /* 일반 회원가입용 */
+    init(idData: String, pwData: String, pwCheckData: String, nickNameData: String, university: String, emailId: Int, phoneNumberId: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.idData = idData
+        self.pwData = pwData
+        self.pwCheckData = pwCheckData
+        self.nickNameData = nickNameData
+        self.university = university
+        self.emailId = emailId
+        self.phoneNumberId = phoneNumberId
+    }
+    
+    /* 네이버 회원가입용 */
+    init(isFromNaverRegister: Bool, accessToken: String, nickNameData: String, university: String, email: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.isFromNaverRegister = isFromNaverRegister
+        self.accessToken = accessToken
+        self.nickNameData = nickNameData
+        self.university = university
+        self.email = email
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Function
     
     private func addSubViews() {

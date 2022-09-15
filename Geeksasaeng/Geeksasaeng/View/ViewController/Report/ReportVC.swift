@@ -35,14 +35,14 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         return view
     }()
     
-    var postReportLabel: UILabel = {
+    let postReportLabel: UILabel = {
         let label = UILabel()
         label.text = "파티 게시글 신고"
         label.font = .customFont(.neoMedium, size: 16)
         label.textColor = .black
         return label
     }()
-    var userReportLabel: UILabel = {
+    let userReportLabel: UILabel = {
         let label = UILabel()
         label.text = "사용자 신고"
         label.font = .customFont(.neoMedium, size: 16)
@@ -51,20 +51,20 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     /* 파티 게시글 신고 카테고리들이 들어갈 테이블뷰 */
-    var postReportTableView: UITableView = {
+    let postReportTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
         return tableView
     }()
     
-    var separateView: UIView = {
+    let separateView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         return view
     }()
     
     /* 사용자 신고 카테고리들이 들어갈 테이블뷰 */
-    var userReportTableView: UITableView = {
+    let userReportTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
         return tableView
