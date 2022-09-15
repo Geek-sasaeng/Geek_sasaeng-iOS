@@ -497,8 +497,10 @@ class ChattingViewController: UIViewController {
         contentsTextView.delegate = self
         
         setFirestore()
-        setEnterTime()
+        loadParticipants()
+        loadMessages()
         setCollectionView()
+        setEnterTime()
         addSubViews()
         setLayouts()
     }
@@ -506,6 +508,8 @@ class ChattingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.title = roomName
+//        self.navigationController?.navigationBar.barTintColor = .white
+//        self.navigationController?.navigationBar.isTranslucent = false
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black

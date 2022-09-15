@@ -11,20 +11,33 @@ import NaverThirdPartyLogin
 class naverLoginViewModel {
     let naverLoginModel = NaverLoginModel()
     
-    func setInstanceDelegate(_ viewController: UIViewController) {
-        naverLoginModel.naverLoginInstance?.delegate = viewController as? NaverThirdPartyLoginConnectionDelegate
+    // 토큰이 남아 있는지 확인
+    func isValidAccessTokenExpireTimeNow() -> Bool {
+        guard let instance = naverLoginModel.naverLoginInstance else { return false }
+        return instance.isValidAccessTokenExpireTimeNow()
     }
     
+    // 토큰 재발급
+    func requestAccessTokenWithRefreshToken() {
+        naverLoginModel.naverLoginInstance?.requestAccessTokenWithRefreshToken()
+    }
+    
+    // 로그인 시도
     func requestLogin() {
         naverLoginModel.naverLoginInstance?.requestThirdPartyLogin()
     }
     
-    func returnToken() -> String {
-        return naverLoginModel.naverLoginInstance?.accessToken ?? ""
+    // 토큰 삭제
+    func resetToken() {
+        naverLoginModel.naverLoginInstance?.resetToken()
     }
     
-    func isExistToken() -> Bool {
-        return naverLoginModel.isExistToken()
+    func setInstanceDelegate(_ viewController: UIViewController) {
+        naverLoginModel.naverLoginInstance?.delegate = viewController as? NaverThirdPartyLoginConnectionDelegate
+    }
+    
+    func returnToken() -> String {
+        return naverLoginModel.naverLoginInstance?.accessToken ?? ""
     }
     
     func naverLoginPaser(_ viewController: LoginViewController) {
@@ -75,9 +88,3 @@ class naverLoginViewModel {
     }
 
 }
-
-/*
- 뷰컨에 엑세스 토큰만 넘겨주고 로그인 뷰컨에서 API 호출,
- 결과에 따라 홈화면 or 회원가입 화면으로 이동하게 하고,
- 회원가입 완료시 호출하는 API도 수정
- */

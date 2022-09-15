@@ -21,7 +21,6 @@ class DeliveryListDetailViewModel {
                     print("DEBUG: 디테일 정보 불러오기 성공")
                     // 성공 시에 completion에 result 전달
                     completion(result.result!)
-                    
                 } else {
                     print("DEBUG: 디테일", result.message!)
                 }
