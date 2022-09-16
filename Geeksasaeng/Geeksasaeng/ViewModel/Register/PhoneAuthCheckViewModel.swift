@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 
+// TODO: - viewController 전달하지 않는 방법 생각하기
 class PhoneAuthCheckViewModel {
     public static func requestCheckPhoneAuth(_ viewController: PhoneAuthViewController, _ parameter: PhoneAuthCheckInput) {
         AF.request("https://geeksasaeng.shop/sms/verification", method: .post, parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
