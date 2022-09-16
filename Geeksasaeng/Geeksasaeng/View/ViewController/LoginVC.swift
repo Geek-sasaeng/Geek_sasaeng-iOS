@@ -465,6 +465,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             // Apple ID
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
+            // 애플 로그인 시 받아올 정보
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
