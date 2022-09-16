@@ -13,8 +13,7 @@ class SystemMessageCell: UICollectionViewCell {
     
     var systemMessageLabel: PaddingLabel = {
         let label = PaddingLabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .init(hex: 0x636363)
+        label.setTextColorAndFont(textColor: .init(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
         label.backgroundColor = .init(hex: 0xF8F8F8)
         label.numberOfLines = 0
         label.clipsToBounds = true
@@ -36,9 +35,7 @@ class SystemMessageCell: UICollectionViewCell {
     // MARK: - Life Cycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
-        
         contentView.backgroundColor = .white
         
         addSubViews()
