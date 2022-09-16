@@ -18,11 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         /* 푸시 알림 전송을 위해 fcm 사용 */
         Messaging.messaging().delegate = self
+        
+        /* FCM 다시 사용 설정 */
+        Messaging.messaging().isAutoInitEnabled = true
+        
         UNUserNotificationCenter.current().delegate = self
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { _, _ in }
         application.registerForRemoteNotifications()
+        
+        /* device token 요청 */
+        UIApplication.shared.registerForRemoteNotifications()
         
         let instance = NaverThirdPartyLoginConnection.getSharedInstance()
         instance?.isNaverAppOauthEnable = true
