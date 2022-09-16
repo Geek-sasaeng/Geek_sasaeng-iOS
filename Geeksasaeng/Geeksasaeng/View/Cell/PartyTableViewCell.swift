@@ -35,7 +35,7 @@ class PartyTableViewCell: UITableViewCell {
         
         addSubViews()
         setLayouts()
-        setLabelsAttribute()
+        setLabelsAttributes()
     }
     
     // MARK: - Set Functions
@@ -85,7 +85,7 @@ class PartyTableViewCell: UITableViewCell {
         }
     }
     
-    private func setLabelsAttribute() {
+    private func setLabelsAttributes() {
         peopleLabel.setTextColorAndFont(textColor: UIColor(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
         timeLabel.setTextColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 14))
         titleLabel.setTextColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 18))
