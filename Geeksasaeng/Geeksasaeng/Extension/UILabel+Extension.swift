@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension UILabel {
     // UILabel의 아래 라인 만들어주는 함수
@@ -20,6 +21,11 @@ extension UILabel {
             make.height.equalTo(height)
             make.left.equalTo(self.snp.left).offset(-5)
         }
+    }
+    
+    func setTextColorAndFont(textColor: UIColor, font: UIFont) {
+        self.textColor = textColor
+        self.font = font
     }
 }
 

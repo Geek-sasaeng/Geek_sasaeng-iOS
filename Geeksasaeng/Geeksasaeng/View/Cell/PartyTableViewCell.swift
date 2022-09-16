@@ -21,42 +21,11 @@ class PartyTableViewCell: UITableViewCell {
         imageView.image = UIImage(named: "PeopleMark")
         return imageView
     }()
-    
-    var peopleLabel: UILabel = {
-        var label = UILabel()
-        label.textColor = UIColor(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 14)
-        return label
-    }()
-    
-    var timeLabel: UILabel = {
-        var label = UILabel()
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 14)
-        return label
-    }()
-    
-    var titleLabel: UILabel = {
-        var label = UILabel()
-        label.textColor = .black
-        label.font = .customFont(.neoBold, size: 18)
-        return label
-    }()
-    
-    var categoryLabel: UILabel = {
-        var label = UILabel()
-        label.textColor = UIColor(hex: 0x636363)
-        label.font = .customFont(.neoMedium, size: 12)
-        return label
-    }()
-    
-    var hashtagLabel: UILabel = {
-        var label = UILabel()
-        label.text = "같이 먹고 싶어요"
-        label.textColor = UIColor(hex: 0xEFEFEF)
-        label.font = .customFont(.neoMedium, size: 12)
-        return label
-    }()
+    let peopleLabel = UILabel()
+    let timeLabel = UILabel()
+    let titleLabel = UILabel()
+    let categoryLabel = UILabel()
+    let hashtagLabel = UILabel()
     
     // MARK: - layoutSubviews()
     
@@ -66,6 +35,7 @@ class PartyTableViewCell: UITableViewCell {
         
         addSubViews()
         setLayouts()
+        setLabelsAttribute()
     }
     
     // MARK: - Set Functions
@@ -113,5 +83,14 @@ class PartyTableViewCell: UITableViewCell {
             make.centerY.equalTo(categoryLabel)
             make.left.equalToSuperview().inset(101)
         }
+    }
+    
+    private func setLabelsAttribute() {
+        peopleLabel.setTextColorAndFont(textColor: UIColor(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
+        timeLabel.setTextColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 14))
+        titleLabel.setTextColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 18))
+        categoryLabel.setTextColorAndFont(textColor: UIColor(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
+        hashtagLabel.setTextColorAndFont(textColor: UIColor(hex: 0xEFEFEF), font: .customFont(.neoMedium, size: 12))
+        hashtagLabel.text = "같이 먹고 싶어요"
     }
 }
