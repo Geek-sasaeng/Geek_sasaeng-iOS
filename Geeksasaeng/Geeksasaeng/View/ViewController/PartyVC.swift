@@ -1271,7 +1271,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 showCompleteRegisterView()
             } else {
                 // 초대 실패 시 실패 메세지 띄우기
-                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .init(hex: 0x474747, alpha: 0.6))
+                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
             }
         })
         
@@ -1386,7 +1386,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
 extension PartyViewController: EdittedDelegate {
     func checkEditted(isEditted: Bool) {
         if isEditted {
-            self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+            self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
             
             // DeliveryVC에서 배달 목록 새로고침 (수정된 거 반영되게 하려고)
             delegate?.updateDeliveryList()

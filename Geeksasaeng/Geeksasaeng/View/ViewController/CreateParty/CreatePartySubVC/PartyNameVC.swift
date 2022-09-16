@@ -236,7 +236,7 @@ class PartyNameViewController: UIViewController {
                                 // TODO: 파티 생성은 잘 됐는데, 파티 채팅방 생성이 안 될 경우에는 어떻게 해야하나...?
                                 print("Seori Test: 채팅방 생성 실패")
                                 // 배달 채팅방 생성 실패
-                                self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                                self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
                             } else {
                                 // 배달 채팅방 생성 성공
                                 print("DEBUG: 배달 채팅방 생성 완료")
@@ -296,7 +296,7 @@ class PartyNameViewController: UIViewController {
                     self.navigationController?.popViewController(animated: true)
                 } else {
                     // 배달파티 생성 실패
-                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    self.showToast(viewController: self, message: "파티 생성을 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
                 }
             }
         }

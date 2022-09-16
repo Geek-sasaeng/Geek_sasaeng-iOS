@@ -516,7 +516,7 @@ class NaverRegisterViewController: UIViewController {
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in// // 경우에 맞는 토스트 메세지 출력
-                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 15), color: .mainColor)
+                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
                 
                 // 닉네임 확인, 이메일 인증번호 전송까지 성공했을 때에 다음 버튼을 활성화
                 if isSuccess, self.isNicknameChecked {
