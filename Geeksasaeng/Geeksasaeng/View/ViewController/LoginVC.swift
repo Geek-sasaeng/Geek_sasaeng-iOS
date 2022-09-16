@@ -468,16 +468,19 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
+            let idToken = appleIDCredential.identityToken!
+            let tokenStr = String(data: idToken, encoding: .utf8)
             
             print("User ID : \(userIdentifier)")
             print("User Email : \(email ?? "")")
             print("User Name : \((fullName?.givenName ?? "") + (fullName?.familyName ?? ""))")
+            print("token : \(tokenStr ?? "")")
             
         default:
             break
         }
     }
-    
+
     // Apple ID 연동 실패 시
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print("Apple ID 연동 실패")
