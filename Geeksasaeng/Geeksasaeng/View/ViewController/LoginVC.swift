@@ -16,49 +16,28 @@ class LoginViewController: UIViewController {
     
     /* 회원가입 버튼이 가려지는 작은 디바이스에는 스크롤뷰를 추가 */
     // 스크롤뷰
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
-    let contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
+    let scrollView = UIScrollView()
+    let contentView = UIView()
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "AppLogo"))
         return imageView
     }()
     
-    lazy var idTextField: UITextField = {
+    let idTextField: UITextField = {
         var textField = UITextField()
-        textField.autocapitalizationType = .none
-        textField.font = .customFont(.neoLight, size: 14)
-        textField.textColor = .init(hex: 0x2F2F2F)
         textField.attributedPlaceholder = NSAttributedString(
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xB5B5B5)]
         )
-        textField.delegate = self
-        textField.makeBottomLine()
-        textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         return textField
     }()
-    
-    lazy var passwordTextField: UITextField = {
+    let passwordTextField: UITextField = {
         var textField = UITextField()
-        textField.autocapitalizationType = .none
-        textField.font = .customFont(.neoLight, size: 14)
-        textField.textColor = .init(hex: 0x2F2F2F)
         textField.attributedPlaceholder = NSAttributedString(
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xB5B5B5)]
         )
-        textField.delegate = self
-        textField.makeBottomLine()
-        textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         textField.isSecureTextEntry = true
         return textField
     }()
@@ -66,39 +45,28 @@ class LoginViewController: UIViewController {
     lazy var loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.backgroundColor = UIColor.init(hex: 0xEFEFEF)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 5
         button.isEnabled = false
         button.addTarget(self, action: #selector(tapLoginButton), for: .touchUpInside)
         return button
     }()
-    
     lazy var naverLoginButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "NaverLogo"), for: .normal)
         button.adjustsImageWhenHighlighted = false
         button.setTitle("  네이버 로그인", for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.titleLabel?.textColor = .white
         button.backgroundColor = UIColor.init(hex: 0x00C73C)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 5
         button.addTarget(self, action: #selector(tapNaverLoginButton), for: .touchUpInside)
         return button
     }()
-    
     lazy var appleLoginButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AppleLogo"), for: .normal)
         button.adjustsImageWhenHighlighted = false
         button.setTitle("  Apple 로그인", for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
         button.titleLabel?.textColor = .white
         button.backgroundColor = .black
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 5
         button.addTarget(self, action: #selector(tapAppleLoginButton), for: .touchUpInside)
         return button
     }()
@@ -147,6 +115,7 @@ class LoginViewController: UIViewController {
         addSubViews()
         setLayouts()
         setKeyboardDown()
+        setComponentsAttributes()
     }
     
     // MARK: - Functions
@@ -244,7 +213,6 @@ class LoginViewController: UIViewController {
     
     private func attemptAutoLogin() {
         if let jwt = UserDefaults.standard.string(forKey: "jwt") {
-            print(jwt)
             AutoLoginAPI.attemptAutoLogin(jwt: jwt) { result in
                 // static에 필요한 데이터 저장
                 LoginModel.jwt = jwt
@@ -268,6 +236,27 @@ class LoginViewController: UIViewController {
     private func setKeyboardDown() {
         let tapGesture = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
         view.addGestureRecognizer(tapGesture)
+    }
+    
+    private func setComponentsAttributes() {
+        [scrollView, contentView].forEach {
+            $0.backgroundColor = .white
+        }
+        
+        [idTextField, passwordTextField].forEach {
+            $0.autocapitalizationType = .none
+            $0.font = .customFont(.neoLight, size: 14)
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.delegate = self
+            $0.makeBottomLine()
+            $0.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
+        }
+        
+        [loginButton, naverLoginButton, appleLoginButton].forEach {
+            $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+            $0.setTitleColor(UIColor.white, for: .normal)
+            $0.layer.cornerRadius = 5
+        }
     }
     
     @objc private func tapSignUpButton() {
@@ -341,7 +330,6 @@ class LoginViewController: UIViewController {
     @objc private func didChangeTextField(_ sender: UITextField) {
         let text = sender.text ?? ""
         
-        // 정규식 넣어서 수정 예정
         switch sender {
         case idTextField:
             if text.count >= 1 && passwordTextField.text?.count ?? 0 >= 1 {
@@ -353,7 +341,7 @@ class LoginViewController: UIViewController {
                 loginButton.tintColor = UIColor(hex: 0xA8A8A8)
                 loginButton.backgroundColor = UIColor(hex: 0xEFEFEF)
             }
-        default:
+        default: // passwordTextField
             if text.count >= 1 && idTextField.text?.count ?? 0 >= 1 {
                 loginButton.isEnabled = true
                 loginButton.tintColor = .white
@@ -372,7 +360,6 @@ class LoginViewController: UIViewController {
         // 첫 로그인 시에는 기숙사 선택 화면으로 이동
         if isFirstLogin {
             let dormitoryVC = DormitoryViewController()
-            print("체크", nickName!)
             dormitoryVC.userNickName = nickName
             dormitoryVC.modalTransitionStyle = .crossDissolve
             dormitoryVC.modalPresentationStyle = .fullScreen

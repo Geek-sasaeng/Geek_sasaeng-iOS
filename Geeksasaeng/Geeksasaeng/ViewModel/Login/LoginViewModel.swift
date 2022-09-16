@@ -28,6 +28,7 @@ class LoginViewModel {
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+                viewController.showBottomToast(viewController: viewController, message: "로그인 요청에 실패하였습니다", font: .customFont(.neoMedium, size: 15), color: .lightGray)
             }
         }
     }
