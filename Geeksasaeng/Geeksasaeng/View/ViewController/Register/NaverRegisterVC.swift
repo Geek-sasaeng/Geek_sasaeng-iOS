@@ -16,24 +16,17 @@ class NaverRegisterViewController: UIViewController {
     lazy var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
         return view
     }()
-    
     lazy var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
         return view
     }()
-    
     lazy var progressIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoTop"))
         return imageView
     }()
-    
     lazy var remainIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
         return imageView
@@ -74,7 +67,6 @@ class NaverRegisterViewController: UIViewController {
             make.width.equalTo(15)
             make.height.equalTo(8)
         }
-        
         return view
     }()
     
@@ -157,13 +149,13 @@ class NaverRegisterViewController: UIViewController {
     lazy var nickNameCheckButton: UIButton = {
         let button = UIButton()
         button.setTitle("중복 확인", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.isEnabled = false
         button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
+        return button
+    }()
+    lazy var authSendButton: UIButton = {
+        var button = UIButton()
+        button.setTitle("인증번호 전송", for: .normal)
+        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
         return button
     }()
     
@@ -174,19 +166,6 @@ class NaverRegisterViewController: UIViewController {
         label.font = .customFont(.neoMedium, size: 13)
         label.isHidden = true
         return label
-    }()
-    
-    lazy var authSendButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("인증번호 전송", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.isEnabled = false
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
-        return button
     }()
     
     lazy var nextButton: UIButton = {
@@ -226,10 +205,10 @@ class NaverRegisterViewController: UIViewController {
         setTextFieldTarget()
         setViewTap()
         setLabelTap()
-        
         addSubViews()
         setLayouts()
         addRightSwipe()
+        setComponentsAttributes()
     }
     
     // MARK: - Functions
@@ -370,33 +349,30 @@ class NaverRegisterViewController: UIViewController {
     
     private func setAttributes() {
         /* label attr */
-        nickNameLabel = setMainLabelAttrs("닉네임")
-        schoolLabel = setMainLabelAttrs("학교 선택")
-        emailLabel = setMainLabelAttrs("학교 이메일 입력")
+        setMainLabelAttrs(nickNameLabel, text: "닉네임")
+        setMainLabelAttrs(schoolLabel, text: "학교 선택")
+        setMainLabelAttrs(emailLabel, text: "학교 이메일 입력")
         
         /* textFields attr */
-        nickNameTextField = setTextFieldAttrs(msg: "3-8자 영문으로 입력", width: 210)
+        setTextFieldAttrs(nickNameTextField, msg: "3-8자 영문으로 입력", width: 210)
         nickNameTextField.autocapitalizationType = .none
         
-        emailTextField = setTextFieldAttrs(msg: "입력하세요", width: 307)
+        setTextFieldAttrs(emailTextField, msg: "입력하세요", width: 307)
         emailTextField.autocapitalizationType = .none
         
-        emailAddressTextField = setTextFieldAttrs(msg: "@", width: 187)
+        setTextFieldAttrs(emailAddressTextField, msg: "@", width: 187)
         emailAddressTextField.isUserInteractionEnabled = false
     }
     
-    private func setMainLabelAttrs(_ text: String) -> UILabel {
-        let label = UILabel()
+    private func setMainLabelAttrs(_ label: UILabel, text: String){
         label.text = text
         label.font = .customFont(.neoMedium, size: 18)
         label.textColor = .black
-        return label
     }
     
     /* 텍스트 필드 속성 설정 */
-    private func setTextFieldAttrs(msg: String, width: CGFloat) -> UITextField {
+    private func setTextFieldAttrs(_ textField: UITextField, msg: String, width: CGFloat){
         // placeHolder 설정
-        let textField = UITextField()
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
             string: msg,
@@ -405,7 +381,6 @@ class NaverRegisterViewController: UIViewController {
         )
         // 밑에 줄 설정
         textField.makeBottomLine()
-        return textField
     }
     
     private func setTextFieldTarget() {
@@ -428,6 +403,22 @@ class NaverRegisterViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
     
+    private func setComponentsAttributes() {
+        [progressBar, remainBar].forEach {
+            $0.clipsToBounds = true
+            view.layer.cornerRadius = 1.5
+        }
+        
+        [nickNameCheckButton, authSendButton].forEach {
+            $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            $0.layer.cornerRadius = 5
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+            $0.clipsToBounds = true
+            $0.isEnabled = false
+        }
+    }
+    
     // MARK: - @objc Functions
     
     @objc
@@ -439,7 +430,22 @@ class NaverRegisterViewController: UIViewController {
         } else {
             if let nickname = nickNameTextField.text {
                 let input = NickNameRepetitionInput(nickName: nickname)
-                RepetitionAPI.checkNicknameRepetitionFromNaverRegister(self, parameters: input)
+                RepetitionAPI.checkNicknameRepetitionFromNaverRegister(parameters: input) { success, message in
+                    if success {
+                        self.isNicknameChecked = true
+                        if self.selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
+                            && self.emailTextField.text?.count ?? 0 >= 1 {
+                            self.nextButton.setActivatedNextButton()
+                        }
+                        self.nickNameAvailableLabel.text = message
+                        self.nickNameAvailableLabel.textColor = .mainColor
+                        self.nickNameAvailableLabel.isHidden = false
+                    } else {
+                        self.nickNameAvailableLabel.text = message
+                        self.nickNameAvailableLabel.textColor = .red
+                        self.nickNameAvailableLabel.isHidden = false
+                    }
+                }
             }
         }
     }
