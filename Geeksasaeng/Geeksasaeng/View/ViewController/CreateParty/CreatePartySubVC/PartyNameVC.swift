@@ -288,6 +288,7 @@ class PartyNameViewController: UIViewController {
                     
                     // delegate로 DeliveryVC를 넘겨줌
                     partyVC.delegate = delegate
+                    partyVC.fromCreated = true
                     
                     var vcArray = self.navigationController?.viewControllers
                     vcArray!.removeLast()

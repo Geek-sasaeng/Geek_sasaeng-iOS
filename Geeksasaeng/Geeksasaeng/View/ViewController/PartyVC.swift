@@ -20,6 +20,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var createdData: DeliveryListDetailModelResult?
     var ChatRoomName: String?
+    var fromCreated: Bool?
     
     var mapView: MTMapView? // 카카오맵
     var marker: MTMapPOIItem = {
@@ -554,6 +555,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         setLayouts()
         setAttributes()
         startTimer()
+        showToastFromCreated()
         
         NotificationCenter.default.addObserver(forName: Notification.Name("TapEditButton"), object: nil, queue: nil) { notification in
             let result = notification.object as! String
@@ -1345,6 +1347,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         let _ = Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
             self.tapCancelButton()
         })
+    }
+    
+    private func showToastFromCreated() {
+        guard let fromCreated = fromCreated else { return }
+        if fromCreated {
+            self.showToast(viewController: self, message: "파티 생성이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
+        }
     }
     
     /* 채팅방 생성 완료 뷰 X 눌렀을 때 사라지게 하는 함수 */
