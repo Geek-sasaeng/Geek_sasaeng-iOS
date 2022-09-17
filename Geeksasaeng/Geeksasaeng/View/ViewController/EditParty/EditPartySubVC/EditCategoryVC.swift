@@ -19,65 +19,16 @@ class EditCategoryViewController: UIViewController {
     }()
     
     /* category labels */
-    let korean: UIButton = {
-        let button = UIButton()
-        button.setTitle("한식", for: .normal)
-        return button
-    }()
-    
-    let western: UIButton = {
-        let button = UIButton()
-        button.setTitle("양식", for: .normal)
-        return button
-    }()
-    
-    let chinese: UIButton = {
-        let button = UIButton()
-        button.setTitle("중식", for: .normal)
-        return button
-    }()
-    
-    let japanese: UIButton = {
-        let button = UIButton()
-        button.setTitle("일식", for: .normal)
-        return button
-    }()
-    
-    let snack: UIButton = {
-        let button = UIButton()
-        button.setTitle("분식", for: .normal)
-        return button
-    }()
-    
-    let chicken: UIButton = {
-        let button = UIButton()
-        button.setTitle("치킨/피자", for: .normal)
-        return button
-    }()
-    
-    let rawfish: UIButton = {
-        let button = UIButton()
-        button.setTitle("회/돈까스", for: .normal)
-        return button
-    }()
-    
-    let fastfood: UIButton = {
-        let button = UIButton()
-        button.setTitle("패스트 푸드", for: .normal)
-        return button
-    }()
-    
-    let dessert: UIButton = {
-        let button = UIButton()
-        button.setTitle("디저트/음료", for: .normal)
-        return button
-    }()
-    
-    let etc: UIButton = {
-        let button = UIButton()
-        button.setTitle("기타", for: .normal)
-        return button
-    }()
+    let korean = UIButton()
+    let western = UIButton()
+    let chinese = UIButton()
+    let japanese = UIButton()
+    let snack = UIButton()
+    let chicken = UIButton()
+    let rawfish = UIButton()
+    let fastfood = UIButton()
+    let dessert = UIButton()
+    let etc = UIButton()
     
     /* nextButton: 다음 버튼 */
     lazy var nextButton: UIButton = {
@@ -127,6 +78,17 @@ class EditCategoryViewController: UIViewController {
             $0.backgroundColor = UIColor(hex: 0xEFEFEF)
             $0.addTarget(self, action: #selector(tapCategoryButton(_:)), for: .touchUpInside)
         }
+        
+        korean.setTitle("한식", for: .normal)
+        western.setTitle("양식", for: .normal)
+        chinese.setTitle("중식", for: .normal)
+        japanese.setTitle("일식", for: .normal)
+        snack.setTitle("분식", for: .normal)
+        chicken.setTitle("치킨/피자", for: .normal)
+        rawfish.setTitle("회/돈까스", for: .normal)
+        fastfood.setTitle("패스트 푸드", for: .normal)
+        dessert.setTitle("디저트/음료", for: .normal)
+        etc.setTitle("기타", for: .normal)
     }
     
     private func addSubViews() {
