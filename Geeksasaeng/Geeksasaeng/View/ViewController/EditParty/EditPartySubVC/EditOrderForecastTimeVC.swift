@@ -94,6 +94,18 @@ class EditOrderForecastTimeViewController: UIViewController {
         datePicker.addTarget(self, action: #selector(changedDatePickerValue), for: .valueChanged)
         datePicker.locale = Locale(identifier: "ko_KR")
         dateTextField.inputView = datePicker
+        
+        /* 최대 날짜 설정 (7일 후까지) */
+        let calendar = Calendar(identifier: .gregorian)
+        let currentDate = Date()
+        var components = DateComponents()
+        
+        components.calendar = calendar
+        components.day = 7
+        let maxDate = calendar.date(byAdding: components, to: currentDate)!
+        
+        datePicker.minimumDate = currentDate
+        datePicker.maximumDate = maxDate
     }
     
     private func setTimePicker() {
