@@ -5,8 +5,6 @@
 //  Created by 조동진 on 2022/07/11.
 //
 
-/* 파티 생성하기 API 구현 이후: 등록버튼 누를 때 전역변수 모두 초기화 */
-
 import UIKit
 import SnapKit
 import QuartzCore
@@ -152,7 +150,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     var dormitoryInfo: DormitoryNameResult?
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
     var delegate: UpdateDeliveryDelegate?
     
     // MARK: - Life Cycle
@@ -175,7 +172,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        print("파티생성 뷰 윌 디스어피어 호출")
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapBackButtonFromBankAccountVC"), object: nil)
         mapView = nil // 맵뷰 초기화
@@ -200,9 +196,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         mapView = MTMapView(frame: mapSubView.frame)
         
         if let mapView = mapView {
-            // 델리게이트 연결
-            mapView.delegate = self
-            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
             mapView.baseMapType = .standard
             mapView.isUserInteractionEnabled = false
             
@@ -250,34 +243,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         view.endEditing(true)
         
         // 다음 버튼 누른 VC에 대한 데이터 저장, 표시
-        if let orderForecastTime = CreateParty.orderForecastTime {
-            self.orderForecastTimeButton.layer.shadowRadius = 0
-            self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
-            self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
-            self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
-            self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
-        }
-        
-        if let matchingPerson = CreateParty.matchingPerson {
-            self.selectedPersonLabel.text = "      \(matchingPerson)"
-            self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
-            self.selectedPersonLabel.textColor = .black
-            self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-        }
-        
-        if let url = CreateParty.url {
-            self.selectedUrlLabel.text = "      \(url)"
-            self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
-            self.selectedUrlLabel.textColor = .black
-            self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-        }
-        
-        if let category = CreateParty.category {
-            self.selectedCategoryLabel.text = "      \(category)"
-            self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
-            self.selectedCategoryLabel.textColor = .black
-            self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-        }
+        setLabelsData()
         
         visualEffectView?.removeFromSuperview()
         visualEffectView = nil
@@ -337,41 +303,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             let result = notification.object as! String
             if result == "true" {
                 // 각 서브뷰에서 저장된 전역변수 데이터 출력
-                if let orderForecastTime = CreateParty.orderForecastTime {
-                    self.orderForecastTimeButton.layer.shadowRadius = 0
-                    self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
-                    self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
-                    self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
-                    self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
-                }
-                
-                if let matchingPerson = CreateParty.matchingPerson {
-                    self.selectedPersonLabel.text = "      \(matchingPerson)"
-                    self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedPersonLabel.textColor = .black
-                    self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-                if let category = CreateParty.category {
-                    self.selectedCategoryLabel.text = "      \(category)"
-                    self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedCategoryLabel.textColor = .black
-                    self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-                if let url = CreateParty.url {
-                    self.selectedUrlLabel.text = "      \(url)"
-                    self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedUrlLabel.textColor = .black
-                    self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
-                
-                if let address = CreateParty.address {
-                    self.selectedLocationLabel.text = "      \(address)"
-                    self.selectedLocationLabel.font = .customFont(.neoMedium, size: 13)
-                    self.selectedLocationLabel.textColor = .black
-                    self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
-                }
+                self.setLabelsData()
                 
                 // 좌표가 있으면 기존의 blockedView를 없애고 그 자리에 카카오맵 노출
                 if let _ = CreateParty.latitude,
@@ -409,6 +341,44 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         
+    }
+    
+    private func setLabelsData() {
+        if let orderForecastTime = CreateParty.orderForecastTime {
+            self.orderForecastTimeButton.layer.shadowRadius = 0
+            self.orderForecastTimeButton.setTitle("      \(orderForecastTime)", for: .normal)
+            self.orderForecastTimeButton.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            self.orderForecastTimeButton.backgroundColor = UIColor(hex: 0xF8F8F8)
+            self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
+        }
+        
+        if let matchingPerson = CreateParty.matchingPerson {
+            self.selectedPersonLabel.text = "      \(matchingPerson)"
+            self.selectedPersonLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedPersonLabel.textColor = .black
+            self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        if let url = CreateParty.url {
+            self.selectedUrlLabel.text = "      \(url)"
+            self.selectedUrlLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedUrlLabel.textColor = .black
+            self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        if let category = CreateParty.category {
+            self.selectedCategoryLabel.text = "      \(category)"
+            self.selectedCategoryLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedCategoryLabel.textColor = .black
+            self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        
+        if let address = CreateParty.address {
+            self.selectedLocationLabel.text = "      \(address)"
+            self.selectedLocationLabel.font = .customFont(.neoMedium, size: 13)
+            self.selectedLocationLabel.textColor = .black
+            self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
     }
     
     private func addSubViews() {
@@ -569,14 +539,8 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    /* show 주문 예정 시간 VC */
-    @objc
-    private func tapOrderForecastTimeButton() {
-        view.endEditing(true)
-        createBlueView()
-        selectedLocationLabel.isUserInteractionEnabled = false
-        
-        // addSubview animation 처리
+    /* 화면에 서브뷰 띄우는 함수 */
+    private func addOrderForecastTimeVC() {
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = OrderForecastTimeViewController()
             self.addChild(childView)
@@ -586,10 +550,102 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             }
         }, completion: nil)
     }
+    private func addMatchingPersonVC() {
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let matchingPersonVC = MatchingPersonViewController()
+            self.addChild(matchingPersonVC)
+            self.view.addSubview(matchingPersonVC.view)
+            matchingPersonVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    private func addCategoryVC() {
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let categoryVC = CategoryViewController()
+            self.addChild(categoryVC)
+            self.view.addSubview(categoryVC.view)
+            categoryVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    private func addUrlVC() {
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let urlVC = UrlViewController()
+            self.addChild(urlVC)
+            self.view.addSubview(urlVC.view)
+            urlVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    private func addReceiptPlaceVC() {
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let receiptPlaceVC = ReceiptPlaceViewController()
+            self.addChild(receiptPlaceVC)
+            self.view.addSubview(receiptPlaceVC.view)
+            receiptPlaceVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
     
+    /* 각 버튼을 탭했을 때 서브뷰 띄우는 함수 호출 */
+    @objc
+    private func tapOrderForecastTimeButton() {
+        view.endEditing(true)
+        createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
+        
+        // addSubview animation 처리
+        addOrderForecastTimeVC()
+    }
+    @objc
+    private func tapSelectedPersonLabel() {
+        createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
+        
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
+        addOrderForecastTimeVC()
+        addMatchingPersonVC()
+    }
+    @objc
+    private func tapSelectedCategoryLabel() {
+        createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
+        
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
+        addOrderForecastTimeVC()
+        addMatchingPersonVC()
+        addCategoryVC()
+    }
+    @objc
+    private func tapSelectedUrlLabel() {
+        createBlueView()
+        selectedLocationLabel.isUserInteractionEnabled = false
+        
+        // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, urlVC 띄우기
+        addOrderForecastTimeVC()
+        addMatchingPersonVC()
+        addCategoryVC()
+        addUrlVC()
+    }
+    @objc
+    private func tapSelectedLocationLabel() {
+        createBlueView()
+        
+        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC, receiptPlaceVC 띄우기
+        addOrderForecastTimeVC()
+        addMatchingPersonVC()
+        addCategoryVC()
+        addUrlVC()
+        addReceiptPlaceVC()
+    }
+    
+    /* 조건을 만족 했을 때 우측 상단 다음 버튼 활성화 */
     @objc
     private func changeValueTitleTextField() {
-        // isSettedOptions가 true인데 titleTextField가 지워진 경우
         if isSettedOptions
             && isEditedContentsTextView
             && contentsTextView.text.count >= 1
@@ -602,155 +658,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             self.navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
             self.view.layoutSubviews()
         }
-    }
-    
-    @objc
-    private func tapSelectedPersonLabel() {
-        createBlueView()
-        selectedLocationLabel.isUserInteractionEnabled = false
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-    }
-
-    @objc
-    private func tapSelectedCategoryLabel() {
-        createBlueView()
-        selectedLocationLabel.isUserInteractionEnabled = false
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let categoryVC = CategoryViewController()
-            self.addChild(categoryVC)
-            self.view.addSubview(categoryVC.view)
-            categoryVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-    }
-    
-    @objc
-    private func tapSelectedUrlLabel() {
-        createBlueView()
-        selectedLocationLabel.isUserInteractionEnabled = false
-        // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let categoryVC = CategoryViewController()
-            self.addChild(categoryVC)
-            self.view.addSubview(categoryVC.view)
-            categoryVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let urlVC = UrlViewController()
-            self.addChild(urlVC)
-            self.view.addSubview(urlVC.view)
-            urlVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-    }
-    
-    @objc
-    private func tapSelectedLocationLabel() {
-        createBlueView()
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = OrderForecastTimeViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let matchingPersonVC = MatchingPersonViewController()
-            self.addChild(matchingPersonVC)
-            self.view.addSubview(matchingPersonVC.view)
-            matchingPersonVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let categoryVC = CategoryViewController()
-            self.addChild(categoryVC)
-            self.view.addSubview(categoryVC.view)
-            categoryVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let urlVC = UrlViewController()
-            self.addChild(urlVC)
-            self.view.addSubview(urlVC.view)
-            urlVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
-        
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let receiptPlaceVC = ReceiptPlaceViewController()
-            self.addChild(receiptPlaceVC)
-            self.view.addSubview(receiptPlaceVC.view)
-            receiptPlaceVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
     }
     
     @objc
@@ -827,8 +734,4 @@ extension CreatePartyViewController: UITextViewDelegate {
         
         return newLength <= 100
     }
-}
-
-extension CreatePartyViewController: MTMapViewDelegate {
-
 }
