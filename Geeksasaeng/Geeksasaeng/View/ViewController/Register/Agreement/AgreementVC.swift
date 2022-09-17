@@ -15,24 +15,17 @@ class AgreementViewController: UIViewController {
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
         return view
     }()
-    
     var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
         return view
     }()
-    
     var progressIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoTop"))
         return imageView
     }()
-    
     var remainIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
         return imageView
@@ -53,22 +46,8 @@ class AgreementViewController: UIViewController {
         button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
         return button
     }()
-    
-    lazy var termsOfUseAgreementCheckBox: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "square"), for: .normal)
-        button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
-        return button
-    }()
-    
-    lazy var personalInfoAgreementCheckBox: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "square"), for: .normal)
-        button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
-        return button
-    }()
+    let termsOfUseAgreementCheckBox = UIButton()
+    let personalInfoAgreementCheckBox = UIButton()
     
     lazy var wholeAgreementButton: UIButton = {
         let button = UIButton()
@@ -80,20 +59,14 @@ class AgreementViewController: UIViewController {
     
     lazy var termsOfUseAgreementButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .customFont(.neoRegular, size: 18)
-        // custom text
         let text = " (필수) 서비스 이용약관 동의"
         let attributeString = NSMutableAttributedString(string: text)
         attributeString.addAttribute(.foregroundColor, value: UIColor.mainColor, range: (text as NSString).range(of: "(필수)"))
         button.setAttributedTitle(attributeString, for: .normal)
         return button
     }()
-    
     lazy var personalInfoAgreementButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = .customFont(.neoRegular, size: 18)
         let text = " (필수) 개인정보 수집 및 이용동의"
         let attributeString = NSMutableAttributedString(string: text)
         attributeString.addAttribute(.foregroundColor, value: UIColor.mainColor, range: (text as NSString).range(of: "(필수)"))
@@ -113,7 +86,6 @@ class AgreementViewController: UIViewController {
         button.addTarget(self, action: #selector(tapTermsOfUseAgreementArrow), for: .touchUpInside)
         return button
     }()
-    
     lazy var personalInfoAgreementArrow: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "AgreementArrow"), for: .normal)
@@ -148,6 +120,9 @@ class AgreementViewController: UIViewController {
     var accessToken: String?
     var email: String?
     
+    var isAgreeTermsOfUse = false
+    var isAgreePersonalInfo = false
+    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -157,6 +132,7 @@ class AgreementViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
+        setComponentsAttributes()
     }
     
     // MARK: - Initialization
@@ -292,12 +268,29 @@ class AgreementViewController: UIViewController {
             make.height.equalTo(51)
         }
     }
+    
+    private func setComponentsAttributes() {
+        [progressBar, remainBar].forEach {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 1.5
+        }
+        
+        [termsOfUseAgreementCheckBox, personalInfoAgreementCheckBox].forEach {
+            $0.setImage(UIImage(systemName: "square"), for: .normal)
+            $0.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
+            $0.addTarget(self, action: #selector(tapCheckButton(_:)), for: .touchUpInside)
+        }
+        
+        [termsOfUseAgreementButton, personalInfoAgreementButton].forEach {
+            $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.font = .customFont(.neoRegular, size: 18)
+        }
+    }
 
     /* 회원가입 Request 보내는 함수 */
     @objc private func tapCompleteButton() {
         // TODO: - 네이버 회원가입 수정 필요
         if isFromNaverRegister { // naver 회원가입인 경우
-//            phoneNum = phoneNum?.replacingOccurrences(of: "-", with: "")
             if let email = email,
                let nickname = self.nickNameData,
                let universityName = self.university,
@@ -305,7 +298,7 @@ class AgreementViewController: UIViewController {
                 let input = NaverRegisterInput(accessToken: accessToken, email: email, informationAgreeStatus: "Y", nickname: nickname, universityName: universityName)
                 RegisterAPI.registerUserFromNaver(self, input)
             }
-        } else { // naver 회원가입이 아닌 경우
+        } else { // 일반 회원가입인 경우
             // Request 생성.
             // 최종적으로 데이터 전달
             if let idData = self.idData,
@@ -315,11 +308,11 @@ class AgreementViewController: UIViewController {
                let univ = self.university,
                let emailId = self.emailId,
                let phoneNumberId = self.phoneNumberId
-    //           let agreeStatus = self.isArgree   -> TODO: 나중에 이용약관 추가됐을 때 동의했느냐, 안 했느냐 판단해서 추가
             {
+                let agreeStatus = (self.isAgreeTermsOfUse && self.isAgreePersonalInfo) ? "Y" : "N"
                 let input = RegisterInput(checkPassword: pwCheckData,
                                           emailId: emailId,
-                                          informationAgreeStatus: "Y",
+                                          informationAgreeStatus: agreeStatus,
                                           loginId: idData,
                                           nickname: nickNameData,
                                           password: pwData,
@@ -335,6 +328,8 @@ class AgreementViewController: UIViewController {
     private func tapCheckButton(_ sender: UIButton) {
         if sender.currentImage == UIImage(systemName: "square") {
             sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            if sender == termsOfUseAgreementCheckBox { isAgreeTermsOfUse = true }
+            if sender == personalInfoAgreementCheckBox { isAgreePersonalInfo = true }
         } else {
             sender.setImage(UIImage(systemName: "square"), for: .normal)
         }
@@ -342,6 +337,8 @@ class AgreementViewController: UIViewController {
         if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "checkmark.square") {
             termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
             personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            isAgreeTermsOfUse = true
+            isAgreePersonalInfo = true
         } else if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "square") {
             termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
             personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
@@ -384,6 +381,7 @@ extension AgreementViewController: TermsOfUseAgreementDelegate, PersonalInfoAgre
         print("delegate func called")
         if isTrue {
             termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            isAgreeTermsOfUse = true
         }
     }
     
@@ -391,6 +389,7 @@ extension AgreementViewController: TermsOfUseAgreementDelegate, PersonalInfoAgre
         print("delegate func called")
         if isTrue {
             personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+            isAgreePersonalInfo = true
         }
     }
 }
