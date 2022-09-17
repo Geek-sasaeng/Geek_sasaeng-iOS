@@ -176,7 +176,7 @@ class EditUrlViewController: UIViewController {
         }
         
         if urlTextField.text?.count == 0 {
-            CreateParty.url = "?"
+            CreateParty.url = "URL을 입력하지 않았습니다"
         }
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditUrlButton"), object: "true")
@@ -184,7 +184,7 @@ class EditUrlViewController: UIViewController {
     
     @objc
     private func tapPassButton() {
-        CreateParty.url = "?"
+        CreateParty.url = "URL을 입력하지 않았습니다"
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditUrlButton"), object: "true")
     }
