@@ -730,6 +730,83 @@ class DeliveryViewController: UIViewController {
         partyTableView.endUpdates()
     }
     
+    /* 광고 배너 자동 스크롤 기능 */
+    /* 3초마다 실행되는 타이머를 세팅 */
+    private func setAdCollectionViewTimer() {
+        let _: Timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { (Timer) in
+            self.moveToNextAd()
+        }
+    }
+    
+    /* 다음 광고로 자동 스크롤 */
+    private func moveToNextAd() {
+        if adCellDataArray.count > 1 {
+            // 현재 페이지가 마지막 페이지일 경우,
+            if nowPage == adCellDataArray.count - 1 {
+                // 맨 처음 페이지로 돌아가도록
+                adCollectionView.isPagingEnabled = false    // 자동 스크롤을 위해서 잠시 수동 스크롤 기능을 끈 것.
+                adCollectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
+                adCollectionView.isPagingEnabled = true
+                nowPage = 0
+                return
+            }
+            
+            // 다음 페이지로 전환
+            nowPage += 1
+            adCollectionView.isPagingEnabled = false
+            adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
+            adCollectionView.isPagingEnabled = true
+        }
+    }
+    
+    /* 1분에 한번씩 테이블뷰 자동 리로드 -> 스크롤 하지 않아도 남은 시간이 바뀜 */
+    private func changeOrderTimeByMinute() {
+        let _: Timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (Timer) in
+            self.partyTableView.reloadData()
+        }
+    }
+    
+    /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
+        if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
+            let position = scrollView.contentOffset.y
+            print("pos", position)
+            
+            // 현재 화면에 테이블뷰 셀이 몇개까지 들어가는지
+            let maxCellNum = partyTableView.bounds.size.height / partyTableView.rowHeight
+            // '몇 번째 셀'이 위로 사라질 때 다음 데이터를 불러올지
+            let boundCellNum = 10 - maxCellNum
+            
+            // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
+            if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
+                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
+                if !isFinalPage {
+                    cursor += 1
+                    print("DEBUG: cursor", cursor)
+                    // 값에 따른 API 호출
+                    let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+                    getDeliveryList(input)
+                }
+            }
+        }
+    }
+    
+    private func showReadyView() {
+        view.addSubview(readyView)
+        readyView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+        }
+    }
+    
+    private func removeReadyView() {
+        readyView.removeFromSuperview()
+    }
+    
+    // MARK: - @objc Functions
+    
     /* 검색 버튼 눌렀을 때 검색 화면으로 전환 */
     @objc
     private func tapSearchButton() {
@@ -921,43 +998,6 @@ class DeliveryViewController: UIViewController {
         self.navigationController?.pushViewController(createPartyVC, animated: true)
     }
     
-    /* 광고 배너 자동 스크롤 기능 */
-    /* 3초마다 실행되는 타이머를 세팅 */
-    private func setAdCollectionViewTimer() {
-        let _: Timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { (Timer) in
-            self.moveToNextAd()
-        }
-    }
-    
-    /* 다음 광고로 자동 스크롤 */
-    private func moveToNextAd() {
-//        print("DEBUG: ", nowPage)
-        if adCellDataArray.count > 1 {
-            // 현재 페이지가 마지막 페이지일 경우,
-            if nowPage == adCellDataArray.count - 1 {
-                // 맨 처음 페이지로 돌아가도록
-                adCollectionView.isPagingEnabled = false    // 자동 스크롤을 위해서 잠시 수동 스크롤 기능을 끈 것.
-                adCollectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
-                adCollectionView.isPagingEnabled = true
-                nowPage = 0
-                return
-            }
-            
-            // 다음 페이지로 전환
-            nowPage += 1
-            adCollectionView.isPagingEnabled = false
-            adCollectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
-            adCollectionView.isPagingEnabled = true
-        }
-    }
-    
-    /* 1분에 한번씩 테이블뷰 자동 리로드 -> 스크롤 하지 않아도 남은 시간이 바뀜 */
-    private func changeOrderTimeByMinute() {
-        let _: Timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { (Timer) in
-            self.partyTableView.reloadData()
-        }
-    }
-    
     /* 새로고침 기능 */
     @objc
     private func pullToRefresh() {
@@ -974,45 +1014,6 @@ class DeliveryViewController: UIViewController {
         partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
         partyTableView.refreshControl?.endRefreshing()
-    }
-    
-    /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
-        if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
-            let position = scrollView.contentOffset.y
-            print("pos", position)
-            
-            // 현재 화면에 테이블뷰 셀이 몇개까지 들어가는지
-            let maxCellNum = partyTableView.bounds.size.height / partyTableView.rowHeight
-            // '몇 번째 셀'이 위로 사라질 때 다음 데이터를 불러올지
-            let boundCellNum = 10 - maxCellNum
-            
-            // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
-            if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
-                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
-                if !isFinalPage {
-                    cursor += 1
-                    print("DEBUG: cursor", cursor)
-                    // 값에 따른 API 호출
-                    let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
-                    getDeliveryList(input)
-                }
-            }
-        }
-    }
-    
-    private func showReadyView() {
-        view.addSubview(readyView)
-        readyView.snp.makeConstraints { make in
-            make.width.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
-        }
-    }
-    
-    private func removeReadyView() {
-        readyView.removeFromSuperview()
     }
 }
 
