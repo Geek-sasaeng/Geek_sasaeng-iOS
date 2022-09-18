@@ -14,18 +14,21 @@ class FormatCreater {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
     static let sharedShortFormat: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yy-MM-dd"
         formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
     static let sharedDayFormat: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd"
         formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
     
