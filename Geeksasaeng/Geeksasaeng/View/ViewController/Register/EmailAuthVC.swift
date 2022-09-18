@@ -186,7 +186,7 @@ class EmailAuthViewController: UIViewController {
         addSubViews()
         setLayouts()
         setTextFieldTarget()
-        setTapGesture()
+        setTapGestures()
         addRightSwipe()
     }
     
@@ -357,7 +357,7 @@ class EmailAuthViewController: UIViewController {
         }
     }
     
-    private func setTapGesture() {
+    private func setTapGestures() {
         /* universitySelectView에 탭 제스쳐를 추가 */
         let viewTapGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(tapUnivSelectView))

@@ -339,7 +339,7 @@ class DeliveryViewController: UIViewController {
         // collection view 설정
         [ adCollectionView, timeCollectionView ].forEach { setCollectionView($0) }
         
-        setTapGesture()
+        setTapGestures()
         setAdCollectionViewTimer()
         
         makeButtonShadow(createPartyButton)
@@ -691,7 +691,7 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 탭 제스쳐 추가하는 함수 */
-    private func setTapGesture() {
+    private func setTapGestures() {
         /* label에 탭 제스쳐 추가 */
         for label in [deliveryPartyLabel, marketLabel, helperLabel] {
             // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.

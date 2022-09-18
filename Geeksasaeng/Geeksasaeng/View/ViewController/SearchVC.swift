@@ -12,7 +12,7 @@ class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
+    // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함 -> 이 화면은 이번 릴리즈 플래닝에 안 들어가나?
     var recentSearchDataArray = ["중식", "한식", "이야기", "이야기", "이야기",
                                  "중식", "한식", "이야기", "이야기", "이야기"]
     var weeklyTopDataArray = ["치킨", "마라샹궈", "마라탕", "탕수육", "피자",
@@ -312,7 +312,7 @@ class SearchViewController: UIViewController {
             timeCollectionView
         ].forEach { $0.isHidden = true }
         
-        addGestures()
+        setTapGestures()
     }
     
     // MARK: - viewWillAppear()
@@ -742,7 +742,7 @@ class SearchViewController: UIViewController {
     }
     
     /* 서브뷰에 제스쳐 추가 */
-    private func addGestures() {
+    private func setTapGestures() {
         // peopleFilterView에 탭 제스처 추가
         let viewTapGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(tapPeopleFilterView))
