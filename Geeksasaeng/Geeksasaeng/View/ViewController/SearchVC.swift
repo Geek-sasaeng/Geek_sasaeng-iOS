@@ -966,20 +966,11 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             
             // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
             // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            formatter.locale = Locale(identifier: "ko_KR")
-            formatter.timeZone = TimeZone(abbreviation: "KST")
+            let formatter = FormatCreater.sharedLongFormat
             
             let nowDate = Date()
-//            let nowDateString = formatter.string(from: nowDate)
-//            print("DEBUG: 현재 시간", nowDateString)
-            
             let orderDate = formatter.date(from: orderTime)
             if let orderDate = orderDate {
-//                let orderDateString = formatter.string(from: orderDate)
-//                print("DEBUG: 주문 예정 시간", orderDateString)
-                
                 // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
                 let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
                 
@@ -987,7 +978,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 let dayTime = intervalSecs / 60 / 60 / 24
                 let hourTime = intervalSecs / 60 / 60 % 24
                 let minuteTime = intervalSecs / 60 % 60
-                //                    let secondTime = intervalSecs % 60
                 
                 // 각 값이 0이면 텍스트에서 제외한다
                 var dayString: String? = nil
