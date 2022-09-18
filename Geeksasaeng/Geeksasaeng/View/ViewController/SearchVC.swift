@@ -506,27 +506,8 @@ class SearchViewController: UIViewController {
           }
     }
     
-    /*
-     검색 버튼을 눌렀을 때 실행되는 함수
-     - API를 통해 검색어가 들어간 배달 파티 리스트를 불러옴
-     - 검색 결과 화면을 보여줌
-     */
-    @objc
-    private func tapSearchButton() {
-        if nowSearchKeyword != searchTextField.text {
-            deliveryCellDataArray.removeAll()
-            cursor = 0
-            getSearchedDeliveryList()
-            
-            nowSearchKeyword = searchTextField.text!
-            print("DEBUG: 검색 키워드", nowSearchKeyword)
-            
-            showSearchResultView()
-        }
-    }
-    
     /* 배달 파티 검색 */
-    private func getSearchedDeliveryList() {
+    private func getSearchedDeliveryList(_ input: DeliveryListInput) {
         guard let keyword = searchTextField.text,
               let dormitoryInfo = dormitoryInfo,
               let dormitoryId = dormitoryInfo.id else { return }
@@ -539,56 +520,15 @@ class SearchViewController: UIViewController {
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
         // 1. 필터링 없는 전체 배달 목록 조회
-        if nowPeopleFilter == nil, nowTimeFilter == nil {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword) { [weak self] result in
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
-        }
-        // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
-        else if nowPeopleFilter != nil, nowTimeFilter == nil {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, maxMatching: nowPeopleFilter) { [weak self] result in
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
-        }
-        // 3. 시간 필터링이 적용된 전체 배달 목록 조회
-        else if nowPeopleFilter == nil, nowTimeFilter != nil {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, orderTimeCategory: nowTimeFilter) { [weak self] result in
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
-        }
-        // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
-        else {
-            SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter) { [weak self] result in
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
+        SearchViewModel.requestDeliveryListByKeyword(cursor: cursor, dormitoryId: dormitoryId, keyword: keyword, input: input) { [weak self] result in
+            guard let data = result.deliveryPartiesVoList,
+                  let isFinalPage = result.finalPage else { return }
+            
+            print("DEBUG: 마지막 페이지인가?", isFinalPage)
+            // 마지막 페이지인지 아닌지 전달
+            self!.isFinalPage = isFinalPage
+            // 셀에 데이터 추가
+            self?.addCellData(result: data)
         }
     }
     
@@ -670,7 +610,9 @@ class SearchViewController: UIViewController {
             cursor = 0
             nowPeopleFilter = num
             print("DEBUG:", nowPeopleFilter as Any, nowTimeFilter as Any)
-            getSearchedDeliveryList()
+            
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getSearchedDeliveryList(input)
         }
     }
 
@@ -704,7 +646,8 @@ class SearchViewController: UIViewController {
         if let orderTimeCategory = orderTimeCategory {
             nowTimeFilter = orderTimeCategory
             print("DEBUG:", nowPeopleFilter, nowTimeFilter)
-            getSearchedDeliveryList()
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getSearchedDeliveryList(input)
         }
     }
     
@@ -761,6 +704,54 @@ class SearchViewController: UIViewController {
         }
     }
     
+    /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
+        if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
+            let position = scrollView.contentOffset.y
+            print("pos", position)
+            
+            // 현재 화면에 테이블뷰 셀이 몇개까지 들어가는지
+            let maxCellNum = partyTableView.bounds.size.height / partyTableView.rowHeight
+            let boundCellNum = 10 - maxCellNum
+            
+            // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
+            if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
+                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
+                if !isFinalPage {
+                    cursor += 1
+                    print("DEBUG: cursor", cursor)
+                    print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
+                    
+                    let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+                    getSearchedDeliveryList(input)
+                }
+            }
+        }
+    }
+    
+    // MARK: - @objc Functions
+    
+    /*
+     검색 버튼을 눌렀을 때 실행되는 함수
+     - API를 통해 검색어가 들어간 배달 파티 리스트를 불러옴
+     - 검색 결과 화면을 보여줌
+     */
+    @objc
+    private func tapSearchButton() {
+        if nowSearchKeyword != searchTextField.text {
+            deliveryCellDataArray.removeAll()
+            cursor = 0
+            
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getSearchedDeliveryList(input)
+            
+            nowSearchKeyword = searchTextField.text!
+            print("DEBUG: 검색 키워드", nowSearchKeyword)
+            showSearchResultView()
+        }
+    }
+    
     /* peopleFilterView 탭하면 DropDown 뷰를 보여준다 */
     @objc
     private func tapPeopleFilterView() {
@@ -805,7 +796,8 @@ class SearchViewController: UIViewController {
             deliveryCellDataArray.removeAll()
             cursor = 0
             
-            getSearchedDeliveryList()
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getSearchedDeliveryList(input)
         } else {
             selectedPeopleLabel = label
             // label 색 변경 - 진하게
@@ -857,7 +849,8 @@ class SearchViewController: UIViewController {
             deliveryCellDataArray.removeAll()
             cursor = 0
             print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
-            getSearchedDeliveryList()
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getSearchedDeliveryList(input)
         }
         
         // 필터가 변경되면 스크롤 맨 위로
@@ -873,36 +866,13 @@ class SearchViewController: UIViewController {
         cursor = 0
         
         // API 호출
-        getSearchedDeliveryList()
+        let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+        getSearchedDeliveryList(input)
         
         // 테이블뷰 새로고침
         partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
         partyTableView.refreshControl?.endRefreshing()
-    }
-    
-    /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
-        if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
-            let position = scrollView.contentOffset.y
-            print("pos", position)
-            
-            // 현재 화면에 테이블뷰 셀이 몇개까지 들어가는지
-            let maxCellNum = partyTableView.bounds.size.height / partyTableView.rowHeight
-            let boundCellNum = 10 - maxCellNum
-            
-            // 마지막 데이터에 도달했을 때 다음 데이터 10개를 불러온다
-            if position > ((partyTableView.rowHeight) * (boundCellNum + (10 * CGFloat(cursor)))) {
-                // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
-                if !isFinalPage {
-                    cursor += 1
-                    print("DEBUG: cursor", cursor)
-                    print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
-                    getSearchedDeliveryList()
-                }
-            }
-        }
     }
 }
 
