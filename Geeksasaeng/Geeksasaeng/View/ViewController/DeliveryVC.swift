@@ -44,14 +44,8 @@ class DeliveryViewController: UIViewController {
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
     var isDropDownPeople = false
     
-    // 배달 목록 화면 처음 킨 건지 여부 확인
-    var isInitial = true
     // 배달 목록의 마지막 페이지인지 여부 확인
     var isFinalPage = false
-    
-    // 필터링이 설정되어 있는지/아닌지 여부 확인
-    var isPeopleFilterOn = false
-    var isTimeFilterOn = false
     
     // 현재 설정되어 있는 인원수 필터값이 뭔지 가져오기 위해
     var nowPeopleFilter: Int? = nil
@@ -82,7 +76,7 @@ class DeliveryViewController: UIViewController {
     
     // TODO: - 학교 API 연동 후 학교 사진으로 변경
     lazy var schoolImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "NaverLogo"))
+        let imageView = UIImageView(image: UIImage(named: "GachonLogo"))
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 31 / 2
         return imageView
@@ -357,7 +351,7 @@ class DeliveryViewController: UIViewController {
         getAdList()
         
         /* 배달 목록 데이터 로딩 */
-        getDeliveryList()
+        getDeliveryList(DeliveryListInput())
         /* 1분마다 시간 재설정 */
         changeOrderTimeByMinute()
     }
@@ -562,7 +556,7 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 배달 목록 정보 API로 불러오기 */
-    private func getDeliveryList(maxMatching: Int? = nil, orderTimeCategory: String? = nil) {
+    private func getDeliveryList(_ input: DeliveryListInput) {
         // 푸터뷰(= 데이터 받아올 때 테이블뷰 맨 아래 새로고침 표시 뜨는 거) 생성
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
@@ -573,68 +567,23 @@ class DeliveryViewController: UIViewController {
         }
         print("DEBUG: 제\(dormitoryId)기숙사의 배달파티 리스트 데이터입니다")
         
-        // 1. 필터링 없는 전체 배달 목록 조회
-        if maxMatching == nil, orderTimeCategory == nil {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, dormitoryId: dormitoryId) { [weak self] result in
-                self?.isInitial = false
-                
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
+        /* 필터에 따른 배달목록 불러오기 API 요청 */
+        DeliveryListViewModel.requestGetDeliveryList(cursor: cursor, dormitoryId: dormitoryId, input: input) { [weak self] result in
+            
+            guard let data = result.deliveryPartiesVoList,
+                  let isFinalPage = result.finalPage else { return }
+            print("DEBUG: 마지막 페이지인가?", isFinalPage)
+            
+            // 마지막 페이지인지 아닌지 전달
+            self!.isFinalPage = isFinalPage
+            // 셀에 데이터 추가
+            self?.addCellData(result: data)
         }
-        // 2. 인원수 필터링이 적용된 전체 배달 목록 조회
-        else if maxMatching != nil, orderTimeCategory == nil {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, dormitoryId: dormitoryId) { [weak self] result in
-                
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
-        }
-        // 3. 시간 필터링이 적용된 전체 배달 목록 조회
-        else if maxMatching == nil, orderTimeCategory != nil {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, orderTimeCategory: orderTimeCategory, dormitoryId: dormitoryId) { [weak self] result in
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
-        }
-        // 4. 인원수, 시간 필터링이 모두 적용된 전체 배달 목록 조회
-        else {
-            DeliveryListViewModel.requestGetDeliveryList(isInitial: isInitial, cursor: cursor, maxMatching: maxMatching, orderTimeCategory: orderTimeCategory, dormitoryId: dormitoryId) { [weak self] result in
-                guard let data = result.deliveryPartiesVoList,
-                      let isFinalPage = result.finalPage else { return }
-                
-                print("DEBUG: 마지막 페이지인가?", isFinalPage)
-                // 마지막 페이지인지 아닌지 전달
-                self!.isFinalPage = isFinalPage
-                // 셀에 데이터 추가
-                self?.addCellData(result: data)
-            }
-        }
-        
     }
     
     /* peopleFilter를 사용하여 데이터 가져오기 */
     private func getPeopleFilterList(text: String?) {
         deliveryCellDataArray.removeAll()
-        isPeopleFilterOn = true
         cursor = 0
         
         enum peopleOption: String {
@@ -665,22 +614,15 @@ class DeliveryViewController: UIViewController {
 
         if let num = num {
             nowPeopleFilter = num
-            
-            // 상태에 따라 다른 파라미터로 API를 호출한다
-            if nowTimeFilter == nil {
-                getDeliveryList(maxMatching: num)
-            }
-            else {
-                getDeliveryList(maxMatching: num, orderTimeCategory: nowTimeFilter)
-            }
+            // 값에 따른 API 호출
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getDeliveryList(input)
         }
     }
 
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
         deliveryCellDataArray.removeAll()
-        // 시간 필터 ON
-        isTimeFilterOn = true
         cursor = 0
 
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
@@ -709,13 +651,9 @@ class DeliveryViewController: UIViewController {
             // 현재 시간 필터 설정
             nowTimeFilter = orderTimeCategory
             
-            // 상태에 따라 다른 파라미터로 API를 호출
-            if nowPeopleFilter == nil {
-                getDeliveryList(orderTimeCategory: orderTimeCategory)
-            }
-            else {
-                getDeliveryList(maxMatching: nowPeopleFilter, orderTimeCategory: orderTimeCategory)
-            }
+            // 값에 따른 API 호출
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getDeliveryList(input)
         }
     }
     
@@ -906,18 +844,14 @@ class DeliveryViewController: UIViewController {
             // 필터 해제
             selectedPeopleLabel = nil
             nowPeopleFilter = nil
-            isPeopleFilterOn = false
             
             // 초기화
             deliveryCellDataArray.removeAll()
             cursor = 0
             
-            // 상태에 따라 함수 호출
-            if nowTimeFilter == nil {
-                getDeliveryList()
-            } else {
-                getDeliveryList(orderTimeCategory: nowTimeFilter)
-            }
+            // 값에 따른 API 호출
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getDeliveryList(input)
         } else {
             selectedPeopleLabel = label
             // label 색 변경 - 진하게
@@ -963,18 +897,15 @@ class DeliveryViewController: UIViewController {
             label.textColor = .init(hex: 0xD8D8D8)
             
             // 시간 필터 해제
-            isTimeFilterOn = false
             nowTimeFilter = nil
             
             // 초기화
             deliveryCellDataArray.removeAll()
             cursor = 0
             
-            if nowPeopleFilter == nil {
-                getDeliveryList()
-            } else {
-                getDeliveryList(maxMatching: nowPeopleFilter)
-            }
+            // 값에 따른 API 호출
+            let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+            getDeliveryList(input)
         }
         
         // 필터가 변경되면 스크롤 맨 위로
@@ -1035,19 +966,10 @@ class DeliveryViewController: UIViewController {
         deliveryCellDataArray.removeAll()
         
         cursor = 0
-        if nowTimeFilter == nil, nowPeopleFilter == nil {
-            // API 호출
-            getDeliveryList()
-        }
-        else if nowTimeFilter != nil, nowPeopleFilter == nil {
-            getDeliveryList(orderTimeCategory: nowTimeFilter)
-        }
-        else if nowTimeFilter == nil, nowPeopleFilter != nil {
-            getDeliveryList(maxMatching: nowPeopleFilter)
-        }
-        else {
-            getDeliveryList(maxMatching: nowPeopleFilter ,orderTimeCategory: nowTimeFilter)
-        }
+        // 값에 따른 API 호출
+        let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+        getDeliveryList(input)
+        
         // 테이블뷰 새로고침
         partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
@@ -1055,7 +977,7 @@ class DeliveryViewController: UIViewController {
     }
     
     /* 테이블뷰 셀의 마지막 데이터까지 스크롤 했을 때 이를 감지해주는 함수 */
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // 스크롤 하는 게 배달 파티 목록일 때, 데이터가 존재할 때에만 실행
         if scrollView == partyTableView, deliveryCellDataArray.count != 0 {
             let position = scrollView.contentOffset.y
@@ -1072,26 +994,9 @@ class DeliveryViewController: UIViewController {
                 if !isFinalPage {
                     cursor += 1
                     print("DEBUG: cursor", cursor)
-                    // 필터링 X
-                    if !isTimeFilterOn, !isPeopleFilterOn {
-                        print("DEBUG: 필터링 X")
-                        self.getDeliveryList()
-                    }
-                    // 시간 필터만
-                    else if isTimeFilterOn, !isPeopleFilterOn {
-                        print("DEBUG: 시간 필터만")
-                        self.getDeliveryList(orderTimeCategory: nowTimeFilter)
-                    }
-                    // 인원수 필터만
-                    else if !isTimeFilterOn, isPeopleFilterOn {
-                        print("DEBUG: 인원수 필터만")
-                        self.getDeliveryList(maxMatching: nowPeopleFilter)
-                    }
-                    // 둘 다 필터링
-                    else {
-                        print("DEBUG: 둘 다 필터링")
-                        self.getDeliveryList(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
-                    }
+                    // 값에 따른 API 호출
+                    let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
+                    getDeliveryList(input)
                 }
             }
         }
