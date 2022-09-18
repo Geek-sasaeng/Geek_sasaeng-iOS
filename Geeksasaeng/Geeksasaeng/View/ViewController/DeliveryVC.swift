@@ -82,10 +82,8 @@ class DeliveryViewController: UIViewController {
     
     // TODO: - 학교 API 연동 후 학교 사진으로 변경
     lazy var schoolImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "GachonLogo"))
-        imageView.snp.makeConstraints { make in
-            make.width.height.equalTo(31)
-        }
+        let imageView = UIImageView(image: UIImage(named: "NaverLogo"))
+        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 31 / 2
         return imageView
     }()
@@ -94,7 +92,6 @@ class DeliveryViewController: UIViewController {
     lazy var leftBarButtonItem: UIBarButtonItem = {
         let stackView = UIStackView(arrangedSubviews: [schoolImageView, dormitoryLabel])
         stackView.spacing = 10
-        
         let barButton = UIBarButtonItem(customView: stackView)
         return barButton
     }()
@@ -348,8 +345,7 @@ class DeliveryViewController: UIViewController {
         // collection view 설정
         [ adCollectionView, timeCollectionView ].forEach { setCollectionView($0) }
         
-        setLabelTap()
-        setFilterViewTap()
+        setTapGesture()
         setAdCollectionViewTimer()
         
         makeButtonShadow(createPartyButton)
@@ -407,6 +403,9 @@ class DeliveryViewController: UIViewController {
         deliveryPartyLabel.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
             make.centerX.equalTo(deliveryPartyBar.snp.centerX)
+        }
+        schoolImageView.snp.makeConstraints { make in
+            make.width.height.equalTo(31)
         }
         marketLabel.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
@@ -753,8 +752,9 @@ class DeliveryViewController: UIViewController {
         return footerView
     }
     
-    /* label에 탭 제스쳐 추가 */
-    private func setLabelTap() {
+    /* 탭 제스쳐 추가하는 함수 */
+    private func setTapGesture() {
+        /* label에 탭 제스쳐 추가 */
         for label in [deliveryPartyLabel, marketLabel, helperLabel] {
             // 탭 제스쳐를 label에 추가 -> label을 탭했을 때 액션이 발생하도록.
             let labelTapGesture = UITapGestureRecognizer(target: self,
@@ -773,10 +773,8 @@ class DeliveryViewController: UIViewController {
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(labelTapGesture)
         }
-    }
-    
-    /* peopleFilterView에 탭 제스처 추가 */
-    private func setFilterViewTap() {
+        
+        /* peopleFilterView에 탭 제스처 추가 */
         let viewTapGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(tapPeopleFilterView))
         peopleFilterView.isUserInteractionEnabled = true

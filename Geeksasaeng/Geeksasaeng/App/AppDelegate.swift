@@ -86,5 +86,6 @@ extension AppDelegate: MessagingDelegate {
         // fcm 등록 토큰 저장
         guard let fcmToken = fcmToken else { return }
         UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
+        print("DEBUG: 이 사용자의 fcmToken은", fcmToken)
     }
 }
