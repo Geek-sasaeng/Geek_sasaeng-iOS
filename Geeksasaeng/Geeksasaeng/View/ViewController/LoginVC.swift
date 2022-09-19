@@ -274,28 +274,36 @@ class LoginViewController: UIViewController {
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
             let input = LoginInput(loginId: id, password: pw, fcmToken: nil)
-            LoginViewModel.login(self, input) { result in
-                // 자동로그인 체크 시 UserDefaults에 jwt 저장
-                if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
-                    UserDefaults.standard.set(result.jwt, forKey: "jwt")
+            LoginViewModel.login(input) { isSuccess, result, message  in
+                switch isSuccess {
+                case .success:
+                    // 자동로그인 체크 시 UserDefaults에 jwt 저장
+                    if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
+                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
+                    }
+                    
+                    // static property에 jwt, nickname, userImgUrl 저장
+                    LoginModel.jwt = result?.jwt
+                    LoginModel.nickname = result?.nickName
+                    LoginModel.userImgUrl = result?.userImageUrl
+                    
+                    // dormitoryId, Name 저장
+                    self.dormitoryInfo = DormitoryNameResult(id: result?.dormitoryId, name: result?.dormitoryName)
+                    // userImageUrl 저장
+                    self.userImageUrl = result?.userImageUrl
+                    
+                    // 로그인 완료 후 경우에 따른 화면 전환
+                    if result?.loginStatus == "NEVER" {
+                        self.showNextView(isFirstLogin: true, nickName: result?.nickName ?? "홍길동")
+                    } else {
+                        self.showNextView(isFirstLogin: false)
+                    }
+                case .OnlyRequestSuccess:
+                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
+                case .failure:
+                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
                 }
                 
-                // static property에 jwt, nickname, userImgUrl 저장
-                LoginModel.jwt = result.jwt
-                LoginModel.nickname = result.nickName
-                LoginModel.userImgUrl = result.userImageUrl
-                
-                // dormitoryId, Name 저장
-                self.dormitoryInfo = DormitoryNameResult(id: result.dormitoryId, name: result.dormitoryName)
-                // userImageUrl 저장
-                self.userImageUrl = result.userImageUrl
-                
-                // 로그인 완료 후 경우에 따른 화면 전환
-                if result.loginStatus == "NEVER" {
-                    self.showNextView(isFirstLogin: true, nickName: result.nickName ?? "홍길동")
-                } else {
-                    self.showNextView(isFirstLogin: false)
-                }
             }
         }
     }

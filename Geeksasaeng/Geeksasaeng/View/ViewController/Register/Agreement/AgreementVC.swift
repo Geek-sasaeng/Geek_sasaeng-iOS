@@ -296,7 +296,20 @@ class AgreementViewController: UIViewController {
                let universityName = self.university,
                let accessToken = self.accessToken {
                 let input = NaverRegisterInput(accessToken: accessToken, email: email, informationAgreeStatus: "Y", nickname: nickname, universityName: universityName)
-                RegisterAPI.registerUserFromNaver(self, input)
+                RegisterAPI.registerUserFromNaver(input) { isSuccess, result in
+                    switch isSuccess {
+                    case .success:
+                        // 네이버 회원가입은 자동 로그인이 default
+                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
+                        LoginModel.jwt = result?.jwt
+                        self.showDomitoryView()
+                    case .OnlyRequestSuccess:
+                        print("OnlyRequestSuccess")
+                    case .failure:
+                        print("Failure")
+                    }
+                    
+                }
             }
         } else { // 일반 회원가입인 경우
             // Request 생성.
@@ -319,7 +332,16 @@ class AgreementViewController: UIViewController {
                                           phoneNumberId: phoneNumberId,
                                           universityName: univ)
                 
-                RegisterAPI.registerUser(self, input)
+                RegisterAPI.registerUser(input) { isSuccess in
+                    switch isSuccess {
+                    case .success:
+                        self.showLoginView()
+                    case .OnlyRequestSuccess:
+                        print("OnlyRequestSuccess")
+                    case .failure:
+                        print("Failure")
+                    }
+                }
             }
         }
     }

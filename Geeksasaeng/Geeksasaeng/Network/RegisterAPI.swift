@@ -63,7 +63,7 @@ struct NaverRegisterModelResult: Decodable {
 
 // 회원가입 API 연동
 class RegisterAPI {
-    public static func registerUser(_ viewController : AgreementViewController, _ parameter : RegisterInput) {
+    public static func registerUser(_ parameter : RegisterInput, completion: @escaping (ResponseCase) -> Void) {
         AF.request("https://geeksasaeng.shop/members", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -72,19 +72,19 @@ class RegisterAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
-                    
-                    // 일반 회원가입은 완료한 이후 로그인 화면으로 이동.
-                    viewController.showLoginView()
+                    completion(.success)
                 } else {
+                    completion(.OnlyRequestSuccess)
                     print("DEBUG:", result.message!)
                 }
             case .failure(let error):
+                completion(.failure)
                 print("DEBUG:", error.localizedDescription)
             }
         }
     }
     
-    public static func registerUserFromNaver(_ viewController : AgreementViewController, _ parameter : NaverRegisterInput) {
+    public static func registerUserFromNaver(_ parameter : NaverRegisterInput, completion: @escaping (ResponseCase, NaverRegisterModelResult?) -> Void) {
         AF.request("https://geeksasaeng.shop/members/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -93,15 +93,15 @@ class RegisterAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 회원가입 성공")
-                    // 네이버 회원가입은 자동 로그인이 default
-                    UserDefaults.standard.set(result.result?.jwt, forKey: "jwt")
-                    LoginModel.jwt = result.result?.jwt
-                    viewController.showDomitoryView()
+                    guard let passedResult = result.result else { return }
+                    completion(.success, passedResult)
                 } else {
                     print("DEBUG:", result.message!)
+                    completion(.OnlyRequestSuccess, nil)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+                completion(.failure, nil)
             }
         }
     }

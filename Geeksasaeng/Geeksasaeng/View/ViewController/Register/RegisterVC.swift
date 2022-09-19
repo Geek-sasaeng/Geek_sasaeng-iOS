@@ -374,7 +374,28 @@ class RegisterViewController: UIViewController {
         } else {
             if let id = idTextField.text {
                 let input = IdRepetitionInput(loginId: id)
-                RepetitionAPI.checkIdRepetition(self, parameters: input)
+                RepetitionAPI.checkIdRepetition(input) { isSuccess, message in
+                    switch isSuccess {
+                    case .success:
+                        self.idCheck = true
+                        if self.idTextField.text?.isValidId() ?? false
+                            && self.pwTextField.text?.isValidPassword() ?? false
+                            && self.pwCheckTextField.text == self.pwTextField.text
+                            && self.nicknameCheck {
+                            self.nextButton.setActivatedNextButton()
+                        }
+                        self.idAvailableLabel.text = message
+                        self.idAvailableLabel.textColor = .mainColor
+                        self.idAvailableLabel.isHidden = false
+                    case .OnlyRequestSuccess:
+                        self.idCheck = false
+                        self.idAvailableLabel.text = message
+                        self.idAvailableLabel.textColor = .red
+                        self.idAvailableLabel.isHidden = false
+                    case .failure:
+                        print(message)
+                    }
+                }
             }
         }
     }
@@ -389,7 +410,28 @@ class RegisterViewController: UIViewController {
         } else {
             if let nickname = nickNameTextField.text {
                 let input = NickNameRepetitionInput(nickName: nickname)
-                RepetitionAPI.checkNicknameRepetition(self, parameters: input)
+                RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
+                    switch isSuccess {
+                    case .success:
+                        self.nicknameCheck = true
+                        if self.idTextField.text?.isValidId() ?? false
+                            && self.pwTextField.text?.isValidPassword() ?? false
+                            && self.pwCheckTextField.text == self.pwTextField.text
+                            && self.idCheck {
+                            self.nextButton.setActivatedNextButton()
+                        }
+                        self.nickNameAvailableLabel.text = message
+                        self.nickNameAvailableLabel.textColor = .mainColor
+                        self.nickNameAvailableLabel.isHidden = false
+                    case .OnlyRequestSuccess:
+                        self.nicknameCheck = true
+                        self.nickNameAvailableLabel.text = message
+                        self.nickNameAvailableLabel.textColor = .red
+                        self.nickNameAvailableLabel.isHidden = false
+                    case .failure:
+                        print(message)
+                    }
+                }
             }
         }
     }

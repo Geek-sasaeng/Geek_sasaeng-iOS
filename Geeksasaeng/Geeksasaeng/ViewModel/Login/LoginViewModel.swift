@@ -12,7 +12,7 @@ import Alamofire
 // 로그인 API 연동
 // TODO: - viewController를 넘기지 않는 방법 생각해보기
 class LoginViewModel {
-    public static func login(_ viewController: LoginViewController, _ parameter : LoginInput, completion: @escaping (LoginModelResult) -> Void) {
+    public static func login(_ parameter : LoginInput, completion: @escaping (ResponseCase, LoginModelResult?, String?) -> Void) {
         AF.request("https://geeksasaeng.shop/login", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -22,18 +22,18 @@ class LoginViewModel {
                 if result.isSuccess! {
                     guard let passedResult = result.result else { return }
                     print("DEBUG: 성공")
-                    completion(passedResult)
+                    completion(.success, passedResult, nil)
                 } else {
-                    print("DEBUG:", result.message!)
-                    viewController.showBottomToast(viewController: viewController, message: result.message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
+                    completion(.OnlyRequestSuccess, nil, result.message!)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
-                viewController.showBottomToast(viewController: viewController, message: "로그인 요청에 실패하였습니다", font: .customFont(.neoMedium, size: 15), color: .lightGray)
+                completion(.failure, nil, "로그인 요청에 실패하였습니다")
             }
         }
     }
     
+    /* loginNaver는 네아로에서 제공하는 메서드에서 호출 중이라 일단 보류 */
     public static func loginNaver(viewController: LoginViewController, _ parameter : NaverLoginInput) {
         AF.request("https://geeksasaeng.shop/login/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
@@ -71,4 +71,10 @@ class LoginViewModel {
             }
         }
     }
+}
+
+enum ResponseCase {
+    case success
+    case OnlyRequestSuccess
+    case failure
 }

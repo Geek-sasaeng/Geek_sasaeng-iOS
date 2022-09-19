@@ -311,7 +311,17 @@ class PhoneAuthViewController: UIViewController {
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
             let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
-            PhoneAuthCheckViewModel.requestCheckPhoneAuth(self, input)
+            PhoneAuthCheckViewModel.requestCheckPhoneAuth(input) { isSuccess, result, message in
+                switch isSuccess {
+                case .success:
+                    self.phoneNumberId = result?.phoneNumberId
+                    self.showNextView()
+                case .OnlyRequestSuccess:
+                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                case .failure:
+                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                }
+            }
         }
     }
     
@@ -345,7 +355,14 @@ class PhoneAuthViewController: UIViewController {
             authSendButton.setTitle("재전송 하기", for: .normal)
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
             print("DEBUG:", uuid.uuidString)
-            PhoneAuthViewModel.requestSendPhoneAuth(self, input)
+            PhoneAuthViewModel.requestSendPhoneAuth(input) { isSuccess, message in
+                switch isSuccess {
+                case .success:
+                    self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
+                default:
+                    self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .init(hex: 0xA8A8A8))
+                }
+            }
         }
     }
 }
