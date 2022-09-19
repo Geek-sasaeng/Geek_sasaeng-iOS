@@ -273,7 +273,12 @@ class LoginViewController: UIViewController {
         // 로그인 시도
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
-            let input = LoginInput(loginId: id, password: pw, fcmToken: nil)
+
+            // fcm 등록토큰 값 불러오기
+            let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
+            print("DEBUG: fcmToken in LoginVC", fcmToken)
+            let input = LoginInput(loginId: id, password: pw, fcmToken: fcmToken)
+            
             LoginViewModel.login(input) { isSuccess, result, message  in
                 switch isSuccess {
                 case .success:
@@ -301,9 +306,8 @@ class LoginViewController: UIViewController {
                 case .onlyRequestSuccess:
                     self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
                 case .failure:
-                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
+                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)   
                 }
-                
             }
         }
     }

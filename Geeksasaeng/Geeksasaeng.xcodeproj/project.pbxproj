@@ -1052,6 +1052,9 @@
 		A248D8A1289FFEAF000E2422 /* PartyNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */; };
 		A248D8A2289FFEAF000E2422 /* PartyNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */; };
 		A248D8A3289FFEAF000E2422 /* PartyNameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */; };
+		A24D386328D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */; };
+		A24D386428D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */; };
+		A24D386528D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */; };
 		A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
 		A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
 		A24F0B22289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
@@ -1565,6 +1568,7 @@
 		A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListTableViewCell.swift; sourceTree = "<group>"; };
 		A248D89C289FF344000E2422 /* BankAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountVC.swift; sourceTree = "<group>"; };
 		A248D8A0289FFEAF000E2422 /* PartyNameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyNameVC.swift; sourceTree = "<group>"; };
+		A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryNotificationAPI.swift; sourceTree = "<group>"; };
 		A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashPlayerVC.swift; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
 		A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthViewModel.swift; sourceTree = "<group>"; };
@@ -2167,6 +2171,7 @@
 				106093CF28A81981007FD463 /* ChatRoomExitAPI.swift */,
 				A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */,
 				1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */,
+				A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3543,6 +3548,7 @@
 				A26780B428AD64050078350D /* RecentPartyViewModel.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
 				10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */,
+				A24D386328D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */,
 				10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
 				10D7EC942886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				10E8E713288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
@@ -3654,6 +3660,7 @@
 				A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
 				10D4D6C02894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				10FECB1B28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
+				A24D386428D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */,
 				10E6956628885589000B7309 /* LocationAPI.swift in Sources */,
 				106D9752287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				A248D88E289FB8E5000E2422 /* MessageCell.swift in Sources */,
@@ -3775,6 +3782,7 @@
 				A248D88F289FB8E5000E2422 /* MessageCell.swift in Sources */,
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
+				A24D386528D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
@@ -3998,7 +4006,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC 2기/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;
@@ -4042,7 +4050,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/jodongjin/Desktop/UMC 2기/Geeksasaeng/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/seori/Desktop/Geek_sasaeng-iOS/Geeksasaeng/Geeksasaeng/Kakao-Map-Bridge-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_WORKSPACE = NO;

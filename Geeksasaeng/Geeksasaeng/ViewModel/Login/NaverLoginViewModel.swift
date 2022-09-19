@@ -77,7 +77,11 @@ class naverLoginViewModel {
                     
                     /* 토큰으로 서버에 네이버 로그인 시도 */
                     print("==========", accessToken)
+                    // fcm 등록토큰 값 불러오기
+                    let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
+                    print("DEBUG: fcmToken in NaverLoginVM", fcmToken ?? "")
                     let input = NaverLoginInput(accessToken: accessToken, fcmToken: "")
+                    
                     LoginViewModel.loginNaver(viewController: viewController, input)
                 }
                 else { // 실패
