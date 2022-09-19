@@ -7,6 +7,12 @@
 
 import Foundation
 
+// input으로 필요한 파라미터들을 구조체로 선언
+struct DeliveryListInput: Encodable {
+    var maxMatching: Int? = nil
+    var orderTimeCategory: String? = nil
+}
+
 // 배달 목록 불러오기 Response
 struct DeliveryListModel: Decodable {
     var code: Int?

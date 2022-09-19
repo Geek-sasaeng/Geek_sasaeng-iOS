@@ -77,8 +77,8 @@ class ChattingListTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.backgroundColor = .white
         
+        self.selectionStyle = .gray
         addSubViews()
         setLayouts()
     }
