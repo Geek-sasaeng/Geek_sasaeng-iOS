@@ -298,7 +298,7 @@ class LoginViewController: UIViewController {
                     } else {
                         self.showNextView(isFirstLogin: false)
                     }
-                case .OnlyRequestSuccess:
+                case .onlyRequestSuccess:
                     self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
                 case .failure:
                     self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)

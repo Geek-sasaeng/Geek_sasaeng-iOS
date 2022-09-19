@@ -74,7 +74,7 @@ class RegisterAPI {
                     print("DEBUG: 회원가입 성공")
                     completion(.success)
                 } else {
-                    completion(.OnlyRequestSuccess)
+                    completion(.onlyRequestSuccess)
                     print("DEBUG:", result.message!)
                 }
             case .failure(let error):
@@ -97,7 +97,7 @@ class RegisterAPI {
                     completion(.success, passedResult)
                 } else {
                     print("DEBUG:", result.message!)
-                    completion(.OnlyRequestSuccess, nil)
+                    completion(.onlyRequestSuccess, nil)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
