@@ -1109,7 +1109,6 @@ class ChattingViewController: UIViewController {
                 ChatRoomExitAPI.patchExitCheif(input)
                 
                 // 새 방장 선정 시스템 메세지 출력
-                print("Seori Test 선정 메세지 나옴", roomMaster)
                 self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
                     "content": "방장의 활동 중단에 따라 새로운\n방장으로 \'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
                     "nickname": "SystemMessage",
@@ -1176,7 +1175,6 @@ class ChattingViewController: UIViewController {
                     if self.roomMaster == LoginModel.nickname { // 본인이 방장이면
                         if participants?.count ?? 0 >= 2 {
                             self.roomMaster = participants?[1].participant // 다음 인덱스를 방장으로
-                            print("Seori Test 방장 변경 완료", self.roomMaster)
                         } else {
                             self.db.collection("Rooms").document(roomUUID).delete() // 방에 한 명이라면 채팅방 삭제
                         }

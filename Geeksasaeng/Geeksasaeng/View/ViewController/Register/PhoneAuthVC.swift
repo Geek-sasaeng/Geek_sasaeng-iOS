@@ -15,24 +15,17 @@ class PhoneAuthViewController: UIViewController {
     var progressBar: UIView = {
         let view = UIView()
         view.backgroundColor = .mainColor
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
         return view
     }()
-    
     var remainBar: UIView = {
         let view = UIView()
         view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
         return view
     }()
-    
     var progressIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoTop"))
         return imageView
     }()
-    
     var remainIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
         return imageView
@@ -47,23 +40,16 @@ class PhoneAuthViewController: UIViewController {
     lazy var authSendButton: UIButton = {
         var button = UIButton()
         button.setTitle("인증번호 전송", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
         button.setActivatedButton()
         button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
         return button
     }()
-    
     lazy var authCheckButton: UIButton = {
         var button = UIButton()
         button.setTitle("확인", for: .normal)
         button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
         button.backgroundColor = UIColor(hex: 0xEFEFEF)
         button.isEnabled = false
-        button.clipsToBounds = true
         button.addTarget(self, action: #selector(tapAuthCheckButton), for: .touchUpInside)
         return button
     }()
@@ -100,6 +86,7 @@ class PhoneAuthViewController: UIViewController {
     var university: String? = nil
     var emailId: Int? = nil
     var uuid: UUID? = nil
+    
     var phoneNumberId: Int? = nil
     
     // Timer
@@ -118,6 +105,7 @@ class PhoneAuthViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
+        setComponentsAttributes()
     }
     
     // MARK: - Initialization
@@ -262,32 +250,28 @@ class PhoneAuthViewController: UIViewController {
     
     private func setAttributes() {
         /* labels attr */
-        phoneNumLabel = setMainLabelAttrs("휴대폰 번호 입력")
-        authLabel = setMainLabelAttrs("인증번호 입력")
+        setMainLabelAttrs(phoneNumLabel, text: "휴대폰 번호 입력")
+        setMainLabelAttrs(authLabel, text: "인증번호 입력")
         
         /* textFields attr */
-        phoneNumTextField = setTextFieldAttrs(msg: "- 제외 숫자만 입력하세요", width: 187)
-        authTextField = setTextFieldAttrs(msg: "입력하세요", width: 187)
+        setTextFieldAttrs(phoneNumTextField, msg: "- 제외 숫자만 입력하세요", width: 187)
+        setTextFieldAttrs(authTextField, msg: "입력하세요", width: 187)
     }
     
     // 공통 속성을 묶어놓은 함수
-    private func setMainLabelAttrs(_ text: String) -> UILabel {
-        let label = UILabel()
+    private func setMainLabelAttrs(_ label: UILabel, text: String) {
         label.text = text
         label.font = .customFont(.neoMedium, size: 18)
         label.textColor = .black
-        return label
     }
     
-    private func setTextFieldAttrs(msg: String, width: CGFloat) -> UITextField {
-        let textField = UITextField()
+    private func setTextFieldAttrs(_ textField: UITextField, msg: String, width: CGFloat) {
         textField.textColor = .black
         textField.attributedPlaceholder = NSAttributedString(
             string: msg,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
         textField.makeBottomLine()
-        return textField
     }
     
     private func setTextFieldTarget() {
@@ -307,6 +291,19 @@ class PhoneAuthViewController: UIViewController {
         }
     }
     
+    private func setComponentsAttributes() {
+        [progressBar, remainBar].forEach {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 1.5
+        }
+        
+        [authSendButton, authCheckButton].forEach {
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            $0.layer.cornerRadius = 5
+            $0.clipsToBounds = true
+        }
+    }
+    
     // 인증번호 일치/불일치 확인
     @objc
     private func tapAuthCheckButton() {
@@ -314,7 +311,17 @@ class PhoneAuthViewController: UIViewController {
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
             let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
-            PhoneAuthCheckViewModel.requestCheckPhoneAuth(self, input)
+            PhoneAuthCheckViewModel.requestCheckPhoneAuth(input) { isSuccess, result, message in
+                switch isSuccess {
+                case .success:
+                    self.phoneNumberId = result?.phoneNumberId
+                    self.showNextView()
+                case .OnlyRequestSuccess:
+                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                case .failure:
+                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                }
+            }
         }
     }
     
@@ -348,7 +355,14 @@ class PhoneAuthViewController: UIViewController {
             authSendButton.setTitle("재전송 하기", for: .normal)
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
             print("DEBUG:", uuid.uuidString)
-            PhoneAuthViewModel.requestSendPhoneAuth(self, input)
-        }   // API 호출
+            PhoneAuthViewModel.requestSendPhoneAuth(input) { isSuccess, message in
+                switch isSuccess {
+                case .success:
+                    self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
+                default:
+                    self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .init(hex: 0xA8A8A8))
+                }
+            }
+        }
     }
 }

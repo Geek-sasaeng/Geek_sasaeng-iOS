@@ -33,13 +33,14 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         return imageView
     }()
     
-    let dormitoryLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 12)
-        label.text = "기숙사"
-        return label
-    }()
+    /* title labels */
+    let dormitoryLabel = UILabel()
+    let nicknameLabel = UILabel()
+    let idLabel = UILabel()
+    let emailLabel = UILabel()
+    let phoneNumLabel = UILabel()
+    
+    /* content labels */
     let dormitoryDataLabel: PaddingLabel = {
         let label = PaddingLabel()
         label.backgroundColor = .init(hex: 0xEFEFEF)
@@ -51,73 +52,12 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         label.paddingBottom = 7
         label.paddingLeft = 15
         label.paddingRight = 15
-        label.text = "별별학사"
         return label
     }()
-    
-    let nicknameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 12)
-        label.text = "닉네임"
-        return label
-    }()
-    lazy var nicknameDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 15)
-        label.makeBottomLine(color: 0xF8F8F8, width: view.bounds.width - 56, height: 1, offsetToTop: 10)
-        label.text = "Neo01"
-        return label
-    }()
-    
-    let idLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 12)
-        label.text = "아이디"
-        return label
-    }()
-    lazy var idDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 15)
-        label.makeBottomLine(color: 0xF8F8F8, width: view.bounds.width - 56, height: 1, offsetToTop: 10)
-        label.text = "Neo01"
-        return label
-    }()
-    
-    let emailLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 12)
-        label.text = "이메일"
-        return label
-    }()
-    lazy var emailDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 15)
-        label.makeBottomLine(color: 0xF8F8F8, width: view.bounds.width - 56, height: 1, offsetToTop: 10)
-        label.text = "Neo01@naver.com"
-        return label
-    }()
-    
-    let phoneNumLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 12)
-        label.text = "전화번호"
-        return label
-    }()
-    lazy var phoneNumDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 15)
-        label.makeBottomLine(color: 0xF8F8F8, width: view.bounds.width - 56, height: 1, offsetToTop: 10)
-        label.text = "010-0000-0000"
-        return label
-    }()
+    lazy var nicknameDataLabel = UILabel()
+    lazy var idDataLabel = UILabel()
+    lazy var emailDataLabel = UILabel()
+    lazy var phoneNumDataLabel = UILabel()
     
     lazy var logoutButton: UIButton = {
         let button = UIButton()
@@ -248,6 +188,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.delegate = self
         setNavigationBar()
+        setComponentsAttributes()
         addSubViews()
         setLayouts()
         setUserInfo()
@@ -265,6 +206,25 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Pencil"), style: .plain, target: self, action: nil)
         navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+    }
+    
+    private func setComponentsAttributes() {
+        [dormitoryLabel, nicknameLabel, idLabel, emailLabel, phoneNumLabel].forEach {
+            $0.textColor = .init(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 12)
+        }
+        
+        dormitoryLabel.text = "기숙사"
+        nicknameLabel.text = "닉네임"
+        idLabel.text = "아이디"
+        emailLabel.text = "이메일"
+        phoneNumLabel.text = "전화번호"
+        
+        [nicknameDataLabel, idDataLabel, emailDataLabel, phoneNumDataLabel].forEach {
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 15)
+            $0.makeBottomLine(color: 0xF8F8F8, width: view.bounds.width - 56, height: 1, offsetToTop: 10)
+        }
     }
     
     private func addSubViews() {

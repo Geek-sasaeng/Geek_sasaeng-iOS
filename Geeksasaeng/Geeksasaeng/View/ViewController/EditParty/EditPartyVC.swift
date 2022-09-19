@@ -124,31 +124,11 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     var selectedLocationLabel = UILabel()
     
     /* Edit imageView */
-    let orderEditImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "PartyEdit")
-        return imageView
-    }()
-    let matchingEditImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "PartyEdit")
-        return imageView
-    }()
-    let categoryEditImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "PartyEdit")
-        return imageView
-    }()
-    let urlEditImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "PartyEdit")
-        return imageView
-    }()
-    let locationEditImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "PartyEdit")
-        return imageView
-    }()
+    let orderEditImageView = UIImageView()
+    let matchingEditImageView = UIImageView()
+    let categoryEditImageView = UIImageView()
+    let urlEditImageView = UIImageView()
+    let locationEditImageView = UIImageView()
     
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
@@ -194,6 +174,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         setNotificationCenter()
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
+        setEditImageViews()
         setDelegate()
         setNavigationBar()
         setTapGestureToLabels()
@@ -228,8 +209,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         mapView = MTMapView(frame: mapSubView.frame)
         
         if let mapView = mapView {
-            // 델리게이트 연결
-            mapView.delegate = self
             // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
             mapView.baseMapType = .standard
             mapView.isUserInteractionEnabled = false
@@ -369,6 +348,12 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         selectedCategoryLabel.text = "      한식"
         selectedUrlLabel.text = "      url"
         selectedLocationLabel.text = "      제1기숙사 정문"
+    }
+    
+    private func setEditImageViews() {
+        [orderEditImageView, matchingEditImageView, categoryEditImageView, urlEditImageView, locationEditImageView].forEach {
+            $0.image = UIImage(named: "PartyEdit")
+        }
     }
     
     private func setDelegate() {
@@ -668,7 +653,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    /* show 주문 예정 시간 VC */
     @objc func tapOrderForecastTimeButton() {
         view.endEditing(true)
         createBlueView()
@@ -771,7 +755,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.isEdittiedDelegate?.checkEditted(isEditted: true)
                     self.navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
                 } else {
-                    self.showToast(viewController: self, message: "파티 수정을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    self.showToast(viewController: self, message: "파티 수정을 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
                 }
             }
         }
@@ -823,8 +807,4 @@ extension EditPartyViewController: UITextViewDelegate {
         
         return newLength <= 100
     }
-}
-
-extension EditPartyViewController: MTMapViewDelegate {
-
 }

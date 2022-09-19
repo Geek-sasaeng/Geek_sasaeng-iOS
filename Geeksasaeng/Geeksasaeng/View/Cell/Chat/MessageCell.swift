@@ -12,95 +12,23 @@ class MessageCell: UICollectionViewCell {
     
     // MARK: - SubViews
     
-    var nicknameLabel : UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoBold, size: 11)
-        label.textColor = .black
-        return label
-    }()
-    
-    var leftImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 16
-        return imageView
-    }()
-    
-    var rightImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 16
-        return imageView
-    }()
-    
-    var rightTimeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .init(hex: 0xA8A8A8)
-        return label
-    }()
-    
-    var leftTimeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 12)
-        label.textColor = .init(hex: 0xA8A8A8)
-        return label
-    }()
-
-    var leftMessageLabel: PaddingLabel = {
-        let label = PaddingLabel()
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .black
-        label.numberOfLines = 0
-        label.backgroundColor = .init(hex: 0xEFEFEF)
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 5
-        label.textAlignment = .left
-        label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.569
-        
-        label.sizeToFit()
-        label.setNeedsLayout()
-        
-        label.paddingTop = 10
-        label.paddingBottom = 10
-        label.paddingLeft = 18
-        label.paddingRight = 18
-        return label
-    }()
-    
-    var rightMessageLabel: PaddingLabel = {
-        let label = PaddingLabel()
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .black
-        label.numberOfLines = 0
-        label.backgroundColor = .init(hex: 0xEFEFEF)
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 5
-        label.textAlignment = .left
-        label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.569
-        
-        label.sizeToFit()
-        label.setNeedsLayout()
-        
-        label.paddingTop = 10
-        label.paddingBottom = 10
-        label.paddingLeft = 18
-        label.paddingRight = 18
-        return label
-    }()
+    let leftImageView = UIImageView()
+    let rightImageView = UIImageView()
+    let nicknameLabel = UILabel()
+    let rightTimeLabel = UILabel()
+    let leftTimeLabel = UILabel()
+    let leftMessageLabel = PaddingLabel()
+    let rightMessageLabel = PaddingLabel()
     
     // MARK: - Life Cycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
-        
         contentView.backgroundColor = .white
         
         addSubViews()
         setLayouts()
+        setComponentsAttributes()
     }
     
     override func prepareForReuse() {
@@ -133,13 +61,11 @@ class MessageCell: UICollectionViewCell {
         leftMessageLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
             make.left.equalTo(leftImageView.snp.right).offset(10)
-//            make.height.equalTo(39)
         }
         
         rightMessageLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
             make.right.equalTo(rightImageView.snp.left).offset(-10)
-//            make.height.equalTo(39)
         }
         
         leftTimeLabel.snp.makeConstraints { make in
@@ -168,6 +94,34 @@ class MessageCell: UICollectionViewCell {
             make.top.equalToSuperview()
             make.width.height.equalTo(32)
             make.right.equalToSuperview().inset(23)
+        }
+    }
+    
+    private func setComponentsAttributes() {
+        nicknameLabel.setTextColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 11))
+        rightTimeLabel.setTextColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        leftTimeLabel.setTextColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        
+        [leftMessageLabel, rightMessageLabel].forEach {
+            $0.paddingTop = 10
+            $0.paddingBottom = 10
+            $0.paddingLeft = 18
+            $0.paddingRight = 18
+            $0.setTextColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 15))
+            $0.numberOfLines = 0
+            $0.backgroundColor = .init(hex: 0xEFEFEF)
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 5
+            $0.textAlignment = .left
+            $0.lineBreakMode = .byCharWrapping
+            $0.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.569
+            $0.sizeToFit()
+            $0.setNeedsLayout()
+        }
+        
+        [leftImageView, rightImageView].forEach {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 16
         }
     }
 }

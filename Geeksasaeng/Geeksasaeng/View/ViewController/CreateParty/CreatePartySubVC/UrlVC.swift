@@ -197,7 +197,7 @@ class UrlViewController: UIViewController {
         if let url = urlTextField.text, !url.isEmpty {
             CreateParty.url = url
         } else {
-            CreateParty.url = "?"
+            CreateParty.url = "URL을 입력하지 않았습니다"
         }
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -212,7 +212,7 @@ class UrlViewController: UIViewController {
     
     @objc
     private func tapPassButton() {
-        CreateParty.url = "?"
+        CreateParty.url = "URL을 입력하지 않았습니다"
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = ReceiptPlaceViewController()
             self.addChild(childView)
