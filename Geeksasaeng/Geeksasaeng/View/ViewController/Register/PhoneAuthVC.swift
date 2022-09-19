@@ -316,9 +316,7 @@ class PhoneAuthViewController: UIViewController {
                 case .success:
                     self.phoneNumberId = result?.phoneNumberId
                     self.showNextView()
-                case .OnlyRequestSuccess:
-                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
-                case .failure:
+                default:
                     self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
                 }
             }
