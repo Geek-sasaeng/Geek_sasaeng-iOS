@@ -14,13 +14,16 @@ class SearchViewModel {
     /* 검색어(키워드)를 포함한 배달파티 목록 조회 */
     // escaping을 통해 이 함수를 호출한 부분의 클로저로 결과 값을 넘겨줌 -> 호출한 VC에서 처리 가능해짐
     public static func requestDeliveryListByKeyword(cursor: Int, dormitoryId: Int, keyword: String,
-                                                    maxMatching: Int? = nil, orderTimeCategory: String? = nil,
+                                                    input: DeliveryListInput,
                                                     completion: @escaping (DeliveryListModelResultList) -> Void) {
         let url = "https://geeksasaeng.shop/\(dormitoryId)/delivery-parties/keyword"
         var parameters: Parameters = [
             "cursor": cursor,
             "keyword": keyword
         ]
+        
+        let orderTimeCategory = input.orderTimeCategory
+        let maxMatching = input.maxMatching
         
         if let orderTimeCategory = orderTimeCategory,
            let maxMatching = maxMatching {

@@ -92,6 +92,7 @@ class ChattingViewController: UIViewController {
             let button = UIButton()
             button.setTitle("배달 완료 알림 보내기", for: .normal)
             button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+            button.addTarget(self, action: #selector(tapDeliveryConfirmButton), for: .touchUpInside)
             return button
         }()
         var closeMatchingButton: UIButton = {
@@ -800,6 +801,16 @@ class ChattingViewController: UIViewController {
         // collectionView의 contentInset 값과 bottomView의 transform을 원래대로 변경
         collectionView.contentInset.bottom = 0
         bottomView.transform = .identity
+    }
+    
+    /* 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
+    @objc
+    private func tapDeliveryConfirmButton() {
+        print("DEBUG: 배달 완료 푸시알림 전송", roomUUID)
+        let input = DeliveryNotificationInput(uuid: roomUUID)
+        DeliveryNotificationAPI.requestPushNotification(input)
+        
+        showChattingRoom(optionViewForOwner)
     }
     
     /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
