@@ -617,7 +617,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    private func createBlueView() {
+    private func createBlurView() {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
@@ -655,7 +655,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func tapOrderForecastTimeButton() {
         view.endEditing(true)
-        createBlueView()
+        createBlurView()
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
@@ -669,7 +669,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func tapSelectedPersonLabel() {
-        createBlueView()
+        createBlurView()
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = EditMatchingPersonViewController()
             self.addChild(orderForecastTimeVC)
@@ -681,7 +681,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
 
     @objc func tapSelectedCategoryLabel() {
-        createBlueView()
+        createBlurView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = EditCategoryViewController()
@@ -694,7 +694,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func tapSelectedUrlLabel() {
-        createBlueView()
+        createBlurView()
         // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = EditUrlViewController()
@@ -707,7 +707,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func tapSelectedLocationLabel() {
-        createBlueView()
+        createBlurView()
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let orderForecastTimeVC = EditReceiptPlaceViewController()

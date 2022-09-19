@@ -329,7 +329,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    private func createBlueView() {
+    private func createBlurView() {
         if visualEffectView == nil {
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
@@ -348,7 +348,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapLogoutButton() {
         if visualEffectView == nil {
-            createBlueView()
+            createBlurView()
             view.addSubview(logoutView)
             logoutView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
