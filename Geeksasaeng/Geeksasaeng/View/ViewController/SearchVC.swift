@@ -143,7 +143,6 @@ class SearchViewController: UIViewController {
     let filterImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "FilterImage"))
         imageView.tintColor = UIColor(hex: 0x2F2F2F)
-        imageView.isHidden = true
         return imageView
     }()
     
@@ -153,20 +152,17 @@ class SearchViewController: UIViewController {
         label.text = "인원 선택"
         label.font = .customFont(.neoMedium, size: 14)
         label.textColor = UIColor(hex: 0xA8A8A8)
-        label.isHidden = true
         return label
     }()
     let peopleFilterToggleImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
         imageView.tintColor = UIColor(hex: 0xA8A8A8)
-        imageView.isHidden = true
         return imageView
     }()
     lazy var peopleFilterView: UIView = {
         var view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         view.layer.cornerRadius = 5
-        view.isHidden = true
         
         [
             peopleFilterLabel,
@@ -266,7 +262,6 @@ class SearchViewController: UIViewController {
     lazy var partyTableView: UITableView = {
         var tableView = UITableView()
         tableView.backgroundColor = .white
-        tableView.isHidden = true
         return tableView
     }()
     
@@ -276,7 +271,6 @@ class SearchViewController: UIViewController {
         // 그라데이션 적용
         view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
         view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
-        view.isHidden = true
         return view
     }()
     
@@ -304,14 +298,7 @@ class SearchViewController: UIViewController {
         setTableView()
         
         // 검색 결과 화면 숨기기 - 초기화
-        [
-            filterImageView,
-            peopleFilterView,
-            peopleFilterLabel,
-            peopleFilterToggleImageView,
-            timeCollectionView
-        ].forEach { $0.isHidden = true }
-        
+        showSearchMainView()
         setTapGestures()
     }
     
@@ -493,17 +480,17 @@ class SearchViewController: UIViewController {
     
     /* Vertical Label list의 label을 구성한다 */
     private func setVLabelList(_ passedArray: [String], _ stackView: UIStackView) {
-          for i in 0..<passedArray.count {
-              /* Filter Label */
-              let filterLabel = UILabel()
-              let filterText = passedArray[i]
-              filterLabel.textColor = .init(hex: 0xD8D8D8)
-              filterLabel.font = .customFont(.neoMedium, size: 14)
-              filterLabel.text = filterText
-              
-              /* Stack View */
-              stackView.addArrangedSubview(filterLabel)
-          }
+        for i in 0..<passedArray.count {
+            /* Filter Label */
+            let filterLabel = UILabel()
+            let filterText = passedArray[i]
+            filterLabel.textColor = .init(hex: 0xD8D8D8)
+            filterLabel.font = .customFont(.neoMedium, size: 14)
+            filterLabel.text = filterText
+            
+            /* Stack View */
+            stackView.addArrangedSubview(filterLabel)
+        }
     }
     
     /* 배달 파티 검색 */
@@ -512,7 +499,7 @@ class SearchViewController: UIViewController {
               let dormitoryInfo = dormitoryInfo,
               let dormitoryId = dormitoryInfo.id else { return }
         print("DEBUG:", keyword, dormitoryInfo)
-        if searchTextField.text == "" { return }
+        if keyword.isEmpty { return }
         
         print("DEBUG: 검색어 내용 \(keyword) 기숙사 정보 \(dormitoryInfo)")
         
