@@ -1015,8 +1015,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.layer.opacity -= 0.6
             },
             completion: { _ in ()
-                nowView.removeFromSuperview()
-                self.visualEffectView?.removeFromSuperview()
+                self.removeViewWithBlurView(nowView)
             }
         )
     }
@@ -1175,6 +1174,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func removeViewWithBlurView(_ view: UIView) {
+        view.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+    }
+    
     // MARK: - @objc Functions
     
     /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
@@ -1206,8 +1210,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func showEditView() {
-        optionViewForAuthor.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
+        removeViewWithBlurView(optionViewForAuthor)
         
         let editPartyVC = EditPartyViewController()
         editPartyVC.dormitoryInfo = dormitoryInfo
@@ -1229,8 +1232,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         reportVC.memberId = memberId
         
         // 옵션탭 집어넣고 화면 전환 실행
-        self.optionView.removeFromSuperview()
-        self.visualEffectView?.removeFromSuperview()
+        removeViewWithBlurView(self.optionView)
         self.navigationController?.pushViewController(reportVC, animated: true)
     }
     
@@ -1246,15 +1248,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func removeDeleteView() {
-        deleteView.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
+        removeViewWithBlurView(deleteView)
     }
     
     /* 신청하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
     @objc
     private func removeRegisterView() {
-        registerView.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
+        removeViewWithBlurView(registerView)
     }
     
     /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
@@ -1330,7 +1330,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         guard let uuid = detailData.uuid else { return }
         print("DEBUG: 이 채팅방의 uuid값은", uuid)
-        addParticipant(roomUUID: uuid, completion: { [self] in
+        addParticipant(roomUUID: uuid) { [self] in
             print("DEBUG: 초대 상황은?", isInvited)
             // 초대하기 성공했을 때만 성공 메세지 띄우기
             if isInvited {
@@ -1346,9 +1346,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 // 초대 실패 시 실패 메세지 띄우기
                 showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
             }
-        })
-        
-        
+        }
     }
     
     /* 채팅방 생성 완료 뷰 X 눌렀을 때 사라지게 하는 함수 */
