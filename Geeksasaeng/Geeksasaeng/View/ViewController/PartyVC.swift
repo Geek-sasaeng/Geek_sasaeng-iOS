@@ -455,8 +455,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         view.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.width.equalToSuperview()
+            make.top.width.equalToSuperview()
             make.height.equalTo(50)
         }
         
@@ -520,8 +519,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
-            make.left.equalTo(18)
-            make.right.equalTo(-18)
+            make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1.7)
         }
         
@@ -585,7 +583,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func setFirestore() {
         settings.isPersistenceEnabled = false
         db.settings = settings
-        
         db.clearPersistence()
     }
     
@@ -648,7 +645,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         guard let belongStatus = self.detailData.belongStatus else { return }
         print("속해있는가", belongStatus)
-        print("방장인가", self.detailData.authorStatus)
+        print("방장인가", self.detailData.authorStatus as Any)
         
         if belongStatus == "Y" {
             self.signUpButton.setTitle("채팅방 가기", for: .normal)
@@ -659,9 +656,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                                                           
     
     private func setDefaultValue() {
-//        chiefProfileImgUrl -> default image 추후에
-//        id
-//        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
@@ -797,9 +791,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         contentLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
+            make.left.right.equalToSuperview().inset(23)
             make.top.equalTo(titleLabel.snp.bottom).offset(14)
-            make.right.equalToSuperview().inset(23)
         }
         
         separateView.snp.makeConstraints { make in
