@@ -31,11 +31,10 @@ class PartyTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.backgroundColor = .white
         
         addSubViews()
         setLayouts()
-        setLabelsAttributes()
+        setAttributes()
     }
     
     // MARK: - Set Functions
@@ -85,12 +84,14 @@ class PartyTableViewCell: UITableViewCell {
         }
     }
     
-    private func setLabelsAttributes() {
+    private func setAttributes() {
         peopleLabel.setTextColorAndFont(textColor: UIColor(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
         timeLabel.setTextColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 14))
         titleLabel.setTextColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 18))
         categoryLabel.setTextColorAndFont(textColor: UIColor(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
         hashtagLabel.setTextColorAndFont(textColor: UIColor(hex: 0xEFEFEF), font: .customFont(.neoMedium, size: 12))
         hashtagLabel.text = "같이 먹고 싶어요"
+        
+        self.selectionStyle = .gray
     }
 }
