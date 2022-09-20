@@ -991,6 +991,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         let viewController = PartyViewController()
         viewController.partyId = deliveryCellDataArray[indexPath.row].id
         self.navigationController?.pushViewController(viewController, animated: true)
+        
+        // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

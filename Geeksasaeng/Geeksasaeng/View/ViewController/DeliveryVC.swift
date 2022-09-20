@@ -1088,6 +1088,9 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
         // delegate로 자기 자신(DeliveryVC)를 넘겨줌
         partyVC.delegate = self
         self.navigationController?.pushViewController(partyVC, animated: true)
+        
+        // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
