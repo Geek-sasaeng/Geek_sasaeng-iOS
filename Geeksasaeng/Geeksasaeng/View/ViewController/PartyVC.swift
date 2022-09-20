@@ -906,19 +906,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.rightBarButtonItem?.imageInsets = .init(top: -3, left: 0, bottom: 0, right: 20)
     }
     
-    /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
-    @objc
-    private func tapEllipsisOption() {
-        guard let authorStatus = detailData.authorStatus else { return }
-        
-        // 글쓴이인지 아닌지 확인해서 해당하는 옵션뷰에 애니메이션을 적용한다
-        if authorStatus {
-            showOptionMenu(optionViewForAuthor, UIScreen.main.bounds.height / 3.8)
-        } else {
-            showOptionMenu(optionView, UIScreen.main.bounds.height / 5.5)
-        }
-    }
-    
     /*
      오른쪽 상단의 옵션뷰 보여주기
      - 오른쪽 위에서부터 대각선 아래로 내려오는 애니메이션 설정
@@ -1014,20 +1001,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         timer?.resume()
     }
     
-    /* 이전 화면으로 돌아가기 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    /* 옵션뷰 안에 들어있는 Ellipsis 버튼 클릭해서 옵션뷰 사라지게 할 때 사용하는 함수 */
-    @objc
-    private func tapEllipsisInOptionView(_ sender: UIButton) {
-        // 클릭한 버튼의 superView가 그냥 optionView인지 optionViewForAuthor인지 파라미터로 보내주는 것
-        guard let nowView = sender.superview else { return }
-        showPartyPost(nowView)
-    }
-    
     /* 파티 보기 화면으로 돌아가기 */
     private func showPartyPost(_ nowView: UIView) {
         UIView.animate(
@@ -1046,6 +1019,189 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.removeFromSuperview()
             }
         )
+    }
+    
+    /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
+    private func addParticipant(roomUUID: String, completion: @escaping () -> ()) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        // 해당 채팅방의 participants에 본인 닉네임을 append
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let e = error {
+                print(e.localizedDescription)
+                self.isInvited = false
+            } else {
+                if let document = documentSnapshot {
+                    // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
+                    if document.exists {
+                        do {
+                            let data = try document.data(as: RoomInfoModel.self)
+                            guard let roomInfo = data.roomInfo,
+                                  let participants = roomInfo.participants else { return }
+                            
+                            guard let nickName = LoginModel.nickname else { return }
+                            /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
+                            let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
+
+                            self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
+                            
+                            // 참가자 참가 시스템 메세지 업로드
+                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                                "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
+                                "nickname": LoginModel.nickname ?? "홍길동",
+                                "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                                "time": formatter.string(from: Date()),
+                                "isSystemMessage": true,
+                                "readUsers": [LoginModel.nickname ?? "홍길동"]
+                            ]) { error in
+                                if let e = error {
+                                    print(e.localizedDescription)
+                                } else {
+                                    print("DEBUG: 입장 메세지 띄우기 완료")
+                                }
+                            }
+                            
+                            if participants.count == roomInfo.maxMatching! - 1 {
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                formatter.locale = Locale(identifier: "ko_KR")
+                                
+                                // 모든 참가자 참여 완료 시스템 메세지 업로드
+                                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                                    "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
+                                    "nickname": "SystemMessage",
+                                    "userImgUrl": "SystemMessage",
+                                    "time": formatter.string(from: Date()),
+                                    "isSystemMessage": true,
+                                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+                                ]) { error in
+                                    if let e = error {
+                                        print(e.localizedDescription)
+                                    } else {
+                                        print("Success save data")
+                                    }
+                                }
+                            }
+                            
+                            print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        
+                        self.isInvited = true
+                    }
+                }
+            }
+            // 비동기 처리를 위해 completion 사용 -> 이 함수가 끝난 뒤에 실행되게 하려고
+            completion()
+        }
+    }
+    
+    private func showCompleteRegisterView() {
+        /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
+        toastView = {
+            let view = UIView()
+            view.backgroundColor = .init(hex: 0x474747, alpha: 0.6)
+            view.layer.cornerRadius = 5;
+            view.clipsToBounds  =  true
+            
+            // 서브뷰들
+            let toastLabel: UILabel = {
+                let label = UILabel()
+                label.text = "파티 채팅방이 생성되었습니다"
+                label.textColor = UIColor.white
+                label.font = .customFont(.neoMedium, size: 14)
+                label.alpha = 1.0
+                return label
+            }()
+            lazy var cancelButton: UIButton = {
+                let button = UIButton()
+                button.setImage(UIImage(named: "XmarkWhite"), for: .normal)
+                button.addTarget(self, action: #selector(tapCancelButton), for: .touchUpInside)
+                return button
+            }()
+            lazy var goChatButton: UIButton = {
+                let button = UIButton()
+                button.setTitle("바로가기 >", for: .normal)
+                button.setTitleColor(.white, for: .normal)
+                button.titleLabel?.font =  .customFont(.neoBold, size: 15)
+                button.addTarget(self, action: #selector(tapGoChatButton), for: .touchUpInside)
+                return button
+            }()
+            
+            [toastLabel, cancelButton, goChatButton]
+                .forEach { view.addSubview($0) }
+            toastLabel.snp.makeConstraints { make in
+                make.top.equalToSuperview().inset(24)
+                make.centerX.equalToSuperview()
+            }
+            cancelButton.snp.makeConstraints { make in
+                make.top.equalToSuperview().inset(12)
+                make.right.equalToSuperview().inset(6)
+                make.width.equalTo(20)
+                make.height.equalTo(15)
+            }
+            goChatButton.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(toastLabel.snp.bottom).offset(9)
+                make.width.equalTo(72)
+                make.height.equalTo(19)
+            }
+            
+            return view
+        }()
+        
+        // toastView가 보이게 설정
+        view.addSubview(toastView!)
+        toastView!.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalTo(246)
+            make.height.equalTo(93)
+        }
+        
+        // 3초 뒤에 사라지도록 타이머 설정
+        let _ = Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
+            self.tapCancelButton()
+        })
+    }
+    
+    private func showToastFromCreated() {
+        guard let fromCreated = fromCreated else { return }
+        if fromCreated {
+            self.showToast(viewController: self, message: "파티 생성이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
+        }
+    }
+    
+    // MARK: - @objc Functions
+    
+    /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
+    @objc
+    private func tapEllipsisOption() {
+        guard let authorStatus = detailData.authorStatus else { return }
+        
+        // 글쓴이인지 아닌지 확인해서 해당하는 옵션뷰에 애니메이션을 적용한다
+        if authorStatus {
+            showOptionMenu(optionViewForAuthor, UIScreen.main.bounds.height / 3.8)
+        } else {
+            showOptionMenu(optionView, UIScreen.main.bounds.height / 5.5)
+        }
+    }
+    
+    /* 이전 화면으로 돌아가기 */
+    @objc
+    private func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    /* 옵션뷰 안에 들어있는 Ellipsis 버튼 클릭해서 옵션뷰 사라지게 할 때 사용하는 함수 */
+    @objc
+    private func tapEllipsisInOptionView(_ sender: UIButton) {
+        // 클릭한 버튼의 superView가 그냥 optionView인지 optionViewForAuthor인지 파라미터로 보내주는 것
+        guard let nowView = sender.superview else { return }
+        showPartyPost(nowView)
     }
     
     @objc
@@ -1166,84 +1322,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
-    private func addParticipant(roomUUID: String, completion: @escaping () -> ()) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        // 해당 채팅방의 participants에 본인 닉네임을 append
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let e = error {
-                print(e.localizedDescription)
-                self.isInvited = false
-            } else {
-                if let document = documentSnapshot {
-                    // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
-                    if document.exists {
-                        do {
-                            let data = try document.data(as: RoomInfoModel.self)
-                            guard let roomInfo = data.roomInfo,
-                                  let participants = roomInfo.participants else { return }
-                            
-                            guard let nickName = LoginModel.nickname else { return }
-                            /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
-                            let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
-
-                            self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
-                            
-                            // 참가자 참가 시스템 메세지 업로드
-                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                                "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
-                                "nickname": LoginModel.nickname ?? "홍길동",
-                                "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                                "time": formatter.string(from: Date()),
-                                "isSystemMessage": true,
-                                "readUsers": [LoginModel.nickname ?? "홍길동"]
-                            ]) { error in
-                                if let e = error {
-                                    print(e.localizedDescription)
-                                } else {
-                                    print("DEBUG: 입장 메세지 띄우기 완료")
-                                }
-                            }
-                            
-                            if participants.count == roomInfo.maxMatching! - 1 {
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                formatter.locale = Locale(identifier: "ko_KR")
-                                
-                                // 모든 참가자 참여 완료 시스템 메세지 업로드
-                                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                                    "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
-                                    "nickname": "SystemMessage",
-                                    "userImgUrl": "SystemMessage",
-                                    "time": formatter.string(from: Date()),
-                                    "isSystemMessage": true,
-                                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                                ]) { error in
-                                    if let e = error {
-                                        print(e.localizedDescription)
-                                    } else {
-                                        print("Success save data")
-                                    }
-                                }
-                            }
-                            
-                            print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                        
-                        self.isInvited = true
-                    }
-                }
-            }
-            // 비동기 처리를 위해 completion 사용 -> 이 함수가 끝난 뒤에 실행되게 하려고
-            completion()
-        }
-    }
-    
     /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapRegisterConfirmButton() {
@@ -1271,82 +1349,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         })
         
         
-    }
-    
-    private func showCompleteRegisterView() {
-        /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
-        toastView = {
-            let view = UIView()
-            view.backgroundColor = .init(hex: 0x474747, alpha: 0.6)
-            view.layer.cornerRadius = 5;
-            view.clipsToBounds  =  true
-            
-            // 서브뷰들
-            let toastLabel: UILabel = {
-                let label = UILabel()
-                label.text = "파티 채팅방이 생성되었습니다"
-                label.textColor = UIColor.white
-                label.font = .customFont(.neoMedium, size: 14)
-                label.alpha = 1.0
-                return label
-            }()
-            lazy var cancelButton: UIButton = {
-                let button = UIButton()
-                button.setImage(UIImage(named: "XmarkWhite"), for: .normal)
-                button.addTarget(self, action: #selector(tapCancelButton), for: .touchUpInside)
-                return button
-            }()
-            lazy var goChatButton: UIButton = {
-                let button = UIButton()
-                button.setTitle("바로가기 >", for: .normal)
-                button.setTitleColor(.white, for: .normal)
-                button.titleLabel?.font =  .customFont(.neoBold, size: 15)
-                button.addTarget(self, action: #selector(tapGoChatButton), for: .touchUpInside)
-                return button
-            }()
-            
-            [toastLabel, cancelButton, goChatButton]
-                .forEach { view.addSubview($0) }
-            toastLabel.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(24)
-                make.centerX.equalToSuperview()
-            }
-            cancelButton.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(12)
-                make.right.equalToSuperview().inset(6)
-                make.width.equalTo(20)
-                make.height.equalTo(15)
-            }
-            goChatButton.snp.makeConstraints { make in
-                make.centerX.equalToSuperview()
-                make.top.equalTo(toastLabel.snp.bottom).offset(9)
-                make.width.equalTo(72)
-                make.height.equalTo(19)
-            }
-            
-            return view
-        }()
-        
-        // toastView가 보이게 설정
-        view.addSubview(toastView!)
-        toastView!.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.width.equalTo(246)
-            make.height.equalTo(93)
-        }
-        
-        // 3초 뒤에 사라지도록 타이머 설정
-        let _ = Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
-            self.tapCancelButton()
-        })
-    }
-    
-    private func showToastFromCreated() {
-        guard let fromCreated = fromCreated else { return }
-        if fromCreated {
-            self.showToast(viewController: self, message: "파티 생성이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
-        }
     }
     
     /* 채팅방 생성 완료 뷰 X 눌렀을 때 사라지게 하는 함수 */
@@ -1386,7 +1388,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
 // MARK: - EdittedDelegate
 
 extension PartyViewController: EdittedDelegate {
-    func checkEditted(isEditted: Bool) {
+    public func checkEditted(isEditted: Bool) {
         if isEditted {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
             
