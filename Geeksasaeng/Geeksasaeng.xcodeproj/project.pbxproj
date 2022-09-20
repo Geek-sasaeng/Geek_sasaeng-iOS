@@ -1087,9 +1087,6 @@
 		A25766D328AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25766D528AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
-		A25EBDC5289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
-		A25EBDC6289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
-		A25EBDC7289AEDAD0068FAF6 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */; };
 		A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26780B228AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
@@ -1579,7 +1576,6 @@
 		A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckModel.swift; sourceTree = "<group>"; };
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
-		A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
 		A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geeksasaeng.entitlements; sourceTree = "<group>"; };
 		A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OngoingTableViewCell.swift; sourceTree = "<group>"; };
 		A26780B328AD64050078350D /* RecentPartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPartyViewModel.swift; sourceTree = "<group>"; };
@@ -2351,7 +2347,6 @@
 			isa = PBXGroup;
 			children = (
 				A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */,
-				A25EBDC4289AEDAD0068FAF6 /* SplashVC.swift */,
 				A2B42098286F249800278F92 /* TabBarController.swift */,
 				103F1483286ACB95004B637B /* LoginVC.swift */,
 				A29F6F882885464900350744 /* Register */,
@@ -3561,7 +3556,6 @@
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2AF539D2896C0680052F734 /* SearchViewModel.swift in Sources */,
 				A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */,
-				A25EBDC5289AEDAD0068FAF6 /* SplashVC.swift in Sources */,
 				A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				102230FA289E640700042ACC /* ChattingVC.swift in Sources */,
@@ -3619,7 +3613,6 @@
 				10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */,
 				A2F54FD828757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2AF539E2896C0680052F734 /* SearchViewModel.swift in Sources */,
-				A25EBDC6289AEDAD0068FAF6 /* SplashVC.swift in Sources */,
 				106D974E287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
@@ -3817,7 +3810,6 @@
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				10E8E71E288D739100AF4581 /* DeletePartyModel.swift in Sources */,
-				A25EBDC7289AEDAD0068FAF6 /* SplashVC.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
 				A20FC0F3287F30C40095224C /* SearchVC.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
