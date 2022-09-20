@@ -105,7 +105,6 @@ class PhoneAuthViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
-        setComponentsAttributes()
     }
     
     // MARK: - Initialization
@@ -256,6 +255,17 @@ class PhoneAuthViewController: UIViewController {
         /* textFields attr */
         setTextFieldAttrs(phoneNumTextField, msg: "- 제외 숫자만 입력하세요", width: 187)
         setTextFieldAttrs(authTextField, msg: "입력하세요", width: 187)
+        
+        [progressBar, remainBar].forEach {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 1.5
+        }
+        
+        [authSendButton, authCheckButton].forEach {
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            $0.layer.cornerRadius = 5
+            $0.clipsToBounds = true
+        }
     }
     
     // 공통 속성을 묶어놓은 함수
@@ -288,19 +298,6 @@ class PhoneAuthViewController: UIViewController {
         } else {
             nextButton.setDeactivatedNextButton()
             authCheckButton.setDeactivatedButton()
-        }
-    }
-    
-    private func setComponentsAttributes() {
-        [progressBar, remainBar].forEach {
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 1.5
-        }
-        
-        [authSendButton, authCheckButton].forEach {
-            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
-            $0.layer.cornerRadius = 5
-            $0.clipsToBounds = true
         }
     }
     

@@ -132,7 +132,7 @@ class AgreementViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
-        setComponentsAttributes()
+        setAttributes()
     }
     
     // MARK: - Initialization
@@ -269,7 +269,7 @@ class AgreementViewController: UIViewController {
         }
     }
     
-    private func setComponentsAttributes() {
+    private func setAttributes() {
         [progressBar, remainBar].forEach {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 1.5

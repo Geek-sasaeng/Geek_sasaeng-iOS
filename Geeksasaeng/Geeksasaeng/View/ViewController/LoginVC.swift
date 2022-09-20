@@ -115,7 +115,7 @@ class LoginViewController: UIViewController {
         addSubViews()
         setLayouts()
         setKeyboardDown()
-        setComponentsAttributes()
+        setAttributes()
     }
     
     // MARK: - Functions
@@ -238,7 +238,7 @@ class LoginViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
     
-    private func setComponentsAttributes() {
+    private func setAttributes() {
         [scrollView, contentView].forEach {
             $0.backgroundColor = .white
         }
