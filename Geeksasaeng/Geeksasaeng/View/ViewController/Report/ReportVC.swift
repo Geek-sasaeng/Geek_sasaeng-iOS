@@ -37,16 +37,12 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     
     let postReportLabel: UILabel = {
         let label = UILabel()
-        label.text = "파티 게시글 신고"
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .black
+        label.setTextAndColorAndFont(text: "파티 게시글 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
         return label
     }()
     let userReportLabel: UILabel = {
         let label = UILabel()
-        label.text = "사용자 신고"
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .black
+        label.setTextAndColorAndFont(text: "사용자 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
         return label
     }()
     

@@ -98,16 +98,16 @@ class MessageCell: UICollectionViewCell {
     }
     
     private func setComponentsAttributes() {
-        nicknameLabel.setTextColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 11))
-        rightTimeLabel.setTextColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
-        leftTimeLabel.setTextColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        nicknameLabel.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 11))
+        rightTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        leftTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
         
         [leftMessageLabel, rightMessageLabel].forEach {
             $0.paddingTop = 10
             $0.paddingBottom = 10
             $0.paddingLeft = 18
             $0.paddingRight = 18
-            $0.setTextColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 15))
+            $0.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 15))
             $0.numberOfLines = 0
             $0.backgroundColor = .init(hex: 0xEFEFEF)
             $0.clipsToBounds = true

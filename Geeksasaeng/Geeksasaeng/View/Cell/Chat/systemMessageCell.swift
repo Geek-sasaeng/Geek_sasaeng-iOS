@@ -13,7 +13,7 @@ class SystemMessageCell: UICollectionViewCell {
     
     var systemMessageLabel: PaddingLabel = {
         let label = PaddingLabel()
-        label.setTextColorAndFont(textColor: .init(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
+        label.setTextAndColorAndFont(textColor: .init(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
         label.backgroundColor = .init(hex: 0xF8F8F8)
         label.numberOfLines = 0
         label.clipsToBounds = true

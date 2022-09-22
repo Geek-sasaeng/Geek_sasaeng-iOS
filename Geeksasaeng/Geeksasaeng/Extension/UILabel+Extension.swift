@@ -23,7 +23,9 @@ extension UILabel {
         }
     }
     
-    func setTextColorAndFont(textColor: UIColor, font: UIFont) {
+    /* label의 텍스트, 컬러, 폰트를 설정하는 함수 */
+    func setTextAndColorAndFont(text: String? = nil, textColor: UIColor, font: UIFont) {
+        self.text = text
         self.textColor = textColor
         self.font = font
     }
