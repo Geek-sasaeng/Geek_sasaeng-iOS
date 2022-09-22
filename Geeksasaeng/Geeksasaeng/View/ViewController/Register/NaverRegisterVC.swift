@@ -208,7 +208,6 @@ class NaverRegisterViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
-        setComponentsAttributes()
     }
     
     // MARK: - Functions
@@ -362,6 +361,20 @@ class NaverRegisterViewController: UIViewController {
         
         setTextFieldAttrs(emailAddressTextField, msg: "@", width: 187)
         emailAddressTextField.isUserInteractionEnabled = false
+        
+        [progressBar, remainBar].forEach {
+            $0.clipsToBounds = true
+            view.layer.cornerRadius = 1.5
+        }
+        
+        [nickNameCheckButton, authSendButton].forEach {
+            $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+            $0.layer.cornerRadius = 5
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+            $0.clipsToBounds = true
+            $0.isEnabled = false
+        }
     }
     
     private func setMainLabelAttrs(_ label: UILabel, text: String){
@@ -401,22 +414,6 @@ class NaverRegisterViewController: UIViewController {
                                                      action: #selector(tapUnivName(_:)))
         univNameLabel.isUserInteractionEnabled = true
         univNameLabel.addGestureRecognizer(labelTapGesture)
-    }
-    
-    private func setComponentsAttributes() {
-        [progressBar, remainBar].forEach {
-            $0.clipsToBounds = true
-            view.layer.cornerRadius = 1.5
-        }
-        
-        [nickNameCheckButton, authSendButton].forEach {
-            $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
-            $0.layer.cornerRadius = 5
-            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
-            $0.clipsToBounds = true
-            $0.isEnabled = false
-        }
     }
     
     // MARK: - @objc Functions

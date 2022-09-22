@@ -188,7 +188,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.delegate = self
         setNavigationBar()
-        setComponentsAttributes()
+        setAttributes()
         addSubViews()
         setLayouts()
         setUserInfo()
@@ -208,7 +208,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
     }
     
-    private func setComponentsAttributes() {
+    private func setAttributes() {
         [dormitoryLabel, nicknameLabel, idLabel, emailLabel, phoneNumLabel].forEach {
             $0.textColor = .init(hex: 0xA8A8A8)
             $0.font = .customFont(.neoMedium, size: 12)
@@ -329,7 +329,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    private func createBlueView() {
+    private func createBlurView() {
         if visualEffectView == nil {
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
@@ -348,7 +348,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapLogoutButton() {
         if visualEffectView == nil {
-            createBlueView()
+            createBlurView()
             view.addSubview(logoutView)
             logoutView.snp.makeConstraints { make in
                 make.center.equalToSuperview()

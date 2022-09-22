@@ -215,27 +215,40 @@ class EditReceiptPlaceViewController: UIViewController {
     
     @objc
     private func tapSearchButton() {
-        geocoder.geocodeAddressString(searchTextField.text ?? "") { placemark, error in
-            // 검색된 위치로 맵의 중심을 이동
-            self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0)), zoomLevel: 5, animated: true)
-            
-            // API Request를 위해 전역에 좌표 저장
-            self.latitude = placemark?.first?.location?.coordinate.latitude ?? 0
-            self.longitude = placemark?.first?.location?.coordinate.longitude ?? 0
-            
-            // 마커 이동 안 했을 때를 대비하여 전역에 좌표 저장
-            CreateParty.latitude = self.latitude
-            CreateParty.longitude = self.longitude
-            
-            // 검색된 위치로 마커 이동
-            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: placemark?.first?.location?.coordinate.latitude ?? 0, longitude: placemark?.first?.location?.coordinate.longitude ?? 0))
-            
-            // 주소 추출
-            if let administrativeArea = placemark?.first?.administrativeArea,
-               let locality = placemark?.first?.locality,
-               let name = placemark?.first?.name {
-                // 일단 검색 결과 주소를 넣고 마커 이동하면 갱신된 주소를 대입
-                self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+        guard let searchedKeyword = searchTextField.text else { return }
+        geocoder.geocodeAddressString(searchedKeyword) { placemarks, error in
+            guard let placemarks = placemarks else { return }
+            if error != nil {
+                print("DEBUG 에러 발생: \(error!.localizedDescription)")
+            } else if placemarks.count > 0 {
+                print("DEBUG: 카카오맵 placemarks", placemarks)
+                let placemark = placemarks.first
+                let location = placemark?.location
+                let coordinate = location?.coordinate
+                
+                // 검색된 위치로 맵의 중심을 이동
+                let searchedPlace = MTMapPointGeo(latitude: coordinate?.latitude ?? 0, longitude: coordinate?.longitude ?? 0)
+                self.mapView!.setMapCenter(MTMapPoint(geoCoord: searchedPlace), zoomLevel: 5, animated: true)
+                
+                // API Request를 위해 전역에 좌표 저장
+                self.latitude = coordinate?.latitude ?? 0
+                self.longitude = coordinate?.longitude ?? 0
+                
+                // 마커 이동 안 했을 때를 대비하여 전역에 좌표 저장
+                CreateParty.latitude = self.latitude
+                CreateParty.longitude = self.longitude
+                
+                // 검색된 위치로 마커 이동
+                self.marker.mapPoint = MTMapPoint(geoCoord: searchedPlace)
+                
+                // 주소 추출
+                if let administrativeArea = placemark?.administrativeArea,
+                   let locality = placemark?.locality,
+                   let name = placemark?.name {
+                    // 일단 검색 결과 주소를 넣고 마커 이동하면 갱신된 주소를 대입
+                    self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+                    print("Seori Test \(administrativeArea) \(locality) \(name)")
+                }
             }
         }
     }

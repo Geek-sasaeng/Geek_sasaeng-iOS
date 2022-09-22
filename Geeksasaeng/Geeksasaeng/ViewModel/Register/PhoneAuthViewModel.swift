@@ -24,7 +24,7 @@ class PhoneAuthViewModel {
                     completion(.success, "인증번호가 전송되었습니다")
                 } else {
                     print("DEBUG: 실패", result.message!)
-                    completion(.OnlyRequestSuccess, result.message!)
+                    completion(.onlyRequestSuccess, result.message!)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)

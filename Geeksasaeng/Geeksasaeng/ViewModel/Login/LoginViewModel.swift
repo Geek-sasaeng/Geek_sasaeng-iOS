@@ -24,7 +24,7 @@ class LoginViewModel {
                     print("DEBUG: 성공")
                     completion(.success, passedResult, nil)
                 } else {
-                    completion(.OnlyRequestSuccess, nil, result.message!)
+                    completion(.onlyRequestSuccess, nil, result.message!)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
@@ -75,6 +75,6 @@ class LoginViewModel {
 
 enum ResponseCase {
     case success
-    case OnlyRequestSuccess
+    case onlyRequestSuccess
     case failure
 }

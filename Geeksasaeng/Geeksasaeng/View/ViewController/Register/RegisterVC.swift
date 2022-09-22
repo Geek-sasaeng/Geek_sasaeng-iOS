@@ -387,7 +387,7 @@ class RegisterViewController: UIViewController {
                         self.idAvailableLabel.text = message
                         self.idAvailableLabel.textColor = .mainColor
                         self.idAvailableLabel.isHidden = false
-                    case .OnlyRequestSuccess:
+                    case .onlyRequestSuccess:
                         self.idCheck = false
                         self.idAvailableLabel.text = message
                         self.idAvailableLabel.textColor = .red
@@ -423,7 +423,7 @@ class RegisterViewController: UIViewController {
                         self.nickNameAvailableLabel.text = message
                         self.nickNameAvailableLabel.textColor = .mainColor
                         self.nickNameAvailableLabel.isHidden = false
-                    case .OnlyRequestSuccess:
+                    case .onlyRequestSuccess:
                         self.nicknameCheck = true
                         self.nickNameAvailableLabel.text = message
                         self.nickNameAvailableLabel.textColor = .red
