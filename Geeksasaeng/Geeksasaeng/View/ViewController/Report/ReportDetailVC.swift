@@ -333,6 +333,19 @@ class ReportDetailViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = false
     }
     
+    // MARK: - Initialization
+    
+    init(labelText: String, reportCategoryId: Int?, partyId: Int?, memberId: Int?) {
+        super.init(nibName: nil, bundle: nil)
+        self.reportCategoryLabel.text = labelText
+        self.reportCategoryId = reportCategoryId
+        self.partyId = partyId
+        self.memberId = memberId
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Functions
     
