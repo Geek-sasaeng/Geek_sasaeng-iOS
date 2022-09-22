@@ -132,7 +132,7 @@ class AgreementViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
-        setComponentsAttributes()
+        setAttributes()
     }
     
     // MARK: - Initialization
@@ -269,7 +269,7 @@ class AgreementViewController: UIViewController {
         }
     }
     
-    private func setComponentsAttributes() {
+    private func setAttributes() {
         [progressBar, remainBar].forEach {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 1.5
@@ -303,8 +303,8 @@ class AgreementViewController: UIViewController {
                         UserDefaults.standard.set(result?.jwt, forKey: "jwt")
                         LoginModel.jwt = result?.jwt
                         self.showDomitoryView()
-                    case .OnlyRequestSuccess:
-                        print("OnlyRequestSuccess")
+                    case .onlyRequestSuccess:
+                        print("onlyRequestSuccess")
                     case .failure:
                         print("Failure")
                     }
@@ -336,8 +336,8 @@ class AgreementViewController: UIViewController {
                     switch isSuccess {
                     case .success:
                         self.showLoginView()
-                    case .OnlyRequestSuccess:
-                        print("OnlyRequestSuccess")
+                    case .onlyRequestSuccess:
+                        print("onlyRequestSuccess")
                     case .failure:
                         print("Failure")
                     }

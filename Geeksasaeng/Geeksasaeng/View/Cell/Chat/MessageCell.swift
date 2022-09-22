@@ -28,7 +28,7 @@ class MessageCell: UICollectionViewCell {
         
         addSubViews()
         setLayouts()
-        setComponentsAttributes()
+        setAttributes()
     }
     
     override func prepareForReuse() {
@@ -97,7 +97,7 @@ class MessageCell: UICollectionViewCell {
         }
     }
     
-    private func setComponentsAttributes() {
+    private func setAttributes() {
         nicknameLabel.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 11))
         rightTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
         leftTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))

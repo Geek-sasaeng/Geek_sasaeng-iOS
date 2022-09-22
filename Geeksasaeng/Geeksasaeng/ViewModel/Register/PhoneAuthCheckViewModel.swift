@@ -23,7 +23,7 @@ class PhoneAuthCheckViewModel {
                         completion(.success, passedResult, nil)
                     } else {
                         print("DEBUG: 실패", result.message!)
-                        completion(.OnlyRequestSuccess, nil, result.message!)
+                        completion(.onlyRequestSuccess, nil, result.message!)
                     }
                 case .failure(let error):
                     print("DEBUG:", error.localizedDescription)

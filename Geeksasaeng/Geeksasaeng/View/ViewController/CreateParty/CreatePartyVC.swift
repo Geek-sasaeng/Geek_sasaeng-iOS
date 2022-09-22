@@ -507,7 +507,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         orderForecastTimeButton.setTitle(formatter.string(from: Date()), for: .normal)
     }
     
-    private func createBlueView() {
+    private func createBlurView() {
         if visualEffectView == nil {
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
@@ -595,7 +595,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapOrderForecastTimeButton() {
         view.endEditing(true)
-        createBlueView()
+        createBlurView()
         selectedLocationLabel.isUserInteractionEnabled = false
         
         // addSubview animation 처리
@@ -603,7 +603,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     @objc
     private func tapSelectedPersonLabel() {
-        createBlueView()
+        createBlurView()
         selectedLocationLabel.isUserInteractionEnabled = false
         
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC 띄우기
@@ -612,7 +612,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     @objc
     private func tapSelectedCategoryLabel() {
-        createBlueView()
+        createBlurView()
         selectedLocationLabel.isUserInteractionEnabled = false
         
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
@@ -622,7 +622,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     @objc
     private func tapSelectedUrlLabel() {
-        createBlueView()
+        createBlurView()
         selectedLocationLabel.isUserInteractionEnabled = false
         
         // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, urlVC 띄우기
@@ -633,7 +633,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     @objc
     private func tapSelectedLocationLabel() {
-        createBlueView()
+        createBlurView()
         
         // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC, receiptPlaceVC 띄우기
         addOrderForecastTimeVC()
@@ -669,7 +669,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         view.endEditing(true)
-        createBlueView()
+        createBlurView()
         
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = BankAccountViewController()

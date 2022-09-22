@@ -43,7 +43,7 @@ class RepetitionAPI {
                             completion(.success, result.message!)
                         } else {
                             print("DEBUG: 실패", result.message!)
-                            completion(.OnlyRequestSuccess, result.message!)
+                            completion(.onlyRequestSuccess, result.message!)
                         }
                     case .failure(let error):
                         print("DEBUG:", error.localizedDescription)
@@ -64,7 +64,7 @@ class RepetitionAPI {
                         completion(.success, result.message!)
                     } else {
                         print("DEBUG: 실패", result.message!)
-                        completion(.OnlyRequestSuccess, result.message!)
+                        completion(.onlyRequestSuccess, result.message!)
                     }
                 case .failure(let error):
                     print("DEBUG: ", error.localizedDescription)

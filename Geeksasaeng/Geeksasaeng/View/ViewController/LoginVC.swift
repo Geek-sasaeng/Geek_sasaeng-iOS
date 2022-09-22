@@ -115,7 +115,7 @@ class LoginViewController: UIViewController {
         addSubViews()
         setLayouts()
         setKeyboardDown()
-        setComponentsAttributes()
+        setAttributes()
     }
     
     // MARK: - Functions
@@ -238,7 +238,7 @@ class LoginViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
     
-    private func setComponentsAttributes() {
+    private func setAttributes() {
         [scrollView, contentView].forEach {
             $0.backgroundColor = .white
         }
@@ -303,7 +303,7 @@ class LoginViewController: UIViewController {
                     } else {
                         self.showNextView(isFirstLogin: false)
                     }
-                case .OnlyRequestSuccess:
+                case .onlyRequestSuccess:
                     self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
                 case .failure:
                     self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)   
