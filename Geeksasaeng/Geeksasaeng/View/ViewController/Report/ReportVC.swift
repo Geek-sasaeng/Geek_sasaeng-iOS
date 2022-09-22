@@ -76,7 +76,8 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.delegate = self
         
-        setTableView()
+        [postReportTableView,
+         userReportTableView].forEach { setTableView($0) }
         setAttributes()
         addSubViews()
         setLayouts()
@@ -157,18 +158,13 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* 테이블뷰 세팅 */
-    private func setTableView() {
-        postReportTableView.delegate = self
-        postReportTableView.dataSource = self
-        postReportTableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
-        
-        userReportTableView.delegate = self
-        userReportTableView.dataSource = self
-        userReportTableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
+    private func setTableView(_ tableView: UITableView) {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
         
         // 테이블뷰 셀 높이 설정
-        postReportTableView.rowHeight = 41   // 11 + 11 + 19
-        userReportTableView.rowHeight = 41   // 11 + 11 + 19
+        tableView.rowHeight = 41   // 11 + 11 + 19
     }
     
     // MARK: - @objc Functions
