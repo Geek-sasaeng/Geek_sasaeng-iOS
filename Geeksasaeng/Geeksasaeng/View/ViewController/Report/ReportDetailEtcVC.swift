@@ -48,7 +48,7 @@ class ReportDetailEtcViewController: UIViewController {
     
     lazy var checkBoxButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "CheckBox"), for: .normal)
+        button.setImage(UIImage(systemName: "square"), for: .normal)
         button.addTarget(self, action: #selector(tapCheckBoxButton(_:)), for: .touchUpInside)
         button.tintColor = .init(hex: 0x5B5B5B)
         return button
@@ -392,9 +392,8 @@ class ReportDetailEtcViewController: UIViewController {
         }
         
         reportButton.snp.makeConstraints { make in
-            make.width.equalToSuperview()
+            make.width.bottom.equalToSuperview()
             make.height.equalTo(55 + 20)    // 20은 safeAreaLayoutGuide 아래 빈 공간 가리기 위해 추가
-            make.bottom.equalToSuperview()
         }
     }
     
@@ -416,7 +415,7 @@ class ReportDetailEtcViewController: UIViewController {
         }
     }
     
-    // MARK: - Objc Functions
+    // MARK: - @objc Functions
 
     /* 키보드 숨기기 */
     @objc
@@ -434,7 +433,7 @@ class ReportDetailEtcViewController: UIViewController {
     @objc
     private func tapCheckBoxButton(_ sender: UIButton) {
         isBlock = !isBlock
-        (isBlock) ? sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal) : sender.setImage(UIImage(systemName: "square"), for: .normal)
+        sender.setImage(UIImage(systemName: (isBlock) ? "checkmark.square" : "square"), for: .normal)
     }
     
     /* 키보드 올라올 때 실행되는 함수 */
