@@ -54,6 +54,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     let postReportTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
+        tableView.tag = 1
         return tableView
     }()
     
@@ -67,6 +68,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     let userReportTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
+        tableView.tag = 2
         return tableView
     }()
     
@@ -173,7 +175,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         userReportTableView.rowHeight = 41   // 11 + 11 + 19
     }
     
-    // MARK: - Objc Functions
+    // MARK: - @objc Functions
     
      /* 이전 화면으로 돌아가기 */
     @objc
@@ -220,7 +222,7 @@ extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
     
     /* 셀 갯수 설정 */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == postReportTableView {
+        if tableView.tag == 1 {
             return postReportCategoryData.count
         } else {
             return userReportCategoryData.count
@@ -231,7 +233,7 @@ extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ReportTableViewCell.identifier, for: indexPath) as? ReportTableViewCell else { return UITableViewCell() }
         
-        if tableView == postReportTableView {
+        if tableView.tag == 1 {
             cell.reportCategoryLabel.text = postReportCategoryData[indexPath.row]
             cell.arrowButton.tag = indexPath.row
             
