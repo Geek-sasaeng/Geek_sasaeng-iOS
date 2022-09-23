@@ -37,16 +37,12 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     
     let postReportLabel: UILabel = {
         let label = UILabel()
-        label.text = "파티 게시글 신고"
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .black
+        label.setTextAndColorAndFont(text: "파티 게시글 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
         return label
     }()
     let userReportLabel: UILabel = {
         let label = UILabel()
-        label.text = "사용자 신고"
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .black
+        label.setTextAndColorAndFont(text: "사용자 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
         return label
     }()
     
@@ -54,6 +50,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     let postReportTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
+        tableView.tag = 1
         return tableView
     }()
     
@@ -67,6 +64,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     let userReportTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
+        tableView.tag = 2
         return tableView
     }()
     
@@ -78,7 +76,8 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.delegate = self
         
-        setTableView()
+        [postReportTableView,
+         userReportTableView].forEach { setTableView($0) }
         setAttributes()
         addSubViews()
         setLayouts()
@@ -159,21 +158,16 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* 테이블뷰 세팅 */
-    private func setTableView() {
-        postReportTableView.delegate = self
-        postReportTableView.dataSource = self
-        postReportTableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
-        
-        userReportTableView.delegate = self
-        userReportTableView.dataSource = self
-        userReportTableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
+    private func setTableView(_ tableView: UITableView) {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ReportTableViewCell.self, forCellReuseIdentifier: ReportTableViewCell.identifier)
         
         // 테이블뷰 셀 높이 설정
-        postReportTableView.rowHeight = 41   // 11 + 11 + 19
-        userReportTableView.rowHeight = 41   // 11 + 11 + 19
+        tableView.rowHeight = 41   // 11 + 11 + 19
     }
     
-    // MARK: - Objc Functions
+    // MARK: - @objc Functions
     
      /* 이전 화면으로 돌아가기 */
     @objc
@@ -184,18 +178,20 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     /* 기타 사유 선택 카테고리가 아닌 화살표를 눌렀을 때 실행되는 함수 */
     @objc
     private func tapReportArrowButton(_ sender: UIButton) {
-        let reportDetailVC = ReportDetailViewController()
         // 태그 번호에 따라 파티 게시글 신고 화살표인지, 사용자 신고의 화살표인지 확인
+        var passedText: String?
         if sender.tag < 4 {
-            reportDetailVC.reportCategoryLabel.text = postReportCategoryData[sender.tag]
+            passedText = postReportCategoryData[sender.tag]
         } else {
-            reportDetailVC.reportCategoryLabel.text = userReportCategoryData[sender.tag - 4]    // 인덱스 가져올 땐 다시 4빼서
+            passedText = userReportCategoryData[sender.tag - 4]
         }
         
-        // 신고하기 카테고리 id값, 파티 id값, 유저 id값 전달
-        reportDetailVC.reportCategoryId = sender.tag + 1 // 1부터 시작
-        reportDetailVC.partyId = partyId
-        reportDetailVC.memberId = memberId
+        // 신고하기 카테고리 label text값과 id값, 파티 id값, 유저 id값 전달
+        let reportDetailVC = ReportDetailViewController(
+            labelText: passedText!,
+            reportCategoryId: sender.tag + 1,
+            partyId: partyId,
+            memberId: memberId)
         
         self.navigationController?.pushViewController(reportDetailVC, animated: true)
     }
@@ -203,12 +199,8 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     /* 기타 사유 선택 카테고리 화살표를 눌렀을 때 실행되는 함수 */
     @objc
     private func tapReportEtcArrowButton(_ sender: UIButton) {
-        let reportDetailEtcVC = ReportDetailEtcViewController()
-        
         // 신고하기 카테고리 id값, 파티 id값, 유저 id값 전달
-        reportDetailEtcVC.reportCategoryId = sender.tag + 1 // 1부터 시작
-        reportDetailEtcVC.partyId = partyId
-        reportDetailEtcVC.memberId = memberId
+        let reportDetailEtcVC = ReportDetailEtcViewController(reportCategoryId: sender.tag + 1, partyId: partyId, memberId: memberId)
         
         self.navigationController?.pushViewController(reportDetailEtcVC, animated: true)
     }
@@ -220,7 +212,7 @@ extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
     
     /* 셀 갯수 설정 */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == postReportTableView {
+        if tableView.tag == 1 {
             return postReportCategoryData.count
         } else {
             return userReportCategoryData.count
@@ -231,7 +223,7 @@ extension ReportViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ReportTableViewCell.identifier, for: indexPath) as? ReportTableViewCell else { return UITableViewCell() }
         
-        if tableView == postReportTableView {
+        if tableView.tag == 1 {
             cell.reportCategoryLabel.text = postReportCategoryData[indexPath.row]
             cell.arrowButton.tag = indexPath.row
             

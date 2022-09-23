@@ -174,14 +174,14 @@ class BankAccountViewController: UIViewController {
         }
     }
     
+    // MARK: - @objc Functions
+    
     /* 다음 버튼 누르면 실행되는 함수 -> 파티 이름 입력하기 화면을 보여줌 */
     @objc
     private func tapNextButton() {
-        if let bank = bankTextField.text {
+        if let bank = bankTextField.text,
+           let accountNumber = accountNumberTextField.text {
             CreateParty.bank = bank
-        }
-        
-        if let accountNumber = accountNumberTextField.text {
             CreateParty.accountNumber = accountNumber
         }
         
@@ -207,8 +207,10 @@ class BankAccountViewController: UIViewController {
     
     @objc
     private func changeValueTitleTextField() {
-        if bankTextField.text?.count ?? 0 >= 1
-            && accountNumberTextField.text?.count ?? 0 >= 1 {
+        guard let bankText = bankTextField.text,
+              let accountNumberText = accountNumberTextField.text else { return }
+                
+        if bankText.count >= 1 && accountNumberText.count >= 1 {
             nextButton.setActivatedNextButton()
         }
     }

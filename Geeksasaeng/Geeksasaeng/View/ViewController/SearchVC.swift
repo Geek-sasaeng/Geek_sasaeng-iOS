@@ -143,7 +143,6 @@ class SearchViewController: UIViewController {
     let filterImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "FilterImage"))
         imageView.tintColor = UIColor(hex: 0x2F2F2F)
-        imageView.isHidden = true
         return imageView
     }()
     
@@ -153,20 +152,17 @@ class SearchViewController: UIViewController {
         label.text = "인원 선택"
         label.font = .customFont(.neoMedium, size: 14)
         label.textColor = UIColor(hex: 0xA8A8A8)
-        label.isHidden = true
         return label
     }()
     let peopleFilterToggleImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
         imageView.tintColor = UIColor(hex: 0xA8A8A8)
-        imageView.isHidden = true
         return imageView
     }()
     lazy var peopleFilterView: UIView = {
         var view = UIView()
         view.backgroundColor = .init(hex: 0xF8F8F8)
         view.layer.cornerRadius = 5
-        view.isHidden = true
         
         [
             peopleFilterLabel,
@@ -266,7 +262,6 @@ class SearchViewController: UIViewController {
     lazy var partyTableView: UITableView = {
         var tableView = UITableView()
         tableView.backgroundColor = .white
-        tableView.isHidden = true
         return tableView
     }()
     
@@ -276,7 +271,6 @@ class SearchViewController: UIViewController {
         // 그라데이션 적용
         view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
         view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
-        view.isHidden = true
         return view
     }()
     
@@ -304,14 +298,7 @@ class SearchViewController: UIViewController {
         setTableView()
         
         // 검색 결과 화면 숨기기 - 초기화
-        [
-            filterImageView,
-            peopleFilterView,
-            peopleFilterLabel,
-            peopleFilterToggleImageView,
-            timeCollectionView
-        ].forEach { $0.isHidden = true }
-        
+        showSearchMainView()
         setTapGestures()
     }
     
@@ -493,17 +480,17 @@ class SearchViewController: UIViewController {
     
     /* Vertical Label list의 label을 구성한다 */
     private func setVLabelList(_ passedArray: [String], _ stackView: UIStackView) {
-          for i in 0..<passedArray.count {
-              /* Filter Label */
-              let filterLabel = UILabel()
-              let filterText = passedArray[i]
-              filterLabel.textColor = .init(hex: 0xD8D8D8)
-              filterLabel.font = .customFont(.neoMedium, size: 14)
-              filterLabel.text = filterText
-              
-              /* Stack View */
-              stackView.addArrangedSubview(filterLabel)
-          }
+        for i in 0..<passedArray.count {
+            /* Filter Label */
+            let filterLabel = UILabel()
+            let filterText = passedArray[i]
+            filterLabel.textColor = .init(hex: 0xD8D8D8)
+            filterLabel.font = .customFont(.neoMedium, size: 14)
+            filterLabel.text = filterText
+            
+            /* Stack View */
+            stackView.addArrangedSubview(filterLabel)
+        }
     }
     
     /* 배달 파티 검색 */
@@ -512,7 +499,7 @@ class SearchViewController: UIViewController {
               let dormitoryInfo = dormitoryInfo,
               let dormitoryId = dormitoryInfo.id else { return }
         print("DEBUG:", keyword, dormitoryInfo)
-        if searchTextField.text == "" { return }
+        if keyword.isEmpty { return }
         
         print("DEBUG: 검색어 내용 \(keyword) 기숙사 정보 \(dormitoryInfo)")
         
@@ -578,7 +565,7 @@ class SearchViewController: UIViewController {
     
     /* peopleFilter를 사용하여 데이터 가져오기 */
     private func getPeopleFilterList(text: String?) {
-        deliveryCellDataArray.removeAll()
+        removeCellData()
         
         enum peopleOption: String {
             case two = "2명 이하"
@@ -607,7 +594,6 @@ class SearchViewController: UIViewController {
         print("TEST: ", num ?? -1)
 
         if let num = num {
-            cursor = 0
             nowPeopleFilter = num
             print("DEBUG:", nowPeopleFilter as Any, nowTimeFilter as Any)
             
@@ -618,8 +604,7 @@ class SearchViewController: UIViewController {
 
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
-        deliveryCellDataArray.removeAll()
-        cursor = 0
+        removeCellData()
 
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
         enum TimeOption: String {
@@ -645,7 +630,6 @@ class SearchViewController: UIViewController {
         
         if let orderTimeCategory = orderTimeCategory {
             nowTimeFilter = orderTimeCategory
-            print("DEBUG:", nowPeopleFilter, nowTimeFilter)
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
             getSearchedDeliveryList(input)
         }
@@ -669,6 +653,12 @@ class SearchViewController: UIViewController {
         DispatchQueue.main.async {
             self.partyTableView.reloadData()
         }
+    }
+    
+    /* 배달파티 목록, 커서 초기화 함수 */
+    private func removeCellData() {
+        deliveryCellDataArray.removeAll()
+        cursor = 0
     }
     
     /* 무한 스크롤로 마지막 데이터까지 가면 나오는(= FooterView) 데이터 로딩 표시 생성 */
@@ -720,9 +710,6 @@ class SearchViewController: UIViewController {
                 // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
                 if !isFinalPage {
                     cursor += 1
-                    print("DEBUG: cursor", cursor)
-                    print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
-                    
                     let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
                     getSearchedDeliveryList(input)
                 }
@@ -740,8 +727,7 @@ class SearchViewController: UIViewController {
     @objc
     private func tapSearchButton() {
         if nowSearchKeyword != searchTextField.text {
-            deliveryCellDataArray.removeAll()
-            cursor = 0
+            removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
             getSearchedDeliveryList(input)
@@ -793,8 +779,7 @@ class SearchViewController: UIViewController {
             nowPeopleFilter = nil
             
             // 초기화
-            deliveryCellDataArray.removeAll()
-            cursor = 0
+            removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
             getSearchedDeliveryList(input)
@@ -842,13 +827,10 @@ class SearchViewController: UIViewController {
             // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
             label.textColor = .init(hex: 0xD8D8D8)
             
-            // 시간 필터 해제
+            // 시간 필터 초기화
             nowTimeFilter = nil
+            removeCellData()
             
-            // 초기화
-            deliveryCellDataArray.removeAll()
-            cursor = 0
-            print("DEBUG: Filter", nowPeopleFilter, nowTimeFilter)
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
             getSearchedDeliveryList(input)
         }
@@ -862,8 +844,7 @@ class SearchViewController: UIViewController {
     private func pullToRefresh() {
         // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
         print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
-        deliveryCellDataArray.removeAll()
-        cursor = 0
+        removeCellData()
         
         // API 호출
         let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
@@ -1004,6 +985,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         let viewController = PartyViewController()
         viewController.partyId = deliveryCellDataArray[indexPath.row].id
         self.navigationController?.pushViewController(viewController, animated: true)
+        
+        // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

@@ -24,8 +24,7 @@ class ReportDetailViewController: UIViewController {
     
     let reportCategoryLabel: UILabel = {
         let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .black
+        label.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 16))
         return label
     }()
     
@@ -57,18 +56,16 @@ class ReportDetailViewController: UIViewController {
     
     let blockUserLabel: UILabel = {
         let label = UILabel()
-        label.text = "이 사용자 차단하기"
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .mainColor
+        label.setTextAndColorAndFont(text: "이 사용자 차단하기", textColor: .mainColor, font: .customFont(.neoMedium, size: 15))
         return label
     }()
     
     let guideLabel: UILabel = {
         let label = UILabel()
-        label.text = "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다."
+        label.setTextAndColorAndFont(text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다.",
+                                     textColor: .init(hex: 0xA8A8A8),
+                                     font: .customFont(.neoRegular, size: 15))
         label.numberOfLines = 0
-        label.font = .customFont(.neoRegular, size: 15)
-        label.textColor = .init(hex: 0xA8A8A8)
         return label
     }()
     
@@ -80,9 +77,7 @@ class ReportDetailViewController: UIViewController {
         
         let reportLabel: UILabel = {
             let label = UILabel()
-            label.text = "신고하기"
-            label.textColor = .white
-            label.font = .customFont(.neoBold, size: 20)
+            label.setTextAndColorAndFont(text: "신고하기", textColor: .white, font: .customFont(.neoBold, size: 20))
             return label
         }()
         button.addSubview(reportLabel)
@@ -120,9 +115,7 @@ class ReportDetailViewController: UIViewController {
         
         /* set titleLabel */
         let titleLabel = UILabel()
-        titleLabel.text = "신고하기"
-        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
-        titleLabel.font = .customFont(.neoMedium, size: 14)
+        titleLabel.setTextAndColorAndFont(text: "신고하기", textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
         topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -159,10 +152,10 @@ class ReportDetailViewController: UIViewController {
         }
         
         /* set contentLabel */
-        contentLabel.text = "고객님께서 요청하신 사항에\n따른 신고가 정상적으로\n처리되었습니다."
+        contentLabel.setTextAndColorAndFont(
+            text: "고객님께서 요청하신 사항에\n따른 신고가 정상적으로\n처리되었습니다.",
+            textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
         contentLabel.numberOfLines = 0
-        contentLabel.textColor = .init(hex: 0x2F2F2F)
-        contentLabel.font = .customFont(.neoMedium, size: 14)
         let attrString = NSMutableAttributedString(string: contentLabel.text!)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 6
@@ -223,9 +216,7 @@ class ReportDetailViewController: UIViewController {
         
         /* set titleLabel */
         let titleLabel = UILabel()
-        titleLabel.text = "신고하기"
-        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
-        titleLabel.font = .customFont(.neoMedium, size: 14)
+        titleLabel.setTextAndColorAndFont(text: "신고하기", textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
         topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -245,7 +236,7 @@ class ReportDetailViewController: UIViewController {
         
         /* bottom View: contents, 확인 버튼 */
         let bottomSubView = UIView()
-        bottomSubView.backgroundColor = UIColor.white
+        bottomSubView.backgroundColor = .white
         view.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
@@ -262,8 +253,7 @@ class ReportDetailViewController: UIViewController {
         
         /* set failContentLabel */
         failContentLabel.numberOfLines = 0
-        failContentLabel.textColor = .init(hex: 0x2F2F2F)
-        failContentLabel.font = .customFont(.neoMedium, size: 14)
+        failContentLabel.setTextAndColorAndFont(textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
         let attrString = NSMutableAttributedString(string: failContentLabel.text!)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 6
@@ -333,6 +323,19 @@ class ReportDetailViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = false
     }
     
+    // MARK: - Initialization
+    
+    init(labelText: String, reportCategoryId: Int?, partyId: Int?, memberId: Int?) {
+        super.init(nibName: nil, bundle: nil)
+        self.reportCategoryLabel.text = labelText
+        self.reportCategoryId = reportCategoryId
+        self.partyId = partyId
+        self.memberId = memberId
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Functions
     
@@ -416,7 +419,7 @@ class ReportDetailViewController: UIViewController {
         }
     }
     
-    // MARK: - Objc Functions
+    // MARK: - @objc Functions
 
     /* 키보드 숨기기 */
     @objc

@@ -455,8 +455,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         view.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.width.equalToSuperview()
+            make.top.width.equalToSuperview()
             make.height.equalTo(50)
         }
         
@@ -520,8 +519,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
-            make.left.equalTo(18)
-            make.right.equalTo(-18)
+            make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1.7)
         }
         
@@ -585,7 +583,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func setFirestore() {
         settings.isPersistenceEnabled = false
         db.settings = settings
-        
         db.clearPersistence()
     }
     
@@ -648,7 +645,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         guard let belongStatus = self.detailData.belongStatus else { return }
         print("속해있는가", belongStatus)
-        print("방장인가", self.detailData.authorStatus)
+        print("방장인가", self.detailData.authorStatus as Any)
         
         if belongStatus == "Y" {
             self.signUpButton.setTitle("채팅방 가기", for: .normal)
@@ -659,9 +656,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                                                           
     
     private func setDefaultValue() {
-//        chiefProfileImgUrl -> default image 추후에
-//        id
-//        matchingStatus      안 쓴 다섯 개 값 (나중에 필요)
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
@@ -797,9 +791,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         contentLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
+            make.left.right.equalToSuperview().inset(23)
             make.top.equalTo(titleLabel.snp.bottom).offset(14)
-            make.right.equalToSuperview().inset(23)
         }
         
         separateView.snp.makeConstraints { make in
@@ -913,19 +906,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.rightBarButtonItem?.imageInsets = .init(top: -3, left: 0, bottom: 0, right: 20)
     }
     
-    /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
-    @objc
-    private func tapEllipsisOption() {
-        guard let authorStatus = detailData.authorStatus else { return }
-        
-        // 글쓴이인지 아닌지 확인해서 해당하는 옵션뷰에 애니메이션을 적용한다
-        if authorStatus {
-            showOptionMenu(optionViewForAuthor, UIScreen.main.bounds.height / 3.8)
-        } else {
-            showOptionMenu(optionView, UIScreen.main.bounds.height / 5.5)
-        }
-    }
-    
     /*
      오른쪽 상단의 옵션뷰 보여주기
      - 오른쪽 위에서부터 대각선 아래로 내려오는 애니메이션 설정
@@ -1021,20 +1001,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         timer?.resume()
     }
     
-    /* 이전 화면으로 돌아가기 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    /* 옵션뷰 안에 들어있는 Ellipsis 버튼 클릭해서 옵션뷰 사라지게 할 때 사용하는 함수 */
-    @objc
-    private func tapEllipsisInOptionView(_ sender: UIButton) {
-        // 클릭한 버튼의 superView가 그냥 optionView인지 optionViewForAuthor인지 파라미터로 보내주는 것
-        guard let nowView = sender.superview else { return }
-        showPartyPost(nowView)
-    }
-    
     /* 파티 보기 화면으로 돌아가기 */
     private func showPartyPost(_ nowView: UIView) {
         UIView.animate(
@@ -1049,128 +1015,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.layer.opacity -= 0.6
             },
             completion: { _ in ()
-                nowView.removeFromSuperview()
-                self.visualEffectView?.removeFromSuperview()
+                self.removeViewWithBlurView(nowView)
             }
         )
-    }
-    
-    @objc
-    private func showEditView() {
-        optionViewForAuthor.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
-        
-        let editPartyVC = EditPartyViewController()
-        editPartyVC.dormitoryInfo = dormitoryInfo
-        editPartyVC.detailData = detailData
-        editPartyVC.isEdittiedDelegate = self
-        navigationController?.pushViewController(editPartyVC, animated: true)
-    }
-        
-    /* 신고하기 버튼 눌렀을 때 화면 전환 */
-    @objc
-    private func tapReportButton() {
-        guard let partyId = self.partyId,
-              let memberId = self.detailData.chiefId else { return }
-        
-        let reportVC = ReportViewController()
-        
-        // 해당 배달파티 id값, 유저 id값 전달
-        reportVC.partyId = partyId
-        reportVC.memberId = memberId
-        
-        // 옵션탭 집어넣고 화면 전환 실행
-        self.optionView.removeFromSuperview()
-        self.visualEffectView?.removeFromSuperview()
-        self.navigationController?.pushViewController(reportVC, animated: true)
-    }
-    
-    @objc
-    private func showDeleteView() {
-        optionViewForAuthor.removeFromSuperview()
-        
-        view.addSubview(deleteView)
-        deleteView.snp.makeConstraints { make in
-            make.center.equalTo(view.center)
-        }
-    }
-    
-    @objc
-    private func removeDeleteView() {
-        deleteView.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
-    }
-    
-    /* 신청하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
-    @objc
-    private func removeRegisterView() {
-        registerView.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
-    }
-    
-    /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
-    @objc
-    private func tapConfirmButton() {
-        guard let partyId = partyId else { return }
-
-        // 파티 삭제
-        DeletePartyViewModel.deleteParty(partyId: partyId) { success in
-            if success {
-                // 삭제하기 뷰 없애고
-                self.removeDeleteView()
-                // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
-                self.delegate?.updateDeliveryList()
-                // 이전화면으로 이동
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
-    }
-    
-    /* 배달 파티 신청하기 버튼 눌렀을 때 실행되는 함수 */
-    @objc
-    private func tapSignUpButton(_ sender: UIButton) {
-        // 파티장이라면 채팅방으로 가는 로직을 연결
-        if sender.title(for: .normal) == "채팅방 가기" {
-            guard let roomUUID = detailData.uuid else { return }
-            db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
-                if let document = document {
-                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                    print("Cached document data: \(dataDescription)")
-                    
-                    do {
-                        let data = try document.data(as: RoomInfoModel.self)
-                        guard let roomInfo = data.roomInfo else { return }
-                        
-                        self.ChatRoomName = roomInfo.title
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    
-                    // 해당 채팅방으로 이동
-                    let chattingVC = ChattingViewController()
-                    chattingVC.roomName = self.ChatRoomName
-                    chattingVC.roomUUID = roomUUID
-                    chattingVC.maxMatching = self.detailData.maxMatching
-                    self.navigationController?.pushViewController(chattingVC, animated: true)
-                } else {
-                    print("Document does not exist in cache")
-                }
-            }
-        } else {
-            // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
-            // 배경을 흐리게, 블러뷰로 설정
-            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-            visualEffectView.layer.opacity = 0.6
-            visualEffectView.frame = view.frame
-            view.addSubview(visualEffectView)
-            self.visualEffectView = visualEffectView
-            
-            /* 신청하기 뷰 보여줌 */
-            view.addSubview(registerView)
-            registerView.snp.makeConstraints { make in
-                make.centerX.centerY.equalToSuperview()
-            }
-        }
     }
     
     /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
@@ -1251,35 +1098,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
-    @objc
-    private func tapRegisterConfirmButton() {
-        // 신청하기 뷰 없애고
-        removeRegisterView()
-        
-        guard let uuid = detailData.uuid else { return }
-        print("DEBUG: 이 채팅방의 uuid값은", uuid)
-        addParticipant(roomUUID: uuid, completion: { [self] in
-            print("DEBUG: 초대 상황은?", isInvited)
-            // 초대하기 성공했을 때만 성공 메세지 띄우기
-            if isInvited {
-                // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
-                // 배달 파티 신청하기 API 호출
-                guard let partyId = self.partyId else { return }
-                JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) {
-                    print("DEBUG: 배달 파티멤버로 추가 완료")
-                }
-                
-                showCompleteRegisterView()
-            } else {
-                // 초대 실패 시 실패 메세지 띄우기
-                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
-            }
-        })
-        
-        
-    }
-    
     private func showCompleteRegisterView() {
         /* 파티 신청 후 채팅방에 초대가 완료 됐을 때 뜨는 뷰 */
         toastView = {
@@ -1356,6 +1174,181 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func removeViewWithBlurView(_ view: UIView) {
+        view.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+    }
+    
+    // MARK: - @objc Functions
+    
+    /* Ellipsis Button을 눌렀을 때 동작하는, 옵션뷰를 나타나게 하는 함수 */
+    @objc
+    private func tapEllipsisOption() {
+        guard let authorStatus = detailData.authorStatus else { return }
+        
+        // 글쓴이인지 아닌지 확인해서 해당하는 옵션뷰에 애니메이션을 적용한다
+        if authorStatus {
+            showOptionMenu(optionViewForAuthor, UIScreen.main.bounds.height / 3.8)
+        } else {
+            showOptionMenu(optionView, UIScreen.main.bounds.height / 5.5)
+        }
+    }
+    
+    /* 이전 화면으로 돌아가기 */
+    @objc
+    private func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    /* 옵션뷰 안에 들어있는 Ellipsis 버튼 클릭해서 옵션뷰 사라지게 할 때 사용하는 함수 */
+    @objc
+    private func tapEllipsisInOptionView(_ sender: UIButton) {
+        // 클릭한 버튼의 superView가 그냥 optionView인지 optionViewForAuthor인지 파라미터로 보내주는 것
+        guard let nowView = sender.superview else { return }
+        showPartyPost(nowView)
+    }
+    
+    @objc
+    private func showEditView() {
+        removeViewWithBlurView(optionViewForAuthor)
+        
+        let editPartyVC = EditPartyViewController()
+        editPartyVC.dormitoryInfo = dormitoryInfo
+        editPartyVC.detailData = detailData
+        editPartyVC.isEdittiedDelegate = self
+        navigationController?.pushViewController(editPartyVC, animated: true)
+    }
+        
+    /* 신고하기 버튼 눌렀을 때 화면 전환 */
+    @objc
+    private func tapReportButton() {
+        guard let partyId = self.partyId,
+              let memberId = self.detailData.chiefId else { return }
+        
+        let reportVC = ReportViewController()
+        
+        // 해당 배달파티 id값, 유저 id값 전달
+        reportVC.partyId = partyId
+        reportVC.memberId = memberId
+        
+        // 옵션탭 집어넣고 화면 전환 실행
+        removeViewWithBlurView(self.optionView)
+        self.navigationController?.pushViewController(reportVC, animated: true)
+    }
+    
+    @objc
+    private func showDeleteView() {
+        optionViewForAuthor.removeFromSuperview()
+        
+        view.addSubview(deleteView)
+        deleteView.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
+    }
+    
+    @objc
+    private func removeDeleteView() {
+        removeViewWithBlurView(deleteView)
+    }
+    
+    /* 신청하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
+    @objc
+    private func removeRegisterView() {
+        removeViewWithBlurView(registerView)
+    }
+    
+    /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapConfirmButton() {
+        guard let partyId = partyId else { return }
+
+        // 파티 삭제
+        DeletePartyViewModel.deleteParty(partyId: partyId) { success in
+            if success {
+                // 삭제하기 뷰 없애고
+                self.removeDeleteView()
+                // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
+                self.delegate?.updateDeliveryList()
+                // 이전화면으로 이동
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
+    /* 배달 파티 신청하기 버튼 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapSignUpButton(_ sender: UIButton) {
+        // 파티장이라면 채팅방으로 가는 로직을 연결
+        if sender.title(for: .normal) == "채팅방 가기" {
+            guard let roomUUID = detailData.uuid else { return }
+            db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
+                if let document = document {
+                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                    print("Cached document data: \(dataDescription)")
+                    
+                    do {
+                        let data = try document.data(as: RoomInfoModel.self)
+                        guard let roomInfo = data.roomInfo else { return }
+                        
+                        self.ChatRoomName = roomInfo.title
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                    
+                    // 해당 채팅방으로 이동
+                    let chattingVC = ChattingViewController()
+                    chattingVC.roomName = self.ChatRoomName
+                    chattingVC.roomUUID = roomUUID
+                    chattingVC.maxMatching = self.detailData.maxMatching
+                    self.navigationController?.pushViewController(chattingVC, animated: true)
+                } else {
+                    print("Document does not exist in cache")
+                }
+            }
+        } else {
+            // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
+            // 배경을 흐리게, 블러뷰로 설정
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+            
+            /* 신청하기 뷰 보여줌 */
+            view.addSubview(registerView)
+            registerView.snp.makeConstraints { make in
+                make.centerX.centerY.equalToSuperview()
+            }
+        }
+    }
+    
+    /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapRegisterConfirmButton() {
+        // 신청하기 뷰 없애고
+        removeRegisterView()
+        
+        guard let uuid = detailData.uuid else { return }
+        print("DEBUG: 이 채팅방의 uuid값은", uuid)
+        addParticipant(roomUUID: uuid) { [self] in
+            print("DEBUG: 초대 상황은?", isInvited)
+            // 초대하기 성공했을 때만 성공 메세지 띄우기
+            if isInvited {
+                // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
+                // 배달 파티 신청하기 API 호출
+                guard let partyId = self.partyId else { return }
+                JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) {
+                    print("DEBUG: 배달 파티멤버로 추가 완료")
+                }
+                
+                showCompleteRegisterView()
+            } else {
+                // 초대 실패 시 실패 메세지 띄우기
+                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
+            }
+        }
+    }
+    
     /* 채팅방 생성 완료 뷰 X 눌렀을 때 사라지게 하는 함수 */
     @objc
     private func tapCancelButton() {
@@ -1393,7 +1386,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
 // MARK: - EdittedDelegate
 
 extension PartyViewController: EdittedDelegate {
-    func checkEditted(isEditted: Bool) {
+    public func checkEditted(isEditted: Bool) {
         if isEditted {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
             
