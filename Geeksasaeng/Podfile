@@ -16,6 +16,7 @@ target 'Geeksasaeng' do
   pod 'FirebaseFirestoreSwift'
   pod 'Firebase/Messaging'
   pod 'lottie-ios'
+  pod 'Then'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths
