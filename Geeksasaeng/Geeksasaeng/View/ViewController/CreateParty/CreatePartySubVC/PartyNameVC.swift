@@ -15,69 +15,56 @@ class PartyNameViewController: UIViewController {
     // MARK: - SubViews
     
     /* titleLabel: 파티 이름 입력하기 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "파티 이름 입력하기"
-        label.font = .customFont(.neoMedium, size: 18)
-        label.textColor = .black
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "파티 이름 입력하기"
+        $0.font = .customFont(.neoMedium, size: 18)
+        $0.textColor = .black
+    }
     
     /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "Back"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var backButton = UIButton().then {
+        $0.setImage(UIImage(named: "Back"), for: .normal)
+        $0.tintColor = UIColor(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
+    }
     
     /* 파티 채팅방 이름 입력하는 텍스트 필드 */
-    lazy var partyNameTextField: UITextField = {
-        let textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(
+    lazy var partyNameTextField = UITextField().then {
+        $0.attributedPlaceholder = NSAttributedString(
             string: "10글자 이내로 입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
-                         NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)]
-        )
-        textField.makeBottomLine()
-        textField.font = .customFont(.neoMedium, size: 15)
-        textField.textColor = .init(hex: 0x5B5B5B)
-        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
-        return textField
-    }()
+                         NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)])
+        $0.makeBottomLine()
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.textColor = .init(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+    }
     
     /* 추후 수정이 불가합니다 */
-    let guideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "추후 수정이 불가합니다"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xA8A8A8)
-        return label
-    }()
+    let guideLabel = UILabel().then {
+        $0.text = "추후 수정이 불가합니다"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xA8A8A8)
+    }
     
     /* 완료 버튼 */
-    lazy var confirmButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("완료", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setDeactivatedNextButton()
-        button.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var confirmButton = UIButton().then {
+        $0.setTitle("완료", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setDeactivatedNextButton()
+        $0.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
+    }
     
     /* pageLabel: 2/2 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "2/2"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
-    }()
+    let pageLabel = UILabel().then {
+        $0.text = "2/2"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     // MARK: - Properties
     

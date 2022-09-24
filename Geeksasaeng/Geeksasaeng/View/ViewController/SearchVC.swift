@@ -7,12 +7,13 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함 -> 이 화면은 이번 릴리즈 플래닝에 안 들어가나?
+    // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
     var recentSearchDataArray = ["중식", "한식", "이야기", "이야기", "이야기",
                                  "중식", "한식", "이야기", "이야기", "이야기"]
     var weeklyTopDataArray = ["치킨", "마라샹궈", "마라탕", "탕수육", "피자",
@@ -48,126 +49,100 @@ class SearchViewController: UIViewController {
     // MARK: - Subviews
     
     /* 검색창 textField */
-    lazy var searchTextField: UITextField = {
-        let textField = UITextField()
-        textField.backgroundColor = .white
-        textField.textColor = .init(hex: 0x2F2F2F)
-        textField.attributedPlaceholder = NSAttributedString(
+    lazy var searchTextField = UITextField().then {
+        $0.backgroundColor = .white
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.attributedPlaceholder = NSAttributedString(
             string: "검색어를 입력하세요",
             attributes: [
                 NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xEFEFEF),
                 NSAttributedString.Key.font: UIFont.customFont(.neoMedium, size: 20)
             ]
         )
-        textField.makeBottomLine()
-        textField.delegate = self
-        return textField
-    }()
+        $0.makeBottomLine()
+        $0.delegate = self
+    }
     
-    lazy var searchButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "SearchMark"), for: .normal)
-        button.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
-        button.contentMode = .scaleAspectFit
-        return button
-    }()
+    lazy var searchButton = UIButton().then {
+        $0.setImage(UIImage(named: "SearchMark"), for: .normal)
+        $0.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
+        $0.contentMode = .scaleAspectFit
+    }
     
-    let recentSearchLabel: UILabel = {
-        let label = UILabel()
-        label.text = "최근 검색어"
-        return label
-    }()
+    let recentSearchLabel = UILabel().then {
+        $0.text = "최근 검색어"
+    }
     
-    lazy var dormitoryWeeklyTopLabel: UILabel = {
-        let label = UILabel()
+    lazy var dormitoryWeeklyTopLabel = UILabel().then {
         if let name = dormitoryInfo?.name {
-            label.text = "\("제" + name) Weekly TOP 10"
+            $0.text = "\("제" + name) Weekly TOP 10"
         }
-        return label
-    }()
+    }
+    
+    // 최근 검색어 기록 Collection View의 레이아웃 설정
+    let recentSearchCollectionViewLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        // 셀 사이 좌우 간격 설정
+        $0.minimumInteritemSpacing = 20
+    }
     
     /* 최근 검색어 기록 Collection View */
-    let recentSearchCollectionView: UICollectionView = {
-        // 레이아웃 설정
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-
-        // 셀 사이 좌우 간격 설정
-        layout.minimumInteritemSpacing = 20
-        
-        // 컬렉션뷰 생성
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
-        collectionView.tag = 1
-        
+    lazy var recentSearchCollectionView =  UICollectionView(frame: .zero, collectionViewLayout: recentSearchCollectionViewLayout).then {
+        $0.backgroundColor = .white
+        $0.tag = 1
         // indicator 숨김
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
+        $0.showsHorizontalScrollIndicator = false
+    }
+    
+    // Weekly Top 10 Collection View의 레이아웃 설정
+    let weeklyTopCollectionViewLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        // 셀 사이 좌우 간격 설정
+        $0.minimumLineSpacing = 70
+        $0.minimumInteritemSpacing = 3
+    }
+    
     /* Weekly Top 10 Collection View */
-    let weeklyTopCollectionView: UICollectionView = {
-        // 레이아웃 설정
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-
-        // 셀 사이 좌우 간격 설정
-        layout.minimumLineSpacing = 70
-        layout.minimumInteritemSpacing = 3
-        
-        // 컬렉션뷰 생성
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
-        collectionView.tag = 2
-        
+    lazy var weeklyTopCollectionView = UICollectionView(frame: .zero, collectionViewLayout: weeklyTopCollectionViewLayout).then {
+        $0.backgroundColor = .white
+        $0.tag = 2
         // indicator 숨김
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
+        $0.showsHorizontalScrollIndicator = false
+    }
     
     /* 구분선 View */
-    let firstSeparateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
+    let firstSeparateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
     
     /* 배경에 있는 로고 이미지 */
-    let logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "SearchBackLogo")
-        return imageView
-    }()
+    let logoImageView = UIImageView().then {
+        $0.image = UIImage(named: "SearchBackLogo")
+    }
     
     /* 여기서부터 있는 서브뷰들은 다 '검색 결과 화면'에 쓰이는 서브뷰 */
     /* Filter Icon */
-    let filterImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "FilterImage"))
-        imageView.tintColor = UIColor(hex: 0x2F2F2F)
-        return imageView
-    }()
+    let filterImageView = UIImageView(image: UIImage(named: "FilterImage")).then {
+        $0.tintColor = UIColor(hex: 0x2F2F2F)
+    }
     
     /* People Filter */
-    let peopleFilterLabel: UILabel = {
-        let label = UILabel()
-        label.text = "인원 선택"
-        label.font = .customFont(.neoMedium, size: 14)
-        label.textColor = UIColor(hex: 0xA8A8A8)
-        return label
-    }()
-    let peopleFilterToggleImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-        imageView.tintColor = UIColor(hex: 0xA8A8A8)
-        return imageView
-    }()
-    lazy var peopleFilterView: UIView = {
-        var view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        view.layer.cornerRadius = 5
+    let peopleFilterLabel = UILabel().then {
+        $0.text = "인원 선택"
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = UIColor(hex: 0xA8A8A8)
+    }
+    let peopleFilterToggleImageView = UIImageView(image: UIImage(named: "ToggleMark")).then {
+        $0.tintColor = UIColor(hex: 0xA8A8A8)
+    }
+    lazy var peopleFilterView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+        $0.layer.cornerRadius = 5
         
         [
             peopleFilterLabel,
             peopleFilterToggleImageView
-        ].forEach { view.addSubview($0) }
+        ].forEach { $0.addSubview($0) }
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -179,102 +154,84 @@ class SearchViewController: UIViewController {
             make.centerY.equalToSuperview().offset(-1)
             make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
         }
-        return view
-    }()
+    }
     
     /* Expanded Filter Views */
     /* DropDown뷰의 데이터가 들어갈 stackView 생성 */
-    lazy var peopleOptionStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.sizeToFit()
-        stackView.layoutIfNeeded()
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .leading
-        stackView.spacing = 22
+    lazy var peopleOptionStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.sizeToFit()
+        $0.layoutIfNeeded()
+        $0.distribution = .fillProportionally
+        $0.alignment = .leading
+        $0.spacing = 22
         
         // stackView label 내용 구성
-        setVLabelList(["2명 이하", "4명 이하", "6명 이하", "8명 이하", "10명 이하"], stackView)
-        
-        return stackView
-    }()
+        setVLabelList(["2명 이하", "4명 이하", "6명 이하", "8명 이하", "10명 이하"], $0)
+    }
     
     /* peopleFilterView 눌렀을 때 확장되는 부분의 뷰 */
-    lazy var peopleDropDownView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
+    lazy var peopleDropDownView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
         
         // 왼쪽, 오른쪽 하단의 코너에만 cornerRadius를 적용
-        view.layer.masksToBounds = true
-        view.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMaxYCorner]
-        view.layer.cornerRadius = 5
-        view.isHidden = true
+        $0.layer.masksToBounds = true
+        $0.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMaxYCorner]
+        $0.layer.cornerRadius = 5
+        $0.isHidden = true
         
-        view.addSubview(peopleOptionStackView)
+        $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(15)
-            make.left.equalToSuperview().inset(14)
+            make.top.left.equalToSuperview().inset(16)
         }
-        return view
-    }()
+    }
     
     /* peopleFilterView가 dropdown 됐을 때 테두리 그림자를 활성화 시켜주기 위해 생성한 컨테이너 뷰 */
-    lazy var peopleFilterContainerView: UIView = {
-        var view = UIView()
-        view.backgroundColor = .none
-        view.layer.borderWidth = 5
-        view.layer.cornerRadius = 6
-        view.clipsToBounds = true
-        view.isHidden = true
+    lazy var peopleFilterContainerView = UIView().then {
+        $0.backgroundColor = .none
+        $0.layer.borderWidth = 5
+        $0.layer.cornerRadius = 6
+        $0.clipsToBounds = true
+        $0.isHidden = true
         
         // 테두리 그림자 생성
-        view.layer.shadowRadius = 5
-        view.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 0, height: 0)
-        view.layer.masksToBounds = false
+        $0.layer.shadowRadius = 5
+        $0.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        $0.layer.shadowOpacity = 1
+        $0.layer.shadowOffset = CGSize(width: 0, height: 0)
+        $0.layer.masksToBounds = false
         
         [peopleFilterView, peopleDropDownView].forEach { view.addSubview($0) }
-        
-        return view
-    }()
+    }
+    
+    // timeCollectionView 레이아웃 설정
+    let timeCollectionViewLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        // 셀 사이 좌우 간격 설정
+        $0.minimumInteritemSpacing = 9
+    }
    
     /* Time Filter -> 컬렉션뷰로 */
-    let timeCollectionView: UICollectionView = {
-        // 레이아웃 설정
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-
-        // 셀 사이 좌우 간격 설정
-        layout.minimumInteritemSpacing = 9
-        
-        // 컬렉션뷰 생성
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
-        collectionView.tag = 3
-        
+    lazy var timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout).then {
+        $0.backgroundColor = .white
+        $0.tag = 3
         // indicator 숨김
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
+        $0.showsHorizontalScrollIndicator = false
+    }
     
     /* Table View */
-    lazy var partyTableView: UITableView = {
-        var tableView = UITableView()
-        tableView.backgroundColor = .white
-        return tableView
-    }()
+    lazy var partyTableView = UITableView().then {
+        $0.backgroundColor = .white
+    }
     
     /* 테이블뷰 셀 하단에 블러뷰 */
-    lazy var blurView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140))
+    lazy var blurView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140)).then {
         // 그라데이션 적용
-        view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
-        view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
-        return view
-    }()
+        $0.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
+        $0.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
+    }
     
-    // MARK: - viewDidLoad()
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -301,8 +258,6 @@ class SearchViewController: UIViewController {
         showSearchMainView()
         setTapGestures()
     }
-    
-    // MARK: - viewWillAppear()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

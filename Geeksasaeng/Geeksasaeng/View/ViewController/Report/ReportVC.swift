@@ -24,49 +24,35 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - SubViews
     
     // 스크롤뷰
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
-    let contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
-    let postReportLabel: UILabel = {
-        let label = UILabel()
-        label.setTextAndColorAndFont(text: "파티 게시글 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
-        return label
-    }()
-    let userReportLabel: UILabel = {
-        let label = UILabel()
-        label.setTextAndColorAndFont(text: "사용자 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
-        return label
-    }()
+    let postReportLabel = UILabel().then {
+        $0.setTextAndColorAndFont(text: "파티 게시글 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
+    }
+    let userReportLabel = UILabel().then {
+        $0.setTextAndColorAndFont(text: "사용자 신고", textColor: .black, font: .customFont(.neoMedium, size: 16))
+    }
     
     /* 파티 게시글 신고 카테고리들이 들어갈 테이블뷰 */
-    let postReportTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.backgroundColor = .white
-        tableView.tag = 1
-        return tableView
-    }()
+    let postReportTableView = UITableView().then {
+        $0.backgroundColor = .white
+        $0.tag = 1
+    }
     
-    let separateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
+    let separateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
     
     /* 사용자 신고 카테고리들이 들어갈 테이블뷰 */
-    let userReportTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.backgroundColor = .white
-        tableView.tag = 2
-        return tableView
-    }()
+    let userReportTableView = UITableView().then {
+        $0.backgroundColor = .white
+        $0.tag = 2
+    }
     
     // MARK: - Life Cycle
     
