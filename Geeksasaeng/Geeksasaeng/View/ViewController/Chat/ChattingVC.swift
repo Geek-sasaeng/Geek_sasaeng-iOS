@@ -890,6 +890,9 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapSendButton() {
+        /* 메뉴 입력 테스트용 */
+//        let menuVC = CreateMenuViewController()
+//        self.navigationController?.pushViewController(menuVC, animated: true)
         sendButton.isEnabled = false
         sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
         
