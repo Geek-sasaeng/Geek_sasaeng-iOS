@@ -7,20 +7,21 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 class CommunityViewController: UIViewController {
 
-    let readyView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
+    let readyView = UIView().then {
+        $0.backgroundColor = .white
         let imageView = UIImageView(image: UIImage(named: "ReadyImage"))
-        view.addSubview(imageView)
+        $0.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
             make.width.equalTo(153)
             make.height.equalTo(143)
         }
-        return view
-    }()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

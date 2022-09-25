@@ -6,9 +6,11 @@
 //
 
 import UIKit
-import SnapKit
+
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import SnapKit
+import Then
 
 class PartyNameViewController: UIViewController {
     

@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class WeeklyTopCollectionViewCell: UICollectionViewCell {
 
@@ -16,19 +18,15 @@ class WeeklyTopCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Subviews
     
-    var rankLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 14)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    var rankLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
-    var searchLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 14)
-        label.textColor = .init(hex: 0x5B5B5B)
-        return label
-    }()
+    var searchLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = .init(hex: 0x5B5B5B)
+    }
     
     // MARK: - Initialization
     

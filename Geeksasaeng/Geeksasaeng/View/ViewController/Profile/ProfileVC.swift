@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class ProfileViewController: UIViewController {
 
@@ -21,194 +23,152 @@ class ProfileViewController: UIViewController {
     // MARK: - SubViews
     
     // 스크롤뷰
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
-    let contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 118 / 2
-        return imageView
-    }()
-    let levelIconImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LevelIcon"))
-        imageView.backgroundColor = .white
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 37 / 2
+    let profileImageView = UIImageView(image: UIImage(named: "DefaultProfile")).then {
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 118 / 2
+    }
+    let levelIconImageView = UIImageView(image: UIImage(named: "LevelIcon")).then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 37 / 2
         // 테두리 그림자 생성
-        imageView.layer.shadowRadius = 5
-        imageView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        imageView.layer.shadowOpacity = 1
-        imageView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        imageView.layer.masksToBounds = false
-        return imageView
-    }()
+        $0.layer.shadowRadius = 5
+        $0.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        $0.layer.shadowOpacity = 1
+        $0.layer.shadowOffset = CGSize(width: 0, height: 0)
+        $0.layer.masksToBounds = false
+    }
     
-    let degreeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "별별학사"
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    let dotImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "Dot"))
-        return imageView
-    }()
-    let univLabel: UILabel = {
-        let label = UILabel()
-        label.text = "별별대학교"
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    let degreeLabel = UILabel().then {
+        $0.text = "별별학사"
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
+    let dotImageView = UIImageView(image: UIImage(named: "Dot"))
+    let univLabel = UILabel().then {
+        $0.text = "별별대학교"
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
-    let nickNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = LoginModel.nickname
-        label.font = .customFont(.neoBold, size: 17)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    let nickNameLabel = UILabel().then {
+        $0.text = LoginModel.nickname
+        $0.font = .customFont(.neoBold, size: 17)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
-    let levelGuideView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF1F5F9)
-        view.layer.cornerRadius = 39 / 2
-        let label: UILabel = {
-            let label = UILabel()
-            label.text = "복학까지 2학기 남았어요"
-            label.font = .customFont(.neoMedium, size: 14)
-            label.textColor = .mainColor
-            return label
-        }()
-        view.addSubview(label)
-        label.snp.makeConstraints { make in
+    let levelGuideView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF1F5F9)
+        $0.layer.cornerRadius = 39 / 2
+        let guideLabel = UILabel().then {
+            $0.text = "복학까지 2학기 남았어요"
+            $0.font = .customFont(.neoMedium, size: 14)
+            $0.textColor = .mainColor
+        }
+        $0.addSubview(guideLabel)
+        guideLabel.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
-        return view
-    }()
+    }
     
     // 신입생 lv 이미지
-    let freshmanView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 11 / 2
-        view.snp.makeConstraints { make in
+    let freshmanView = UIView().then {
+        $0.layer.cornerRadius = 11 / 2
+        $0.snp.makeConstraints { make in
             make.width.height.equalTo(11)
         }
-        view.backgroundColor = .mainColor
-        return view
-    }()
+        $0.backgroundColor = .mainColor
+    }
     // 복학생 lv 이미지
-    let returningStudentView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 7 / 2
-        view.snp.makeConstraints { make in
+    let returningStudentView = UIView().then {
+        $0.layer.cornerRadius = 7 / 2
+        $0.snp.makeConstraints { make in
             make.width.height.equalTo(7)
         }
-        view.backgroundColor = .init(hex: 0xD9D9D9)
-        return view
-    }()
+        $0.backgroundColor = .init(hex: 0xD9D9D9)
+    }
     // 졸업생 lv 이미지
-    let graduateView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 7 / 2
-        view.snp.makeConstraints { make in
+    let graduateView = UIView().then {
+        $0.layer.cornerRadius = 7 / 2
+        $0.snp.makeConstraints { make in
             make.width.height.equalTo(7)
         }
-        view.backgroundColor = .init(hex: 0xD9D9D9)
-        return view
-    }()
+        $0.backgroundColor = .init(hex: 0xD9D9D9)
+    }
     
     // level 정보에 관한 스택뷰들
     let levelViewStackView = UIStackView()
     let levelLabelStackView = UIStackView()
     
     // level 바
-    let freshmanBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.layer.cornerRadius = 2.5
-        return view
-    }()
-    let totalBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xEFEFEF)
-        view.layer.cornerRadius = 2.5
-        return view
-    }()
+    let freshmanBar = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.layer.cornerRadius = 2.5
+    }
+    let totalBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
+        $0.layer.cornerRadius = 2.5
+    }
     
-    let ongoingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "진행 중인 활동"
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    let ongoingLabel = UILabel().then {
+        $0.text = "진행 중인 활동"
+        $0.font = .customFont(.neoMedium, size: 16)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
     let ongoingTableView = UITableView()
     
     /* 구분선 View */
-    let separateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
+    let separateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
     
     /* 공지사항 옆에 파란색 동그라미 */
-    let noticeCheckAlarmView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 5 / 2
-        return view
-    }()
+    let noticeCheckAlarmView = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5 / 2
+    }
     
     /* 공지사항, 나의 활동 보기, 나의 정보, 문의하기, 이용 약관 보기 */
-    let noticeLabel = UILabel()
-    let myActivityLabel = UILabel()
-    let myInfoLabel = UILabel()
-    let contactUsLabel = UILabel()
-    let termsOfUseLabel = UILabel()
+    let noticeLabel = UILabel().then { $0.text = "공지사항" }
+    let myActivityLabel = UILabel().then { $0.text = "나의 활동 보기" }
+    let myInfoLabel = UILabel().then { $0.text = "나의 정보" }
+    let contactUsLabel = UILabel().then { $0.text = "문의하기" }
+    let termsOfUseLabel = UILabel().then { $0.text = "서비스 이용 약관 보기" }
     
     // 공지사항 contents 뷰
-    let noticeView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 5
-        view.backgroundColor = .init(hex: 0xEFEFEF)
+    let noticeView = UIView().then {
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
         
         let noticeImageView = UIImageView(image: UIImage(named: "NoticeImage"))
-        view.addSubview(noticeImageView)
+        $0.addSubview(noticeImageView)
         noticeImageView.snp.makeConstraints { make in
             make.width.height.equalTo(18)
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().inset(17)
         }
         
-        let noticeContentLabel: UILabel = {
-            let label = UILabel()
-            label.font = .customFont(.neoMedium, size: 13)
-            label.textColor = .init(hex: 0x2F2F2F)
-            label.text = "긱사생 이용자분들께 알립니다. 본 공지는 더미 데이터입니다."
-            return label
-        }()
-        view.addSubview(noticeContentLabel)
+        let noticeContentLabel = UILabel().then {
+            $0.font = .customFont(.neoMedium, size: 13)
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.text = "긱사생 이용자분들께 알립니다. 본 공지는 더미 데이터입니다."
+        }
+        $0.addSubview(noticeContentLabel)
         noticeContentLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalTo(noticeImageView.snp.right).offset(10)
             make.right.equalToSuperview().inset(16)
         }
-        
-        return view
-    }()
+    }
     
     // 공지사항, 나의 활동 보기, 나의 정보, 문의하기, 이용 약관 보기 옆의 화살표 버튼
     let noticeArrowButton = UIButton()
@@ -275,12 +235,6 @@ class ProfileViewController: UIViewController {
             $0.textColor = .init(hex: 0x2F2F2F)
         }
         
-        noticeLabel.text = "공지사항"
-        myActivityLabel.text = "나의 활동 보기"
-        myInfoLabel.text = "나의 정보"
-        contactUsLabel.text = "문의하기"
-        termsOfUseLabel.text = "서비스 이용 약관 보기"
-        
         [firstLineView, secondLineView, fourthLineView].forEach {
             $0.backgroundColor = .init(hex: 0xF8F8F8)
         }
@@ -289,7 +243,6 @@ class ProfileViewController: UIViewController {
         [ noticeArrowButton, myActivityArrowButton, myInfoArrowButton, contactUsArrowButton, termsOfUseArrowButton ].forEach {
             $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
         }
-        
         /* 타겟 설정 */
         myInfoArrowButton.addTarget(self, action: #selector(tapMyInfoButton), for: .touchUpInside)
     }
@@ -317,10 +270,11 @@ class ProfileViewController: UIViewController {
             stackView.spacing = 85
             
             for string in stringArray {
-                let label = UILabel()
-                label.font = .customFont(.neoMedium, size: 12)
-                label.textColor = .init(hex: 0x636363)
-                label.text = string
+                let label = UILabel().then {
+                    $0.font = .customFont(.neoMedium, size: 12)
+                    $0.textColor = .init(hex: 0x636363)
+                    $0.text = string
+                }
                 stackView.addArrangedSubview(label)
             }
         }

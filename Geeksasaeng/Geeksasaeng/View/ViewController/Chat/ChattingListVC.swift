@@ -6,8 +6,11 @@
 //
 
 import UIKit
+
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import SnapKit
+import Then
 
 class FormatCreater {
     static let sharedLongFormat: DateFormatter = {
@@ -69,47 +72,39 @@ class ChattingListViewController: UIViewController {
     // MARK: - SubViews
     
     /* Filter Icon */
-    let filterImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "FilterImage"))
-        imageView.tintColor = UIColor(hex: 0x2F2F2F)
-        return imageView
-    }()
+    let filterImageView = UIImageView(image: UIImage(named: "FilterImage")).then {
+        $0.tintColor = UIColor(hex: 0x2F2F2F)
+    }
     
     /* Category Filter */
     /* 필터뷰들을 묶어놓는 스택뷰 */
-    let filterStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 9
-        stackView.axis = .horizontal
-        stackView.alignment = .top
-        stackView.distribution = .equalSpacing
-        return stackView
-    }()
+    let filterStackView = UIStackView().then {
+        $0.spacing = 9
+        $0.axis = .horizontal
+        $0.alignment = .top
+        $0.distribution = .equalSpacing
+    }
     
     /* 테이블뷰 셀 하단에 블러뷰 */
-    let blurView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140))
+    let blurView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140)).then {
         // 그라데이션 적용
-        view.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
-        view.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
-        return view
-    }()
+        $0.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
+        $0.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
+    }
     
     let chattingTableView = UITableView()
     
     // 준비 중입니다 화면
-    let readyView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
+    let readyView = UIView().then {
+        $0.backgroundColor = .white
         let imageView = UIImageView(image: UIImage(named: "ReadyImage"))
-        view.addSubview(imageView)
+        $0.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
             make.width.equalTo(153)
             make.height.equalTo(143)
         }
-        return view
-    }()
+    }
     
     // MARK: - Life Cycle
     
@@ -390,10 +385,8 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         
         /* firestore에서 채팅방의 가장 최근 메세지, 전송 시간 데이터 가져오기 */
         let roomDocRef = db.collection("Rooms").document(roomUUIDList[indexPath.row])
-//        print("1111위치" + roomUUIDList[indexPath.row])
         // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
         recentMsgListener = roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
-//            print("2222위치" + self.roomUUIDList[indexPath.row])
                 if let error = error {
                     print("Error retreiving collection: \(error)")
                 }

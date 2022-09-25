@@ -7,6 +7,9 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 /* 진행 중인 활동 tableview의 cell */
 class OngoingTableViewCell: UITableViewCell {
     
@@ -21,25 +24,19 @@ class OngoingTableViewCell: UITableViewCell {
     
     // MARK: - SubViews
     
-    let masterProfileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "PartyChatImage"))
-        imageView.layer.cornerRadius = 26 / 2
-        return imageView
-    }()
+    let masterProfileImageView = UIImageView(image: UIImage(named: "PartyChatImage")).then {
+        $0.layer.cornerRadius = 26 / 2
+    }
     
-    let partyTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "한둘셋넷닷한둘셋넷닷총열개"
-        label.font = UIFont.customFont(.neoBold, size: 13)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    let partyTitleLabel = UILabel().then {
+        $0.text = "한둘셋넷닷한둘셋넷닷총열개"
+        $0.font = UIFont.customFont(.neoBold, size: 13)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
-    let arrowButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "ServiceArrow"), for: .normal)
-        return button
-    }()
+    let arrowButton = UIButton().then {
+        $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
+    }
     
     // MARK: - layoutSubviews()
     

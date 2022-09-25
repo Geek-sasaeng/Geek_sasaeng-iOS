@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class ReportDetailViewController: UIViewController {
     
@@ -22,91 +24,74 @@ class ReportDetailViewController: UIViewController {
     
     // MARK: - SubViews
     
-    let reportCategoryLabel: UILabel = {
-        let label = UILabel()
-        label.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 16))
-        return label
-    }()
+    let reportCategoryLabel = UILabel().then {
+        $0.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 16))
+    }
     
     let textViewPlaceHolder = "(선택) 어떤 상황인가요? 긱사생에게 알려주시면 문제 해결에 도움이 됩니다"
-    lazy var reportTextView: UITextView = {
-        let textView = UITextView()
-        textView.backgroundColor = .white
-        textView.text = textViewPlaceHolder
-        textView.textColor = .init(hex: 0xD8D8D8)
-        textView.font = .customFont(.neoRegular, size: 15)
-        textView.autocorrectionType = .no
-        textView.autocapitalizationType = .none
-        return textView
-    }()
+    lazy var reportTextView = UITextView().then {
+        $0.backgroundColor = .white
+        $0.text = textViewPlaceHolder
+        $0.textColor = .init(hex: 0xD8D8D8)
+        $0.font = .customFont(.neoRegular, size: 15)
+        $0.autocorrectionType = .no
+        $0.autocapitalizationType = .none
+    }
     
-    let separateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
+    let separateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
     
-    lazy var checkBoxButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "square"), for: .normal)
-        button.addTarget(self, action: #selector(tapCheckBoxButton(_:)), for: .touchUpInside)
-        button.tintColor = .init(hex: 0x5B5B5B)
-        return button
-    }()
+    lazy var checkBoxButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "square"), for: .normal)
+        $0.addTarget(self, action: #selector(tapCheckBoxButton(_:)), for: .touchUpInside)
+        $0.tintColor = .init(hex: 0x5B5B5B)
+    }
     
-    let blockUserLabel: UILabel = {
-        let label = UILabel()
-        label.setTextAndColorAndFont(text: "이 사용자 차단하기", textColor: .mainColor, font: .customFont(.neoMedium, size: 15))
-        return label
-    }()
+    let blockUserLabel = UILabel().then {
+        $0.setTextAndColorAndFont(text: "이 사용자 차단하기", textColor: .mainColor, font: .customFont(.neoMedium, size: 15))
+    }
     
-    let guideLabel: UILabel = {
-        let label = UILabel()
-        label.setTextAndColorAndFont(text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다.",
+    let guideLabel = UILabel().then {
+        $0.setTextAndColorAndFont(text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다.",
                                      textColor: .init(hex: 0xA8A8A8),
                                      font: .customFont(.neoRegular, size: 15))
-        label.numberOfLines = 0
-        return label
-    }()
+        $0.numberOfLines = 0
+    }
     
     // 하단에 있는 신고하기 버튼
-    lazy var reportButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .mainColor
-        button.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
+    lazy var reportButton = UIButton().then {
+        $0.backgroundColor = .mainColor
+        $0.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
         
-        let reportLabel: UILabel = {
-            let label = UILabel()
-            label.setTextAndColorAndFont(text: "신고하기", textColor: .white, font: .customFont(.neoBold, size: 20))
-            return label
-        }()
-        button.addSubview(reportLabel)
+        let reportLabel = UILabel().then {
+            $0.setTextAndColorAndFont(text: "신고하기", textColor: .white, font: .customFont(.neoBold, size: 20))
+        }
+        $0.addSubview(reportLabel)
         reportLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(15)
         }
-        
-        return button
-    }()
+    }
     
     // 배경에 뜰 어두운 블러뷰
     var visualEffectView: UIVisualEffectView?
     
     /* 신고하기 성공 시 나오는 신고성공 안내 뷰 */
-    lazy var reportSuccessView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 7
-        view.snp.makeConstraints { make in
+    lazy var reportSuccessView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        $0.snp.makeConstraints { make in
             make.width.equalTo(256)
             make.height.equalTo(226)
         }
         
         /* top View */
-        let topSubView = UIView()
-        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
-        view.addSubview(topSubView)
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
@@ -114,17 +99,19 @@ class ReportDetailViewController: UIViewController {
         }
         
         /* set titleLabel */
-        let titleLabel = UILabel()
-        titleLabel.setTextAndColorAndFont(text: "신고하기", textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
+        let titleLabel = UILabel().then {
+            $0.setTextAndColorAndFont(text: "신고하기", textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
+        }
         topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
         
         /* set cancelButton */
-        lazy var cancelButton = UIButton()
-        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
-        cancelButton.addTarget(self, action: #selector(removeView(sender:)), for: .touchUpInside)
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.removeView(sender:)), for: .touchUpInside)
+        }
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -134,72 +121,74 @@ class ReportDetailViewController: UIViewController {
         }
         
         /* bottom View: contents, 확인 버튼 */
-        let bottomSubView = UIView()
-        bottomSubView.backgroundColor = UIColor.white
-        view.addSubview(bottomSubView)
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = .white
+        }
+        $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
             make.height.equalTo(176)
         }
         
-        let contentLabel = UILabel()
-        let lineView = UIView()
-        lazy var confirmButton = UIButton()
+        let contentLabel = UILabel().then {
+            /* set contentLabel */
+            $0.setTextAndColorAndFont(
+                text: "고객님께서 요청하신 사항에\n따른 신고가 정상적으로\n처리되었습니다.",
+                textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
+            $0.numberOfLines = 0
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            /* set confirmButton */
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.removeView(sender:)), for: .touchUpInside)
+        }
         
         [contentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)
         }
-        
-        /* set contentLabel */
-        contentLabel.setTextAndColorAndFont(
-            text: "고객님께서 요청하신 사항에\n따른 신고가 정상적으로\n처리되었습니다.",
-            textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
-        contentLabel.numberOfLines = 0
-        let attrString = NSMutableAttributedString(string: contentLabel.text!)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 6
-        paragraphStyle.alignment = .center
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
-        contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(20)
         }
-        
         /* set lineView */
-        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(15)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)
         }
-        
-        /* set confirmButton */
-        confirmButton.setTitleColor(.mainColor, for: .normal)
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
-        confirmButton.addTarget(self, action: #selector(removeView(sender:)), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
             make.width.height.equalTo(34)
         }
-        
-        return view
-    }()
+    }
     
     /* 신고실패 안내뷰의 contents label */
-    let failContentLabel = UILabel()
+    let failContentLabel = UILabel().then {
+        /* set failContentLabel */
+        $0.numberOfLines = 0
+        $0.setTextAndColorAndFont(textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
+    }
     
     /* 신고하기 실패 시 나오는 신고실패 안내 뷰 */
-    lazy var reportFailView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 7
-        view.snp.makeConstraints { make in
+    lazy var reportFailView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        $0.snp.makeConstraints { make in
             make.width.equalTo(256)
             make.height.equalTo(203)
         }
@@ -207,59 +196,67 @@ class ReportDetailViewController: UIViewController {
         /* top View */
         let topSubView = UIView()
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
-        view.addSubview(topSubView)
+        $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.width.equalToSuperview()
+            make.top.width.equalToSuperview()
             make.height.equalTo(50)
         }
         
         /* set titleLabel */
-        let titleLabel = UILabel()
-        titleLabel.setTextAndColorAndFont(text: "신고하기", textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
-        topSubView.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        let titleLabel = UILabel().then {
+            $0.setTextAndColorAndFont(text: "신고하기", textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 14))
+            topSubView.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
         }
         
         /* set cancelButton */
-        lazy var cancelButton = UIButton()
-        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
-        cancelButton.addTarget(self, action: #selector(removeView(sender:)), for: .touchUpInside)
-        topSubView.addSubview(cancelButton)
-        cancelButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.width.equalTo(20)
-            make.height.equalTo(12)
-            make.right.equalToSuperview().offset(-15)
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.removeView(sender:)), for: .touchUpInside)
+            topSubView.addSubview($0)
+            $0.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.width.equalTo(20)
+                make.height.equalTo(12)
+                make.right.equalToSuperview().offset(-15)
+            }
         }
+        
         
         /* bottom View: contents, 확인 버튼 */
         let bottomSubView = UIView()
         bottomSubView.backgroundColor = .white
-        view.addSubview(bottomSubView)
+        $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
             make.height.equalTo(153)
         }
         
-        let lineView = UIView()
-        lazy var confirmButton = UIButton()
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.removeView(sender:)), for: .touchUpInside)
+        }
         
         [failContentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)
         }
         
         /* set failContentLabel */
-        failContentLabel.numberOfLines = 0
-        failContentLabel.setTextAndColorAndFont(textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
         let attrString = NSMutableAttributedString(string: failContentLabel.text!)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 6
         paragraphStyle.alignment = .center
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         failContentLabel.attributedText = attrString
+        
         failContentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(20)
@@ -268,7 +265,6 @@ class ReportDetailViewController: UIViewController {
         }
         
         /* set lineView */
-        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(failContentLabel.snp.bottom).offset(15)
             make.left.equalTo(18)
@@ -277,18 +273,12 @@ class ReportDetailViewController: UIViewController {
         }
         
         /* set confirmButton */
-        confirmButton.setTitleColor(.mainColor, for: .normal)
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
-        confirmButton.addTarget(self, action: #selector(removeView(sender:)), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
             make.width.height.equalTo(34)
         }
-        
-        return view
-    }()
+    }
     
     // MARK: - Life Cycle
     

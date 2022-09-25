@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 /* 회원가입 후, 첫 로그인 성공 시에 나오게 되는 기숙사 선택 화면 */
 class DormitoryViewController: UIViewController {
@@ -26,55 +28,42 @@ class DormitoryViewController: UIViewController {
     
     // MARK: - Subviews
     
-    lazy var welcomeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "\(userNickName ?? "홍길동")님,\n환영합니다"
-        label.numberOfLines = 0
-        label.font = .customFont(.neoBold, size: 32)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    lazy var welcomeLabel = UILabel().then {
+        $0.text = "\(userNickName ?? "홍길동")님,\n환영합니다"
+        $0.numberOfLines = 0
+        $0.font = .customFont(.neoBold, size: 32)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
-    let questionLabel: UILabel = {
-        let label = UILabel()
-        label.text = "현재 어느 기숙사에 거주하고 계신가요?"
-        label.numberOfLines = 2
-        label.font = .customFont(.neoBold, size: 24)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
+    let questionLabel = UILabel().then {
+        $0.text = "현재 어느 기숙사에 거주하고 계신가요?"
+        $0.numberOfLines = 2
+        $0.font = .customFont(.neoBold, size: 24)
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
     
-    let guideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "*추후 프로필에서 기숙사를 변경하실 수 있습니다"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = .init(hex: 0xA8A8A8)
-        return label
-    }()
+    let guideLabel = UILabel().then {
+        $0.text = "*추후 프로필에서 기숙사를 변경하실 수 있습니다"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = .init(hex: 0xA8A8A8)
+    }
     
-    let backgroundLogoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "BackgroundLogo")
-        return imageView
-    }()
+    let backgroundLogoImageView = UIImageView().then {
+        $0.image = UIImage(named: "BackgroundLogo")
+    }
     
-    let dormitoryPickerView: UIPickerView = {
-        let pickerView = UIPickerView()
-        return pickerView
-    }()
+    let dormitoryPickerView = UIPickerView()
     
-    lazy var startButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("시작하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = .mainColor
-        button.addTarget(self, action: #selector(tapStartButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var startButton = UIButton().then {
+        $0.setTitle("시작하기", for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = .mainColor
+        $0.addTarget(self, action: #selector(tapStartButton), for: .touchUpInside)
+    }
     
-    // MARK: - viewDidLoad()
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,6 +138,8 @@ class DormitoryViewController: UIViewController {
             self.dormitoryPickerView.reloadAllComponents()
         }
     }
+    
+    // MARK: - @objc Functions
     
     /* 홈 화면으로 전환 */
     @objc

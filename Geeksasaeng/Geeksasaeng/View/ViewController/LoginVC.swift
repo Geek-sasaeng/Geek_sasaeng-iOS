@@ -19,83 +19,64 @@ class LoginViewController: UIViewController {
     let scrollView = UIScrollView()
     let contentView = UIView()
     
-    let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "AppLogo"))
-        return imageView
-    }()
+    let logoImageView = UIImageView(image: UIImage(named: "AppLogo"))
     
-    let idTextField: UITextField = {
-        var textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(
+    let idTextField = UITextField().then {
+        $0.attributedPlaceholder = NSAttributedString(
             string: "아이디",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xB5B5B5)]
         )
-        return textField
-    }()
-    let passwordTextField: UITextField = {
-        var textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(
+    }
+    let passwordTextField = UITextField().then {
+        $0.attributedPlaceholder = NSAttributedString(
             string: "비밀번호",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xB5B5B5)]
         )
-        textField.isSecureTextEntry = true
-        return textField
-    }()
+        $0.isSecureTextEntry = true
+    }
     
-    lazy var loginButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("로그인", for: .normal)
-        button.backgroundColor = UIColor.init(hex: 0xEFEFEF)
-        button.isEnabled = false
-        button.addTarget(self, action: #selector(tapLoginButton), for: .touchUpInside)
-        return button
-    }()
-    lazy var naverLoginButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "NaverLogo"), for: .normal)
-        button.adjustsImageWhenHighlighted = false
-        button.setTitle("  네이버 로그인", for: .normal)
-        button.titleLabel?.textColor = .white
-        button.backgroundColor = UIColor.init(hex: 0x00C73C)
-        button.addTarget(self, action: #selector(tapNaverLoginButton), for: .touchUpInside)
-        return button
-    }()
-    lazy var appleLoginButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "AppleLogo"), for: .normal)
-        button.adjustsImageWhenHighlighted = false
-        button.setTitle("  Apple 로그인", for: .normal)
-        button.titleLabel?.textColor = .white
-        button.backgroundColor = .black
-        button.addTarget(self, action: #selector(tapAppleLoginButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var loginButton = UIButton().then {
+        $0.setTitle("로그인", for: .normal)
+        $0.backgroundColor = UIColor.init(hex: 0xEFEFEF)
+        $0.isEnabled = false
+        $0.addTarget(self, action: #selector(tapLoginButton), for: .touchUpInside)
+    }
+    lazy var naverLoginButton = UIButton().then {
+        $0.setImage(UIImage(named: "NaverLogo"), for: .normal)
+        $0.adjustsImageWhenHighlighted = false
+        $0.setTitle("  네이버 로그인", for: .normal)
+        $0.titleLabel?.textColor = .white
+        $0.backgroundColor = UIColor.init(hex: 0x00C73C)
+        $0.addTarget(self, action: #selector(tapNaverLoginButton), for: .touchUpInside)
+    }
+    lazy var appleLoginButton = UIButton().then {
+        $0.setImage(UIImage(named: "AppleLogo"), for: .normal)
+        $0.adjustsImageWhenHighlighted = false
+        $0.setTitle("  Apple 로그인", for: .normal)
+        $0.titleLabel?.textColor = .white
+        $0.backgroundColor = .black
+        $0.addTarget(self, action: #selector(tapAppleLoginButton), for: .touchUpInside)
+    }
     
-    lazy var automaticLoginButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "CheckBox"), for: .normal)
-        button.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapAutomaticLoginButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var automaticLoginButton = UIButton().then {
+        $0.setImage(UIImage(named: "CheckBox"), for: .normal)
+        $0.imageView?.tintColor = UIColor(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(tapAutomaticLoginButton), for: .touchUpInside)
+    }
     
-    let autoLoginLabel: UILabel = {
-        let label = UILabel()
-        label.text = "자동 로그인"
-        label.font = .customFont(.neoRegular, size: 15)
-        label.textColor = .init(hex: 0x5B5B5B)
-        return label
-    }()
+    let autoLoginLabel = UILabel().then {
+        $0.text = "자동 로그인"
+        $0.font = .customFont(.neoRegular, size: 15)
+        $0.textColor = .init(hex: 0x5B5B5B)
+    }
     
-    lazy var signUpButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("회원가입", for: .normal)
-        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
-        button.titleLabel?.font = .customFont(.neoLight, size: 15)
-        button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
-        button.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var signUpButton = UIButton().then {
+        $0.setTitle("회원가입", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoLight, size: 15)
+        $0.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
+        $0.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
+    }
     
     // MARK: - Properties
     

@@ -6,11 +6,12 @@
 //
 
 import UIKit
-import SnapKit
-import Then
+
 import CoreLocation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import SnapKit
+import Then
 
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     

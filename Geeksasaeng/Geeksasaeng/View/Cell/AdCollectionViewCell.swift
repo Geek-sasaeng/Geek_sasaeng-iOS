@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class AdCollectionViewCell: UICollectionViewCell {
     
@@ -16,16 +18,14 @@ class AdCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Subviews
     
-    var cellImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.clipsToBounds = true
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 5
-        imageView.backgroundColor = .mainColor  // test. 배포 때는 없앨 것
-        imageView.contentMode = .scaleToFill
-        imageView.image = UIImage()
-        return imageView
-    }()
+    var cellImageView = UIImageView().then {
+        $0.clipsToBounds = true
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = .mainColor  // test. 배포 때는 없앨 것
+        $0.contentMode = .scaleToFill
+        $0.image = UIImage()
+    }
     
     // MARK: - Initialization
     

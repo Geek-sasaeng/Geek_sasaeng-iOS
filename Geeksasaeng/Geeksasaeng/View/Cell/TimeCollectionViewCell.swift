@@ -7,6 +7,9 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 class TimeCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Properties
@@ -15,12 +18,10 @@ class TimeCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Subviews
     
-    var timeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 14)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
-    }()
+    var timeLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     // MARK: - Initialization
     

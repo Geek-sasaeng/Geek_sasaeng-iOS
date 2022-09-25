@@ -6,8 +6,10 @@
 //
 
 import UIKit
-import SnapKit
+
 import Kingfisher
+import SnapKit
+import Then
 
 /* Delegate Pattern을 구현하기 위한 프로토콜 */
 protocol UpdateDeliveryDelegate {
