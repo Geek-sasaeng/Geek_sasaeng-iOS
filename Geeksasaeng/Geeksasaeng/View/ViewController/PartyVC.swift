@@ -60,13 +60,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* 글쓴이가 오른쪽 상단의 옵션 탭 눌렀을 때 나오는 옵션 뷰 */
-    lazy var optionViewForAuthor = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8))).then {
+    lazy var optionViewForAuthor = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8))).then { view in
         // 등장 애니메이션을 위해 뷰의 생성 때부터 원점과 크기를 정해놓음
-        $0.backgroundColor = .white
+        view.backgroundColor = .white
         
         // 왼쪽 하단의 코너에만 cornerRadius를 적용
-        $0.layer.cornerRadius = 8
-        $0.layer.maskedCorners = [.layerMinXMaxYCorner]
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner]
         
         /* 옵션뷰에 있는 ellipsis 버튼
          -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
@@ -76,7 +76,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
             $0.addTarget(self, action: #selector(self.tapEllipsisInOptionView), for: .touchUpInside)
         }
-        $0.addSubview(ellipsisButton)
+        view.addSubview(ellipsisButton)
         ellipsisButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
             make.right.equalToSuperview().inset(30)
@@ -99,7 +99,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
             $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
             // layouts
-            $0.addSubview($0)
+            view.addSubview($0)
         }
         
         editButton.snp.makeConstraints { make in
@@ -113,13 +113,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* (글쓴이가 아닌) 유저가 오른쪽 상단의 옵션 탭 눌렀을 때 나오는 옵션 뷰 */
-    lazy var optionView = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5.5))).then {
+    lazy var optionView = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5.5))).then { view in
         // 등장 애니메이션을 위해 뷰의 생성 때부터 원점과 크기를 정해놓음
-        $0.backgroundColor = .white
+        view.backgroundColor = .white
         
         // 왼쪽 하단의 코너에만 cornerRadius를 적용
-        $0.layer.cornerRadius = 8
-        $0.layer.maskedCorners = [.layerMinXMaxYCorner]
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMinXMaxYCorner]
         
         /* 옵션뷰에 있는 ellipsis 버튼
          -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
@@ -140,7 +140,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         [
             ellipsisButton,
             reportButton
-        ].forEach { $0.addSubview($0) }
+        ].forEach { view.addSubview($0) }
         ellipsisButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
             make.right.equalToSuperview().inset(30)

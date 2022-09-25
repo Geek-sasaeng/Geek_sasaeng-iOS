@@ -78,13 +78,14 @@ class DeliveryViewController: UIViewController {
         $0.layer.cornerRadius = 31 / 2
     }
     
+    /* Navigation Bar Buttons으로 들어갈 스택뷰 생성 */
+    lazy var stackView = UIStackView(arrangedSubviews: [schoolImageView, dormitoryLabel]).then {
+        $0.spacing = 10
+    }
+    
     /* Navigation Bar Buttons */
-    lazy var leftBarButtonItem: UIBarButtonItem = {
-        let stackView = UIStackView(arrangedSubviews: [schoolImageView, dormitoryLabel])
-        stackView.spacing = 10
-        let barButton = UIBarButtonItem(customView: stackView)
-        return barButton
-    }()
+    lazy var leftBarButtonItem = UIBarButtonItem(customView: stackView)
+    
     lazy var rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "SearchMark"), style: .plain, target: self, action: #selector(tapSearchButton)).then {
         $0.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 13)
         $0.tintColor = .init(hex: 0x2F2F2F)
@@ -155,14 +156,14 @@ class DeliveryViewController: UIViewController {
     let peopleFilterToggleImageView = UIImageView(image: UIImage(named: "ToggleMark")).then {
         $0.tintColor = UIColor(hex: 0xA8A8A8)
     }
-    lazy var peopleFilterView = UIView().then {
-        $0.backgroundColor = .init(hex: 0xF8F8F8)
-        $0.layer.cornerRadius = 5
+    lazy var peopleFilterView = UIView().then { view in
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        view.layer.cornerRadius = 5
         
         [
             peopleFilterLabel,
             peopleFilterToggleImageView
-        ].forEach { $0.addSubview($0) }
+        ].forEach { view.addSubview($0) }
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -208,21 +209,21 @@ class DeliveryViewController: UIViewController {
     }
     
     /* peopleFilterView가 dropdown 됐을 때 테두리 그림자를 활성화 시켜주기 위해 생성한 컨테이너 뷰 */
-    lazy var peopleFilterContainerView = UIView().then {
-        $0.backgroundColor = .none
-        $0.layer.borderWidth = 5
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 6
-        $0.isHidden = true
+    lazy var peopleFilterContainerView = UIView().then { view in
+        view.backgroundColor = .none
+        view.layer.borderWidth = 5
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 6
+        view.isHidden = true
         
         // 테두리 그림자 생성
-        $0.layer.shadowRadius = 5
-        $0.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        $0.layer.shadowOpacity = 1
-        $0.layer.shadowOffset = CGSize(width: 0, height: 0)
-        $0.layer.masksToBounds = false
+        view.layer.shadowRadius = 5
+        view.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.masksToBounds = false
         
-        [peopleFilterView, peopleDropDownView].forEach { $0.addSubview($0) }
+        [peopleFilterView, peopleDropDownView].forEach { view.addSubview($0) }
     }
     
     // timeCollectionView 레이아웃 설정

@@ -135,14 +135,14 @@ class SearchViewController: UIViewController {
     let peopleFilterToggleImageView = UIImageView(image: UIImage(named: "ToggleMark")).then {
         $0.tintColor = UIColor(hex: 0xA8A8A8)
     }
-    lazy var peopleFilterView = UIView().then {
-        $0.backgroundColor = .init(hex: 0xF8F8F8)
-        $0.layer.cornerRadius = 5
+    lazy var peopleFilterView = UIView().then { view in
+        view.backgroundColor = .init(hex: 0xF8F8F8)
+        view.layer.cornerRadius = 5
         
         [
             peopleFilterLabel,
             peopleFilterToggleImageView
-        ].forEach { $0.addSubview($0) }
+        ].forEach { view.addSubview($0) }
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
