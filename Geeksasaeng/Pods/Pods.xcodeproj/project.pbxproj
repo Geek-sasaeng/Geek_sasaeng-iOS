@@ -1518,7 +1518,7 @@
 		3C3D60AD21908ECA30260DC3188CAE0F /* pollset_set_custom.h in Headers */ = {isa = PBXBuildFile; fileRef = 73811AAAA02D07BBD498F6A9333F631F /* pollset_set_custom.h */; };
 		3C4059621E23842C19D4EB5D35B41989 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5558A0A6988E9369D386D6E0F1BBD062 /* Validation.swift */; };
 		3C4921BEDB7A4CD39F07F8A6DA561318 /* api_trace.h in Copy src/core/lib/surface Private Headers */ = {isa = PBXBuildFile; fileRef = 5B154DF997CFEBA44150ABC1D8116D74 /* api_trace.h */; };
-		3C4993B8B46F8703D990FF233AFA7A48 /* gRPC-C++-gRPCCertificates-Cpp in Resources */ = {isa = PBXBuildFile; fileRef = 9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPC-C++-gRPCCertificates-Cpp */; };
+		3C4993B8B46F8703D990FF233AFA7A48 /* gRPCCertificates-Cpp.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPCCertificates-Cpp.bundle */; };
 		3C5758701C44A4C3011AE80A9D25746A /* FIRInstallationsErrorUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B984AB8AEE6DF1BAE2ABB6AD61607B6 /* FIRInstallationsErrorUtil.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		3C6778A79066305728494368DFE88C3B /* status.upbdefs.h in Headers */ = {isa = PBXBuildFile; fileRef = D7F77052DC8E49DA748FABD1CF1A83F1 /* status.upbdefs.h */; };
 		3C6E210E3AA8503CA7BE1981AC92D6CA /* path_transformation.upb.h in Headers */ = {isa = PBXBuildFile; fileRef = AF50D32B9415201F59302E0F15BD3D53 /* path_transformation.upb.h */; };
@@ -15817,7 +15817,7 @@
 		9C6AD8857C2FEF4354D0F2957477F8AE /* load_report.upb.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = load_report.upb.h; path = "src/core/ext/upb-generated/envoy/config/endpoint/v3/load_report.upb.h"; sourceTree = "<group>"; };
 		9C755610680ADA71E2F092AD7F8D22E7 /* mutation_batch.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = mutation_batch.cc; path = Firestore/core/src/model/mutation_batch.cc; sourceTree = "<group>"; };
 		9C76289E33178C2C4E8FDB3B9DDEC04C /* tcp_client.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tcp_client.h; path = src/core/lib/iomgr/tcp_client.h; sourceTree = "<group>"; };
-		9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPC-C++-gRPCCertificates-Cpp */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "gRPC-C++-gRPCCertificates-Cpp"; path = "gRPCCertificates-Cpp.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPCCertificates-Cpp.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "gRPCCertificates-Cpp.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C88AEB6BF3DB54A8C84C15A70161B47 /* elf_mem_image.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = elf_mem_image.cc; path = absl/debugging/internal/elf_mem_image.cc; sourceTree = "<group>"; };
 		9CACA7C7E6650BFF9EFB38CC30C0DBD6 /* FIRMessagingTokenOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FIRMessagingTokenOperation.m; path = FirebaseMessaging/Sources/Token/FIRMessagingTokenOperation.m; sourceTree = "<group>"; };
 		9CB69FCD42092D87C85BF579DE888115 /* stl_type_traits.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = stl_type_traits.h; path = absl/strings/internal/stl_type_traits.h; sourceTree = "<group>"; };
@@ -22342,7 +22342,7 @@
 				856B5CD56F194FAD26EA91620B66D614 /* GoogleDataTransport */,
 				B43874C6CBB50E7134FBEC24BABFE14F /* GoogleUtilities */,
 				1911113E0FBF13CFF9132E5FF7685228 /* gRPC-C++ */,
-				9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPC-C++-gRPCCertificates-Cpp */,
+				9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPCCertificates-Cpp.bundle */,
 				B471867C535B02FA55D87E260F6480F8 /* gRPC-Core */,
 				C3F44C782D64D7EB20B61CE3844EBFAD /* Kingfisher */,
 				0A9F46A999C47653013D3AD854352507 /* leveldb-library */,
@@ -26501,7 +26501,7 @@
 			);
 			name = "gRPC-C++-gRPCCertificates-Cpp";
 			productName = "gRPCCertificates-Cpp";
-			productReference = 9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPC-C++-gRPCCertificates-Cpp */;
+			productReference = 9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPCCertificates-Cpp.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		4402AFF83DBDC4DD07E198685FDC2DF2 /* FirebaseCore */ = {
@@ -27265,7 +27265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C4993B8B46F8703D990FF233AFA7A48 /* gRPC-C++-gRPCCertificates-Cpp in Resources */,
+				3C4993B8B46F8703D990FF233AFA7A48 /* gRPCCertificates-Cpp.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -30448,6 +30448,7 @@
 			baseConfigurationReference = CFF77C3BAAEC96B547EF0B8A5BF712CD /* gRPC-C++.debug.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
+				DEVELOPMENT_TEAM = 67BH3YNZWS;
 				IBSC_MODULE = grpcpp;
 				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -31189,6 +31190,7 @@
 			baseConfigurationReference = 723BE07A2E0523EE2E253C70E33D53C8 /* gRPC-C++.release.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC-C++";
+				DEVELOPMENT_TEAM = 67BH3YNZWS;
 				IBSC_MODULE = grpcpp;
 				INFOPLIST_FILE = "Target Support Files/gRPC-C++/ResourceBundle-gRPCCertificates-Cpp-gRPC-C++-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
