@@ -7,89 +7,78 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 class BankAccountViewController: UIViewController {
 
     // MARK: - SubViews
     
     /* titleLabel: 계좌번호 입력하기 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "계좌번호 입력하기"
-        label.font = .customFont(.neoMedium, size: 18)
-        label.textColor = .black
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "계좌번호 입력하기"
+        $0.font = .customFont(.neoMedium, size: 18)
+        $0.textColor = .black
+    }
     
     /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "Back"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var backButton = UIButton().then {
+        $0.setImage(UIImage(named: "Back"), for: .normal)
+        $0.tintColor = UIColor(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
+    }
     
     /* 은행 이름 입력하는 텍스트 필드 */
-    lazy var bankTextField: UITextField = {
-        let textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(
+    lazy var bankTextField = UITextField().then {
+        $0.attributedPlaceholder = NSAttributedString(
             string: "은행을 입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)]
         )
-        textField.makeBottomLine()
-        textField.font = .customFont(.neoMedium, size: 15)
-        textField.textColor = .init(hex: 0x5B5B5B)
-        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
-        return textField
-    }()
+        $0.makeBottomLine()
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.textColor = .init(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+    }
     
     /* 계좌 번호 입력하는 텍스트 필드 */
-    lazy var accountNumberTextField: UITextField = {
-        let textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(
+    lazy var accountNumberTextField = UITextField().then {
+        $0.attributedPlaceholder = NSAttributedString(
             string: "계좌번호를 입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)]
         )
-        textField.makeBottomLine()
-        textField.font = .customFont(.neoMedium, size: 15)
-        textField.textColor = .init(hex: 0x5B5B5B)
-        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
-        return textField
-    }()
+        $0.makeBottomLine()
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.textColor = .init(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+    }
     
     /* 추후 수정이 가능합니다 */
-    let guideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "추후 수정이 가능합니다"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xA8A8A8)
-        return label
-    }()
+    let guideLabel = UILabel().then {
+        $0.text = "추후 수정이 가능합니다"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xA8A8A8)
+    }
     
     /* 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setDeactivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setDeactivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     /* pageLabel: 1/2 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "1/2"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
-    }()
+    let pageLabel = UILabel().then {
+        $0.text = "1/2"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     // MARK: - Properties
     

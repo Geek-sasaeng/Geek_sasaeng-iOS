@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 /* 채팅방 목록 셀 */
 class ChattingListTableViewCell: UITableViewCell {
@@ -28,50 +30,40 @@ class ChattingListTableViewCell: UITableViewCell {
     // MARK: - SubViews
     
     /* 채팅방 이미지 */
-    let partyChatImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame = CGRect(x: 0, y: 0, width: 33, height: 33)
-        imageView.layer.cornerRadius = imageView.frame.width / 2
-        imageView.image = UIImage(named: "PartyChatImage")
-        return imageView
-    }()
+    let partyChatImageView = UIImageView().then {
+        $0.frame = CGRect(x: 0, y: 0, width: 33, height: 33)
+        $0.layer.cornerRadius = $0.frame.width / 2
+        $0.image = UIImage(named: "PartyChatImage")
+    }
     
     /* 채팅방 제목 label */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "맛있게 같이 먹어요"
-        label.textColor = .black
-        label.font = .customFont(.neoBold, size: 15)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "맛있게 같이 먹어요"
+        $0.textColor = .black
+        $0.font = .customFont(.neoBold, size: 15)
+    }
 
     /* 채팅방 가장 최근 메세지 label */
-    let recentMessageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "채팅을 시작해보세요!"
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let recentMessageLabel = UILabel().then {
+        $0.text = "채팅을 시작해보세요!"
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
 
     /* 메세지를 받은지 얼마나 됐는지 알려주는 시간 label */
-    let receivedTimeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "방금"
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 11)
-        return label
-    }()
+    let receivedTimeLabel = UILabel().then {
+        $0.text = "방금"
+        $0.textColor = .init(hex: 0xA8A8A8)
+        $0.font = .customFont(.neoMedium, size: 11)
+    }
     
     /* 안 읽은 메세지가 몇 갠지 알려주는 label */
-    let unreadMessageCountLabel: UILabel = {
-        let label = UILabel()
+    let unreadMessageCountLabel = UILabel().then {
         // TODO: - 값 연결
-        label.text = "+1"
-        label.textColor = .mainColor
-        label.font = .customFont(.neoBold, size: 11)
-        return label
-    }()
+        $0.text = "+1"
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoBold, size: 11)
+    }
     
     // MARK: - layoutSubviews()
     

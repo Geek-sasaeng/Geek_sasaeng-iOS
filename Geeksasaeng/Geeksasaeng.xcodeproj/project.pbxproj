@@ -1102,6 +1102,9 @@
 		A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */; };
 		A26DA3C528918D0F002DB07D /* DormitoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */; };
 		A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */; };
+		A274DE7728E0F68800F5024E /* CreateMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A274DE7628E0F68800F5024E /* CreateMenuVC.swift */; };
+		A274DE7828E0F68800F5024E /* CreateMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A274DE7628E0F68800F5024E /* CreateMenuVC.swift */; };
+		A274DE7928E0F68800F5024E /* CreateMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A274DE7628E0F68800F5024E /* CreateMenuVC.swift */; };
 		A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
@@ -1582,6 +1585,7 @@
 		A26780B728AD64D90078350D /* RecentPartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentPartyModel.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
 		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
+		A274DE7628E0F68800F5024E /* CreateMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMenuVC.swift; sourceTree = "<group>"; };
 		A2AF5394289696810052F734 /* ReportAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAPI.swift; sourceTree = "<group>"; };
 		A2AF539C2896C0680052F734 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
@@ -2274,6 +2278,14 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		A274DE7528E0F5DC00F5024E /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				A274DE7628E0F68800F5024E /* CreateMenuVC.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
 		A29F6F842885454200350744 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -2358,6 +2370,7 @@
 				10D4D6B02894F84F00B53AB0 /* EditParty */,
 				A2D2047728885A14002350C8 /* Report */,
 				A24F0B29289D88AF007A9C5C /* Chat */,
+				A274DE7528E0F5DC00F5024E /* Menu */,
 				A225E10D28ADEBF700029686 /* Profile */,
 				A225E10928ADE06A00029686 /* CommunityVC.swift */,
 			);
@@ -3560,6 +3573,7 @@
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				102230FA289E640700042ACC /* ChattingVC.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
+				A274DE7728E0F68800F5024E /* CreateMenuVC.swift in Sources */,
 				10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				1041ADDE28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
@@ -3683,6 +3697,7 @@
 				A248D892289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				A26780B928AD64D90078350D /* RecentPartyModel.swift in Sources */,
 				A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
+				A274DE7828E0F68800F5024E /* CreateMenuVC.swift in Sources */,
 				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
@@ -3788,6 +3803,7 @@
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				1031AAA028981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
+				A274DE7928E0F68800F5024E /* CreateMenuVC.swift in Sources */,
 				A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				A2513F232878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */,

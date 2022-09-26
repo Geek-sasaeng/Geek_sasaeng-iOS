@@ -12,7 +12,9 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 class ChattingViewController: UIViewController {
+    
     // MARK: - SubViews
+    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 9
@@ -464,6 +466,7 @@ class ChattingViewController: UIViewController {
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
+    
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
     
@@ -492,6 +495,7 @@ class ChattingViewController: UIViewController {
     var loadParticipantsListener: ListenerRegistration?
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -509,8 +513,7 @@ class ChattingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.title = roomName
-//        self.navigationController?.navigationBar.barTintColor = .white
-//        self.navigationController?.navigationBar.isTranslucent = false
+        
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -887,6 +890,9 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapSendButton() {
+        /* 메뉴 입력 테스트용 */
+//        let menuVC = CreateMenuViewController()
+//        self.navigationController?.pushViewController(menuVC, animated: true)
         sendButton.isEnabled = false
         sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
         

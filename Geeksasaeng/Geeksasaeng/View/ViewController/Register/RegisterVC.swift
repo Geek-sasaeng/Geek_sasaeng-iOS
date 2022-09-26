@@ -6,35 +6,26 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class RegisterViewController: UIViewController {
     
     // MARK: - Subviews
     
-    var progressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    var progressBar = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.layer.cornerRadius = 1.5
+    }
     
-    var remainBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    var remainBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF2F2F2)
+        $0.layer.cornerRadius = 1.5
+    }
     
-    var progressIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
-        return imageView
-    }()
-    
-    var remainIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
-        return imageView
-    }()
+    var progressIcon = UIImageView(image: UIImage(named: "LogoTop"))
+    var remainIcon = UIImageView(image: UIImage(named: "LogoBottom"))
     
     var idLabel = UILabel()
     var passwordLabel = UILabel()
@@ -42,76 +33,58 @@ class RegisterViewController: UIViewController {
     var nickNameLabel = UILabel()
     
     var idTextField = UITextField()
-    lazy var pwTextField: UITextField = {
-        let textField = UITextField()
-        textField.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
-        return textField
-    }()
-    lazy var pwCheckTextField: UITextField = {
-        let textField = UITextField()
-        textField.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
-        return textField
-    }()
+    lazy var pwTextField = UITextField().then {
+        $0.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
+    }
+    lazy var pwCheckTextField = UITextField().then {
+        $0.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
+    }
     var nickNameTextField = UITextField()
     
-    var idAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var idAvailableLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    var passwordAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.text = "문자, 숫자 및 특수문자 포함 8자 이상으로 입력해주세요"
-        label.textColor = .red
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var passwordAvailableLabel = UILabel().then {
+        $0.text = "문자, 숫자 및 특수문자 포함 8자 이상으로 입력해주세요"
+        $0.textColor = .red
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    var passwordSameCheckLabel: UILabel = {
-        let label = UILabel()
-        label.text = "비밀번호를 다시 확인해주세요"
-        label.textColor = .red
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var passwordSameCheckLabel = UILabel().then {
+        $0.text = "비밀번호를 다시 확인해주세요"
+        $0.textColor = .red
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    var nickNameAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.text = "사용 가능한 아이디입니다"
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var nickNameAvailableLabel = UILabel().then {
+        $0.text = "사용 가능한 아이디입니다"
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
-        button.isEnabled = false
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        $0.isEnabled = false
+    }
     
-    lazy var idCheckButton:  UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(tapIdCheckButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var idCheckButton = UIButton().then {
+        $0.addTarget(self, action: #selector(tapIdCheckButton), for: .touchUpInside)
+    }
     
-    lazy var nickNameCheckButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nickNameCheckButton = UIButton().then {
+        $0.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
+    }
     
     // MARK: - Properties
     
@@ -314,6 +287,8 @@ class RegisterViewController: UIViewController {
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
+    
+    // MARK: - @objc Functions
     
     // EmailAuthVC로 화면 전환.
     @objc private func showNextView() {

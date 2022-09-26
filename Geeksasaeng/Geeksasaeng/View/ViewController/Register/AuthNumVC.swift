@@ -6,84 +6,66 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 /* 이메일 인증번호 입력하는 화면의 VC */
 class AuthNumViewController: UIViewController {
     
     // MARK: - Subviews
     
-    let progressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    let progressBar = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.layer.cornerRadius = 1.5
+    }
     
-    let remainBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    let remainBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF2F2F2)
+        $0.layer.cornerRadius = 1.5
+    }
     
-    let progressIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
-        return imageView
-    }()
+    let progressIcon = UIImageView(image: UIImage(named: "LogoTop"))
     
-    let remainIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
-        return imageView
-    }()
+    let remainIcon = UIImageView(image: UIImage(named: "LogoBottom"))
     
-    let authNumLabel: UILabel = {
-        let label = UILabel()
-        label.text = "인증번호 입력"
-        label.font = .customFont(.neoMedium, size: 18)
-        label.textColor = .black
-        return label
-    }()
+    let authNumLabel = UILabel().then {
+        $0.text = "인증번호 입력"
+        $0.font = .customFont(.neoMedium, size: 18)
+        $0.textColor = .black
+    }
     
-    lazy var authNumTextField: UITextField = {
-        let textField = UITextField()
-        textField.textColor = .black
-        textField.attributedPlaceholder = NSAttributedString(
+    lazy var authNumTextField = UITextField().then {
+        $0.textColor = .black
+        $0.attributedPlaceholder = NSAttributedString(
             string: "입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
-        textField.makeBottomLine()
-        textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
-        return textField
-    }()
+        $0.makeBottomLine()
+        $0.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
+    }
     
-    lazy var authResendButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("재전송 하기", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var authResendButton = UIButton().then {
+        $0.setTitle("재전송 하기", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.layer.cornerRadius = 5
+        $0.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
+    }
     
-    let remainTimeLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let remainTimeLabel = UILabel().then {
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.isEnabled = false
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.isEnabled = false
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     // MARK: - Properties
     

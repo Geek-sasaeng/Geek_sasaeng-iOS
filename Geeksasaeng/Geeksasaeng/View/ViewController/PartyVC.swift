@@ -6,10 +6,12 @@
 //
 
 import UIKit
-import SnapKit
+
 import CoreLocation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import SnapKit
+import Then
 
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
@@ -46,28 +48,21 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Subviews
     
     // 스크롤뷰
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
-    let contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
     // 신청하기 뷰가 들어갈 뷰 -> 신청하기 뷰를 탭바 위에 고정시켜 놓기 위해 필요!
-    let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .none
-        return view
-    }()
+    let containerView = UIView().then {
+        $0.backgroundColor = .none
+    }
     
     /* 글쓴이가 오른쪽 상단의 옵션 탭 눌렀을 때 나오는 옵션 뷰 */
-    lazy var optionViewForAuthor: UIView = {
+    lazy var optionViewForAuthor = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8))).then { view in
         // 등장 애니메이션을 위해 뷰의 생성 때부터 원점과 크기를 정해놓음
-        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8)))
         view.backgroundColor = .white
         
         // 왼쪽 하단의 코너에만 cornerRadius를 적용
@@ -76,14 +71,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         /* 옵션뷰에 있는 ellipsis 버튼
          -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
-        lazy var ellipsisButton: UIButton = {
-            let button = UIButton()
-            button.setImage(UIImage(named: "EllipsisOption"), for: .normal)
-            button.tintColor = .init(hex: 0x2F2F2F)
+        lazy var ellipsisButton = UIButton().then {
+            $0.setImage(UIImage(named: "EllipsisOption"), for: .normal)
+            $0.tintColor = .init(hex: 0x2F2F2F)
             // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
-            button.addTarget(self, action: #selector(tapEllipsisInOptionView), for: .touchUpInside)
-            return button
-        }()
+            $0.addTarget(self, action: #selector(self.tapEllipsisInOptionView), for: .touchUpInside)
+        }
         view.addSubview(ellipsisButton)
         ellipsisButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
@@ -92,25 +85,20 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* 옵션뷰에 있는 버튼 */
-        lazy var editButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("수정하기", for: .normal)
-            button.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            return button
-        }()
-        lazy var deleteButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("삭제하기", for: .normal)
-            button.addTarget(self, action: #selector(showDeleteView), for: .touchUpInside)
-            return button
-        }()
+        lazy var editButton = UIButton().then {
+            $0.setTitle("수정하기", for: .normal)
+            $0.addTarget(self, action: #selector(self.showEditView), for: .touchUpInside)
+            $0.makeBottomLine(color: 0xEFEFEF, width: self.view.bounds.width - 40, height: 1, offsetToTop: 16)
+        }
+        lazy var deleteButton = UIButton().then {
+            $0.setTitle("삭제하기", for: .normal)
+            $0.addTarget(self, action: #selector(self.showDeleteView), for: .touchUpInside)
+        }
         
         [editButton, deleteButton].forEach {
             // attributes
             $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
             $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
-            
             // layouts
             view.addSubview($0)
         }
@@ -123,13 +111,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(editButton.snp.bottom).offset(27)
             make.left.equalToSuperview().inset(20)
         }
-        return view
-    }()
+    }
     
     /* (글쓴이가 아닌) 유저가 오른쪽 상단의 옵션 탭 눌렀을 때 나오는 옵션 뷰 */
-    lazy var optionView: UIView = {
+    lazy var optionView = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5.5))).then { view in
         // 등장 애니메이션을 위해 뷰의 생성 때부터 원점과 크기를 정해놓음
-        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5.5)))
         view.backgroundColor = .white
         
         // 왼쪽 하단의 코너에만 cornerRadius를 적용
@@ -138,23 +124,19 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         /* 옵션뷰에 있는 ellipsis 버튼
          -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
-        lazy var ellipsisButton: UIButton = {
-            let button = UIButton()
-            button.setImage(UIImage(named: "EllipsisOption"), for: .normal)
-            button.tintColor = .init(hex: 0x2F2F2F)
+        lazy var ellipsisButton = UIButton().then {
+            $0.setImage(UIImage(named: "EllipsisOption"), for: .normal)
+            $0.tintColor = .init(hex: 0x2F2F2F)
             // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
-            button.addTarget(self, action: #selector(tapEllipsisInOptionView), for: .touchUpInside)
-            return button
-        }()
+            $0.addTarget(self, action: #selector(self.tapEllipsisInOptionView), for: .touchUpInside)
+        }
         /* 옵션뷰에 있는 버튼 */
-        lazy var reportButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("신고하기", for: .normal)
-            button.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
-            button.titleLabel?.font =  .customFont(.neoMedium, size: 15)
-            button.addTarget(self, action: #selector(tapReportButton), for: .touchUpInside)
-            return button
-        }()
+        lazy var reportButton = UIButton().then {
+            $0.setTitle("신고하기", for: .normal)
+            $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
+            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
+            $0.addTarget(self, action: #selector(self.tapReportButton), for: .touchUpInside)
+        }
         
         [
             ellipsisButton,
@@ -169,183 +151,134 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(ellipsisButton.snp.bottom).offset(27)
             make.left.equalToSuperview().inset(20)
         }
-        
-        return view
-    }()
+    }
     
     /* 배경 블러 처리를 위해 추가한 visualEffectView */
     var visualEffectView: UIVisualEffectView?
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image =  UIImage(named: "ProfileImage")
-        imageView.layer.cornerRadius = 13
-        return imageView
-    }()
+    let profileImageView = UIImageView().then {
+        $0.image =  UIImage(named: "ProfileImage")
+        $0.layer.cornerRadius = 13
+    }
     
-    let nickNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let nickNameLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    let postingTime: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoRegular, size: 11)
-        label.textColor = .init(hex: 0xD8D8D8)
-        return label
-    }()
+    let postingTime = UILabel().then {
+        $0.font = .customFont(.neoRegular, size: 11)
+        $0.textColor = .init(hex: 0xD8D8D8)
+    }
     
-    let hashTagLabel: UILabel = {
-        let label = UILabel()
-        label.text = "# 같이 먹고 싶어요"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = .init(hex: 0xA8A8A8)
-        return label
-    }()
+    let hashTagLabel = UILabel().then {
+        $0.text = "# 같이 먹고 싶어요"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = .init(hex: 0xA8A8A8)
+    }
     
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoBold, size: 20)
-        label.textColor = .black
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.font = .customFont(.neoBold, size: 20)
+        $0.textColor = .black
+    }
     
-    let contentLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoLight, size: 15)
-        label.textColor = .init(hex: 0x5B5B5B)
-        label.numberOfLines = 0
-        return label
-    }()
+    let contentLabel = UILabel().then {
+        $0.font = .customFont(.neoLight, size: 15)
+        $0.textColor = .init(hex: 0x5B5B5B)
+        $0.numberOfLines = 0
+    }
     
-    let separateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
+    let separateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
 
-    let orderLabel: UILabel = {
-        let label = UILabel()
-        label.text = "주문 예정 시간"
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
-    let orderReserveLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let orderLabel = UILabel().then {
+        $0.text = "주문 예정 시간"
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
+    let orderReserveLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    let matchingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "매칭 현황"
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
-    let matchingDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let matchingLabel = UILabel().then {
+        $0.text = "매칭 현황"
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
+    let matchingDataLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    let categoryLabel: UILabel = {
-        let label = UILabel()
-        label.text = "카테고리"
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
-    let categoryDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let categoryLabel = UILabel().then {
+        $0.text = "카테고리"
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
+    let categoryDataLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    let storeLinkLabel: UILabel = {
-        let label = UILabel()
-        label.text = "식당 링크"
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
-    let storeLinkDataLabel: UILabel = {
-        let label = UILabel()
-        label.text = "???"
-        label.numberOfLines = 1
-        label.lineBreakMode = .byCharWrapping
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let storeLinkLabel = UILabel().then {
+        $0.text = "식당 링크"
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
+    let storeLinkDataLabel = UILabel().then {
+        $0.text = "???"
+        $0.numberOfLines = 1
+        $0.lineBreakMode = .byCharWrapping
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    let pickupLocationLabel: UILabel = {
-        let label = UILabel()
-        label.text = "수령 장소"
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
-    let pickupLocationDataLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x2F2F2F)
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    let pickupLocationLabel = UILabel().then {
+        $0.text = "수령 장소"
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
+    let pickupLocationDataLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    let mapSubView: UIView = {
-        let view = UIView()
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 5
-        return view
-    }()
+    let mapSubView = UIView().then {
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 5
+    }
     
-    let matchingStatusView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        return view
-    }()
+    let matchingStatusView = UIView().then {
+        $0.backgroundColor = .mainColor
+    }
     
-    let matchingDataWhiteLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.customFont(.neoMedium, size: 16)
-        label.textColor = .white
-        return label
-    }()
+    let matchingDataWhiteLabel = UILabel().then {
+        $0.font = UIFont.customFont(.neoMedium, size: 16)
+        $0.textColor = .white
+    }
     
-    let remainTimeLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.customFont(.neoMedium, size: 16)
-        label.textColor = .white
-        return label
-    }()
+    let remainTimeLabel = UILabel().then {
+        $0.font = UIFont.customFont(.neoMedium, size: 16)
+        $0.textColor = .white
+    }
     
-    lazy var signUpButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 16)
-        button.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var signUpButton = UIButton().then {
+        $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 16)
+        $0.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
+    }
     
-    let arrowImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Arrow")
-        return imageView
-    }()
+    let arrowImageView = UIImageView().then {
+        $0.image = UIImage(named: "Arrow")
+    }
     
-    lazy var deleteView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 5
-        view.snp.makeConstraints { make in
+    lazy var deleteView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+        $0.snp.makeConstraints { make in
             make.width.equalTo(256)
             make.height.equalTo(298)
         }
@@ -353,7 +286,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         /* top View: 삭제하기 */
         let topSubView = UIView()
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
-        view.addSubview(topSubView)
+        $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(50)
@@ -384,7 +317,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         /* bottom View: contents, 확인 버튼 */
         let bottomSubView = UIView()
         bottomSubView.backgroundColor = UIColor.white
-        view.addSubview(bottomSubView)
+        $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(206)
@@ -435,17 +368,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(15)
         }
-        
-        return view
-    }()
+    }
     
     /* 신청하기 누르면 나오는 신청하기 Alert 뷰 */
-    lazy var registerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 7
-        view.snp.makeConstraints { make in
+    lazy var registerView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        $0.snp.makeConstraints { make in
             make.width.equalTo(256)
             make.height.equalTo(222)
         }
@@ -453,7 +383,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         /* top View: 삭제하기 */
         let topSubView = UIView()
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
-        view.addSubview(topSubView)
+        $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.width.equalToSuperview()
             make.height.equalTo(50)
@@ -484,7 +414,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         /* bottom View: contents, 확인 버튼 */
         let bottomSubView = UIView()
         bottomSubView.backgroundColor = UIColor.white
-        view.addSubview(bottomSubView)
+        $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
@@ -533,13 +463,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(lineView.snp.bottom).offset(18)
             make.width.height.equalTo(34)
         }
-        
-        return view
-    }()
+    }
     
     lazy var toastView: UIView? = nil
     
-    // MARK: - viewDidLoad()
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -564,8 +492,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
-    
-    // MARK: - viewWillAppear()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

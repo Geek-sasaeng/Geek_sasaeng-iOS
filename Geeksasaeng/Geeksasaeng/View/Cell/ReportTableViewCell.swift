@@ -7,6 +7,9 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 class ReportTableViewCell: UITableViewCell {
     
     // MARK: - Properties
@@ -15,18 +18,14 @@ class ReportTableViewCell: UITableViewCell {
     
     // MARK: - SubViews
     
-    var reportCategoryLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .init(hex: 0x636363)
-        label.font = .customFont(.neoMedium, size: 14)
-        return label
-    }()
+    var reportCategoryLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x636363)
+        $0.font = .customFont(.neoMedium, size: 14)
+    }
     
-    var arrowButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "ReportArrow"), for: .normal)
-        return button
-    }()
+    var arrowButton = UIButton().then {
+        $0.setImage(UIImage(named: "ReportArrow"), for: .normal)
+    }
     
     // MARK: - layoutSubviews()
     

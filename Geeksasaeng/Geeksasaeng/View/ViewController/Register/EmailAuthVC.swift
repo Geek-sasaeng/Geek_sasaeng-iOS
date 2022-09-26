@@ -6,60 +6,47 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class EmailAuthViewController: UIViewController {
     
     // MARK: - Subviews
     
-    let progressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    let progressBar = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.layer.cornerRadius = 1.5
+    }
     
-    let remainBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    let remainBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF2F2F2)
+        $0.layer.cornerRadius = 1.5
+    }
     
-    let progressIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
-        return imageView
-    }()
+    let progressIcon = UIImageView(image: UIImage(named: "LogoTop"))
     
-    let remainIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
-        return imageView
-    }()
+    let remainIcon = UIImageView(image: UIImage(named: "LogoBottom"))
     
-    let selectYourUnivLabel: UILabel = {
-        let label = UILabel()
-        label.text = "자신의 학교를 선택해주세요"
-        label.font = .customFont(.neoLight, size: 15)
-        label.textColor = .init(hex: 0xD8D8D8)
-        return label
-    }()
-    let toggleImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-        imageView.tintColor = .init(hex: 0xD8D8D8)
-        return imageView
-    }()
+    let selectYourUnivLabel = UILabel().then {
+        $0.text = "자신의 학교를 선택해주세요"
+        $0.font = .customFont(.neoLight, size: 15)
+        $0.textColor = .init(hex: 0xD8D8D8)
+    }
+    let toggleImageView = UIImageView(image: UIImage(named: "ToggleMark")).then {
+        $0.tintColor = .init(hex: 0xD8D8D8)
+    }
     
     /* 자신의 학교를 선택해주세요 버튼 */
-    lazy var universitySelectView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 5
-        view.clipsToBounds = true
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
+    lazy var universitySelectView = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 5
+        $0.clipsToBounds = true
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
         
-        view.addSubview(selectYourUnivLabel)
-        view.addSubview(toggleImageView)
+        $0.addSubview(selectYourUnivLabel)
+        $0.addSubview(toggleImageView)
         selectYourUnivLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(12)
             make.centerY.equalToSuperview()
@@ -70,48 +57,37 @@ class EmailAuthViewController: UIViewController {
             make.width.equalTo(15)
             make.height.equalTo(8)
         }
-        
-        return view
-    }()
+    }
     
     // Label Tap Gesture 적용을 위해 따로 꺼내놓음
-    let univNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "가천대학교"
-        label.font = .customFont(.neoLight, size: 15)
-        label.textColor = .init(hex: 0x636363)
-        return label
-    }()
+    let univNameLabel = UILabel().then {
+        $0.text = "가천대학교"
+        $0.font = .customFont(.neoLight, size: 15)
+        $0.textColor = .init(hex: 0x636363)
+    }
     
     /* 자신의 학교를 선택해주세요 눌렀을 때 확장되는 뷰
         -> 학교 리스트를 보여줌 */
-    lazy var universityListView: UIView = {
-        let view = UIView()
+    lazy var universityListView = UIView().then { view in
         view.backgroundColor = .white
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
         
-        let selectYourUnivLabel: UILabel = {
-            let label = UILabel()
-            label.text = "자신의 학교를 선택해주세요"
-            label.font = .customFont(.neoLight, size: 15)
-            label.textColor = .init(hex: 0xD8D8D8)
-            return label
-        }()
-        let toggleImageView: UIImageView = {
-            let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-            imageView.tintColor = .init(hex: 0xD8D8D8)
-            return imageView
-        }()
-        let markUnivLabel: UILabel = {
-            let label = UILabel()
-            label.text = "ㄱ"
-            label.font = .customFont(.neoLight, size: 12)
-            label.textColor = .init(hex: 0xA8A8A8)
-            return label
-        }()
+        let selectYourUnivLabel = UILabel().then {
+            $0.text = "자신의 학교를 선택해주세요"
+            $0.font = .customFont(.neoLight, size: 15)
+            $0.textColor = .init(hex: 0xD8D8D8)
+        }
+        let toggleImageView = UIImageView(image: UIImage(named: "ToggleMark")).then {
+            $0.tintColor = .init(hex: 0xD8D8D8)
+        }
+        let markUnivLabel = UILabel().then {
+            $0.text = "ㄱ"
+            $0.font = .customFont(.neoLight, size: 12)
+            $0.textColor = .init(hex: 0xA8A8A8)
+        }
         
         [
             selectYourUnivLabel,
@@ -140,29 +116,24 @@ class EmailAuthViewController: UIViewController {
             make.left.equalToSuperview().inset(12)
         }
         view.isHidden = true
-        return view
-    }()
+    }
     
     let schoolLabel = UILabel()
     let emailLabel = UILabel()
     let emailTextField = UITextField()
     let emailAddressTextField = UITextField()
     
-    lazy var authSendButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("인증번호 전송", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var authSendButton = UIButton().then {
+        $0.setTitle("인증번호 전송", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
+    }
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     // MARK: - Properties
     
@@ -369,6 +340,8 @@ class EmailAuthViewController: UIViewController {
         univNameLabel.isUserInteractionEnabled = true
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
+    
+    // MARK: - @objc Functions
 
     @objc
     private func didChangeTextField(_ sender: UITextField) {
@@ -453,5 +426,4 @@ class EmailAuthViewController: UIViewController {
             present(authNumVC, animated: true)
         }
     }
-    
 }
