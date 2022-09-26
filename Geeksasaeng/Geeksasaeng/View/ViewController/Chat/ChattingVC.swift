@@ -418,6 +418,51 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // 주문완료 상단 뷰 (방장인 경우에만 노출)
+    lazy var orderCompletedView = UIView().then { view in
+        view.backgroundColor = .init(hex: 0xF6F9FB)
+        view.layer.opacity = 0.9
+        
+        let orderCompletedImageView = UIImageView().then {
+            $0.image = UIImage(named: "OrderCompletedIcon")
+        }
+        
+        let showMenuLabel = UILabel().then {
+            $0.font = .customFont(.neoMedium, size: 14)
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.text = "메뉴판 보기"
+        }
+        
+        let orderCompletedButton = UIButton().then {
+            $0.setTitle("주문 완료", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 11)
+            $0.titleLabel?.textColor = .white
+            $0.backgroundColor = .mainColor
+            $0.layer.cornerRadius = 5
+//            $0.addTarget(self, action: #selector(tapRemittanceButton), for: .touchUpInside)
+            // TODO: - 채팅 구현 후 addTarget 설정
+        }
+        
+        [orderCompletedImageView, showMenuLabel, orderCompletedButton].forEach {
+            view.addSubview($0)
+        }
+        orderCompletedImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(29)
+            make.width.height.equalTo(24)
+        }
+        showMenuLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(orderCompletedImageView.snp.right).offset(8)
+        }
+        orderCompletedButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(28)
+            make.width.equalTo(67)
+            make.height.equalTo(29)
+        }
+    }
+    
     // 블러 뷰
     var visualEffectView: UIVisualEffectView?
     
@@ -615,18 +660,28 @@ class ChattingViewController: UIViewController {
                         self.bank = bank
                         self.accountNumber = accountNumber
                         
-                        // 해당 참여자가 송금을 하지 않을 상태이면 remittanceView 노출
-                        participants.forEach {
-                            if $0.participant == LoginModel.nickname {
-                                guard let isRemittance = $0.isRemittance else { return }
-                                if !isRemittance {
-                                    self.view.addSubview(self.remittanceView)
-                                    self.remittanceView.snp.makeConstraints { make in
-                                        if let navigationBar = self.navigationController?.navigationBar {
-                                            make.top.equalTo(navigationBar.snp.bottom)
+                        if self.roomMaster == LoginModel.nickname { // 방장일 때 주문 완료 상단바 노출
+                            self.view.addSubview(self.orderCompletedView)
+                            self.orderCompletedView.snp.makeConstraints { make in
+                                if let navigationBar = self.navigationController?.navigationBar {
+                                    make.top.equalTo(navigationBar.snp.bottom)
+                                }
+                                make.width.equalToSuperview()
+                                make.height.equalTo(55)
+                            }
+                        } else { // 방장이 아닐 때 && 해당 참여자가 송금을 하지 않은 상태일 때 remittanceView 노출
+                            participants.forEach {
+                                if $0.participant == LoginModel.nickname {
+                                    guard let isRemittance = $0.isRemittance else { return }
+                                    if !isRemittance {
+                                        self.view.addSubview(self.remittanceView)
+                                        self.remittanceView.snp.makeConstraints { make in
+                                            if let navigationBar = self.navigationController?.navigationBar {
+                                                make.top.equalTo(navigationBar.snp.bottom)
+                                            }
+                                            make.width.equalToSuperview()
+                                            make.height.equalTo(55)
                                         }
-                                        make.width.equalToSuperview()
-                                        make.height.equalTo(55)
                                     }
                                 }
                             }
