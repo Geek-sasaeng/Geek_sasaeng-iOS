@@ -11,26 +11,24 @@ import SnapKit
 class SystemMessageCell: UICollectionViewCell {
     // MARK: - SubViews
     
-    var systemMessageLabel: PaddingLabel = {
-        let label = PaddingLabel()
-        label.setTextAndColorAndFont(textColor: .init(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
-        label.backgroundColor = .init(hex: 0xF8F8F8)
-        label.numberOfLines = 0
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 5
-        label.textAlignment = .center
-        label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.783
+    var systemMessageLabel = PaddingLabel().then {
+        $0.setTextAndColorAndFont(textColor: .init(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+        $0.numberOfLines = 0
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+        $0.textAlignment = .center
+        $0.lineBreakMode = .byCharWrapping
+        $0.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.783
         
-        label.sizeToFit()
-        label.setNeedsLayout()
+        $0.sizeToFit()
+        $0.setNeedsLayout()
         
-        label.paddingTop = 6
-        label.paddingBottom = 6
-        label.paddingLeft = 18
-        label.paddingRight = 18
-        return label
-    }()
+        $0.paddingTop = 6
+        $0.paddingBottom = 6
+        $0.paddingLeft = 18
+        $0.paddingRight = 18
+    }
     
     // MARK: - Life Cycle
     override func layoutSubviews() {

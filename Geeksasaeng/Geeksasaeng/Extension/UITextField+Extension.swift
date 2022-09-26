@@ -11,8 +11,9 @@ extension UITextField {
     
     // UITextField의 아래 라인 만들어주는 함수
     func makeBottomLine() {
-        let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.init(hex: 0xEFEFEF)
+        let bottomLine = UIView().then {
+            $0.backgroundColor = UIColor.init(hex: 0xEFEFEF)
+        }
         borderStyle = .none
         
         self.addSubview(bottomLine)

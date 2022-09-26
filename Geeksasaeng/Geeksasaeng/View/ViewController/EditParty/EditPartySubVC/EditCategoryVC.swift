@@ -7,16 +7,15 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class EditCategoryViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 카테고리 선택 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "카테고리 선택"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "카테고리 선택"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* category labels */
     let korean = UIButton()
@@ -31,16 +30,14 @@ class EditCategoryViewController: UIViewController {
     let etc = UIButton()
     
     /* nextButton: 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("완료", for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-        button.setDeactivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("완료", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.clipsToBounds = true
+        $0.setDeactivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     // MARK: - Properties
     var selectedCategory: UIButton?

@@ -110,6 +110,20 @@ NS_SWIFT_NAME(Analytics)
 ///     session terminates.
 + (void)setSessionTimeoutInterval:(NSTimeInterval)sessionTimeoutInterval;
 
+/// Asynchronously retrieves the identifier of the current app session.
+///
+/// The session ID retrieval could fail due to Analytics collection disabled, app session expired,
+/// etc.
+///
+/// @param completion The completion handler to call when the session ID retrieval is complete. This
+///     handler is executed on a system-defined global concurrent queue.
+///     This completion handler takes the following parameters:
+///     <b>sessionID</b> The identifier of the current app session. The value is undefined if the
+///         request failed.
+///     <b>error</b> An error object that indicates why the request failed, or `nil` if the request
+///         was successful.
++ (void)sessionIDWithCompletion:(void (^)(int64_t sessionID, NSError *_Nullable error))completion;
+
 /// Returns the unique ID for this instance of the application or `nil` if
 /// `ConsentType.analyticsStorage` has been set to `ConsentStatus.denied`.
 ///

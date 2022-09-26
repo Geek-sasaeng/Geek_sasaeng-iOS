@@ -7,56 +7,51 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class EditOrderForecastTimeViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 주문 예정 시간 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "주문 예정 시간"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "주문 예정 시간"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* dateTextField: 현재 날짜 */
-    let dateTextField: UITextField = {
-        let textField = UITextField()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM월 dd일"
-        formatter.locale = Locale(identifier: "ko_KR")
-        textField.text = formatter.string(from: Date())
-        textField.font = .customFont(.neoMedium, size: 32)
-        textField.tintColor = .clear
-        textField.textColor = .black
-        return textField
-    }()
+    let dateTextField = UITextField().then {
+        let formatter = DateFormatter().then {
+            $0.dateFormat = "MM월 dd일"
+            $0.locale = Locale(identifier: "ko_KR")
+        }
+        $0.text = formatter.string(from: Date())
+        $0.font = .customFont(.neoMedium, size: 32)
+        $0.tintColor = .clear
+        $0.textColor = .black
+    }
     
     /* tileLabel: 현재 시간 */
-    let timeTextField: UITextField = {
-        let textField = UITextField()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH시 mm분"
-        formatter.locale = Locale(identifier: "ko_KR")
-        textField.text = formatter.string(from: Date())
-        textField.font = .customFont(.neoMedium, size: 20)
-        textField.tintColor = .clear
-        textField.textColor = .black
-        return textField
-    }()
+    let timeTextField = UITextField().then {
+        let formatter = DateFormatter().then {
+            $0.dateFormat = "HH시 mm분"
+            $0.locale = Locale(identifier: "ko_KR")
+        }
+        $0.text = formatter.string(from: Date())
+        $0.font = .customFont(.neoMedium, size: 20)
+        $0.tintColor = .clear
+        $0.textColor = .black
+    }
     
     /* nextButton: 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("완료", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("완료", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setActivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     let datePicker = UIDatePicker()
     let timePicker = UIDatePicker()

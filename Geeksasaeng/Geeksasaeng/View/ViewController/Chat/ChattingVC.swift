@@ -10,56 +10,50 @@ import SnapKit
 import Kingfisher
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Then
 
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
     
-    lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 9
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
+    /* collectionView 생성할 때, Layout 초기화 필요 -> then 쓰기 위해 바깥에 layout 변수 선언 */
+    let layout = UICollectionViewFlowLayout().then {
+        $0.minimumLineSpacing = 9
+    }
+    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout).then {
+        $0.backgroundColor = .white
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapCollectionView))
-        collectionView.addGestureRecognizer(gesture)
-        return collectionView
-    }()
+        $0.addGestureRecognizer(gesture)
+    }
     
     /* bottomView components */
-    let bottomView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xEFEFEF)
-        return view
-    }()
-    let sendImageButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "SendImage"), for: .normal)
-        return button
-    }()
-    let contentsTextView: UITextView = {
-        let textView = UITextView()
-        textView.font = .customFont(.neoMedium, size: 16)
-        textView.backgroundColor = .init(hex: 0xEFEFEF)
-        textView.textColor = .black
-        textView.textAlignment = .left
-        textView.isEditable = true
-        textView.text = "입력하세요"
-        textView.textColor = .init(hex: 0xD8D8D8)
-        return textView
-    }()
-    lazy var sendButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("전송", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 16)
-        button.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
-        button.isEnabled = false
-        button.addTarget(self, action: #selector(tapSendButton), for: .touchUpInside)
-        return button
-    }()
+    let bottomView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
+    }
+    let sendImageButton = UIButton().then {
+        $0.setImage(UIImage(named: "SendImage"), for: .normal)
+    }
+    let contentsTextView = UITextView().then {
+        $0.font = .customFont(.neoMedium, size: 16)
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
+        $0.textColor = .black
+        $0.textAlignment = .left
+        $0.isEditable = true
+        $0.text = "입력하세요"
+        $0.textColor = .init(hex: 0xD8D8D8)
+    }
+    lazy var sendButton = UIButton().then {
+        $0.setTitle("전송", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 16)
+        $0.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
+        $0.isEnabled = false
+        $0.addTarget(self, action: #selector(self.tapSendButton), for: .touchUpInside)
+    }
     
     /* 방장이 옵션뷰를 눌렀을 때 나오는 뷰 */
-    lazy var optionViewForOwner: UIView = {
-        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8)))
+    lazy var optionViewForOwner = UIView().then { view in
+//        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8)))
+        view.frame = CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8))
         view.backgroundColor = .white
         
         // 왼쪽 하단의 코너에만 cornerRadius를 적용
@@ -68,14 +62,12 @@ class ChattingViewController: UIViewController {
         
         /* 옵션뷰에 있는 ellipsis 버튼
          -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
-        lazy var settingButton: UIButton = {
-            let button = UIButton()
-            button.setImage(UIImage(named: "Setting"), for: .normal)
-            button.tintColor = .init(hex: 0x2F2F2F)
+        lazy var settingButton = UIButton().then {
+            $0.setImage(UIImage(named: "Setting"), for: .normal)
+            $0.tintColor = .init(hex: 0x2F2F2F)
             // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
-            button.addTarget(self, action: #selector(tapOptionButtonInView), for: .touchUpInside)
-            return button
-        }()
+            $0.addTarget(self, action: #selector(self.tapOptionButtonInView), for: .touchUpInside)
+        }
         view.addSubview(settingButton)
         settingButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
@@ -84,38 +76,28 @@ class ChattingViewController: UIViewController {
         }
         
         /* 옵션뷰에 있는 버튼 */
-        var showMenuButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("메뉴판 보기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            return button
-        }()
-        var sendDeliveryConfirmButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("배달 완료 알림 보내기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            button.addTarget(self, action: #selector(tapDeliveryConfirmButton), for: .touchUpInside)
-            return button
-        }()
-        var closeMatchingButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("매칭 마감하기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            button.addTarget(self, action: #selector(tapCloseMatchingButton), for: .touchUpInside)
-            return button
-        }()
-        var forcedExitButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("강제 퇴장시키기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            return button
-        }()
-        var endOfChatButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("나가기", for: .normal)
-            button.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
-            return button
-        }()
+        var showMenuButton = UIButton().then {
+            $0.setTitle("메뉴판 보기", for: .normal)
+            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+        }
+        var sendDeliveryConfirmButton = UIButton().then {
+            $0.setTitle("배달 완료 알림 보내기", for: .normal)
+            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+            $0.addTarget(self, action: #selector(tapDeliveryConfirmButton), for: .touchUpInside)
+        }
+        var closeMatchingButton = UIButton().then {
+            $0.setTitle("매칭 마감하기", for: .normal)
+            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+            $0.addTarget(self, action: #selector(tapCloseMatchingButton), for: .touchUpInside)
+        }
+        var forcedExitButton = UIButton().then {
+            $0.setTitle("강제 퇴장시키기", for: .normal)
+            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+        }
+        var endOfChatButton = UIButton().then {
+            $0.setTitle("나가기", for: .normal)
+            $0.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
+        }
         
         [showMenuButton, sendDeliveryConfirmButton, closeMatchingButton, forcedExitButton, endOfChatButton].forEach {
             // attributes
@@ -146,12 +128,10 @@ class ChattingViewController: UIViewController {
             make.top.equalTo(forcedExitButton.snp.bottom).offset(27)
             make.left.equalToSuperview().inset(20)
         }
-        
-        return view
-    }()
+    }
     
-    lazy var optionViewForUser: UIView = {
-        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5)))
+    lazy var optionViewForUser = UIView().then { view in
+        view.frame = CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5))
         view.backgroundColor = .white
         
         // 왼쪽 하단의 코너에만 cornerRadius를 적용
@@ -160,14 +140,12 @@ class ChattingViewController: UIViewController {
         
         /* 옵션뷰에 있는 ellipsis 버튼
          -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
-        lazy var settingButton: UIButton = {
-            let button = UIButton()
-            button.setImage(UIImage(named: "Setting"), for: .normal)
-            button.tintColor = .init(hex: 0x2F2F2F)
+        lazy var settingButton = UIButton().then {
+            $0.setImage(UIImage(named: "Setting"), for: .normal)
+            $0.tintColor = .init(hex: 0x2F2F2F)
             // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
-            button.addTarget(self, action: #selector(tapOptionButtonInView), for: .touchUpInside)
-            return button
-        }()
+            $0.addTarget(self, action: #selector(self.tapOptionButtonInView), for: .touchUpInside)
+        }
         view.addSubview(settingButton)
         settingButton.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(49)
@@ -176,18 +154,14 @@ class ChattingViewController: UIViewController {
         }
         
         /* 옵션뷰에 있는 버튼 */
-        var showMenuButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("메뉴판 보기", for: .normal)
-            button.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            return button
-        }()
-        var endOfChatButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("채팅 나가기", for: .normal)
-            button.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
-            return button
-        }()
+        var showMenuButton = UIButton().then {
+            $0.setTitle("메뉴판 보기", for: .normal)
+            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+        }
+        var endOfChatButton = UIButton().then {
+            $0.setTitle("채팅 나가기", for: .normal)
+            $0.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
+        }
         
         [showMenuButton, endOfChatButton].forEach {
             // attributes
@@ -206,20 +180,18 @@ class ChattingViewController: UIViewController {
             make.top.equalTo(showMenuButton.snp.bottom).offset(27)
             make.left.equalToSuperview().inset(20)
         }
-        
-        return view
-    }()
+    }
     
     // 나가기 뷰
-    lazy var exitView: UIView = {
-        let view = UIView()
+    lazy var exitView = UIView().then { view in
         view.backgroundColor = .white
         view.clipsToBounds = true
         view.layer.cornerRadius = 7
         
         /* top View: 삭제하기 */
-        let topSubView = UIView()
-        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
         view.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -228,19 +200,21 @@ class ChattingViewController: UIViewController {
         }
         
         /* set titleLabel */
-        let titleLabel = UILabel()
-        titleLabel.text = "나가기"
-        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
-        titleLabel.font = .customFont(.neoMedium, size: 14)
+        let titleLabel = UILabel().then {
+            $0.text = "나가기"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
         topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
         
         /* set cancelButton */
-        lazy var cancelButton = UIButton()
-        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
-        cancelButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
+        }
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -250,8 +224,9 @@ class ChattingViewController: UIViewController {
         }
         
         /* bottom View: contents, 확인 버튼 */
-        let bottomSubView = UIView()
-        bottomSubView.backgroundColor = UIColor.white
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
         view.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
@@ -259,56 +234,50 @@ class ChattingViewController: UIViewController {
             make.height.equalTo(162)
         }
         
-        let contentLabel = UILabel()
-        let lineView = UIView()
-        lazy var confirmButton = UIButton()
+        let contentLabel = UILabel().then {
+            $0.text = "본 채팅방을 나갈 시\n이후로 채팅에 참여할 수\n없습니다. 계속하시겠습니까?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapExitConfirmButton), for: .touchUpInside)
+        }
         
         [contentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)
         }
-        
-        /* set contentLabel */
-        contentLabel.text = "본 채팅방을 나갈 시\n이후로 채팅에 참여할 수\n없습니다. 계속하시겠습니까?"
-        contentLabel.numberOfLines = 0
-        contentLabel.textColor = .init(hex: 0x2F2F2F)
-        contentLabel.font = .customFont(.neoMedium, size: 14)
-        let attrString = NSMutableAttributedString(string: contentLabel.text!)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 6
-        paragraphStyle.alignment = .center
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
-        contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(25)
         }
-        
-        /* set lineView */
-        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)
         }
-        
-        /* set confirmButton */
-        confirmButton.setTitleColor(.mainColor, for: .normal)
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
-        confirmButton.addTarget(self, action: #selector(tapExitConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
             make.width.height.equalTo(34)
         }
-        
-        return view
-    }()
+    }
     
     /* 매칭 마감하기 누르면 나오는 매칭마감 안내 뷰 */
-    lazy var closeMatchingView: UIView = {
-        let view = UIView()
+    lazy var closeMatchingView = UIView().then { view in
         view.backgroundColor = .white
         view.clipsToBounds = true
         view.layer.cornerRadius = 7
@@ -318,8 +287,9 @@ class ChattingViewController: UIViewController {
         }
         
         /* top View */
-        let topSubView = UIView()
-        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
         view.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -328,19 +298,21 @@ class ChattingViewController: UIViewController {
         }
         
         /* set titleLabel */
-        let titleLabel = UILabel()
-        titleLabel.text = "매칭 마감하기"
-        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
-        titleLabel.font = .customFont(.neoMedium, size: 14)
+        let titleLabel = UILabel().then {
+            $0.text = "매칭 마감하기"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
         topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
         
         /* set cancelButton */
-        lazy var cancelButton = UIButton()
-        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
-        cancelButton.addTarget(self, action: #selector(removeCloseMatchingView), for: .touchUpInside)
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.removeCloseMatchingView), for: .touchUpInside)
+        }
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -350,8 +322,9 @@ class ChattingViewController: UIViewController {
         }
         
         /* bottom View: contents, 확인 버튼 */
-        let bottomSubView = UIView()
-        bottomSubView.backgroundColor = UIColor.white
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
         view.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
@@ -359,108 +332,91 @@ class ChattingViewController: UIViewController {
             make.height.equalTo(200)
         }
         
-        let contentLabel = UILabel()
-        let lineView = UIView()
-        lazy var confirmButton = UIButton()
+        let contentLabel = UILabel().then {
+            $0.text = "매칭을 종료할 시\n본 파티에 대한 추가 인원이\n더 이상 모집되지 않습니다.\n계속하시겠습니까?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapConfirmButton), for: .touchUpInside)
+        }
         
         [contentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)
         }
-        
-        /* set contentLabel */
-        contentLabel.text = "매칭을 종료할 시\n본 파티에 대한 추가 인원이\n더 이상 모집되지 않습니다.\n계속하시겠습니까?"
-        contentLabel.numberOfLines = 0
-        contentLabel.textColor = .init(hex: 0x2F2F2F)
-        contentLabel.font = .customFont(.neoMedium, size: 14)
-        let attrString = NSMutableAttributedString(string: contentLabel.text!)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 6
-        paragraphStyle.alignment = .center
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
-        contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(20)
         }
-        
-        /* set lineView */
-        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(15)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)
         }
-        
-        /* set confirmButton */
-        confirmButton.setTitleColor(.mainColor, for: .normal)
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
-        confirmButton.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
             make.width.height.equalTo(34)
         }
-        
-        return view
-    }()
+    }
     
     // 송금하기 상단 뷰 (Firestore의 participant의 isRemittance 값이 false인 경우에만 노출)
-    lazy var remittanceView: UIView = {
-        let view = UIView()
+    lazy var remittanceView = UIView().then { view in
         view.backgroundColor = .init(hex: 0xF6F9FB)
         view.layer.opacity = 0.9
         
-        let coinImageView: UIImageView = {
-            let imageView = UIImageView()
-            imageView.image = UIImage(named: "RemittanceIcon")
-            return imageView
-        }()
+        let coinImageView = UIImageView().then {
+            $0.image = UIImage(named: "RemittanceIcon")
+        }
         
-        let accountLabel: UILabel = {
-            let label = UILabel()
-            label.font = .customFont(.neoMedium, size: 14)
-            label.textColor = .init(hex: 0x2F2F2F)
-            label.text = "\(self.bank ?? "은행")  \(self.accountNumber ?? "000-0000-0000-00")"
-            return label
-        }()
+        let accountLabel = UILabel().then {
+            $0.font = .customFont(.neoMedium, size: 14)
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.text = "\(self.bank ?? "은행")  \(self.accountNumber ?? "000-0000-0000-00")"
+        }
         
-        let remittanceConfirmButton: UIButton = {
-            let button = UIButton()
-            button.setTitle("송금 완료", for: .normal)
-            button.titleLabel?.font = .customFont(.neoMedium, size: 11)
-            button.titleLabel?.textColor = .white
-            button.backgroundColor = .mainColor
-            button.layer.cornerRadius = 5
-            button.addTarget(self, action: #selector(tapRemittanceButton), for: .touchUpInside)
-            return button
-        }()
+        let remittanceConfirmButton = UIButton().then {
+            $0.setTitle("송금 완료", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 11)
+            $0.titleLabel?.textColor = .white
+            $0.backgroundColor = .mainColor
+            $0.layer.cornerRadius = 5
+            $0.addTarget(self, action: #selector(tapRemittanceButton), for: .touchUpInside)
+        }
         
         [coinImageView, accountLabel, remittanceConfirmButton].forEach {
             view.addSubview($0)
         }
-        
         coinImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalToSuperview().offset(29)
             make.width.height.equalTo(24)
         }
-        
         accountLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.left.equalTo(coinImageView.snp.right).offset(8)
         }
-        
         remittanceConfirmButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().inset(28)
             make.width.equalTo(67)
             make.height.equalTo(29)
         }
-        
-        return view
-    }()
+    }
     
     // 블러 뷰
     var visualEffectView: UIVisualEffectView?
@@ -809,7 +765,6 @@ class ChattingViewController: UIViewController {
     /* 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
     @objc
     private func tapDeliveryConfirmButton() {
-        print("DEBUG: 배달 완료 푸시알림 전송", roomUUID)
         let input = DeliveryNotificationInput(uuid: roomUUID)
         DeliveryNotificationAPI.requestPushNotification(input)
         
@@ -882,6 +837,8 @@ class ChattingViewController: UIViewController {
             }
             view.subviews.forEach {
                 if $0 == exitView {
+                    $0.removeFromSuperview()
+                } else if $0 == closeMatchingView {
                     $0.removeFromSuperview()
                 }
             }
