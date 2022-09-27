@@ -93,6 +93,7 @@ class ChattingViewController: UIViewController {
         var forcedExitButton = UIButton().then {
             $0.setTitle("강제 퇴장시키기", for: .normal)
             $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
+            $0.addTarget(self, action: #selector(tapForcedExitButton), for: .touchUpInside)
         }
         var endOfChatButton = UIButton().then {
             $0.setTitle("나가기", for: .normal)
@@ -876,6 +877,14 @@ class ChattingViewController: UIViewController {
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
+    }
+    
+    // 강제 퇴장시키기 버튼 누르면 실행되는 함수
+    @objc
+    private func tapForcedExitButton() {
+        showChattingRoom(optionViewForOwner)
+        let forcedExitVC = ForcedExitViewController()
+        navigationController?.pushViewController(forcedExitVC, animated: true)
     }
     
     @objc
