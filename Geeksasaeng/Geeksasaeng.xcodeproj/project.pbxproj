@@ -1028,6 +1028,9 @@
 		A21DB934289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
 		A21DB935289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
 		A21DB936289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
+		A21E82B528E48FA400D75084 /* ChattingStorageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */; };
+		A21E82B628E48FA400D75084 /* ChattingStorageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */; };
+		A21E82B728E48FA400D75084 /* ChattingStorageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */; };
 		A2211118287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A2211119287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
 		A221111A287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */; };
@@ -1560,6 +1563,7 @@
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseMatchingAPI.swift; sourceTree = "<group>"; };
 		A21DB933289D896B00A523F1 /* ChattingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListVC.swift; sourceTree = "<group>"; };
+		A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingStorageVC.swift; sourceTree = "<group>"; };
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A225E10928ADE06A00029686 /* CommunityVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityVC.swift; sourceTree = "<group>"; };
 		A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPartyAPI.swift; sourceTree = "<group>"; };
@@ -2274,6 +2278,7 @@
 			children = (
 				102230F9289E640700042ACC /* ChattingVC.swift */,
 				A21DB933289D896B00A523F1 /* ChattingListVC.swift */,
+				A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3520,6 +3525,7 @@
 				A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */,
 				10223102289E68F600042ACC /* MessageModel.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
+				A21E82B528E48FA400D75084 /* ChattingStorageVC.swift in Sources */,
 				A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				A26780B828AD64D90078350D /* RecentPartyModel.swift in Sources */,
 				108B633828899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
@@ -3716,6 +3722,7 @@
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 				10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				A21E82B628E48FA400D75084 /* ChattingStorageVC.swift in Sources */,
 				10D4D6C42894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				10E8E71D288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
@@ -3795,6 +3802,7 @@
 				1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A248D8A3289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
+				A21E82B728E48FA400D75084 /* ChattingStorageVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
 				10EBEFEB289F559300038EFC /* RoomInfoModel.swift in Sources */,
