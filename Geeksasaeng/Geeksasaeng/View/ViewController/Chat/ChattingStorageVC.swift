@@ -39,6 +39,8 @@ class ChattingStorageViewController: UIViewController {
         $0.distribution = .equalSpacing
     }
     
+    let chattingStorageTableView = UITableView()
+    
     /* 테이블뷰 셀 하단에 블러뷰 */
     let blurView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140)).then {
         // 그라데이션 적용
@@ -69,6 +71,7 @@ class ChattingStorageViewController: UIViewController {
                            stackView: filterStackView)
         addSubViews()
         setLayouts()
+        setTableView()
         setLabelTap()
     }
     
@@ -94,6 +97,7 @@ class ChattingStorageViewController: UIViewController {
     private func addSubViews() {
         [
             filterImageView, filterStackView,
+            chattingStorageTableView,
             blurView
         ].forEach { view.addSubview($0) }
     }
@@ -112,12 +116,30 @@ class ChattingStorageViewController: UIViewController {
             make.width.equalTo(134 + 85)
         }
         
+        /* Chatting Storage List */
+        chattingStorageTableView.snp.makeConstraints { make in
+            make.top.equalTo(filterStackView.snp.bottom).offset(18)
+            make.left.right.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
         /* Blur View */
         blurView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(140)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+    }
+    
+    /* 테이블뷰 세팅 */
+    private func setTableView() {
+        chattingStorageTableView.dataSource = self
+        chattingStorageTableView.delegate = self
+        chattingStorageTableView.register(ChattingStorageTableViewCell.self, forCellReuseIdentifier: ChattingStorageTableViewCell.identifier)
+        
+        chattingStorageTableView.rowHeight = 97
+        /* 구분선 양옆 간격 설정*/
+        chattingStorageTableView.separatorInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
     }
     
     /* 배열에 담긴 이름으로 Filter Views를 만들고 스택뷰로 묶는다 */
@@ -220,4 +242,19 @@ class ChattingStorageViewController: UIViewController {
         }
     }
 
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension ChattingStorageViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingStorageTableViewCell.identifier, for: indexPath) as? ChattingStorageTableViewCell else { return UITableViewCell() }
+        
+        return cell
+    }
+    
 }
