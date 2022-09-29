@@ -7,80 +7,65 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class EditUrlViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "식당 링크"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "식당 링크"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* url 입력 텍스트 필드 */
-    let urlTextField: UITextField = {
-        let textField = UITextField()
-        textField.font = .customFont(.neoRegular, size: 15)
-        textField.placeholder = "입력하세요"
-        textField.makeBottomLine()
-        textField.textColor = .black
-        return textField
-    }()
+    let urlTextField = UITextField().then {
+        $0.font = .customFont(.neoRegular, size: 15)
+        $0.placeholder = "입력하세요"
+        $0.makeBottomLine()
+        $0.textColor = .black
+    }
     
-    let urlTextFieldArrow: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "UrlArrow")
-        return imageView
-    }()
+    let urlTextFieldArrow = UIImageView().then {
+        $0.image = UIImage(named: "UrlArrow")
+    }
     
-    let urlExplainLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textColor = .black
-        label.font = .customFont(.neoMedium, size: 16)
-        label.text = "원하는 식당의 링크를 복사하여\n입력해주세요"
-        return label
-    }()
+    let urlExplainLabel = UILabel().then {
+        $0.numberOfLines = 0
+        $0.textColor = .black
+        $0.font = .customFont(.neoMedium, size: 16)
+        $0.text = "원하는 식당의 링크를 복사하여\n입력해주세요"
+    }
     
-    let urlExampleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .black
-        label.font = .customFont(.neoRegular, size: 11)
-        label.text = "ex. 배달의 민족, 요기요"
-        return label
-    }()
+    let urlExampleLabel = UILabel().then {
+        $0.textColor = .black
+        $0.font = .customFont(.neoRegular, size: 11)
+        $0.text = "ex. 배달의 민족, 요기요"
+    }
     
-    let urlImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "UrlImage")
-        return imageView
-    }()
+    let urlImageView = UIImageView().then {
+        $0.image = UIImage(named: "UrlImage")
+    }
     
     /* 건너뛰기 버튼 */
-    lazy var passButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("건너뛰기", for: .normal)
-        button.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
-        button.titleLabel?.font = .customFont(.neoLight, size: 15)
-        button.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
-        button.addTarget(self, action: #selector(tapPassButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var passButton = UIButton().then {
+        $0.setTitle("건너뛰기", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0x5B5B5B), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoLight, size: 15)
+        $0.makeBottomLine(color: 0x5B5B5B, width: 55, height: 1, offsetToTop: -8)
+        $0.addTarget(self, action: #selector(tapPassButton), for: .touchUpInside)
+    }
     
     /* nextButton: 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("완료", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("완료", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setActivatedNextButton()
+        $0.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
+    }
     
     // MARK: - Properties
     

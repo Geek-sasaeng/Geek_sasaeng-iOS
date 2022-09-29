@@ -7,31 +7,26 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - SubViews
     
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
     
-    lazy var contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.isUserInteractionEnabled = true
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapContentView))
-        view.addGestureRecognizer(gesture)
-        return view
-    }()
+    lazy var contentView = UIView().then {
+        $0.backgroundColor = .white
+        $0.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.tapContentView))
+        $0.addGestureRecognizer(gesture)
+    }
     
-    let userImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "EditUserImage")
-        return imageView
-    }()
+    let userImageView = UIImageView().then {
+        $0.image = UIImage(named: "EditUserImage")
+    }
     
     /* title labels */
     let dormitoryLabel = UILabel()
@@ -41,54 +36,48 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     let phoneNumLabel = UILabel()
     
     /* content labels */
-    let dormitoryDataLabel: PaddingLabel = {
-        let label = PaddingLabel()
-        label.backgroundColor = .init(hex: 0xEFEFEF)
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 15)
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 5
-        label.paddingTop = 7
-        label.paddingBottom = 7
-        label.paddingLeft = 15
-        label.paddingRight = 15
-        return label
-    }()
+    let dormitoryDataLabel = PaddingLabel().then {
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+        $0.paddingTop = 7
+        $0.paddingBottom = 7
+        $0.paddingLeft = 15
+        $0.paddingRight = 15
+    }
     lazy var nicknameDataLabel = UILabel()
     lazy var idDataLabel = UILabel()
     lazy var emailDataLabel = UILabel()
     lazy var phoneNumDataLabel = UILabel()
     
-    lazy var logoutButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(UIColor(hex: 0x2F2F2F), for: .normal)
-        button.backgroundColor = .init(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.layer.cornerRadius = 5
-        button.setTitle("로그아웃", for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 15)
-        button.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var logoutButton = UIButton().then {
+        $0.setTitleColor(UIColor(hex: 0x2F2F2F), for: .normal)
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+        $0.setTitle("로그아웃", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
+        $0.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
+    }
     
-    lazy var withdrawalMembershipButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoMedium, size: 13)
-        button.makeBottomLine(color: 0xA8A8A8, width: 48, height: 1, offsetToTop: -8)
-        button.setTitle("회원탈퇴", for: .normal)
-        return button
-    }()
+    lazy var withdrawalMembershipButton = UIButton().then {
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.makeBottomLine(color: 0xA8A8A8, width: 48, height: 1, offsetToTop: -8)
+        $0.setTitle("회원탈퇴", for: .normal)
+    }
     
-    lazy var logoutView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 7
+    lazy var logoutView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
   
-        let topSubView = UIView()
-        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
-        view.addSubview(topSubView)
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
@@ -96,19 +85,21 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* set titleLabel */
-        let titleLabel = UILabel()
-        titleLabel.text = "로그아웃"
-        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
-        titleLabel.font = .customFont(.neoMedium, size: 14)
+        let titleLabel = UILabel().then {
+            $0.text = "로그아웃"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
         topSubView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
         
         /* set cancelButton */
-        lazy var cancelButton = UIButton()
-        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
-        cancelButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
+        }
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -118,61 +109,57 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* bottom View: contents, 확인 버튼 */
-        let bottomSubView = UIView()
-        bottomSubView.backgroundColor = UIColor.white
-        view.addSubview(bottomSubView)
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
             make.height.equalTo(162)
         }
         
-        let contentLabel = UILabel()
-        let lineView = UIView()
-        lazy var confirmButton = UIButton()
+        let contentLabel = UILabel().then {
+            $0.text = "로그아웃 시 서비스 사용이 제한\n되며, 로그인이 필요합니다.\n계속하시겠습니까?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapLogoutConfirmButton), for: .touchUpInside)
+        }
         
         [contentLabel, lineView, confirmButton].forEach {
             bottomSubView.addSubview($0)
         }
-        
-        /* set contentLabel */
-        contentLabel.text = "로그아웃 시 서비스 사용이 제한\n되며, 로그인이 필요합니다.\n계속하시겠습니까?"
-        contentLabel.numberOfLines = 0
-        contentLabel.textColor = .init(hex: 0x2F2F2F)
-        contentLabel.font = .customFont(.neoMedium, size: 14)
-        let attrString = NSMutableAttributedString(string: contentLabel.text!)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 6
-        paragraphStyle.alignment = .center
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
-        contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(25)
         }
-        
-        /* set lineView */
-        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)
         }
-        
-        /* set confirmButton */
-        confirmButton.setTitleColor(.mainColor, for: .normal)
-        confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
-        confirmButton.addTarget(self, action: #selector(tapLogoutConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(18)
             make.width.height.equalTo(34)
         }
-        
-        return view
-    }()
+    }
     
     var visualEffectView: UIVisualEffectView?
     

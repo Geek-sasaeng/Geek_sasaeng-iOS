@@ -16,11 +16,9 @@ class PartyTableViewCell: UITableViewCell {
     
     // MARK: - SubViews
     
-    var peopleImageView: UIImageView = {
-        var imageView = UIImageView()
-        imageView.image = UIImage(named: "PeopleMark")
-        return imageView
-    }()
+    var peopleImageView = UIImageView().then {
+        $0.image = UIImage(named: "PeopleMark")
+    }
     let peopleLabel = UILabel()
     let timeLabel = UILabel()
     let titleLabel = UILabel()

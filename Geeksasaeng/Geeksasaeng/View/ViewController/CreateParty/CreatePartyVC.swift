@@ -8,90 +8,80 @@
 import UIKit
 import SnapKit
 import QuartzCore
+import Then
 
 class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
 
     // MARK: - SubViews
     
     // 스크롤뷰
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
     
     // 콘텐츠뷰
-    lazy var contentView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.isUserInteractionEnabled = true
+    lazy var contentView = UIView().then {
+        $0.backgroundColor = .white
+        $0.isUserInteractionEnabled = true
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapContentView))
-        view.addGestureRecognizer(gesture)
-        return view
-    }()
+        $0.addGestureRecognizer(gesture)
+    }
     
     /* 우측 상단 다음 버튼 */
-    var deactivatedRightBarButtonItem: UIBarButtonItem = {
-        let registerButton = UIButton()
-        registerButton.setTitle("다음", for: .normal)
-        registerButton.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
-        let barButton = UIBarButtonItem(customView: registerButton)
-        barButton.isEnabled = false
-        return barButton
-    }()
+    var deactivatedRightBarButtonItem = UIBarButtonItem().then {
+        let registerButton = UIButton().then {
+            $0.setTitle("다음", for: .normal)
+            $0.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
+        }
+//        let barButton = UIBarButtonItem(customView: registerButton)
+        $0.customView = registerButton
+        $0.isEnabled = false
+    }
     
     /* 타이틀 위 같이 먹고 싶고 싶어요 버튼 */
-    lazy var eatTogetherButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
-        button.tintColor = UIColor(hex: 0xD8D8D8)
-        button.setTitle("  같이 먹고 싶어요", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoLight, size: 13)
-        button.addTarget(self, action: #selector(tapEatTogetherButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var eatTogetherButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+        $0.tintColor = UIColor(hex: 0xD8D8D8)
+        $0.setTitle("  같이 먹고 싶어요", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoLight, size: 13)
+        $0.addTarget(self, action: #selector(tapEatTogetherButton), for: .touchUpInside)
+    }
     
     /* 타이틀 텍스트 필드 */
-    lazy var titleTextField: UITextField = {
-        let textField = UITextField()
-        textField.backgroundColor = .white
-        textField.attributedPlaceholder = NSAttributedString(
+    lazy var titleTextField = UITextField().then {
+        $0.backgroundColor = .white
+        $0.attributedPlaceholder = NSAttributedString(
             string: "제목",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xA8A8A8)]
         )
-        textField.font = .customFont(.neoMedium, size: 20)
-        textField.textColor = .black
+        $0.font = .customFont(.neoMedium, size: 20)
+        $0.textColor = .black
         
         // backgroundColor를 설정해 줬더니 borderStyle의 roundRect이 적용되지 않아서 따로 layer를 custom함
-        textField.layer.cornerRadius = 5
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor(hex: 0xEFEFEF).cgColor
+        $0.layer.cornerRadius = 5
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(hex: 0xEFEFEF).cgColor
         
         // placeholder와 layer 사이에 간격 설정
-        textField.layer.sublayerTransform = CATransform3DMakeTranslation(15, 0, 0)
+        $0.layer.sublayerTransform = CATransform3DMakeTranslation(15, 0, 0)
         
-        textField.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
-        return textField
-    }()
+        $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+    }
     
     /* 내용 텍스트 필드 */
-    var contentsTextView: UITextView = {
-        let textView = UITextView()
-        textView.backgroundColor = .white
-        textView.font = .customFont(.neoRegular, size: 15)
-        textView.refreshControl?.contentVerticalAlignment = .top
-        textView.text = "내용을 입력하세요"
-        textView.textColor = UIColor(hex: 0xD8D8D8)
-        return textView
-    }()
+    var contentsTextView = UITextView().then {
+        $0.backgroundColor = .white
+        $0.font = .customFont(.neoRegular, size: 15)
+        $0.refreshControl?.contentVerticalAlignment = .top
+        $0.text = "내용을 입력하세요"
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     /* 구분선 */
-    var separateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
+    var separateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
     
     /* Option labels */
     var orderForecastTimeLabel = UILabel()
@@ -101,35 +91,29 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     var locationLabel = UILabel()
     
     /* selected Button & labels */
-    lazy var orderForecastTimeButton: UIButton = {
-        let button = UIButton()
-        button.titleLabel?.font = .customFont(.neoRegular, size: 13)
-        button.contentHorizontalAlignment = .left
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
-        button.setActivatedButton()
-        button.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var orderForecastTimeButton = UIButton().then {
+        $0.titleLabel?.font = .customFont(.neoRegular, size: 13)
+        $0.contentHorizontalAlignment = .left
+        $0.layer.cornerRadius = 3
+        $0.clipsToBounds = true
+        $0.setActivatedButton()
+        $0.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
+    }
         
     var selectedPersonLabel = UILabel()
     var selectedCategoryLabel = UILabel()
     var selectedUrlLabel = UILabel()
     var selectedLocationLabel = UILabel()
     
-    let mapSubView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 5
-        return view
-    }()
+    let mapSubView = UIView().then {
+        $0.backgroundColor = .gray
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 5
+    }
     
-    let blockedView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray
-        return view
-    }()
+    let blockedView = UIView().then {
+        $0.backgroundColor = .gray
+    }
     
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?

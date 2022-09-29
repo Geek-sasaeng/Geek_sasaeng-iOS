@@ -7,29 +7,24 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class PhoneAuthViewController: UIViewController {
     
     // MARK: - SubViews
     
-    var progressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        return view
-    }()
-    var remainBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF2F2F2)
-        return view
-    }()
-    var progressIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
-        return imageView
-    }()
-    var remainIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
-        return imageView
-    }()
+    var progressBar = UIView().then {
+        $0.backgroundColor = .mainColor
+    }
+    var remainBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF2F2F2)
+    }
+    var progressIcon = UIImageView().then {
+        $0.image = UIImage(named: "LogoTop")
+    }
+    var remainIcon = UIImageView().then {
+        $0.image = UIImage(named: "LogoBottom")
+    }
     
     var phoneNumLabel = UILabel()
     var authLabel = UILabel()
@@ -37,42 +32,34 @@ class PhoneAuthViewController: UIViewController {
     var phoneNumTextField = UITextField()
     var authTextField = UITextField()
     
-    lazy var authSendButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("인증번호 전송", for: .normal)
-        button.setActivatedButton()
-        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
-        return button
-    }()
-    lazy var authCheckButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("확인", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.isEnabled = false
-        button.addTarget(self, action: #selector(tapAuthCheckButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var authSendButton = UIButton().then {
+        $0.setTitle("인증번호 전송", for: .normal)
+        $0.setActivatedButton()
+        $0.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
+    }
+    lazy var authCheckButton = UIButton().then {
+        $0.setTitle("확인", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.isEnabled = false
+        $0.addTarget(self, action: #selector(tapAuthCheckButton), for: .touchUpInside)
+    }
     
-    var remainTimeLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 13)
-        return label
-    }()
+    var remainTimeLabel = UILabel().then {
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+    }
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.isEnabled = false
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.isEnabled = false
+        $0.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+    }
     
     var visualEffectView: UIVisualEffectView?
     

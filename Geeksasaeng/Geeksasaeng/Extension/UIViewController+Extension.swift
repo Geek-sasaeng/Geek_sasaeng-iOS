@@ -9,19 +9,17 @@ import UIKit
 
 extension UIViewController {
     public func showToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor) {
-        let toastLabel: UILabel = {
-            let label = UILabel()
-            label.backgroundColor = color.withAlphaComponent(0.6)
-            label.text = message
-            label.textColor = UIColor.white
-            label.textAlignment = .center;
-            label.font = font
-            label.numberOfLines = 0
-            label.alpha = 1.0
-            label.layer.cornerRadius = 5;
-            label.clipsToBounds  =  true
-            return label
-        }()
+        let toastLabel = UILabel().then {
+            $0.backgroundColor = color.withAlphaComponent(0.6)
+            $0.text = message
+            $0.textColor = UIColor.white
+            $0.textAlignment = .center;
+            $0.font = font
+            $0.numberOfLines = 0
+            $0.alpha = 1.0
+            $0.layer.cornerRadius = 5;
+            $0.clipsToBounds  =  true
+        }
         
         viewController.view.addSubview(toastLabel)
         toastLabel.snp.makeConstraints { make in
@@ -39,23 +37,19 @@ extension UIViewController {
     
     /* 밑에 작은 토스트 메세지 띄워주는 함수 */
     public func showBottomToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor) {
-        let toastView: UIView = {
-            let view = UIView()
-            view.backgroundColor = color
-            view.layer.cornerRadius = 15
-            return view
-        }()
-        let toastLabel: UILabel = {
-            let label = UILabel()
-            label.text = message
-            label.font = font
-            label.textColor = UIColor.white
-            label.numberOfLines = 0
-            label.lineBreakMode = .byCharWrapping
-            let newSize = label.sizeThatFits(view.frame.size)
-            label.frame.size = newSize
-            return label
-        }()
+        let toastView = UIView().then {
+            $0.backgroundColor = color
+            $0.layer.cornerRadius = 15
+        }
+        let toastLabel = UILabel().then {
+            $0.text = message
+            $0.font = font
+            $0.textColor = UIColor.white
+            $0.numberOfLines = 0
+            $0.lineBreakMode = .byCharWrapping
+            let newSize = $0.sizeThatFits(view.frame.size)
+            $0.frame.size = newSize
+        }
         
         toastView.addSubview(toastLabel)
         toastLabel.snp.makeConstraints { make in

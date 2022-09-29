@@ -933,6 +933,12 @@
 		108D5972289AE7B700F2C258 /* DormitoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D5971289AE7B700F2C258 /* DormitoryAPI.swift */; };
 		108D5973289AE7B700F2C258 /* DormitoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D5971289AE7B700F2C258 /* DormitoryAPI.swift */; };
 		108D5974289AE7B700F2C258 /* DormitoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D5971289AE7B700F2C258 /* DormitoryAPI.swift */; };
+		10A4A35528E3734E00AF4235 /* ForcedExitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */; };
+		10A4A35628E3734E00AF4235 /* ForcedExitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */; };
+		10A4A35728E3734E00AF4235 /* ForcedExitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */; };
+		10A4A35928E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */; };
+		10A4A35A28E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */; };
+		10A4A35B28E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */; };
 		10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A53C722882FA6D00DDCE87 /* APIKEY.swift */; };
 		10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A53C722882FA6D00DDCE87 /* APIKEY.swift */; };
 		10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A53C722882FA6D00DDCE87 /* APIKEY.swift */; };
@@ -1524,6 +1530,8 @@
 		108B6333288998F9008C4F65 /* CreatePartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyModel.swift; sourceTree = "<group>"; };
 		108B633728899A4C008C4F65 /* DeliveryListDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListDetailViewModel.swift; sourceTree = "<group>"; };
 		108D5971289AE7B700F2C258 /* DormitoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryAPI.swift; sourceTree = "<group>"; };
+		10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForcedExitVC.swift; sourceTree = "<group>"; };
+		10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForcedExitTableViewCell.swift; sourceTree = "<group>"; };
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10AC5CA82889269000C8086A /* EditPartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyVC.swift; sourceTree = "<group>"; };
 		10B3822128A2321F00571406 /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
@@ -2265,6 +2273,7 @@
 				10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */,
 				A248D890289FB8F1000E2422 /* systemMessageCell.swift */,
 				A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */,
+				10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2274,6 +2283,7 @@
 			children = (
 				102230F9289E640700042ACC /* ChattingVC.swift */,
 				A21DB933289D896B00A523F1 /* ChattingListVC.swift */,
+				10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3555,6 +3565,7 @@
 				102B35D82879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				A26780B428AD64050078350D /* RecentPartyViewModel.swift in Sources */,
 				10C8D26828770D310044552A /* NaverRegisterVC.swift in Sources */,
+				10A4A35528E3734E00AF4235 /* ForcedExitVC.swift in Sources */,
 				10A53C732882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				A24D386328D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */,
 				10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
@@ -3609,6 +3620,7 @@
 				A2FA89AA286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
 				106D9755287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				1040FB9A2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
+				10A4A35928E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */,
 				1040FB982875C06E0060A3E4 /* AgreementVC.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
 			);
@@ -3650,6 +3662,7 @@
 				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
 				10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
+				10A4A35A28E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */,
 				102B35D92879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10D4D6B42894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
@@ -3677,6 +3690,7 @@
 				A2B045D32889923200B97636 /* ReportDetailVC.swift in Sources */,
 				102B35DD2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
+				10A4A35628E3734E00AF4235 /* ForcedExitVC.swift in Sources */,
 				10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				108B6335288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
@@ -3794,6 +3808,7 @@
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
+				10A4A35728E3734E00AF4235 /* ForcedExitVC.swift in Sources */,
 				A248D8A3289FFEAF000E2422 /* PartyNameVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
@@ -3820,6 +3835,7 @@
 				10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				10EC391228AD307700A72DC6 /* MyInfoVC.swift in Sources */,
+				10A4A35B28E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */,
 				102B35D22879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				103F5E49289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,

@@ -7,30 +7,27 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class EditMatchingPersonViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "매칭 인원 선택"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "매칭 인원 선택"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* nextButton: 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("완료", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("완료", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setActivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     let personPickerView = UIPickerView()
     

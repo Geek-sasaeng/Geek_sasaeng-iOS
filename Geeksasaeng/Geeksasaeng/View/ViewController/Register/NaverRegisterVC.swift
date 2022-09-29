@@ -7,56 +7,47 @@
 
 import UIKit
 import SnapKit
+import Then
 
 // MARK: - 수정된 회원가입 Res에 맞게 수정 필요
 class NaverRegisterViewController: UIViewController {
     
     // MARK: - SubViews
     
-    lazy var progressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        return view
-    }()
-    lazy var remainBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF2F2F2)
-        return view
-    }()
-    lazy var progressIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
-        return imageView
-    }()
-    lazy var remainIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
-        return imageView
-    }()
+    lazy var progressBar = UIView().then {
+        $0.backgroundColor = .mainColor
+    }
+    lazy var remainBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF2F2F2)
+    }
+    lazy var progressIcon = UIImageView().then {
+        $0.image = UIImage(named: "LogoTop")
+    }
+    lazy var remainIcon = UIImageView().then {
+        $0.image = UIImage(named: "LogoBottom")
+    }
     
-    let selectYourUnivLabel: UILabel = {
-        let label = UILabel()
-        label.text = "자신의 학교를 선택해주세요"
-        label.font = .customFont(.neoLight, size: 15)
-        label.textColor = .init(hex: 0xD8D8D8)
-        return label
-    }()
-    let toggleImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-        imageView.tintColor = .init(hex: 0xD8D8D8)
-        return imageView
-    }()
+    let selectYourUnivLabel = UILabel().then {
+        $0.text = "자신의 학교를 선택해주세요"
+        $0.font = .customFont(.neoLight, size: 15)
+        $0.textColor = .init(hex: 0xD8D8D8)
+    }
+    let toggleImageView = UIImageView().then {
+        $0.image = UIImage(named: "ToggleMark")
+        $0.tintColor = .init(hex: 0xD8D8D8)
+    }
     
     /* 자신의 학교를 선택해주세요 버튼 */
-    lazy var universitySelectView: UIView = {
-        let view = UIView()
-        view.isUserInteractionEnabled = true
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 5
-        view.clipsToBounds = true
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
+    lazy var universitySelectView = UIView().then {
+        $0.isUserInteractionEnabled = true
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 5
+        $0.clipsToBounds = true
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
         
-        view.addSubview(selectYourUnivLabel)
-        view.addSubview(toggleImageView)
+        $0.addSubview(selectYourUnivLabel)
+        $0.addSubview(toggleImageView)
         selectYourUnivLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(12)
             make.centerY.equalToSuperview()
@@ -67,46 +58,37 @@ class NaverRegisterViewController: UIViewController {
             make.width.equalTo(15)
             make.height.equalTo(8)
         }
-        return view
-    }()
+    }
     
     // Label Tap Gesture 적용을 위해 따로 꺼내놓음
-    lazy var univNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "가천대학교"
-        label.font = .customFont(.neoLight, size: 15)
-        label.textColor = .init(hex: 0x636363)
-        return label
-    }()
+    lazy var univNameLabel = UILabel().then {
+        $0.text = "가천대학교"
+        $0.font = .customFont(.neoLight, size: 15)
+        $0.textColor = .init(hex: 0x636363)
+    }
     /* 자신의 학교를 선택해주세요 눌렀을 때 확장되는 뷰
         -> 학교 리스트를 보여줌 */
-    lazy var universityListView: UIView = {
-        let view = UIView()
+    lazy var universityListView = UIView().then { view in
         view.backgroundColor = .white
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.init(hex: 0xEFEFEF).cgColor
         
-        var selectYourUnivLabel: UILabel = {
-            let label = UILabel()
-            label.text = "자신의 학교를 선택해주세요"
-            label.font = .customFont(.neoLight, size: 15)
-            label.textColor = .init(hex: 0xD8D8D8)
-            return label
-        }()
-        var toggleImageView: UIImageView = {
-            let imageView = UIImageView(image: UIImage(named: "ToggleMark"))
-            imageView.tintColor = .init(hex: 0xD8D8D8)
-            return imageView
-        }()
-        var markUnivLabel: UILabel = {
-            let label = UILabel()
-            label.text = "ㄱ"
-            label.font = .customFont(.neoLight, size: 12)
-            label.textColor = .init(hex: 0xA8A8A8)
-            return label
-        }()
+        var selectYourUnivLabel = UILabel().then {
+            $0.text = "자신의 학교를 선택해주세요"
+            $0.font = .customFont(.neoLight, size: 15)
+            $0.textColor = .init(hex: 0xD8D8D8)
+        }
+        var toggleImageView = UIImageView().then {
+            $0.image = UIImage(named: "ToggleMark")
+            $0.tintColor = .init(hex: 0xD8D8D8)
+        }
+        var markUnivLabel = UILabel().then {
+            $0.text = "ㄱ"
+            $0.font = .customFont(.neoLight, size: 12)
+            $0.textColor = .init(hex: 0xA8A8A8)
+        }
         
         [
             selectYourUnivLabel,
@@ -135,8 +117,7 @@ class NaverRegisterViewController: UIViewController {
             make.left.equalToSuperview().inset(12)
         }
         view.isHidden = true
-        return view
-    }()
+    }
     
     var nickNameLabel = UILabel()
     var schoolLabel = UILabel()
@@ -146,40 +127,32 @@ class NaverRegisterViewController: UIViewController {
     var emailTextField = UITextField()
     var emailAddressTextField = UITextField()
     
-    lazy var nickNameCheckButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("중복 확인", for: .normal)
-        button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
-        return button
-    }()
-    lazy var authSendButton: UIButton = {
-        var button = UIButton()
-        button.setTitle("인증번호 전송", for: .normal)
-        button.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nickNameCheckButton = UIButton().then {
+        $0.setTitle("중복 확인", for: .normal)
+        $0.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
+    }
+    lazy var authSendButton = UIButton().then {
+        $0.setTitle("인증번호 전송", for: .normal)
+        $0.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
+    }
     
-    var nickNameAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.text = "사용 가능한 닉네임입니다"
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var nickNameAvailableLabel = UILabel().then {
+        $0.text = "사용 가능한 닉네임입니다"
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
-        button.isEnabled = false
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        $0.isEnabled = false
+    }
     
     // MARK: - Properties
     

@@ -7,48 +7,41 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class MatchingPersonViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "매칭 인원 선택"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "매칭 인원 선택"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var backButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        $0.tintColor = UIColor(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
+    }
     
     /* nextButton: 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setActivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     /* pageLabel: 2/5 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "2/5"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
-    }()
+    let pageLabel = UILabel().then {
+        $0.text = "2/5"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     let personPickerView = UIPickerView()
     

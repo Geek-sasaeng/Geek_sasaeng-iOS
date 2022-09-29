@@ -11,103 +11,75 @@ import SnapKit
 class CategoryViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 카테고리 선택 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "카테고리 선택"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "카테고리 선택"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var backButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        $0.tintColor = UIColor(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
+    }
     
     /* category labels */
-    let korean: UIButton = {
-        let button = UIButton()
-        button.setTitle("한식", for: .normal)
-        return button
-    }()
+    let korean = UIButton().then {
+        $0.setTitle("한식", for: .normal)
+    }
     
-    let western: UIButton = {
-        let button = UIButton()
-        button.setTitle("양식", for: .normal)
-        return button
-    }()
+    let western = UIButton().then {
+        $0.setTitle("양식", for: .normal)
+    }
     
-    let chinese: UIButton = {
-        let button = UIButton()
-        button.setTitle("중식", for: .normal)
-        return button
-    }()
+    let chinese = UIButton().then {
+        $0.setTitle("중식", for: .normal)
+    }
     
-    let japanese: UIButton = {
-        let button = UIButton()
-        button.setTitle("일식", for: .normal)
-        return button
-    }()
+    let japanese = UIButton().then {
+        $0.setTitle("일식", for: .normal)
+    }
     
-    let snack: UIButton = {
-        let button = UIButton()
-        button.setTitle("분식", for: .normal)
-        return button
-    }()
+    let snack = UIButton().then {
+        $0.setTitle("분식", for: .normal)
+    }
     
-    let chicken: UIButton = {
-        let button = UIButton()
-        button.setTitle("치킨/피자", for: .normal)
-        return button
-    }()
+    let chicken = UIButton().then {
+        $0.setTitle("치킨/피자", for: .normal)
+    }
     
-    let rawfish: UIButton = {
-        let button = UIButton()
-        button.setTitle("회/돈까스", for: .normal)
-        return button
-    }()
+    let rawfish = UIButton().then {
+        $0.setTitle("회/돈까스", for: .normal)
+    }
     
-    let fastfood: UIButton = {
-        let button = UIButton()
-        button.setTitle("패스트 푸드", for: .normal)
-        return button
-    }()
+    let fastfood = UIButton().then {
+        $0.setTitle("패스트 푸드", for: .normal)
+    }
     
-    let dessert: UIButton = {
-        let button = UIButton()
-        button.setTitle("디저트/음료", for: .normal)
-        return button
-    }()
+    let dessert = UIButton().then {
+        $0.setTitle("디저트/음료", for: .normal)
+    }
     
-    let etc: UIButton = {
-        let button = UIButton()
-        button.setTitle("기타", for: .normal)
-        return button
-    }()
+    let etc = UIButton().then {
+        $0.setTitle("기타", for: .normal)
+    }
     
     /* nextButton: 다음 버튼 */
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.clipsToBounds = true
-        button.setDeactivatedNextButton()
-        button.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.clipsToBounds = true
+        $0.setDeactivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+    }
     
     /* pageLabel: 3/5 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "3/5"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
-    }()
+    let pageLabel = UILabel().then {
+        $0.text = "3/5"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     // MARK: - Properties
     var selectedCategory: UIButton?
