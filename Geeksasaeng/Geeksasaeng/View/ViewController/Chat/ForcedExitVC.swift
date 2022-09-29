@@ -149,3 +149,4 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 // 1. selectedUsers.append 작동 x
+// 2. ChattingVC에서 넘어올 때 송금하기 상단 뷰가 위로 밀리는 현상
