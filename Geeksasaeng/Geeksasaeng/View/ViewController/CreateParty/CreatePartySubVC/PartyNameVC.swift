@@ -251,10 +251,9 @@ class PartyNameViewController: UIViewController {
                     }
                 
                 /* 생성된 파티의 상세 조회 화면으로 이동 */
-                let partyVC = PartyViewController()
-                partyVC.partyId = result.id
-                partyVC.dormitoryInfo = dormitoryInfo
-                partyVC.createdData = DeliveryListDetailModelResult(
+                guard let partyId = result.id,
+                      let dormitoryInfo = dormitoryInfo else { return }
+                let createdData = DeliveryListDetailModelResult(
                     chief: result.chief,
                     chiefId: result.chiefId,
                     chiefProfileImgUrl: result.chiefProfileImgUrl,
@@ -275,10 +274,10 @@ class PartyNameViewController: UIViewController {
                     dormitory: result.dormitoryId,
                     uuid: result.uuid,
                     belongStatus: result.belongStatus)
+                let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo, createdData: createdData)
                 
                 // delegate로 DeliveryVC를 넘겨줌
                 partyVC.delegate = delegate
-                partyVC.fromCreated = true
                 
                 var vcArray = self.navigationController?.viewControllers
                 vcArray!.removeLast()
