@@ -1250,6 +1250,13 @@ class ChattingViewController: UIViewController {
         
         return label.frame.height
     }
+    
+    @objc
+    private func tapProfileImage() {
+        let popUpView = ProfilePopUpViewController()
+        popUpView.modalPresentationStyle = .overFullScreen
+        self.present(popUpView, animated: true)
+    }
 }
 
 extension ChattingViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -1301,6 +1308,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 
                 print("Seori Test: me #\(indexPath.item)", cell)
             } else {
+                cell.leftImageView.isUserInteractionEnabled = true
+                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
                 cell.leftMessageLabel.text = contents[indexPath.row].message?.content
                 cell.nicknameLabel.textAlignment = .left
                 cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
@@ -1308,9 +1317,9 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightMessageLabel.isHidden = true
                 cell.rightImageView.isHidden = true
                 if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
-                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
                 } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
+                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
                 }
                 
                 print("Seori Test: other #\(indexPath.item)", cell)

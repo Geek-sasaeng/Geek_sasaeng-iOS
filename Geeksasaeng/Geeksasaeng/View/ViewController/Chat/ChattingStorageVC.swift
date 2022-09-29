@@ -8,6 +8,7 @@
 import UIKit
 
 import SnapKit
+import Then
 
 /* 채팅 보관함 메인 화면 */
 class ChattingStorageViewController: UIViewController {
