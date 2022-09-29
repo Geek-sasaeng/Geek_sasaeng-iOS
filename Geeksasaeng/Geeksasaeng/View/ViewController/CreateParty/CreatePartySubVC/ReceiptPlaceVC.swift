@@ -8,90 +8,75 @@
 import UIKit
 import SnapKit
 import CoreLocation
+import Then
 
 class ReceiptPlaceViewController: UIViewController {
     // MARK: - SubViews
     /* titleLabel: 수령 장소 */
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "수령 장소"
-        label.font = .customFont(.neoMedium, size: 18)
-        return label
-    }()
+    let titleLabel = UILabel().then {
+        $0.text = "수령 장소"
+        $0.font = .customFont(.neoMedium, size: 18)
+    }
     
     /* backbutton */
-    lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        button.tintColor = UIColor(hex: 0x5B5B5B)
-        button.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var backButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        $0.tintColor = UIColor(hex: 0x5B5B5B)
+        $0.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
+    }
     
-    let searchTextField: UITextField = {
-        let textField = UITextField()
-        textField.font = .customFont(.neoRegular, size: 15)
-        textField.placeholder = "입력하세요"
-        textField.makeBottomLine()
-        textField.textColor = .black
-        return textField
-    }()
+    let searchTextField = UITextField().then {
+        $0.font = .customFont(.neoRegular, size: 15)
+        $0.placeholder = "입력하세요"
+        $0.makeBottomLine()
+        $0.textColor = .black
+    }
     
-    lazy var searchButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        button.tintColor = UIColor(hex: 0x2F2F2F)
-        button.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var searchButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        $0.tintColor = UIColor(hex: 0x2F2F2F)
+        $0.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
+    }
     
-    let customView: UIView = {
-        let view = UIView()
-        view.snp.makeConstraints { make in
+    let customView = UIView().then {
+        $0.snp.makeConstraints { make in
             make.width.equalTo(150)
             make.height.equalTo(30)
         }
         
-        let button = UIButton()
-        button.setTitle("이 위치로 지정", for: .normal)
-        view.addSubview(button)
+        let button = UIButton().then {
+            $0.setTitle("이 위치로 지정", for: .normal)
+        }
+        $0.addSubview(button)
         button.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
-        
-        return view
-    }()
+    }
     
-    let mapSubView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray
-        view.layer.masksToBounds = true
-        view.layer.cornerRadius = 5
-        return view
-    }()
+    let mapSubView = UIView().then {
+        $0.backgroundColor = .gray
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 5
+    }
     
     /* confirmButton: 완료 버튼 */
-    lazy var confirmButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("완료", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.setActivatedNextButton()
-        button.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var confirmButton = UIButton().then {
+        $0.setTitle("완료", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.setActivatedNextButton()
+        $0.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
+    }
     
     /* pageLabel: 5/5 */
-    let pageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "5/5"
-        label.font = .customFont(.neoMedium, size: 13)
-        label.textColor = UIColor(hex: 0xD8D8D8)
-        return label
-    }()
+    let pageLabel = UILabel().then {
+        $0.text = "5/5"
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = UIColor(hex: 0xD8D8D8)
+    }
     
     // MARK: - Properties
     var mapView: MTMapView?

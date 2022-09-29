@@ -11,8 +11,9 @@ import UIKit
 extension UILabel {
     // UILabel의 아래 라인 만들어주는 함수
     func makeBottomLine(color: UInt, width: CGFloat, height: CGFloat, offsetToTop: CGFloat) {
-        let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.init(hex: color)
+        let bottomLine = UIView().then {
+            $0.backgroundColor = UIColor.init(hex: color)
+        }
         
         self.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { make in
