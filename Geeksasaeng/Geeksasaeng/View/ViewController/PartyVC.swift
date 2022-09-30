@@ -504,6 +504,16 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         mapView = nil
     }
     
+    // MARK: - Initialization
+    
+    convenience init(partyId: Int, dormitoryInfo: DormitoryNameResult? = nil, createdData: DeliveryListDetailModelResult? = nil) {
+        self.init()
+        self.partyId = partyId
+        self.dormitoryInfo = dormitoryInfo
+        self.createdData = createdData
+        self.fromCreated = (createdData != nil)
+    }
+    
     // MARK: - Functions
     
     private func setFirestore() {

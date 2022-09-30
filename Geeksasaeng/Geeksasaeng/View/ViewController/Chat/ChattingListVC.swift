@@ -60,9 +60,6 @@ class ChattingListViewController: UIViewController {
     }
     var roomUUIDList: [String] = []
     
-    // 채팅 보관함 버튼 눌렀는지/안 눌렀는지 확인을 위해
-    var isStorageOn: Bool = false
-    
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
     
@@ -345,24 +342,12 @@ class ChattingListViewController: UIViewController {
         }
     }
     
+    /* 채팅 보관함 아이콘 클릭시 실행되는 함수 */
     @objc
     private func tapStorageBox() {
-        isStorageOn = !isStorageOn
         print("DEBUG: 채팅 보관함 아이콘 클릭")
-        if isStorageOn {
-            view.addSubview(readyView)
-            readyView.snp.makeConstraints { make in
-                make.width.equalToSuperview()
-                make.top.bottom.equalTo(view.safeAreaLayoutGuide)
-            }
-        } else {
-            if selectedLabel?.text == "배달파티" {
-                removeReadyView()
-            } else {
-                removeReadyView()
-                showReadyView()
-            }
-        }
+        let chattingStorageVC = ChattingStorageViewController()
+        self.navigationController?.pushViewController(chattingStorageVC, animated: true)
     }
     
 }

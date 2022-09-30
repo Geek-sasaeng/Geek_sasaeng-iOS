@@ -938,8 +938,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = PartyViewController()
-        viewController.partyId = deliveryCellDataArray[indexPath.row].id
+        guard let partyId = deliveryCellDataArray[indexPath.row].id else { return }
+        let viewController = PartyViewController(partyId: partyId)
         self.navigationController?.pushViewController(viewController, animated: true)
         
         // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서

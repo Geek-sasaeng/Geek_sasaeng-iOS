@@ -12,7 +12,9 @@ class MessageCell: UICollectionViewCell {
     
     // MARK: - SubViews
     
-    let leftImageView = UIImageView()
+    let leftImageView = UIButton().then {
+        $0.isUserInteractionEnabled = true
+    }
     let rightImageView = UIImageView()
     let nicknameLabel = UILabel()
     let rightTimeLabel = UILabel()
@@ -21,6 +23,7 @@ class MessageCell: UICollectionViewCell {
     let rightMessageLabel = PaddingLabel()
     
     // MARK: - Life Cycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
@@ -49,6 +52,7 @@ class MessageCell: UICollectionViewCell {
     }
     
     // MARK: - Functions
+    
     private func addSubViews() {
         [nicknameLabel, leftMessageLabel, rightMessageLabel,
          rightTimeLabel, leftTimeLabel,

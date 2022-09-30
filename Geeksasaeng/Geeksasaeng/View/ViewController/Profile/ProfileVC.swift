@@ -249,26 +249,19 @@ class ProfileViewController: UIViewController {
     
     // 스택뷰 구성
     private func setStackView(passedArray: [Any], stackView: UIStackView) {
+        stackView.sizeToFit()
+        stackView.layoutIfNeeded()
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .center
+        
         if let viewArray = passedArray as? [UIView] {
-            stackView.axis = .horizontal
-            stackView.sizeToFit()
-            stackView.layoutIfNeeded()
-            stackView.distribution = .fillProportionally
-            stackView.alignment = .center
             stackView.spacing = 110
-            
             for view in viewArray {
                 stackView.addArrangedSubview(view)
             }
         } else {
             let stringArray = passedArray as! [String]
-            stackView.axis = .horizontal
-            stackView.sizeToFit()
-            stackView.layoutIfNeeded()
-            stackView.distribution = .fillProportionally
-            stackView.alignment = .center
             stackView.spacing = 85
-            
             for string in stringArray {
                 let label = UILabel().then {
                     $0.font = .customFont(.neoMedium, size: 12)
@@ -515,8 +508,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let partyVC = PartyViewController()
-        partyVC.partyId = ongoingPartyList[indexPath.row].id
+        guard let partyId = ongoingPartyList[indexPath.row].id else { return }
+        let partyVC = PartyViewController(partyId: partyId)
         self.navigationController?.pushViewController(partyVC, animated: true)
     }
 }
