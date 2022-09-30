@@ -128,41 +128,38 @@ class ForcedExitViewController: UIViewController {
     
     /* 강제퇴장되는 유저의 라벨(스택뷰) 생성 */
     private func createStackView(users: [String]) -> UIStackView {
-        var views: [UIView] = []
+        var views: [UIStackView] = []
         users.forEach {
-            let view = UIView()
-            view.backgroundColor = .green
-            view.snp.makeConstraints { make in
-                make.width.equalTo(256)
+            let imageView = UIImageView(image: UIImage(named: "ProfileImage"))
+            imageView.snp.makeConstraints { make in
+                make.width.equalTo(19)
                 make.height.equalTo(20)
             }
-            
-            let imageView = UIImageView(image: UIImage(systemName: "ProfileImage"))
             
             let label = UILabel()
             label.text = $0
             label.font = .customFont(.neoBold, size: 13)
             
-            [imageView, label].forEach { view.addSubview($0) }
-            imageView.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalTo(19)
-                make.height.equalTo(20)
+            let subStackView = UIStackView(arrangedSubviews: [imageView, label])
+            subStackView.snp.makeConstraints { make in
+                make.width.equalTo(28 + label.getWidth(text: label.text ?? ""))
             }
-            label.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
-                make.left.equalTo(imageView.snp.right).offset(9)
-            }
+            subStackView.axis = .horizontal
+            subStackView.spacing = 9
             
-            views.append(view)
+            views.append(subStackView)
         }
         
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.axis = .vertical
-        stackView.spacing = 21
+        stackView.spacing = 15
         stackView.distribution = .fillEqually
+        stackView.alignment = .center
+        stackView.snp.makeConstraints { make in
+            make.width.equalTo(256)
+        }
         
-        return stackView
+        return stackView // stackView 안에 stackView 구조
     }
     
     private func setForcedExitAlertView(stackView: UIStackView) {
@@ -173,7 +170,7 @@ class ForcedExitViewController: UIViewController {
             view.layer.cornerRadius = 7
             view.snp.makeConstraints { make in
                 make.width.equalTo(256)
-                make.height.equalTo(250)
+                make.height.equalTo((stackView.arrangedSubviews.count * 20) + ((stackView.arrangedSubviews.count - 1) * 15) + 303)
             }
             
             /* top View */
@@ -274,6 +271,7 @@ class ForcedExitViewController: UIViewController {
     private func removeForcedExitConfirmView() {
         forcedExitConfirmView?.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
+        visualEffectView = nil
     }
     
     @objc

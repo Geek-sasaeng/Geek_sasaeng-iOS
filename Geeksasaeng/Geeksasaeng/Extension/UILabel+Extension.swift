@@ -44,7 +44,7 @@ extension UILabel {
         self.sizeToFit()
         self.setNeedsDisplay()
         
-        return self.frame.height
+        return self.frame.width
     }
 }
 
