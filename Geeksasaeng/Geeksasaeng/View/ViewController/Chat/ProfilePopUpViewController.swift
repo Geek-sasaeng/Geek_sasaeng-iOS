@@ -18,7 +18,7 @@ class ProfilePopUpViewController: UIViewController {
         $0.backgroundColor = .white
         $0.layer.masksToBounds = true
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        $0.layer.cornerRadius = 5
+        $0.layer.cornerRadius = 10
     }
     let profileImageContainerView = UIView().then {
         $0.backgroundColor = .white
@@ -97,7 +97,7 @@ class ProfilePopUpViewController: UIViewController {
         }
         containerView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(196)
+            make.height.equalTo(212)
             make.bottom.equalToSuperview()
         }
         profileImageContainerView.snp.makeConstraints { make in
@@ -115,16 +115,16 @@ class ProfilePopUpViewController: UIViewController {
         }
         nickNameLabel.snp.makeConstraints { make in
             make.centerX.equalTo(roleLabel)
-            make.top.equalTo(roleLabel.snp.bottom).offset(13)
+            make.top.equalTo(roleLabel.snp.bottom).offset(10)
         }
         lineView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(19)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(36)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(25)
             make.height.equalTo(1.7)
         }
         reportStackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(27)
+            make.top.equalTo(lineView.snp.bottom).offset(25)
         }
     }
 }
