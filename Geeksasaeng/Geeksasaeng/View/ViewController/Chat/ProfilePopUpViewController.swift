@@ -10,6 +10,10 @@ import UIKit
 /* 상대 프로필 이미지 클릭시 뜨는 사용자 정보 뷰 */
 class ProfilePopUpViewController: UIViewController {
     
+    // MARK: - Properties
+    
+    var delegate: PushUserReportDelegate?
+    
     // MARK: - SubViews
     
     var blurView: UIVisualEffectView?
@@ -44,10 +48,11 @@ class ProfilePopUpViewController: UIViewController {
     let reportImageView = UIImageView().then {
         $0.image = UIImage(named: "UserReport")
     }
-    let reportLabel = UILabel().then {
-        $0.text = "신고하기"
-        $0.font = .customFont(.neoMedium, size: 15)
-        $0.textColor = .init(hex: 0x2F2F2F)
+    lazy var reportLabel = UIButton().then {
+        $0.setTitle("신고하기", for: .normal)
+        $0.setTitleColor(.init(hex: 0x2F2F2F), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
+        $0.addTarget(self, action: #selector(tapUserReportButton), for: .touchUpInside)
     }
     lazy var reportStackView = UIStackView(arrangedSubviews: [reportImageView, reportLabel]).then {
         $0.axis = .horizontal
@@ -122,9 +127,22 @@ class ProfilePopUpViewController: UIViewController {
             make.top.equalTo(nickNameLabel.snp.bottom).offset(25)
             make.height.equalTo(1.7)
         }
+        reportImageView.snp.makeConstraints { make in
+            make.width.equalTo(15)
+            make.height.equalTo(17)
+        }
         reportStackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(25)
         }
+    }
+    
+    // MARK: - @objc Functions
+    
+    @objc
+    private func tapUserReportButton() {
+        print(reportLabel, "hi")
+        dismiss(animated: true)
+        delegate?.pushUserReportVC()
     }
 }

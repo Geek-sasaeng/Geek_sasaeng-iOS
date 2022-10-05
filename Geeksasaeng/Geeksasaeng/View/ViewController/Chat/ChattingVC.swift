@@ -12,6 +12,10 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Then
 
+protocol PushUserReportDelegate {
+    func pushUserReportVC()
+}
+
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
@@ -1276,11 +1280,14 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapProfileImage() {
         let popUpView = ProfilePopUpViewController()
+        popUpView.delegate = self
         popUpView.modalPresentationStyle = .overFullScreen
         popUpView.modalTransitionStyle = .crossDissolve
         self.present(popUpView, animated: true)
     }
 }
+
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 
 extension ChattingViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -1408,5 +1415,14 @@ extension ChattingViewController: UITextViewDelegate {
             textView.text = "입력하세요"
             textView.textColor = UIColor(hex: 0xD8D8D8)
         }
+    }
+}
+
+// MARK: - PushUserReportDelegate
+
+extension ChattingViewController: PushUserReportDelegate {
+    public func pushUserReportVC() {
+        let reportUserVC = ReportUserViewController()
+        self.navigationController?.pushViewController(reportUserVC, animated: true)
     }
 }

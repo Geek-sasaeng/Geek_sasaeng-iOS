@@ -1049,6 +1049,9 @@
 		A246E58028A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
 		A246E58128A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
 		A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */; };
+		A248720128EA2DCF002F84A8 /* ReportUserVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248720028EA2DCF002F84A8 /* ReportUserVC.swift */; };
+		A248720228EA2DCF002F84A8 /* ReportUserVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248720028EA2DCF002F84A8 /* ReportUserVC.swift */; };
+		A248720328EA2DCF002F84A8 /* ReportUserVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248720028EA2DCF002F84A8 /* ReportUserVC.swift */; };
 		A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D88C289FB8E5000E2422 /* MessageCell.swift */; };
 		A248D88E289FB8E5000E2422 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D88C289FB8E5000E2422 /* MessageCell.swift */; };
 		A248D88F289FB8E5000E2422 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D88C289FB8E5000E2422 /* MessageCell.swift */; };
@@ -1582,6 +1585,7 @@
 		A2211117287F748900A8EEFB /* WeeklyTopCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyTopCollectionViewCell.swift; sourceTree = "<group>"; };
 		A225E10928ADE06A00029686 /* CommunityVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityVC.swift; sourceTree = "<group>"; };
 		A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinPartyAPI.swift; sourceTree = "<group>"; };
+		A248720028EA2DCF002F84A8 /* ReportUserVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportUserVC.swift; sourceTree = "<group>"; };
 		A248D88C289FB8E5000E2422 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		A248D890289FB8F1000E2422 /* systemMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = systemMessageCell.swift; sourceTree = "<group>"; };
 		A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListTableViewCell.swift; sourceTree = "<group>"; };
@@ -2296,9 +2300,10 @@
 			children = (
 				102230F9289E640700042ACC /* ChattingVC.swift */,
 				A21DB933289D896B00A523F1 /* ChattingListVC.swift */,
+				10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */,
 				A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */,
 				A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */,
-				10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */,
+				A248720028EA2DCF002F84A8 /* ReportUserVC.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3542,6 +3547,7 @@
 				10E8E71C288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				102B35DC2879BD670042F691 /* UIViewController+Extension.swift in Sources */,
 				A20FC0E9287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
+				A248720128EA2DCF002F84A8 /* ReportUserVC.swift in Sources */,
 				A2B045D22889923200B97636 /* ReportDetailVC.swift in Sources */,
 				10223102289E68F600042ACC /* MessageModel.swift in Sources */,
 				102B35D42879BCF90042F691 /* UITextField+Extension.swift in Sources */,
@@ -3719,6 +3725,7 @@
 				A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				10D4D6BC2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
+				A248720228EA2DCF002F84A8 /* ReportUserVC.swift in Sources */,
 				A2E78B0A28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				102230FB289E640700042ACC /* ChattingVC.swift in Sources */,
 				A20FC0EE287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
@@ -3768,6 +3775,7 @@
 				A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				A2AF539F2896C0680052F734 /* SearchViewModel.swift in Sources */,
 				A26780BA28AD64D90078350D /* RecentPartyModel.swift in Sources */,
+				A248720328EA2DCF002F84A8 /* ReportUserVC.swift in Sources */,
 				10D4D6C52894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				10D4D6C92894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A2513F1B287868070029C279 /* EmailAuthViewModel.swift in Sources */,
