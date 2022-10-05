@@ -12,8 +12,9 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Then
 
-protocol PushUserReportDelegate {
-    func pushUserReportVC()
+// Delegate Pattern을 통해 pushVC 구현
+protocol PushReportUserDelegate {
+    func pushReportUserVC()
 }
 
 class ChattingViewController: UIViewController {
@@ -1420,8 +1421,8 @@ extension ChattingViewController: UITextViewDelegate {
 
 // MARK: - PushUserReportDelegate
 
-extension ChattingViewController: PushUserReportDelegate {
-    public func pushUserReportVC() {
+extension ChattingViewController: PushReportUserDelegate {
+    public func pushReportUserVC() {
         let reportUserVC = ReportUserViewController()
         self.navigationController?.pushViewController(reportUserVC, animated: true)
     }

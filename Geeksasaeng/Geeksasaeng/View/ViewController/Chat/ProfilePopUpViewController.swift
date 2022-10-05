@@ -12,7 +12,7 @@ class ProfilePopUpViewController: UIViewController {
     
     // MARK: - Properties
     
-    var delegate: PushUserReportDelegate?
+    var delegate: PushReportUserDelegate?
     
     // MARK: - SubViews
     
@@ -141,8 +141,9 @@ class ProfilePopUpViewController: UIViewController {
     
     @objc
     private func tapUserReportButton() {
-        print(reportLabel, "hi")
+        // present로 띄운 이 화면을 dismiss시키고
         dismiss(animated: true)
-        delegate?.pushUserReportVC()
+        // navigation을 쓴 chattingVC를 통해 ReportUserVC를 push한다!
+        delegate?.pushReportUserVC()
     }
 }

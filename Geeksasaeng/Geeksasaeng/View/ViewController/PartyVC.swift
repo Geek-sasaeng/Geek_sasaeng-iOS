@@ -1233,7 +1233,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     
                     // 해당 채팅방으로 이동
                     let chattingVC = ChattingViewController()
-                    chattingVC.partyId = self.partyId
                     chattingVC.roomName = self.ChatRoomName
                     chattingVC.roomUUID = roomUUID
                     chattingVC.maxMatching = self.detailData.maxMatching
