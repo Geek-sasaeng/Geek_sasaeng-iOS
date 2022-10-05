@@ -186,7 +186,7 @@ class NaverRegisterViewController: UIViewController {
         $0.layer.cornerRadius = 5
         $0.backgroundColor = UIColor(hex: 0xEFEFEF)
         $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         $0.isEnabled = false
     }
     
@@ -203,6 +203,7 @@ class NaverRegisterViewController: UIViewController {
     var university: String? = nil // selectYourUnivLabel에서
     var email: String? = nil // emailTextField에서
     var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
+    var emailId: Int?
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -627,25 +628,37 @@ class NaverRegisterViewController: UIViewController {
     
     @objc
     private func tapAuthCheckButton() {
-        
+        if let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
+           let authNum = authNumTextField.text {
+            let email = email + emailAddress
+            print("DEBUG: ", email, authNum)
+            EmailAuthCheckViewModel.requestCheckEmailAuth(EmailAuthCheckInput(email: email, key: authNum)) { isSuccess, emailId in
+                if isSuccess {
+                    self.emailId = emailId
+                    self.nextButton.setActivatedButton()
+                } else {
+                    self.showToast(viewController: self, message: "인증번호를 다시 확인해 주세요.", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                }
+            }
+        }
     }
     
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
     @objc
-    private func showNextView() {
+    private func tapNextButton() {
         if let accessToken = accessToken,
            let nickNameData = nickNameTextField.text,
            let university = selectYourUnivLabel.text,
            let emailId = emailTextField.text,
            let emailAddress = emailAddressTextField.text {
             // 생성자를 통해 데이터 전달
-            let authNumVC = AuthNumViewController(isFromNaverRegister: true, accessToken: accessToken, nickNameData: nickNameData, university: university, email: emailId + emailAddress)
+            let agreementVC = AgreementViewController(isFromNaverRegister: true, accessToken: accessToken, nickNameData: nickNameData, university: university, email: emailId+emailAddress)
             
-            authNumVC.modalTransitionStyle = .crossDissolve
-            authNumVC.modalPresentationStyle = .fullScreen
+            agreementVC.modalTransitionStyle = .crossDissolve
+            agreementVC.modalPresentationStyle = .fullScreen
             
-            // 화면 전환
-            present(authNumVC, animated: true)
+            present(agreementVC, animated: true)
         }
     }
 }

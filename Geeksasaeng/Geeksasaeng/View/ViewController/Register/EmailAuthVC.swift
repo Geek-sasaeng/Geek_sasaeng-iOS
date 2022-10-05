@@ -178,6 +178,7 @@ class EmailAuthViewController: UIViewController {
     var pwCheckData: String?
     var nickNameData: String?
     var uuid: UUID! = UUID()
+    var emailId: Int?
     
     // 학교 선택 리스트가 열려있는지, 닫혀있는지 확인하기 위한 변수
     var isExpanded: Bool! = false
@@ -531,29 +532,54 @@ class EmailAuthViewController: UIViewController {
     
     @objc
     private func tapAuthCheckButton() {
-        
+        if let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
+           let authNum = authNumTextField.text {
+            let email = email + emailAddress
+            print("DEBUG: ", email, authNum)
+            EmailAuthCheckViewModel.requestCheckEmailAuth(EmailAuthCheckInput(email: email, key: authNum)) { isSuccess, emailId in
+                if isSuccess {
+                    self.emailId = emailId
+                    self.nextButton.setActivatedButton()
+                } else {
+                    self.showToast(viewController: self, message: "인증번호를 다시 확인해 주세요.", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                }
+            }
+        }
     }
     
     @objc
     private func tapNextButton() {
-        //
+//        if let idData = self.idData,
+//           let pwData = self.pwData,
+//           let pwCheckData = self.pwCheckData,
+//           let nickNameData = self.nickNameData,
+//           let univ = selectYourUnivLabel.text,
+//           let email = emailTextField.text,
+//           let emailAddress = emailAddressTextField.text,
+//           let uuid = uuid {
+//            // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함 - 일단은 가천대만
+//            let authNumVC = AuthNumViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: univ, email: email + emailAddress, uuid: uuid)
+//
+//            authNumVC.modalTransitionStyle = .crossDissolve
+//            authNumVC.modalPresentationStyle = .fullScreen
+//
+//            present(authNumVC, animated: true)
+//        }
         if let idData = self.idData,
            let pwData = self.pwData,
            let pwCheckData = self.pwCheckData,
            let nickNameData = self.nickNameData,
-           let univ = selectYourUnivLabel.text,
-           let email = emailTextField.text,
-           let emailAddress = emailAddressTextField.text,
-           let uuid = uuid {
-            // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함 - 일단은 가천대만
-            let authNumVC = AuthNumViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: univ, email: email + emailAddress, uuid: uuid)
+           let university = self.selectYourUnivLabel.text,
+           let emailId = self.emailId,
+           let uuid = self.uuid {
+            /* 인증번호 일치했을 때에만 휴대폰 번호 인증하는 화면 띄우기 */
+            let phoneAuthVC = PhoneAuthViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: university, emailId: emailId, uuid: uuid)
             
-            authNumVC.modalTransitionStyle = .crossDissolve
-            authNumVC.modalPresentationStyle = .fullScreen
+            phoneAuthVC.modalTransitionStyle = .crossDissolve
+            phoneAuthVC.modalPresentationStyle = .fullScreen
             
-            present(authNumVC, animated: true)
+            present(phoneAuthVC, animated: true)
         }
     }
 }
-
-/* 확인 버튼 눌러서 이메일 인증 확인 되면: nextButton.setDeactivatedNextButton() */
