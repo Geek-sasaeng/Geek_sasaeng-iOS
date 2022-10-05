@@ -143,6 +143,42 @@ class NaverRegisterViewController: UIViewController {
         $0.isHidden = true
     }
     
+    let authNumLabel = UILabel().then {
+        $0.text = "인증번호 입력"
+        $0.font = .customFont(.neoMedium, size: 18)
+        $0.textColor = .black
+    }
+    
+    lazy var authNumTextField = UITextField().then {
+        $0.textColor = .black
+        $0.attributedPlaceholder = NSAttributedString(
+            string: "입력하세요",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+        )
+        $0.makeBottomLine()
+    }
+    
+    lazy var authResendButton = UIButton().then {
+        $0.setTitle("재전송 하기", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.layer.cornerRadius = 5
+        $0.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
+        $0.isHidden = true
+    }
+    
+    lazy var authCheckButton = UIButton().then {
+        $0.setTitle("확인", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.layer.cornerRadius = 5
+        $0.addTarget(self, action: #selector(tapAuthCheckButton), for: .touchUpInside)
+    }
+    
+    let remainTimeLabel = UILabel().then {
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
+    
     lazy var nextButton = UIButton().then {
         $0.setTitle("다음", for: .normal)
         $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
@@ -167,6 +203,10 @@ class NaverRegisterViewController: UIViewController {
     var university: String? = nil // selectYourUnivLabel에서
     var email: String? = nil // emailTextField에서
     var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
+    
+    // Timer
+    var currentSeconds = 300 // 남은 시간
+    var timer: DispatchSourceTimer?
     
     // MARK: - Life Cycle
     
@@ -203,7 +243,8 @@ class NaverRegisterViewController: UIViewController {
             nickNameLabel, nickNameAvailableLabel, schoolLabel, emailLabel,
             nickNameTextField, emailTextField, emailAddressTextField,
             universitySelectView,
-            nickNameCheckButton, authSendButton,
+            nickNameCheckButton, authSendButton, authResendButton,
+            authNumLabel, authNumTextField, authCheckButton, remainTimeLabel,
             nextButton,
             universityListView  // 맨마지막에 addSubview를 해야 등장 시 맨 앞으로 옴
         ].forEach { view.addSubview($0) }
@@ -305,7 +346,12 @@ class NaverRegisterViewController: UIViewController {
         
         /* authSendButton */
         authSendButton.snp.makeConstraints { make in
-//            make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(10)
+            make.top.equalTo(emailTextField.snp.bottom).offset(28)
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(105)
+            make.height.equalTo(41)
+        }
+        authResendButton.snp.makeConstraints { make in
             make.top.equalTo(emailTextField.snp.bottom).offset(28)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
@@ -316,6 +362,27 @@ class NaverRegisterViewController: UIViewController {
             make.left.equalToSuperview().inset(28)
             make.right.equalTo(authSendButton.snp.left).offset(-15)
             make.top.equalTo(emailTextField.snp.bottom).offset(35)
+        }
+        
+        /* 인증번호 전송 */
+        authNumLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(emailLabel.snp.bottom).offset(138)
+        }
+        authNumTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authResendButton.snp.left).offset(-15)
+            make.top.equalTo(authNumLabel.snp.bottom).offset(20)
+        }
+        authCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(105)
+            make.height.equalTo(41)
+            make.bottom.equalTo(authNumTextField.snp.bottom).offset(9)
+        }
+        remainTimeLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.top.equalTo(authNumTextField.snp.bottom).offset(21)
         }
     }
     
@@ -340,6 +407,8 @@ class NaverRegisterViewController: UIViewController {
             view.layer.cornerRadius = 1.5
         }
         
+        authResendButton.setActivatedButton()
+        authCheckButton.setDeactivatedButton()
         [nickNameCheckButton, authSendButton].forEach {
             $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
             $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
@@ -370,7 +439,7 @@ class NaverRegisterViewController: UIViewController {
     }
     
     private func setTextFieldTarget() {
-        [nickNameTextField, emailTextField, emailAddressTextField].forEach { textField in
+        [nickNameTextField, emailTextField, emailAddressTextField, authNumTextField].forEach { textField in
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
@@ -387,6 +456,26 @@ class NaverRegisterViewController: UIViewController {
                                                      action: #selector(tapUnivName(_:)))
         univNameLabel.isUserInteractionEnabled = true
         univNameLabel.addGestureRecognizer(labelTapGesture)
+    }
+    
+    private func startTimer() {
+        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+        timer?.schedule(deadline: .now(), repeating: 1)
+        
+        timer?.setEventHandler(handler: { [weak self] in
+            guard let self = self else { return }
+            self.currentSeconds -= 1
+            let minutes = self.currentSeconds / 60
+            let seconds = self.currentSeconds % 60
+            self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
+            
+            if self.currentSeconds <= 0 {
+                self.timer?.cancel()
+                self.remainTimeLabel.textColor = .red
+                self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+            }
+        })
+        timer?.resume()
     }
     
     // MARK: - @objc Functions
@@ -422,7 +511,14 @@ class NaverRegisterViewController: UIViewController {
     
     @objc
     private func didChangeTextField(_ sender: UITextField) {
-        // 초기화
+        if sender == authNumTextField {
+            if authNumTextField.text?.count ?? 0 >= 1 {
+                authCheckButton.setActivatedButton()
+            } else {
+                authCheckButton.setDeactivatedButton()
+            }
+        }
+        
         if sender == nickNameTextField {
             isNicknameChecked = false
         } else if sender == emailTextField {
@@ -494,13 +590,44 @@ class NaverRegisterViewController: UIViewController {
             EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in// // 경우에 맞는 토스트 메세지 출력
                 self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
                 
-                // 닉네임 확인, 이메일 인증번호 전송까지 성공했을 때에 다음 버튼을 활성화
                 if isSuccess, self.isNicknameChecked {
-                    self.nextButton.setActivatedNextButton()
-                    self.isEmailSended = isSuccess
+                    self.authSendButton.isHidden = true
+                    self.authResendButton.isHidden = false
+                    self.startTimer()
+                    self.remainTimeLabel.isHidden = false
                 }
             }
         }
+    }
+    
+    @objc
+    private func tapAuthResendButton() {
+        if let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
+           let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            authSendButton.setDeactivatedButton()   // 비활성화
+            
+            print("DEBUG: ", email+emailAddress, univ)
+
+            let uuid = UUID()
+            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
+            print("DEBUG: ", uuid.uuidString)
+            // 이메일로 인증번호 전송하는 API 호출
+            EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in// // 경우에 맞는 토스트 메세지 출력
+                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
+                
+                if isSuccess {
+                    self.timer?.cancel()
+                    self.currentSeconds = 300
+                    self.startTimer()
+                }
+            }
+        }
+    }
+    
+    @objc
+    private func tapAuthCheckButton() {
+        
     }
     
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것

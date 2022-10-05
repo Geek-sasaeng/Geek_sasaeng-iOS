@@ -129,6 +129,42 @@ class EmailAuthViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
     }
     
+    let authNumLabel = UILabel().then {
+        $0.text = "인증번호 입력"
+        $0.font = .customFont(.neoMedium, size: 18)
+        $0.textColor = .black
+    }
+    
+    lazy var authNumTextField = UITextField().then {
+        $0.textColor = .black
+        $0.attributedPlaceholder = NSAttributedString(
+            string: "입력하세요",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
+        )
+        $0.makeBottomLine()
+    }
+    
+    lazy var authResendButton = UIButton().then {
+        $0.setTitle("재전송 하기", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.layer.cornerRadius = 5
+        $0.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
+        $0.isHidden = true
+    }
+    
+    lazy var authCheckButton = UIButton().then {
+        $0.setTitle("확인", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.layer.cornerRadius = 5
+        $0.addTarget(self, action: #selector(tapAuthCheckButton), for: .touchUpInside)
+    }
+    
+    let remainTimeLabel = UILabel().then {
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
+    
     lazy var nextButton = UIButton().then {
         $0.setTitle("다음", for: .normal)
         $0.titleLabel?.font = .customFont(.neoBold, size: 20)
@@ -146,6 +182,10 @@ class EmailAuthViewController: UIViewController {
     // 학교 선택 리스트가 열려있는지, 닫혀있는지 확인하기 위한 변수
     var isExpanded: Bool! = false
     let tempEmailAddress = "@gachon.ac.kr"
+    
+    // Timer
+    var currentSeconds = 300 // 남은 시간
+    var timer: DispatchSourceTimer?
     
     // MARK: - Life Cycle
     
@@ -196,7 +236,8 @@ class EmailAuthViewController: UIViewController {
             schoolLabel, emailLabel,
             universitySelectView,
             emailTextField, emailAddressTextField,
-            authSendButton,
+            authSendButton, authResendButton,
+            authNumLabel, authNumTextField, authCheckButton, remainTimeLabel,
             nextButton,
             universityListView  // 맨마지막에 addSubview를 해야 등장 시 맨 앞으로 옴
         ].forEach { view.addSubview($0) }
@@ -265,8 +306,14 @@ class EmailAuthViewController: UIViewController {
             make.right.equalTo(authSendButton.snp.left).offset(-15)
         }
         
-        /* authSendButton */
+        /* authSendButton, authResendButton */
         authSendButton.snp.makeConstraints { make in
+            make.top.equalTo(remainBar.snp.bottom).offset(243)
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(105)
+            make.height.equalTo(41)
+        }
+        authResendButton.snp.makeConstraints { make in
             make.top.equalTo(remainBar.snp.bottom).offset(243)
             make.right.equalToSuperview().inset(26)
             make.width.equalTo(105)
@@ -278,6 +325,27 @@ class EmailAuthViewController: UIViewController {
             make.left.right.equalToSuperview().inset(28)
             make.bottom.equalToSuperview().inset(51)
             make.height.equalTo(51)
+        }
+        
+        /* 인증번호 입력 */
+        authNumLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(emailLabel.snp.bottom).offset(138)
+        }
+        authNumTextField.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.right.equalTo(authResendButton.snp.left).offset(-15)
+            make.top.equalTo(authNumLabel.snp.bottom).offset(20)
+        }
+        authCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(26)
+            make.width.equalTo(105)
+            make.height.equalTo(41)
+            make.bottom.equalTo(authNumTextField.snp.bottom).offset(9)
+        }
+        remainTimeLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(40)
+            make.top.equalTo(authNumTextField.snp.bottom).offset(21)
         }
     }
     
@@ -294,6 +362,8 @@ class EmailAuthViewController: UIViewController {
         emailAddressTextField.isUserInteractionEnabled = false  // 유저가 입력하는 것이 아니라 학교에 따라 자동 설정되는 것.
         
         /* buttons attr */
+        authResendButton.setActivatedButton()
+        authCheckButton.setDeactivatedButton()
         [authSendButton, nextButton].forEach {
             $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
             $0.layer.cornerRadius = 5
@@ -323,7 +393,7 @@ class EmailAuthViewController: UIViewController {
     }
     
     private func setTextFieldTarget() {
-        [ emailTextField, emailAddressTextField ].forEach { textField in
+        [ emailTextField, emailAddressTextField, authNumTextField ].forEach { textField in
             textField.addTarget(self, action: #selector(didChangeTextField(_:)), for: .editingChanged)
         }
     }
@@ -341,15 +411,42 @@ class EmailAuthViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
     
+    private func startTimer() {
+        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
+        timer?.schedule(deadline: .now(), repeating: 1)
+        
+        timer?.setEventHandler(handler: { [weak self] in
+            guard let self = self else { return }
+            self.currentSeconds -= 1
+            let minutes = self.currentSeconds / 60
+            let seconds = self.currentSeconds % 60
+            self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
+            
+            if self.currentSeconds <= 0 {
+                self.timer?.cancel()
+                self.remainTimeLabel.textColor = .red
+                self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+            }
+        })
+        timer?.resume()
+    }
+    
     // MARK: - @objc Functions
 
     @objc
     private func didChangeTextField(_ sender: UITextField) {
-        if emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
-            authSendButton.setActivatedButton()
+        if sender == authNumTextField {
+            if authNumTextField.text?.count ?? 0 >= 1 {
+                authCheckButton.setActivatedButton()
+            } else {
+                authCheckButton.setDeactivatedButton()
+            }
         } else {
-            nextButton.setDeactivatedNextButton()
-            authSendButton.setDeactivatedButton()
+            if emailTextField.text?.count ?? 0 >= 1 && emailAddressTextField.text?.count ?? 0 >= 1 {
+                authSendButton.setActivatedButton()
+            } else {
+                authSendButton.setDeactivatedButton()
+            }
         }
     }
     
@@ -398,12 +495,43 @@ class EmailAuthViewController: UIViewController {
             EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in// // 경우에 맞는 토스트 메세지 출력
                 self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
                 
-                // 이메일 인증번호 전송까지 성공했을 때에 다음 버튼을 활성화
                 if isSuccess {
-                    self.nextButton.setActivatedNextButton()
+                    self.authSendButton.isHidden = true
+                    self.authResendButton.isHidden = false
+                    self.startTimer()
+                    self.remainTimeLabel.isHidden = false
                 }
             }
         }
+    }
+    
+    @objc
+    private func tapAuthResendButton() {
+        if let email = emailTextField.text,
+           let emailAddress = emailAddressTextField.text,
+           let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            authSendButton.setDeactivatedButton()   // 비활성화
+            
+            print("DEBUG: ", email+emailAddress, univ)
+
+            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
+            print("DEBUG: ", uuid.uuidString)
+            // 이메일로 인증번호 전송하는 API 호출
+            EmailAuthViewModel.requestSendEmail(input) { isSuccess, message in// // 경우에 맞는 토스트 메세지 출력
+                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
+                
+                if isSuccess {
+                    self.timer?.cancel()
+                    self.currentSeconds = 300
+                    self.startTimer()
+                }
+            }
+        }
+    }
+    
+    @objc
+    private func tapAuthCheckButton() {
+        
     }
     
     @objc
@@ -427,3 +555,5 @@ class EmailAuthViewController: UIViewController {
         }
     }
 }
+
+/* 확인 버튼 눌러서 이메일 인증 확인 되면: nextButton.setDeactivatedNextButton() */
