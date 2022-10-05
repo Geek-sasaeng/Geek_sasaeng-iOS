@@ -665,7 +665,7 @@ class ChattingViewController: UIViewController {
                             self.view.addSubview(self.orderCompletedView)
                             self.orderCompletedView.snp.makeConstraints { make in
                                 if let navigationBar = self.navigationController?.navigationBar {
-                                    make.top.equalTo(navigationBar.snp.bottom)
+                                    make.top.equalTo(self.collectionView.snp.top).offset(navigationBar.frame.height + 55)
                                 }
                                 make.width.equalToSuperview()
                                 make.height.equalTo(55)
@@ -678,7 +678,7 @@ class ChattingViewController: UIViewController {
                                         self.view.addSubview(self.remittanceView)
                                         self.remittanceView.snp.makeConstraints { make in
                                             if let navigationBar = self.navigationController?.navigationBar {
-                                                make.top.equalTo(navigationBar.snp.bottom)
+                                                make.top.equalTo(self.collectionView.snp.top).offset(navigationBar.frame.height + 55)
                                             }
                                             make.width.equalToSuperview()
                                             make.height.equalTo(55)
