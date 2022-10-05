@@ -540,7 +540,7 @@ class EmailAuthViewController: UIViewController {
             EmailAuthCheckViewModel.requestCheckEmailAuth(EmailAuthCheckInput(email: email, key: authNum)) { isSuccess, emailId in
                 if isSuccess {
                     self.emailId = emailId
-                    self.nextButton.setActivatedButton()
+                    self.nextButton.setActivatedNextButton()
                 } else {
                     self.showToast(viewController: self, message: "인증번호를 다시 확인해 주세요.", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
                 }
@@ -583,3 +583,5 @@ class EmailAuthViewController: UIViewController {
         }
     }
 }
+
+// TODO: - 리팩토링: authResendButton 필요한지 생각해보고 삭제
