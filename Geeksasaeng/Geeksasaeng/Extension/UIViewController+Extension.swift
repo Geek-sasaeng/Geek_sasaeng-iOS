@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIViewController {
-    public func showToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor) {
+    public func showToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor, width: Int = 209, height: Int = 40) {
         let toastLabel = UILabel().then {
             $0.backgroundColor = color.withAlphaComponent(0.6)
             $0.text = message
@@ -24,8 +24,8 @@ extension UIViewController {
         viewController.view.addSubview(toastLabel)
         toastLabel.snp.makeConstraints { make in
             make.centerX.equalTo(viewController.view.center)
-            make.width.equalTo(209)
-            make.height.equalTo(40)
+            make.width.equalTo(width)
+            make.height.equalTo(height)
             make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)
         }
         UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {

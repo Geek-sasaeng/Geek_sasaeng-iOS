@@ -469,6 +469,102 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // 배달완료 알림 보내기 재확인 알림뷰
+    lazy var notificationSendView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        $0.snp.makeConstraints { make in
+            make.width.equalTo(256)
+            make.height.equalTo(226)
+        }
+        
+        /* top View: 배달완료 알림 보내기 */
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "배달완료 알림 보내기"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.removeNotificationSendView), for: .touchUpInside)
+        }
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 보내기 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(176)
+        }
+        
+        let contentLabel = UILabel().then {
+            $0.text = "주문한 음식이 배달되었는지\n다시 확인한 후 알림을\n보내보세요. "
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("보내기", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapNotificationSendButton), for: .touchUpInside)
+        }
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(15)
+            make.left.right.equalToSuperview().inset(18)
+            make.height.equalTo(1.7)
+        }
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+        }
+    }
+    
     // 블러 뷰
     var visualEffectView: UIVisualEffectView?
     
@@ -823,13 +919,40 @@ class ChattingViewController: UIViewController {
         bottomView.transform = .identity
     }
     
-    /* 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
+    /* 옵션뷰에서 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
     @objc
     private func tapDeliveryConfirmButton() {
-        let input = DeliveryNotificationInput(uuid: roomUUID)
-        DeliveryNotificationAPI.requestPushNotification(input)
+        // 옵션뷰 제거
+        optionViewForOwner.removeFromSuperview()
         
+        // 배달완료 알림 보내기 알림뷰 등장
+        view.addSubview(notificationSendView)
+        notificationSendView.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
+    }
+    
+    /* 배달완료 알림 보내기 Alert 뷰에서 '보내기' 버튼 클릭시 실행되는 함수 */
+    @objc
+    private func tapNotificationSendButton() {
+        print("DEBUG: 클릭!!!")
+        // 알림뷰 제거
+        removeNotificationSendView()
         showChattingRoom(optionViewForOwner)
+        
+        // 서버에 요청
+        let input = DeliveryNotificationInput(uuid: roomUUID)
+        DeliveryNotificationAPI.requestPushNotification(input) { [self] isSuccess in
+            // 토스트 메세지 띄우기
+            if isSuccess {
+                print("DEBUG: 성공!!!")
+                self.showToast(viewController: self, message: "배달완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+            } else {
+                print("DEBUG: 실패!!!")
+                self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+            }
+            
+        }
     }
     
     /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
@@ -905,9 +1028,7 @@ class ChattingViewController: UIViewController {
                 showChattingRoom(optionViewForUser)
             }
             view.subviews.forEach {
-                if $0 == exitView {
-                    $0.removeFromSuperview()
-                } else if $0 == closeMatchingView {
+                if $0 == exitView || $0 == closeMatchingView || $0 == notificationSendView {
                     $0.removeFromSuperview()
                 }
             }
@@ -1184,6 +1305,13 @@ class ChattingViewController: UIViewController {
 //            currentMatching -= 1
 //        }
         navigationController?.popViewController(animated: true)
+    }
+    
+    /* 매칭 마감하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
+    @objc
+    private func removeNotificationSendView() {
+        notificationSendView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
     }
     
     /* 나간 유저의 데이터를 firestore에 업데이트(삭제), 방장이 나간 거면 새 방장까지 선정 */
