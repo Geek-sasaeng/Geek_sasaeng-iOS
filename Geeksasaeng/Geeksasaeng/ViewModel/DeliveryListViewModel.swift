@@ -12,7 +12,8 @@ import Alamofire
 class DeliveryListViewModel {
     
     // escaping을 통해 이 함수를 호출한 부분의 클로저로 결과 값을 넘겨줌 -> 호출한 VC에서 처리 가능해짐
-    public static func requestGetDeliveryList(cursor: Int, dormitoryId: Int, input: DeliveryListInput, completion: @escaping (DeliveryListModelResultList) -> Void) {
+    public static func requestGetDeliveryList(cursor: Int, dormitoryId: Int, input: DeliveryListInput,
+                                              completion: @escaping (DeliveryListModelResultList) -> Void) {
         let url = "https://geeksasaeng.shop/\(dormitoryId)/delivery-parties"
         var parameters: Parameters = [
             "cursor": cursor

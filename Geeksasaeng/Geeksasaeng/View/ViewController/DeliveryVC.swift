@@ -503,7 +503,11 @@ class DeliveryViewController: UIViewController {
     
     /* 광고 목록 데이터 API로 불러오기 */
     private func getAdList() {
-        AdViewModel.requestAd(self)
+        AdViewModel.requestAd() { result in
+            print("DEBUG: 광고 불러오기 성공")
+            guard let result = result else { return }
+            self.adCellDataArray = result
+        }
     }
     
     /* 배달 목록 정보 API로 불러오기 */

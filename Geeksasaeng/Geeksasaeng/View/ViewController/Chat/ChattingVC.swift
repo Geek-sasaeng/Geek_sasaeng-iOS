@@ -922,7 +922,7 @@ class ChattingViewController: UIViewController {
     /* 옵션뷰에서 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
     @objc
     private func tapDeliveryConfirmButton() {
-        // 옵션뷰 제거
+        // 옵션뷰 제거알
         optionViewForOwner.removeFromSuperview()
         
         // 배달완료 알림 보내기 알림뷰 등장
