@@ -743,6 +743,9 @@ class ChattingViewController: UIViewController {
         visualEffectView.isUserInteractionEnabled = false
         view.addSubview(visualEffectView)
         self.visualEffectView = visualEffectView
+        
+        // 키보드가 올라와있는 상태면 내린다.
+        view.endEditing(true)
     }
     
     /* 파라미터로 온 뷰와 배경 블러뷰 함께 제거 */
