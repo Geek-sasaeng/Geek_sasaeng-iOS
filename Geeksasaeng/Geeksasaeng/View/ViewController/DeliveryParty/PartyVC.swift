@@ -754,7 +754,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // title: 나타낼 alert의 제목, message: title과 함께 나타낼 메세지, preferredStyle: alert 스타일
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        // alert발생시 나타날 액션선언 및 추가
+        // alert 발생 시 나타날 액션 선언 및 추가
         [
             UIAlertAction(title: "수정하기", style: .default, handler: { _ in self.tapEditButton() }),
             UIAlertAction(title: "삭제하기", style: .destructive, handler: { _ in self.tapDeleteButton() }),
@@ -765,6 +765,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         present(actionSheet, animated: true)
     }
     
+    /* 글쓴이가 아닌 유저일 경우 액션 시트 띄우기 */
     private func showUserActionSheet() {
         // title: 나타낼 alert의 제목, message: title과 함께 나타낼 메세지, preferredStyle: alert 스타일
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -983,7 +984,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /* 배경에 블러뷰 띄우기 */
-    private func showBlurView() {
+    private func showBlurBackground() {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
@@ -1047,7 +1048,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapDeleteButton() {
         // 배경을 흐리게, 블러뷰로 설정
-        showBlurView()
+        showBlurBackground()
         
         view.addSubview(deleteView)
         deleteView.snp.makeConstraints { make in
@@ -1117,7 +1118,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         } else {
             // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
             // 배경을 흐리게, 블러뷰로 설정
-            showBlurView()
+            showBlurBackground()
             
             /* 신청하기 뷰 보여줌 */
             view.addSubview(registerView)

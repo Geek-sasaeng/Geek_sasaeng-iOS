@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 import SnapKit
 import Kingfisher
 import FirebaseFirestore
@@ -55,137 +56,25 @@ class ChattingViewController: UIViewController {
         $0.addTarget(self, action: #selector(self.tapSendButton), for: .touchUpInside)
     }
     
-    /* 방장이 옵션뷰를 눌렀을 때 나오는 뷰 */
-    lazy var optionViewForOwner = UIView().then { view in
-//        let view = UIView(frame: CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8)))
-        view.frame = CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 3.8))
-        view.backgroundColor = .white
-        
-        // 왼쪽 하단의 코너에만 cornerRadius를 적용
-        view.layer.cornerRadius = 8
-        view.layer.maskedCorners = [.layerMinXMaxYCorner]
-        
-        /* 옵션뷰에 있는 ellipsis 버튼
-         -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
-        lazy var settingButton = UIButton().then {
-            $0.setImage(UIImage(named: "Setting"), for: .normal)
-            $0.tintColor = .init(hex: 0x2F2F2F)
-            // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
-            $0.addTarget(self, action: #selector(self.tapOptionButtonInView), for: .touchUpInside)
-        }
-        view.addSubview(settingButton)
-        settingButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(49)
-            make.right.equalToSuperview().inset(30)
-            make.width.height.equalTo(23)
-        }
-        
-        /* 옵션뷰에 있는 버튼 */
-        var showMenuButton = UIButton().then {
-            $0.setTitle("메뉴판 보기", for: .normal)
-            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-        }
-        var sendDeliveryConfirmButton = UIButton().then {
-            $0.setTitle("배달 완료 알림 보내기", for: .normal)
-            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            $0.addTarget(self, action: #selector(tapDeliveryConfirmButton), for: .touchUpInside)
-        }
-        var closeMatchingButton = UIButton().then {
-            $0.setTitle("매칭 마감하기", for: .normal)
-            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            $0.addTarget(self, action: #selector(tapCloseMatchingButton), for: .touchUpInside)
-        }
-        var forcedExitButton = UIButton().then {
-            $0.setTitle("강제 퇴장시키기", for: .normal)
-            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-            $0.addTarget(self, action: #selector(tapForcedExitButton), for: .touchUpInside)
-        }
-        var endOfChatButton = UIButton().then {
-            $0.setTitle("나가기", for: .normal)
-            $0.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
-        }
-        
-        [showMenuButton, sendDeliveryConfirmButton, closeMatchingButton, forcedExitButton, endOfChatButton].forEach {
-            // attributes
-            $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
-            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
-            
-            // layouts
-            view.addSubview($0)
-        }
-        
-        showMenuButton.snp.makeConstraints { make in
-            make.top.equalTo(settingButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
-        sendDeliveryConfirmButton.snp.makeConstraints { make in
-            make.top.equalTo(showMenuButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
-        closeMatchingButton.snp.makeConstraints { make in
-            make.top.equalTo(sendDeliveryConfirmButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
-        forcedExitButton.snp.makeConstraints { make in
-            make.top.equalTo(closeMatchingButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
-        endOfChatButton.snp.makeConstraints { make in
-            make.top.equalTo(forcedExitButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
+    
+    // 방장에게 띄워질 액션 시트
+    lazy var ownerAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet).then { actionSheet in
+        [
+            UIAlertAction(title: "배달 완료 알림 보내기", style: .default, handler: { _ in self.tapDeliveryConfirmButton() }),
+            UIAlertAction(title: "매칭 마감하기", style: .default, handler: { _ in self.tapCloseMatchingButton() }),
+            UIAlertAction(title: "강제 퇴장시키기", style: .default, handler: { _ in self.tapForcedExitButton() }),
+            UIAlertAction(title: "채팅 나가기", style: .default, handler: { _ in self.tapEndOfChatButton() }),
+            UIAlertAction(title: "닫기", style: .cancel)
+        ].forEach{ actionSheet.addAction($0) }
     }
     
-    lazy var optionViewForUser = UIView().then { view in
-        view.frame = CGRect(origin: CGPoint(x: UIScreen.main.bounds.width, y: 0), size: CGSize(width: UIScreen.main.bounds.width - 150, height: UIScreen.main.bounds.height / 5))
-        view.backgroundColor = .white
-        
-        // 왼쪽 하단의 코너에만 cornerRadius를 적용
-        view.layer.cornerRadius = 8
-        view.layer.maskedCorners = [.layerMinXMaxYCorner]
-        
-        /* 옵션뷰에 있는 ellipsis 버튼
-         -> 원래 있는 버튼을 안 가리게 & 블러뷰에 해당 안 되게 할 수가 없어서 옵션뷰 위에 따로 추가함 */
-        lazy var settingButton = UIButton().then {
-            $0.setImage(UIImage(named: "Setting"), for: .normal)
-            $0.tintColor = .init(hex: 0x2F2F2F)
-            // 옵션뷰 나온 상태에서 ellipsis button 누르면 사라지도록
-            $0.addTarget(self, action: #selector(self.tapOptionButtonInView), for: .touchUpInside)
-        }
-        view.addSubview(settingButton)
-        settingButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(49)
-            make.right.equalToSuperview().inset(30)
-            make.width.height.equalTo(23)
-        }
-        
-        /* 옵션뷰에 있는 버튼 */
-        var showMenuButton = UIButton().then {
-            $0.setTitle("메뉴판 보기", for: .normal)
-            $0.makeBottomLine(color: 0xEFEFEF, width: view.bounds.width - 40, height: 1, offsetToTop: 16)
-        }
-        var endOfChatButton = UIButton().then {
-            $0.setTitle("채팅 나가기", for: .normal)
-            $0.addTarget(self, action: #selector(tapEndOfChatButton), for: .touchUpInside)
-        }
-        
-        [showMenuButton, endOfChatButton].forEach {
-            // attributes
-            $0.setTitleColor(UIColor.init(hex: 0x2F2F2F), for: .normal)
-            $0.titleLabel?.font =  .customFont(.neoMedium, size: 15)
-            
-            // layouts
-            view.addSubview($0)
-        }
-        
-        showMenuButton.snp.makeConstraints { make in
-            make.top.equalTo(settingButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
-        endOfChatButton.snp.makeConstraints { make in
-            make.top.equalTo(showMenuButton.snp.bottom).offset(27)
-            make.left.equalToSuperview().inset(20)
-        }
+    // 방장이 아닌 유저에게 띄워질 액션 시트
+    lazy var userAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet).then { actionSheet in
+        // alert 발생 시 나타날 액션선언 및 추가
+        [
+            UIAlertAction(title: "채팅 나가기", style: .default, handler: { _ in self.tapEndOfChatButton() }),
+            UIAlertAction(title: "닫기", style: .cancel)
+        ].forEach{ actionSheet.addAction($0) }
     }
     
     // 나가기 뷰
@@ -581,9 +470,6 @@ class ChattingViewController: UIViewController {
     var roomUUID: String?
     var roomName: String?
     
-    var presentOptionViewForOwner = false
-    var presentOptionViewForUser = false
-    
     var firstRoomInfo = true
     var firstMessage = true
     
@@ -849,44 +735,8 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    @objc
-    private func tapOptionButton() {
-        if roomMaster == LoginModel.nickname {
-            presentOptionViewForOwner = true
-            showOptionMenu(optionViewForOwner, UIScreen.main.bounds.height / 2 - 30)
-        } else {
-            presentOptionViewForUser = true
-            showOptionMenu(optionViewForUser, UIScreen.main.bounds.height / 4)
-        }
-        
-    }
-    
-    private func showOptionMenu(_ nowView: UIView, _ height: CGFloat) {
-        // 네비게이션 바보다 앞쪽에 위치하도록 설정
-        UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.addSubview(nowView)
-        print("DEBUG: 옵션뷰의 위치", nowView.frame)
-        
-        // 레이아웃 설정
-        nowView.snp.makeConstraints { make in
-            make.top.right.equalToSuperview()
-            make.left.equalToSuperview().inset(150)
-            make.height.equalTo(height)
-        }
-        
-        // 오른쪽 위에서부터 대각선 아래로 내려오는 애니메이션을 설정
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0.1,
-            options: .curveEaseOut,
-            animations: { () -> Void in
-                nowView.center.y += nowView.bounds.height
-                nowView.center.x -= nowView.bounds.width
-                nowView.layoutIfNeeded()
-            },
-            completion: nil
-        )
-        
-        // 배경을 흐리게, 블러뷰로 설정
+    // 배경을 흐리게, 블러뷰로 설정
+    private func showBlurBackground() {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.layer.opacity = 0.6
         visualEffectView.frame = view.frame
@@ -895,422 +745,9 @@ class ChattingViewController: UIViewController {
         self.visualEffectView = visualEffectView
     }
     
-    /* 키보드가 올라올 때 실행되는 함수 */
-    @objc
-    private func keyboardWillShow(sender: NSNotification) {
-        // 1. 키보드의 높이를 구함
-        if let info = sender.userInfo,
-           let keyboardHeight = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
-            // 2. collectionView의 contentInset bottom 값을 변경하여 키보드 위로 content가 올라갈 수 있도록 함
-            collectionView.contentInset.bottom = keyboardHeight
-            // 3. 키보드 높이만큼 bottomView의 y값을 변경
-            bottomView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            
-            // 4. 맨 마지막 아이템으로 스크롤을 해줌으로써 마지막 채팅이 키보드의 위에 뜨도록 함
-            self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
-        }
-    }
-
-    /* 키보드가 내려갈 때 실행되는 함수 */
-    @objc
-    private func keyboardWillHide(sender: NSNotification) {
-        // collectionView의 contentInset 값과 bottomView의 transform을 원래대로 변경
-        collectionView.contentInset.bottom = 0
-        bottomView.transform = .identity
-    }
-    
-    /* 옵션뷰에서 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
-    @objc
-    private func tapDeliveryConfirmButton() {
-        // 옵션뷰 제거알
-        optionViewForOwner.removeFromSuperview()
-        
-        // 배달완료 알림 보내기 알림뷰 등장
-        view.addSubview(notificationSendView)
-        notificationSendView.snp.makeConstraints { make in
-            make.center.equalTo(view.center)
-        }
-    }
-    
-    /* 배달완료 알림 보내기 Alert 뷰에서 '보내기' 버튼 클릭시 실행되는 함수 */
-    @objc
-    private func tapNotificationSendButton() {
-        print("DEBUG: 클릭!!!")
-        // 알림뷰 제거
-        removeNotificationSendView()
-        showChattingRoom(optionViewForOwner)
-        
-        // 서버에 요청
-        let input = DeliveryNotificationInput(uuid: roomUUID)
-        DeliveryNotificationAPI.requestPushNotification(input) { [self] isSuccess in
-            // 토스트 메세지 띄우기
-            if isSuccess {
-                print("DEBUG: 성공!!!")
-                self.showToast(viewController: self, message: "배달완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
-            } else {
-                print("DEBUG: 실패!!!")
-                self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
-            }
-            
-        }
-    }
-    
-    /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
-    @objc
-    private func tapCloseMatchingButton() {
-        optionViewForOwner.removeFromSuperview()
-        
-        /* 매칭 마감 뷰 보여줌 */
-        view.addSubview(closeMatchingView)
-        closeMatchingView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-        }
-    }
-    
-    /* 매칭 마감하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
-    @objc
-    private func removeCloseMatchingView() {
-        closeMatchingView.removeFromSuperview()
-        visualEffectView?.removeFromSuperview()
-    }
-    
-    /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
-    @objc
-    private func tapConfirmButton() {
-        let input = CloseMatchingInput(uuid: roomUUID)
-        CloseMatchingAPI.requestCloseMatching(input) { isSuccess in
-            if isSuccess {
-                // 매칭 마감 시스템 메세지 업로드
-                self.db.collection("Rooms").document(self.roomUUID!).collection("Messages").document(UUID().uuidString).setData([
-                    "content": "매칭이 마감되었습니다",
-                    "nickname": LoginModel.nickname ?? "홍길동",
-                    "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true,
-                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                ]) { error in
-                    if let e = error {
-                        print(e.localizedDescription)
-                    } else {
-                        print("Success save data")
-                    }
-                }
-                
-                // 매칭 마감 버튼 비활성화
-                guard let closeMatchingButton = self.optionViewForOwner.subviews[3] as? UIButton else { return }
-                closeMatchingButton.isUserInteractionEnabled = false
-                closeMatchingButton.setTitleColor(.init(hex: 0xA8A8A8), for: .normal)
-            }
-        }
-        
-        // 매칭 마감하기 뷰 없애기
-        removeCloseMatchingView()
-    }
-    
-    // 강제 퇴장시키기 버튼 누르면 실행되는 함수
-    @objc
-    private func tapForcedExitButton() {
-        showChattingRoom(optionViewForOwner)
-        let forcedExitVC = ForcedExitViewController()
-        navigationController?.pushViewController(forcedExitVC, animated: true)
-    }
-    
-    @objc
-    private func tapCollectionView() {
-        view.endEditing(true)
-        
-        if visualEffectView != nil { // nil이 아니라면, 즉 옵션뷰가 노출되어 있다면
-            if presentOptionViewForOwner {
-                presentOptionViewForOwner = false
-                showChattingRoom(optionViewForOwner)
-            } else if presentOptionViewForUser {
-                presentOptionViewForUser = false
-                showChattingRoom(optionViewForUser)
-            }
-            view.subviews.forEach {
-                if $0 == exitView || $0 == closeMatchingView || $0 == notificationSendView {
-                    $0.removeFromSuperview()
-                }
-            }
-        }
-    }
-    
-    @objc
-    private func tapSendButton() {
-        /* 메뉴 입력 테스트용 */
-//        let menuVC = CreateMenuViewController()
-//        self.navigationController?.pushViewController(menuVC, animated: true)
-        sendButton.isEnabled = false
-        sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        if let message = contentsTextView.text {
-            guard let roomUUID = roomUUID else { return }
-            db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                "content": message,
-                "nickname": LoginModel.nickname ?? "홍길동",
-                "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                "time": formatter.string(from: Date()),
-                "isSystemMessage": false,
-                "readUsers": [LoginModel.nickname ?? "홍길동"]
-            ]) { error in
-                if let e = error {
-                    print(e.localizedDescription)
-                } else {
-                    print("Success save data")
-                    
-                    DispatchQueue.main.async {
-                        self.contentsTextView.text = ""
-                    }
-                }
-            }
-            
-            /* 메세지 전송시 roomInfo의 updatedAt값도 바꿔주기 */
-            db.collection("Rooms").document(roomUUID).updateData(["roomInfo.updatedAt" : formatter.string(from: Date())])
-            { error in
-                if let e = error {
-                    print(e.localizedDescription)
-                } else {
-                    print("DEBUG: updatedAt 값 업데이트")
-                }
-            }
-        }
-    }
-    
-    @objc
-    private func tapRemittanceButton() {
-        // 파이어스토어에 isRemittance = true로 바꾸고 remittanceView remove
-        guard let roomUUID = roomUUID else { return }
-
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                do {
-                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
-                    guard let roomInfo = data?.roomInfo,
-                          let participants = roomInfo.participants else { return }
-                    
-                    var targetEnterTime: String?
-                    
-                    participants.forEach {
-                        if $0.participant == LoginModel.nickname {
-                            targetEnterTime = $0.enterTime
-                        }
-                    }
-                    
-                    guard let targetEnterTime = targetEnterTime else { return }
-                    // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
-                    if let nickname = LoginModel.nickname {
-                        let removeData = ["enterTime": targetEnterTime, "isRemittance": false, "participant": nickname] as [String : Any]
-                        let newData = ["enterTime": targetEnterTime, "isRemittance": true, "participant": nickname] as [String : Any]
-                        
-                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
-                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
-                    }
-                    
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    formatter.locale = Locale(identifier: "ko_KR")
-                    
-                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
-                        "nickname": "SystemMessage",
-                        "userImgUrl": "SystemMessage",
-                        "time": formatter.string(from: Date()),
-                        "isSystemMessage": true,
-                        "readUsers": [LoginModel.nickname ?? "홍길동"]
-                    ]) { error in
-                        if let e = error {
-                            print(e.localizedDescription)
-                        } else {
-                            print("Success save data")
-                        }
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        
-        self.remittanceView.removeFromSuperview()
-    }
-    
-    @objc
-    private func tapOptionButtonInView(_ sender: UIButton) {
-        // 클릭한 버튼의 superView가 그냥 optionView인지 optionViewForAuthor인지 파라미터로 보내주는 것
-        guard let nowView = sender.superview else { return }
-        showChattingRoom(nowView)
-    }
-    
-    private func showChattingRoom(_ nowView: UIView) {
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0.1,
-            options: .curveEaseOut,
-            animations: { () -> Void in
-                // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
-                nowView.center.y -= nowView.bounds.height
-                nowView.center.x += nowView.bounds.width
-                nowView.layoutIfNeeded()
-                self.visualEffectView?.layer.opacity -= 0.6
-            },
-            completion: { _ in ()
-                nowView.removeFromSuperview()
-                self.visualEffectView?.removeFromSuperview()
-            }
-        )
-    }
-    
-    private func formatTime(str: String) -> String {
-        let startIdx = str.index(str.startIndex, offsetBy: 11)
-        let endIdx = str.index(startIdx, offsetBy: 5)
-        let range = startIdx..<endIdx
-        return String(str[range])
-    }
-    
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        if presentOptionViewForOwner {
-            showChattingRoom(optionViewForOwner)
-        } else if presentOptionViewForUser {
-            showChattingRoom(optionViewForUser)
-        }
-        
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @objc
-    private func tapEndOfChatButton() {
-        // 옵션뷰 제거, 블러뷰는 그대로
-        if presentOptionViewForOwner {
-            UIView.animate(
-                withDuration: 0.3,
-                delay: 0.1,
-                options: .curveEaseOut,
-                animations: { () -> Void in
-                    // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
-                    self.optionViewForOwner.center.y -= self.optionViewForOwner.bounds.height
-                    self.optionViewForOwner.center.x += self.optionViewForOwner.bounds.width
-                    self.optionViewForOwner.layoutIfNeeded()
-                },
-                completion: { _ in ()
-                    self.optionViewForOwner.removeFromSuperview()
-                }
-            )
-        } else if presentOptionViewForUser {
-            UIView.animate(
-                withDuration: 0.3,
-                delay: 0.1,
-                options: .curveEaseOut,
-                animations: { () -> Void in
-                    // 사라질 때 자연스럽게 옵션뷰, 블러뷰에 애니메이션 적용
-                    self.optionViewForUser.center.y -= self.optionViewForOwner.bounds.height
-                    self.optionViewForUser.center.x += self.optionViewForOwner.bounds.width
-                    self.optionViewForUser.layoutIfNeeded()
-                },
-                completion: { _ in ()
-                    self.optionViewForUser.removeFromSuperview()
-                }
-            )
-        }
-        
-        
-        // exitView 추가
-        view.addSubview(exitView)
-        exitView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.equalTo(256)
-            make.height.equalTo(236)
-        }
-    }
-    
-    @objc
-    private func tapXButton() {
-        if visualEffectView != nil { // nil이 아니라면, 즉 나가기뷰가 노출되어 있다면
-            visualEffectView?.removeFromSuperview()
-            if presentOptionViewForOwner {
-                presentOptionViewForOwner = false
-                showChattingRoom(optionViewForOwner)
-            } else if presentOptionViewForUser {
-                presentOptionViewForUser = false
-                showChattingRoom(optionViewForUser)
-            }
-            view.subviews.forEach {
-                if $0 == exitView {
-                    $0.removeFromSuperview()
-                }
-            }
-        }
-    }
-    
-    @objc
-    private func tapExitConfirmButton() {
-        guard let roomUUID = roomUUID else { return }
-        
-        // 본인이 방장일 때
-        if roomMaster == LoginModel.nickname {
-            // 파이어 스토어 participants에서도 이름 제거
-            updateExitedMember { [self] in
-                /* 파베에서 새 방장 선정 완료되면 실행 */
-                
-                // 서버에 알려줘서 서버의 방장도 바꿔줌
-                let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
-                ChatRoomExitAPI.patchExitCheif(input)
-                
-                // 새 방장 선정 시스템 메세지 출력
-                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                    "content": "방장의 활동 중단에 따라 새로운\n방장으로 \'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
-                    "nickname": "SystemMessage",
-                    "userImgUrl": "SystemMessage",
-                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true,
-                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                ]) { error in
-                    if let e = error {
-                        print(e.localizedDescription)
-                    } else {
-                        print("Success save data")
-                    }
-                }
-            }
-        } else { // 본인이 방장이 아닐 때
-            // 파이어 스토어 participants에서도 이름 제거
-            updateExitedMember { [self] in
-                /* 파베에서 이름 지우는 거 완료되면 실행 */
-                // 서버에 나간 사람 알려줌
-                let input = ChatRoomExitInput(uuid: roomUUID)
-                ChatRoomExitAPI.patchExitUser(input)
-                
-                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                    "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
-                    "nickname": "SystemMessage",
-                    "userImgUrl": "SystemMessage",
-                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true,
-                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                ]) { error in
-                    if let e = error {
-                        print(e.localizedDescription)
-                    } else {
-                        print("Success save data")
-                    }
-                }
-            }
-        }
-//        if var currentMatching = currentMatching {
-//            currentMatching -= 1
-//        }
-        navigationController?.popViewController(animated: true)
-    }
-    
-    /* 매칭 마감하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
-    @objc
-    private func removeNotificationSendView() {
-        notificationSendView.removeFromSuperview()
+    /* 파라미터로 온 뷰와 배경 블러뷰 함께 제거 */
+    private func removeViewWithBlurView(_ view: UIView) {
+        view.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
     }
     
@@ -1403,6 +840,355 @@ class ChattingViewController: UIViewController {
         label.setNeedsDisplay()
         
         return label.frame.height
+    }
+    
+    private func formatTime(str: String) -> String {
+        let startIdx = str.index(str.startIndex, offsetBy: 11)
+        let endIdx = str.index(startIdx, offsetBy: 5)
+        let range = startIdx..<endIdx
+        return String(str[range])
+    }
+    
+    // MARK: - @objc Functions
+    
+    /* 키보드가 올라올 때 실행되는 함수 */
+    @objc
+    private func keyboardWillShow(sender: NSNotification) {
+        // 1. 키보드의 높이를 구함
+        if let info = sender.userInfo,
+           let keyboardHeight = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+            // 2. collectionView의 contentInset bottom 값을 변경하여 키보드 위로 content가 올라갈 수 있도록 함
+            collectionView.contentInset.bottom = keyboardHeight
+            // 3. 키보드 높이만큼 bottomView의 y값을 변경
+            bottomView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
+            
+            // 4. 맨 마지막 아이템으로 스크롤을 해줌으로써 마지막 채팅이 키보드의 위에 뜨도록 함
+            self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+        }
+    }
+
+    /* 키보드가 내려갈 때 실행되는 함수 */
+    @objc
+    private func keyboardWillHide(sender: NSNotification) {
+        // collectionView의 contentInset 값과 bottomView의 transform을 원래대로 변경
+        collectionView.contentInset.bottom = 0
+        bottomView.transform = .identity
+    }
+    
+    /* 왼쪽 상단 백버튼 클릭시 실행되는 함수 */
+    @objc
+    private func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
+    @objc
+    private func tapOptionButton() {
+        if roomMaster == LoginModel.nickname {
+            /* 방장인 경우의 액션 시트 띄우기 */
+            present(ownerAlertController, animated: true)
+        } else {
+            /* 방장이 아닌 유저일 경우의 액션 시트 띄우기 */
+            present(userAlertController, animated: true)
+        }
+    }
+    
+    /* 메세지 전송 */
+    @objc
+    private func tapSendButton() {
+        sendButton.isEnabled = false
+        sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        if let message = contentsTextView.text {
+            guard let roomUUID = roomUUID else { return }
+            db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                "content": message,
+                "nickname": LoginModel.nickname ?? "홍길동",
+                "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                "time": formatter.string(from: Date()),
+                "isSystemMessage": false,
+                "readUsers": [LoginModel.nickname ?? "홍길동"]
+            ]) { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("Success save data")
+                    
+                    DispatchQueue.main.async {
+                        self.contentsTextView.text = ""
+                    }
+                }
+            }
+            
+            /* 메세지 전송시 roomInfo의 updatedAt값도 바꿔주기 */
+            db.collection("Rooms").document(roomUUID).updateData(["roomInfo.updatedAt" : formatter.string(from: Date())])
+            { error in
+                if let e = error {
+                    print(e.localizedDescription)
+                } else {
+                    print("DEBUG: updatedAt 값 업데이트")
+                }
+            }
+        }
+    }
+    
+    /* 송금 완료 버튼 클릭 */
+    @objc
+    private func tapRemittanceButton() {
+        // 파이어스토어에 isRemittance = true로 바꾸고 remittanceView remove
+        guard let roomUUID = roomUUID else { return }
+
+        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                do {
+                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+                    guard let roomInfo = data?.roomInfo,
+                          let participants = roomInfo.participants else { return }
+                    
+                    var targetEnterTime: String?
+                    
+                    participants.forEach {
+                        if $0.participant == LoginModel.nickname {
+                            targetEnterTime = $0.enterTime
+                        }
+                    }
+                    
+                    guard let targetEnterTime = targetEnterTime else { return }
+                    // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
+                    if let nickname = LoginModel.nickname {
+                        let removeData = ["enterTime": targetEnterTime, "isRemittance": false, "participant": nickname] as [String : Any]
+                        let newData = ["enterTime": targetEnterTime, "isRemittance": true, "participant": nickname] as [String : Any]
+                        
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
+                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
+                    }
+                    
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    formatter.locale = Locale(identifier: "ko_KR")
+                    
+                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
+                        "nickname": "SystemMessage",
+                        "userImgUrl": "SystemMessage",
+                        "time": formatter.string(from: Date()),
+                        "isSystemMessage": true,
+                        "readUsers": [LoginModel.nickname ?? "홍길동"]
+                    ]) { error in
+                        if let e = error {
+                            print(e.localizedDescription)
+                        } else {
+                            print("Success save data")
+                        }
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        
+        self.remittanceView.removeFromSuperview()
+    }
+    
+    /* 배경의 컬렉션뷰 클릭시 띄워져있는 안내뷰와 블러뷰를 없애는 함수 */
+    @objc
+    private func tapCollectionView() {
+        view.endEditing(true)
+        
+        if visualEffectView != nil { // nil이 아니라면, 즉 옵션뷰가 노출되어 있다면
+            view.subviews.forEach {
+                if $0 == exitView || $0 == closeMatchingView || $0 == notificationSendView {
+                    removeViewWithBlurView($0)
+                }
+            }
+        }
+    }
+    
+    /* 액션시트에서 배달 완료 알림 보내기 버튼 누르면 실행되는 함수 */
+    @objc
+    private func tapDeliveryConfirmButton() {
+        // 배경 블러뷰
+        showBlurBackground()
+        
+        // 배달완료 알림 보내기 알림뷰 등장
+        view.addSubview(notificationSendView)
+        notificationSendView.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
+    }
+    
+    /* 배달완료 알림 전송 재확인 뷰에서 '보내기' 버튼 클릭시 실행되는 함수 */
+    @objc
+    private func tapNotificationSendButton() {
+        print("DEBUG: 클릭!!!")
+        // 알림뷰 제거
+        removeNotificationSendView()
+        
+        // 서버에 요청
+        let input = DeliveryNotificationInput(uuid: roomUUID)
+        DeliveryNotificationAPI.requestPushNotification(input) { [self] isSuccess in
+            // 토스트 메세지 띄우기
+            if isSuccess {
+                print("DEBUG: 성공!!!")
+                self.showToast(viewController: self, message: "배달완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+            } else {
+                print("DEBUG: 실패!!!")
+                self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+            }
+            
+        }
+    }
+    
+    /* 배달 완료 알림 전송 재확인 뷰에서 X자 눌렀을 때 실행되는 함수 */
+    @objc
+    private func removeNotificationSendView() {
+        removeViewWithBlurView(notificationSendView)
+    }
+    
+    /* 매칭 마감하기 버튼 누르면 실행되는 함수 */
+    @objc
+    private func tapCloseMatchingButton() {
+        // 배경 블러뷰
+        showBlurBackground()
+        
+        /* 매칭 마감 뷰 보여줌 */
+        view.addSubview(closeMatchingView)
+        closeMatchingView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+    }
+    
+    /* 매칭 마감하기 뷰에서 X자 눌렀을 때 실행되는 함수 */
+    @objc
+    private func removeCloseMatchingView() {
+        removeViewWithBlurView(closeMatchingView)
+    }
+    
+    /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapConfirmButton() {
+        let input = CloseMatchingInput(uuid: roomUUID)
+        CloseMatchingAPI.requestCloseMatching(input) { isSuccess in
+            if isSuccess {
+                // 매칭 마감 시스템 메세지 업로드
+                self.db.collection("Rooms").document(self.roomUUID!).collection("Messages").document(UUID().uuidString).setData([
+                    "content": "매칭이 마감되었습니다",
+                    "nickname": LoginModel.nickname ?? "홍길동",
+                    "userImgUrl": LoginModel.userImgUrl ?? "https://",
+                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+                    "isSystemMessage": true,
+                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+                ]) { error in
+                    if let e = error {
+                        print(e.localizedDescription)
+                    } else {
+                        print("Success save data")
+                    }
+                }
+                
+                // 매칭 마감 버튼 비활성화
+                self.ownerAlertController.actions[1].isEnabled = false
+                self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+            }
+        }
+        
+        // 매칭 마감하기 뷰 없애기
+        removeCloseMatchingView()
+    }
+    
+    // 강제 퇴장시키기 버튼 누르면 실행되는 함수
+    @objc
+    private func tapForcedExitButton() {
+        let forcedExitVC = ForcedExitViewController()
+        navigationController?.pushViewController(forcedExitVC, animated: true)
+    }
+    
+    /* 채팅 나가기 버튼 클릭시 실행 -> 재확인 뷰 띄워줌 */
+    @objc
+    private func tapEndOfChatButton() {
+        // 배경 블러뷰
+        showBlurBackground()
+        
+        // exitView 추가
+        view.addSubview(exitView)
+        exitView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(256)
+            make.height.equalTo(236)
+        }
+    }
+    
+    /* 채팅 나가기에서 'X' 버튼 클릭시 실행 */
+    @objc
+    private func tapXButton() {
+        removeViewWithBlurView(exitView)
+    }
+    
+    /* 채팅 나가기에서 '확인' 버튼 클릭시 실행 */
+    @objc
+    private func tapExitConfirmButton() {
+        guard let roomUUID = roomUUID else { return }
+        
+        // 본인이 방장일 때
+        if roomMaster == LoginModel.nickname {
+            // 파이어 스토어 participants에서도 이름 제거
+            updateExitedMember { [self] in
+                /* 파베에서 새 방장 선정 완료되면 실행 */
+                
+                // 서버에 알려줘서 서버의 방장도 바꿔줌
+                let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
+                ChatRoomExitAPI.patchExitCheif(input)
+                
+                // 새 방장 선정 시스템 메세지 출력
+                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                    "content": "방장의 활동 중단에 따라 새로운\n방장으로 \'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
+                    "nickname": "SystemMessage",
+                    "userImgUrl": "SystemMessage",
+                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+                    "isSystemMessage": true,
+                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+                ]) { error in
+                    if let e = error {
+                        print(e.localizedDescription)
+                    } else {
+                        print("Success save data")
+                    }
+                }
+            }
+        } else { // 본인이 방장이 아닐 때
+            // 파이어 스토어 participants에서도 이름 제거
+            updateExitedMember { [self] in
+                /* 파베에서 이름 지우는 거 완료되면 실행 */
+                // 서버에 나간 사람 알려줌
+                let input = ChatRoomExitInput(uuid: roomUUID)
+                ChatRoomExitAPI.patchExitUser(input)
+                
+                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+                    "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
+                    "nickname": "SystemMessage",
+                    "userImgUrl": "SystemMessage",
+                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+                    "isSystemMessage": true,
+                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+                ]) { error in
+                    if let e = error {
+                        print(e.localizedDescription)
+                    } else {
+                        print("Success save data")
+                    }
+                }
+            }
+        }
+//        if var currentMatching = currentMatching {
+//            currentMatching -= 1
+//        }
+        navigationController?.popViewController(animated: true)
     }
     
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
@@ -1521,6 +1307,8 @@ struct cellContents {
     var message: MessageModel?
 }
 
+// MARK: - UITextViewDelegate
+
 extension ChattingViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.count > 0 {
@@ -1547,7 +1335,7 @@ extension ChattingViewController: UITextViewDelegate {
     }
 }
 
-// MARK: - PushUserReportDelegate
+// MARK: - PushReportUserDelegate
 
 extension ChattingViewController: PushReportUserDelegate {
     public func pushReportUserVC() {
