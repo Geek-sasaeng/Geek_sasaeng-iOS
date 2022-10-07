@@ -2170,7 +2170,7 @@
 				A248D88B289FB881000E2422 /* Chat */,
 				A29F6F872885461000350744 /* Search */,
 				A25D125128F051F400B4B6AD /* Report */,
-				A25D125228F0524900B4B6AD /* User */,
+				A25D125228F0524900B4B6AD /* Profile */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -2356,12 +2356,12 @@
 			path = Report;
 			sourceTree = "<group>";
 		};
-		A25D125228F0524900B4B6AD /* User */ = {
+		A25D125228F0524900B4B6AD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 				A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */,
 			);
-			path = User;
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		A25D125328F0527900B4B6AD /* Splash */ = {
