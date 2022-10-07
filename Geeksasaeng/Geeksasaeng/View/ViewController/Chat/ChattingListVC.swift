@@ -27,6 +27,20 @@ class FormatCreater {
         formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
+    static let sharedYearFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
+        return formatter
+    }()
+    static let sharedMonthFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
+        return formatter
+    }()
     static let sharedDayFormat: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd"
@@ -163,7 +177,7 @@ class ChattingListViewController: UIViewController {
             .order(by: "roomInfo.updatedAt", descending: true)    // 채팅방 목록을 메세지 최신순으로 정렬
         
         // 해당 쿼리문의 결과값을 firestore에서 가져오기
-        listListener = query.addSnapshotListener() {   // updatedAt으로 order되는 순서가 바뀌는 걸 감지하도록 listener로 변경
+        listListener = query.addSnapshotListener() {   // updatedAt으로 order되는 순서가 바뀌는 걸 감지하도록 listener 설치
             (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
@@ -193,6 +207,95 @@ class ChattingListViewController: UIViewController {
         }
     }
     
+    /* firestore에서 채팅방의 가장 최근 메세지, 전송 시간 데이터 가져와서 포맷팅 */
+    private func getRecentMessageAndTime(cell: ChattingListTableViewCell, row: Int) {
+        let roomDocRef = db.collection("Rooms").document(roomUUIDList[row])
+        // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
+        recentMsgListener = roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
+            if let error = error {
+                print("Error retreiving collection: \(error)")
+            }
+            if let querySnapshot = querySnapshot,
+               let lastDocument = querySnapshot.documents.last {
+                if let messageContents = lastDocument["content"] as? String,
+                   let messageTime = lastDocument["time"] as? String {
+                    // 채팅방의 최근 메세지 설정
+                    cell.recentMessageLabel.text = messageContents
+                    
+                    // 현재 시간과 마지막 메세지 전송시간
+                    let nowTimeDate = Date()
+                    let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime)!
+                    
+                    // 현재가 몇 년도 몇 월 며칠인지.
+                    let calendar = Calendar.current
+                    let todayComponents = calendar.dateComponents([.year, .month, .day],
+                                                             from: nowTimeDate)
+                    let todayYear = todayComponents.year
+                    let todayMonth = todayComponents.month
+                    let todayDay = todayComponents.day
+                    
+                    // 마지막 메세지 전송시간이 몇 년도 몇 월 며칠인지.
+                    let messageTimeComponents = calendar.dateComponents([.year, .month, .day],
+                                                             from: messageTimeDate)
+                    let messageSendedYear = messageTimeComponents.year
+                    let messageSendedMonth = messageTimeComponents.month
+                    let messageSendedDay = messageTimeComponents.day
+                    
+                    // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                    let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
+                    
+                    // 각각 일, 시간, 분 단위로 변환
+                    let hourTime = intervalSecs / 60 / 60 % 24
+                    let minuteTime = intervalSecs / 60 % 60
+                    
+                    /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
+                    // 같은 해
+                    if todayYear == messageSendedYear {
+                        // 몇달 전
+                        if todayMonth! > messageSendedMonth! {
+                            let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                            cell.receivedTimeString = date
+                        } else {
+                            // 같은 달
+                            if todayDay! - 1 == messageSendedDay! {
+                                // 하루 전
+                                cell.receivedTimeString = "어제"
+                            } else if (todayDay! - messageSendedDay!) <= 3, (todayDay! - messageSendedDay!) > 0 {
+                                // 3일 이내
+                                cell.receivedTimeString = "\(todayDay! - messageSendedDay!)일 전"
+                            } else if (todayDay! - messageSendedDay!) > 3 {
+                                // 3일 초과
+                                // ex) 22.08.31
+                                let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                                cell.receivedTimeString = date
+                            } else {
+                                // 같은 날
+                                if hourTime == 0 {
+                                    if minuteTime <= 9 {
+                                        // 최근 메세지의 전송 시간 설정
+                                        cell.receivedTimeString = "방금"
+                                    } else if minuteTime > 9, minuteTime <= 59 {
+                                        // 최근 메세지의 전송 시간 설정
+                                        cell.receivedTimeString = "\(minuteTime)분 전"
+                                    }
+                                } else if hourTime >= 1, hourTime <= 12 {
+                                    cell.receivedTimeString = "\(hourTime)시간 전"
+                                } else if messageSendedDay == todayDay {
+                                    cell.receivedTimeString = "오늘"
+                                }
+                            }
+                        }
+                    } else {
+                        // 몇년 전
+                        // ex) 22.08.31
+                        let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                        cell.receivedTimeString = date
+                    }
+                }
+            }
+        }
+    }
+    
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "채팅"
@@ -203,6 +306,8 @@ class ChattingListViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
         
         chattingTableView.backgroundColor = .white
+        chattingTableView.rowHeight = 81 + 6 + 6
+        chattingTableView.separatorStyle = .none
     }
     
     private func addSubViews() {
@@ -247,27 +352,24 @@ class ChattingListViewController: UIViewController {
         chattingTableView.dataSource = self
         chattingTableView.delegate = self
         chattingTableView.register(ChattingListTableViewCell.self, forCellReuseIdentifier: ChattingListTableViewCell.identifier)
-        
-        chattingTableView.rowHeight = 81 + 6 + 6
-        chattingTableView.separatorStyle = .none
     }
     
     /* 배열에 담긴 이름으로 Filter Views를 만들고 스택뷰로 묶는다 */
     private func setFilterStackView(filterNameArray: [String], width: [CGFloat], stackView: UIStackView) {
         for i in 0..<filterNameArray.count {
             let filterText = filterNameArray[i]
-            let filterView: UIView = {
-                let view = UIView()
-                view.backgroundColor = .init(hex: 0xF8F8F8)
-                view.layer.cornerRadius = 5
-                view.snp.makeConstraints { make in
+            let filterView = UIView().then {
+                $0.backgroundColor = .init(hex: 0xF8F8F8)
+                $0.layer.cornerRadius = 5
+                $0.snp.makeConstraints { make in
                     make.width.equalTo(width[i])
                     make.height.equalTo(35)
                 }
                 
-                let label = UILabel()
-                label.text = filterText
-                label.font = .customFont(.neoMedium, size: 14)
+                let label = UILabel().then {
+                    $0.text = filterText
+                    $0.font = .customFont(.neoMedium, size: 14)
+                }
                 if filterText == "배달파티" {
                     // default로 배달파티 필터가 활성화 되어 있도록 설정
                     label.textColor = .mainColor
@@ -275,13 +377,11 @@ class ChattingListViewController: UIViewController {
                 } else {
                     label.textColor = UIColor(hex: 0xD8D8D8)
                 }
-                view.addSubview(label)
+                $0.addSubview(label)
                 label.snp.makeConstraints { make in
                     make.centerX.centerY.equalToSuperview()
                 }
-                
-                return view
-            }()
+            }
             
             /* Stack View */
             stackView.addArrangedSubview(filterView)
@@ -365,67 +465,12 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingListTableViewCell.identifier, for: indexPath) as? ChattingListTableViewCell else { return UITableViewCell() }
         let index = indexPath.row
+        
         // 채팅방 타이틀 설정
         cell.titleLabel.text = chattingRoomList[index].title ?? "디폴트 이름"
+        // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
+        self.getRecentMessageAndTime(cell: cell, row: indexPath.row)
         
-        /* firestore에서 채팅방의 가장 최근 메세지, 전송 시간 데이터 가져오기 */
-        let roomDocRef = db.collection("Rooms").document(roomUUIDList[indexPath.row])
-        // 해당 채팅방의 messages를 time을 기준으로 내림차순 정렬 후 처음의 1개(= 가장 최근 메세지)만 가져온다.
-        recentMsgListener = roomDocRef.collection("Messages").order(by: "time", descending: true).limit(to: 1) .addSnapshotListener { querySnapshot, error in
-                if let error = error {
-                    print("Error retreiving collection: \(error)")
-                }
-                if let querySnapshot = querySnapshot,
-                   let lastDocument = querySnapshot.documents.last {
-                    if let messageContents = lastDocument["content"] as? String,
-                       let messageTime = lastDocument["time"] as? String {
-                        // 채팅방의 최근 메세지 설정
-                        cell.recentMessageLabel.text = messageContents
-                        
-                        let nowTimeDate = Date()
-                        let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime)!
-                        
-                        // 메세지가 전송된 날(일)을 저장, 오늘인지 구분하기 위해
-                        let messageSendedDay = FormatCreater.sharedDayFormat.string(from: messageTimeDate)
-                        let today = FormatCreater.sharedDayFormat.string(from: nowTimeDate)
-                        
-                        // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
-                        let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
-                        
-                        // 각각 일, 시간, 분 단위로 변환
-                        let hourTime = intervalSecs / 60 / 60 % 24
-                        let minuteTime = intervalSecs / 60 % 60
-                        
-                        print("위치\(self.roomUUIDList[indexPath.row]) \(messageContents) \(messageSendedDay)일 \(hourTime)시간 \(minuteTime)분, 오늘은 \(today)일")
-                        
-                        /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
-                        // 일이 다르면 다른 날로. 어제, 오늘.
-                        if Int(today)! - 1 == Int(messageSendedDay) {
-                            cell.receivedTimeString = "어제"
-                        } else if (Int(today)! - Int(messageSendedDay)!) <= 3, (Int(today)! - Int(messageSendedDay)!) > 0 {
-                            cell.receivedTimeString = "\(Int(today)! - Int(messageSendedDay)!)일 전"
-                        } else if (Int(today)! - Int(messageSendedDay)!) > 3 {
-                            // ex) 22.08.31
-                            let testDate = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
-                            cell.receivedTimeString = testDate
-                        } else {
-                            if hourTime == 0 {
-                                if minuteTime <= 9 {
-                                    // 최근 메세지의 전송 시간 설정
-                                    cell.receivedTimeString = "방금"
-                                } else if minuteTime > 9, minuteTime <= 59 {
-                                    // 최근 메세지의 전송 시간 설정
-                                    cell.receivedTimeString = "\(minuteTime)분 전"
-                                }
-                            } else if hourTime >= 1, hourTime <= 12 {
-                                cell.receivedTimeString = "\(hourTime)시간 전"
-                            } else if messageSendedDay == today {
-                                cell.receivedTimeString = "오늘"
-                            }
-                        }
-                    }
-                }
-            }
         return cell
     }
 
