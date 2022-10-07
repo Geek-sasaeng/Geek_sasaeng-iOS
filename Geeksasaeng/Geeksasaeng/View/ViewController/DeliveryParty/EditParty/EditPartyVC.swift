@@ -732,7 +732,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             ) { success in
                 if success {
                     /* 수정된 정보로 이전 뷰 내용 업데이트 */
-                    NotificationCenter.default.post(name: NSNotification.Name("TapEditButton"), object: "true")
+                    NotificationCenter.default.post(name: NSNotification.Name("TapEditCompleteButton"), object: "true")
                     
                     /* 수정되었음을 알림 -> 토스트 메시지 띄우기 (Delegate pattern) */
                     self.isEdittiedDelegate?.checkEditted(isEditted: true)

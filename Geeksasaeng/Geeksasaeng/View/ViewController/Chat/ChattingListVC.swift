@@ -27,27 +27,6 @@ class FormatCreater {
         formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
-    static let sharedYearFormat: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy"
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.timeZone = TimeZone(abbreviation: "KST")
-        return formatter
-    }()
-    static let sharedMonthFormat: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM"
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.timeZone = TimeZone(abbreviation: "KST")
-        return formatter
-    }()
-    static let sharedDayFormat: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd"
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.timeZone = TimeZone(abbreviation: "KST")
-        return formatter
-    }()
     
     private init() { }
 }
@@ -467,7 +446,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         let index = indexPath.row
         
         // 채팅방 타이틀 설정
-        cell.titleLabel.text = chattingRoomList[index].title ?? "디폴트 이름"
+        cell.titleLabel.text = chattingRoomList[index].title ?? "배달파티 채팅방"
         // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
         self.getRecentMessageAndTime(cell: cell, row: indexPath.row)
         
@@ -476,9 +455,6 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
 
     /* 채팅방 셀이 클릭될 때 실행되는 함수 */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 선택된 셀 데이터
-//        guard let selectedCell = tableView.cellForRow(at: indexPath) as? ChattingListTableViewCell else { return }
-        
         let chattingVC = ChattingViewController()
         // 해당 채팅방 uuid값 받아서 이동
         chattingVC.roomName = chattingRoomList[indexPath.row].title
