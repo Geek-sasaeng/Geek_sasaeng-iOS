@@ -241,7 +241,7 @@ class AuthNumViewController: UIViewController {
         if let email = self.email,
            let authNum = self.authNumTextField.text {
             print("DEBUG: ", email, authNum)
-            EmailAuthCheckViewModel.requestCheckEmailAuth(self, EmailAuthCheckInput(email: email, key: authNum))
+//            EmailAuthCheckViewModel.requestCheckEmailAuth(self, EmailAuthCheckInput(email: email, key: authNum))
         }
     }
     

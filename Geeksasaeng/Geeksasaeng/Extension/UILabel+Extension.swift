@@ -32,6 +32,20 @@ extension UILabel {
         self.textColor = textColor
         self.font = font
     }
+    
+    /* 라벨의 너비 반환 */
+    func getWidth(text: String) -> CGFloat {
+        self.frame = CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        
+        self.text = text
+        self.font = .customFont(.neoMedium, size: 13)
+        self.numberOfLines = 1
+        self.lineBreakMode = .byCharWrapping
+        self.sizeToFit()
+        self.setNeedsDisplay()
+        
+        return self.frame.width
+    }
 }
 
 // 패딩이 적용된 라벨
