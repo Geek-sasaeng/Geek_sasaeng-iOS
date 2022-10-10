@@ -7,10 +7,11 @@
 
 import UIKit
 
-import SnapKit
-import Kingfisher
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Kingfisher
+import RMQClient
+import SnapKit
 import Then
 
 // Delegate Pattern을 통해 pushVC 구현

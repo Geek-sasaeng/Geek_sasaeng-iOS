@@ -17,6 +17,7 @@ target 'Geeksasaeng' do
   pod 'Firebase/Messaging'
   pod 'lottie-ios'
   pod 'Then'
+  pod 'RMQClient'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths
