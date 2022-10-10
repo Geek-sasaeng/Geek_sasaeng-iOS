@@ -197,6 +197,7 @@ class EditReceiptPlaceViewController: UIViewController {
     @objc
     private func tapConfirmButton() {
         CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
+        self.mapView?.removeAllPOIItems()
         self.mapView = nil
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditLocationButton"), object: "true")
