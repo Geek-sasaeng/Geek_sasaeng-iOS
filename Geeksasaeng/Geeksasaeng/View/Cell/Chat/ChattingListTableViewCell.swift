@@ -80,6 +80,11 @@ class ChattingListTableViewCell: UITableViewCell {
     // reuse cell을 사용하기 전에 뷰를 초기화 해주는 것
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        // 초기화
+        self.titleLabel.text = ""
+        self.recentMessageLabel.text = ""
+        self.receivedTimeLabel.text = ""
     }
 
     // MARK: - Functions
