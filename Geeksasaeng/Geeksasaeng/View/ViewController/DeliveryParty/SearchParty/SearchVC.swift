@@ -232,6 +232,61 @@ class SearchViewController: UIViewController {
         $0.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
     }
     
+    /* 검색 결과 없을 때 띄울 뷰 */
+    lazy var noResultLabel = UILabel().then {
+        $0.text = "에 대한 검색 결과가 없습니다."
+        $0.textColor = .init(hex: 0x2F2F2F)
+    }
+    lazy var noSearchResultView = UIView().then { view in
+        let resultImageView = UIImageView(image: UIImage(named: "NoSearchResult"))
+        let guideLabel = UILabel().then {
+            $0.text = "보다 일반적인 단어로 입력해보세요.\n검색어의 철자 혹은 띄어쓰기를 다시 확인해보세요."
+            $0.textColor = .init(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 12)
+            $0.numberOfLines = 0
+        }
+        let attrString = NSMutableAttributedString(string: guideLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        paragraphStyle.lineSpacing = 7
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        guideLabel.attributedText = attrString
+        let flagImageView = UIImageView(image: UIImage(named: "Flag"))
+        let questionLabel = UILabel().then {
+            $0.text = "다른 태그로 검색해보셨나요?"
+            $0.textColor = .init(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 12)
+        }
+        [
+            resultImageView,
+            noResultLabel,
+            guideLabel,
+            flagImageView,
+            questionLabel
+        ].forEach { view.addSubview($0) }
+        
+        resultImageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.snp.top).inset(self.view.bounds.height / 5.3)
+        }
+        noResultLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(resultImageView.snp.bottom).offset(34)
+        }
+        guideLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(noResultLabel.snp.bottom).offset(24)
+        }
+        flagImageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(guideLabel.snp.bottom).offset(40)
+        }
+        questionLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(flagImageView.snp.bottom).offset(14)
+        }
+    }
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -297,7 +352,8 @@ class SearchViewController: UIViewController {
             timeCollectionView,
             peopleDropDownView, peopleFilterContainerView,
             partyTableView,
-            blurView
+            blurView,
+            noSearchResultView
         ].forEach { view.addSubview($0) }
     }
     
@@ -395,6 +451,13 @@ class SearchViewController: UIViewController {
             make.height.equalTo(140)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        /* 검색 결과가 없을 때 */
+        noSearchResultView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+        }
     }
     
     /* collection view 등록 */
@@ -483,7 +546,8 @@ class SearchViewController: UIViewController {
             recentSearchCollectionView,
             weeklyTopCollectionView,
             firstSeparateView,
-            logoImageView
+            logoImageView,
+            noSearchResultView
         ].forEach { $0.isHidden = true }
         
         [
@@ -515,7 +579,8 @@ class SearchViewController: UIViewController {
             peopleFilterToggleImageView,
             timeCollectionView,
             partyTableView,
-            blurView
+            blurView,
+            noSearchResultView
         ].forEach { $0.isHidden = true }
     }
     
@@ -673,6 +738,19 @@ class SearchViewController: UIViewController {
         }
     }
     
+    // 검색 결과 없다고 안내해주는 뷰 띄우기
+    private func showNoSearchResult() {
+        // 뷰 띄우기
+        self.noSearchResultView.isHidden = false
+        self.partyTableView.isHidden = true
+        
+        // attributedStr 설정
+        let attributedStr = NSMutableAttributedString()
+        attributedStr.append(NSAttributedString(string: nowSearchKeyword, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 14), NSAttributedString.Key.foregroundColor: UIColor.mainColor]))
+        attributedStr.append(NSAttributedString(string: self.noResultLabel.text!, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 14)]))
+        noResultLabel.attributedText = attributedStr
+    }
+    
     // MARK: - @objc Functions
     
     /*
@@ -691,6 +769,12 @@ class SearchViewController: UIViewController {
             nowSearchKeyword = searchTextField.text!
             print("DEBUG: 검색 키워드", nowSearchKeyword)
             showSearchResultView()
+            
+            // 검색 결과에 해당하는 데이터가 없으면
+            if (deliveryCellDataArray.isEmpty) {
+                // 검색 결과 없다는 뷰 띄우기
+                showNoSearchResult()
+            }
         }
     }
     
