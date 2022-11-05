@@ -37,17 +37,27 @@ class PaaswordCheckViewController: UIViewController {
         $0.makeBottomLine()
         $0.font = .customFont(.neoMedium, size: 15)
         $0.textColor = .init(hex: 0x5B5B5B)
+        $0.isSecureTextEntry = true
+        $0.addTarget(self, action: #selector(changeValuePasswordTextField), for: .editingChanged)
+    }
+    
+    let passwordCheckLabel = UILabel().then {
+        $0.text = "비밀번호가 다릅니다"
+        $0.textColor = .red
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
     }
     
     /* 다음 버튼 */
     lazy var nextButton = UIButton().then {
         $0.setTitle("다음", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
+//        $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .customFont(.neoBold, size: 20)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 5
-        $0.backgroundColor = .mainColor
-//        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
+//        $0.backgroundColor = .mainColor
+        $0.setDeactivatedNextButton()
+        $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
     }
     
     // MARK: - Properties
@@ -81,7 +91,7 @@ class PaaswordCheckViewController: UIViewController {
     private func addSubViews() {
         [
             titleLabel, backButton,
-            passwordTextField,
+            passwordTextField, passwordCheckLabel,
             nextButton
         ].forEach { view.addSubview($0) }
     }
@@ -103,6 +113,11 @@ class PaaswordCheckViewController: UIViewController {
             make.width.equalTo(248)
         }
         
+        passwordCheckLabel.snp.makeConstraints { make in
+            make.top.equalTo(passwordTextField.snp.bottom).offset(18)
+            make.left.equalTo(passwordTextField.snp.left)
+        }
+        
         nextButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(35)
@@ -116,9 +131,16 @@ class PaaswordCheckViewController: UIViewController {
     /* 다음 버튼 누르면 실행되는 함수 */
     @objc
     private func tapNextButton() {
+        // API 호출 (비밀번호 맞는지 확인)
+        
+        
         // 비밀번호 틀렸을 때 -> TextField 하단에 notice
+//        passwordCheckLabel.isHidden = false
+//        passwordTextField.subviews.first?.backgroundColor = .red
+        
         
         // 비밀번호 맞았을 때 -> 수정 화면으로 이동
+        
     }
     
     /* 백버튼 눌렀을 때 실행 -> 이전 화면으로 돌아간다 */
@@ -126,5 +148,13 @@ class PaaswordCheckViewController: UIViewController {
     private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
+    }
+    
+    @objc
+    private func changeValuePasswordTextField() {
+        guard let password = passwordTextField.text else { return }
+        if password.count >= 1 {
+            nextButton.setActivatedNextButton()
+        }
     }
 }

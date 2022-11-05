@@ -163,7 +163,6 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     var visualEffectView: UIVisualEffectView?
     
-    
     // MARK: - Properties
     var naverLoginVM = naverLoginViewModel()
     
@@ -336,6 +335,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapEditButton() {
         // 비밀번호 확인 창 띄우기
+        createBlurView()
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = PaaswordCheckViewController()
             self.addChild(childView)
