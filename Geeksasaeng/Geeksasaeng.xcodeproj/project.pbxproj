@@ -948,6 +948,9 @@
 		10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
 		10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC5CA82889269000C8086A /* EditPartyVC.swift */; };
+		10AC8B0E2916927500A09952 /* PasswordCheckVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */; };
+		10AC8B0F2916927500A09952 /* PasswordCheckVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */; };
+		10AC8B102916927500A09952 /* PasswordCheckVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */; };
 		10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
 		10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
 		10B3822428A2321F00571406 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B3822128A2321F00571406 /* UILabel+Extension.swift */; };
@@ -1550,6 +1553,7 @@
 		10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForcedExitTableViewCell.swift; sourceTree = "<group>"; };
 		10A53C722882FA6D00DDCE87 /* APIKEY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKEY.swift; sourceTree = "<group>"; };
 		10AC5CA82889269000C8086A /* EditPartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPartyVC.swift; sourceTree = "<group>"; };
+		10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordCheckVC.swift; sourceTree = "<group>"; };
 		10B3822128A2321F00571406 /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		10B75B5F289CDD810002865C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10C8D26728770D310044552A /* NaverRegisterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRegisterVC.swift; sourceTree = "<group>"; };
@@ -2280,6 +2284,7 @@
 			children = (
 				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
 				10EC390F28AD307700A72DC6 /* MyInfoVC.swift */,
+				10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -3719,6 +3724,7 @@
 				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
+				10AC8B0E2916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				A2AF5395289696810052F734 /* ReportAPI.swift in Sources */,
@@ -3830,6 +3836,7 @@
 				1031AAA328981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				1041ADDF28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				103F5E48289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
+				10AC8B0F2916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
 				A218D7BE28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
 				10D4D6C82894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
@@ -4011,6 +4018,7 @@
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				A2AF5397289696810052F734 /* ReportAPI.swift in Sources */,
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
+				10AC8B102916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,

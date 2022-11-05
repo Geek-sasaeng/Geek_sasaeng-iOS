@@ -12,7 +12,7 @@ import Then
 class ForcedExitViewController: UIViewController {
     // MARK: - SubViews
     let containerView = UIView().then {
-        $0.backgroundColor = .green
+        $0.backgroundColor = .white
     }
     
     let userTableView = UITableView()
@@ -24,7 +24,7 @@ class ForcedExitViewController: UIViewController {
     }
     
     let bottomView = UIView().then {
-        $0.backgroundColor = .green
+        $0.backgroundColor = .init(hex: 0x94D5F1)
     }
     let countNumLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 16)
@@ -336,7 +336,7 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
         
         /* selectedUsers의 수가 0이면 other color + "선택해 주세요" / 1이상이면 mainColor + "다음" */
         if selectedUsers?.count == 0 {
-            bottomView.backgroundColor = .green
+            bottomView.backgroundColor = .init(hex: 0x94D5F1)
             nextButton.isEnabled = false
             nextButton.setTitle("퇴장시킬 파티원을 선택해 주세요", for: .normal)
         } else {

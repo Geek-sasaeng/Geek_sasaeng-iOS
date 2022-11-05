@@ -190,7 +190,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Pencil"), style: .plain, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Pencil"), style: .plain, target: self, action: #selector(tapEditButton))
         navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
     }
@@ -330,6 +330,20 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    /* 내 정보 수정 버튼 (연필) 눌렀을 때 실행되는 함수 */
+    @objc
+    private func tapEditButton() {
+        // 비밀번호 확인 창 띄우기
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let childView = PaaswordCheckViewController()
+            self.addChild(childView)
+            self.view.addSubview(childView.view)
+            childView.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
     }
 
     @objc
