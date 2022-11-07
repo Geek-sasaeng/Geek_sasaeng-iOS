@@ -4,6 +4,7 @@
 ### Swift ###
 Info.plist
 APIKEY.swift
+Secret/
 
 # Xcode
 #
