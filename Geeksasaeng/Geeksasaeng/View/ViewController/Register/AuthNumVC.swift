@@ -5,6 +5,8 @@
 //  Created by 서은수 on 2022/07/01.
 //
 
+// TODO: - AuthNumVC 지워도 되는지 확인하고 지우기 -> 이메일 인증 화면 합침
+
 import UIKit
 
 import SnapKit
