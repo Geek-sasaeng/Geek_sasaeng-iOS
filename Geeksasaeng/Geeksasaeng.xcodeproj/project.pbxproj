@@ -36,6 +36,9 @@
 		1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */; };
 		1031AAA328981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */; };
 		1031AAA428981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */; };
+		1036F0A6291A7E1500306840 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A5291A7E1500306840 /* Keys.swift */; };
+		1036F0A7291A7E1500306840 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A5291A7E1500306840 /* Keys.swift */; };
+		1036F0A8291A7E1500306840 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A5291A7E1500306840 /* Keys.swift */; };
 		103F1454286ACA84004B637B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1453286ACA84004B637B /* AppDelegate.swift */; };
 		103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1455286ACA84004B637B /* SceneDelegate.swift */; };
 		103F145D286ACA86004B637B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
@@ -1165,9 +1168,6 @@
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
-		A2C5B294291926A400BDBAC6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B293291926A400BDBAC6 /* Keys.swift */; };
-		A2C5B295291926A400BDBAC6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B293291926A400BDBAC6 /* Keys.swift */; };
-		A2C5B296291926A400BDBAC6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B293291926A400BDBAC6 /* Keys.swift */; };
 		A2D2047928885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
@@ -1235,6 +1235,7 @@
 		102B35DF2879BD980042F691 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfUseAgreementVC.swift; sourceTree = "<group>"; };
 		1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoAgreementVC.swift; sourceTree = "<group>"; };
+		1036F0A5291A7E1500306840 /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		103F1450286ACA84004B637B /* Geeksasaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geeksasaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1453286ACA84004B637B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103F1455286ACA84004B637B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1638,7 +1639,6 @@
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
-		A2C5B293291926A400BDBAC6 /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
@@ -2604,7 +2604,7 @@
 		A2C5B28E29191E0D00BDBAC6 /* Secret */ = {
 			isa = PBXGroup;
 			children = (
-				A2C5B293291926A400BDBAC6 /* Keys.swift */,
+				1036F0A5291A7E1500306840 /* Keys.swift */,
 			);
 			path = Secret;
 			sourceTree = "<group>";
@@ -3717,7 +3717,6 @@
 				A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */,
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
-				A2C5B294291926A400BDBAC6 /* Keys.swift in Sources */,
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				A20B53F6288D7F27006C695E /* TimeCollectionViewCell.swift in Sources */,
 				A25766D328AA9F9700ED8DAB /* ProfileVC.swift in Sources */,
@@ -3799,6 +3798,7 @@
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
 				10D4D6C72894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
+				1036F0A6291A7E1500306840 /* Keys.swift in Sources */,
 				A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				A23839F629098CBD0045E488 /* Chatting.swift in Sources */,
 				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
@@ -3917,7 +3917,6 @@
 				A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
 				10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
-				A2C5B295291926A400BDBAC6 /* Keys.swift in Sources */,
 				10EBEFEA289F559300038EFC /* RoomInfoModel.swift in Sources */,
 				A2A6D0B128E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
@@ -3927,6 +3926,7 @@
 				A274DE7828E0F68800F5024E /* CreateMenuVC.swift in Sources */,
 				1031AA9F28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				10E8E714288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
+				1036F0A7291A7E1500306840 /* Keys.swift in Sources */,
 				108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
@@ -3981,6 +3981,7 @@
 				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
 				10E8E719288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				1036F0A8291A7E1500306840 /* Keys.swift in Sources */,
 				102230FC289E640700042ACC /* ChattingVC.swift in Sources */,
 				A2E6EAE02893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
 				10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
@@ -4046,7 +4047,6 @@
 				103F1475286ACA86004B637B /* GeeksasaengUITests.swift in Sources */,
 				1031AAA428981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
-				A2C5B296291926A400BDBAC6 /* Keys.swift in Sources */,
 				A2AF5397289696810052F734 /* ReportAPI.swift in Sources */,
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				10AC8B102916927500A09952 /* PasswordCheckVC.swift in Sources */,
