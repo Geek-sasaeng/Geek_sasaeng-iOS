@@ -19,7 +19,8 @@ extension UITextField {
         self.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { make in
             make.top.equalTo(self.snp.bottom).offset(10)
-            make.left.right.equalToSuperview()
+//            make.left.right.equalToSuperview()
+            make.width.equalTo(self.snp.width)
             make.height.equalTo(1)
         }
     }

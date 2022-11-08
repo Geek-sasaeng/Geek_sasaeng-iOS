@@ -140,7 +140,8 @@ class PaaswordCheckViewController: UIViewController {
         
         
         // 비밀번호 맞았을 때 -> 수정 화면으로 이동
-        
+        let editMyInfoVC = EditMyInfoViewController()
+        navigationController?.pushViewController(editMyInfoVC, animated: true)
     }
     
     /* 백버튼 눌렀을 때 실행 -> 이전 화면으로 돌아간다 */

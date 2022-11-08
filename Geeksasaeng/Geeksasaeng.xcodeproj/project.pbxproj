@@ -39,6 +39,9 @@
 		1036F0A6291A7E1500306840 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A5291A7E1500306840 /* Keys.swift */; };
 		1036F0A7291A7E1500306840 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A5291A7E1500306840 /* Keys.swift */; };
 		1036F0A8291A7E1500306840 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A5291A7E1500306840 /* Keys.swift */; };
+		1036F0AA291A800F00306840 /* EditMyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A9291A800F00306840 /* EditMyInfoVC.swift */; };
+		1036F0AB291A800F00306840 /* EditMyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A9291A800F00306840 /* EditMyInfoVC.swift */; };
+		1036F0AC291A800F00306840 /* EditMyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A9291A800F00306840 /* EditMyInfoVC.swift */; };
 		103F1454286ACA84004B637B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1453286ACA84004B637B /* AppDelegate.swift */; };
 		103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1455286ACA84004B637B /* SceneDelegate.swift */; };
 		103F145D286ACA86004B637B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
@@ -1236,6 +1239,7 @@
 		1031AA9D28981604004B6568 /* TermsOfUseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfUseAgreementVC.swift; sourceTree = "<group>"; };
 		1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoAgreementVC.swift; sourceTree = "<group>"; };
 		1036F0A5291A7E1500306840 /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		1036F0A9291A800F00306840 /* EditMyInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMyInfoVC.swift; sourceTree = "<group>"; };
 		103F1450286ACA84004B637B /* Geeksasaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geeksasaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1453286ACA84004B637B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103F1455286ACA84004B637B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -2298,6 +2302,7 @@
 				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
 				10EC390F28AD307700A72DC6 /* MyInfoVC.swift */,
 				10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */,
+				1036F0A9291A800F00306840 /* EditMyInfoVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -3737,6 +3742,7 @@
 				108D5972289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
 				A225E10A28ADE06A00029686 /* CommunityVC.swift in Sources */,
+				1036F0AA291A800F00306840 /* EditMyInfoVC.swift in Sources */,
 				A218D7BD28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				1031AA9E28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
@@ -3944,6 +3950,7 @@
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
 				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 				10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
+				1036F0AB291A800F00306840 /* EditMyInfoVC.swift in Sources */,
 				A21E82B628E48FA400D75084 /* ChattingStorageVC.swift in Sources */,
 				10D4D6C42894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				10E8E71D288D739100AF4581 /* DeletePartyModel.swift in Sources */,
@@ -3960,6 +3967,7 @@
 				10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
+				1036F0AC291A800F00306840 /* EditMyInfoVC.swift in Sources */,
 				A2AF539F2896C0680052F734 /* SearchViewModel.swift in Sources */,
 				A26780BA28AD64D90078350D /* RecentPartyModel.swift in Sources */,
 				A248720328EA2DCF002F84A8 /* ReportUserVC.swift in Sources */,

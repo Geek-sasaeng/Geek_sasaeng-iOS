@@ -238,7 +238,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         contentView.snp.makeConstraints { (make) in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height + 170)
+            make.bottom.equalTo(withdrawalMembershipButton.snp.bottom).offset(100)
         }
         
         userImageView.snp.makeConstraints { make in
