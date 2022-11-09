@@ -21,6 +21,7 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
     var recentSearchLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 14)
         $0.textColor = .init(hex: 0x5B5B5B)
+        $0.lineBreakMode = .byTruncatingTail
     }
     
     var xImageView = UIImageView().then {
@@ -59,6 +60,7 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
         xImageView.snp.makeConstraints { make in
             make.centerY.equalTo(recentSearchLabel)
             make.right.equalToSuperview()
+            make.left.equalTo(recentSearchLabel.snp.right).offset(3)
             make.width.equalTo(13)
             make.height.equalTo(16)
         }

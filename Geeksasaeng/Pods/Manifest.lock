@@ -785,6 +785,11 @@ PODS:
   - nanopb/encode (2.30909.0)
   - naveridlogin-sdk-ios (4.1.5)
   - PromisesObjC (2.1.1)
+  - Realm (10.32.2):
+    - Realm/Headers (= 10.32.2)
+  - Realm/Headers (10.32.2)
+  - RealmSwift (10.32.2):
+    - Realm (= 10.32.2)
   - RMQClient (0.12.0):
     - CocoaAsyncSocket (~> 7.6)
     - JKVValue (~> 1.3)
@@ -800,6 +805,7 @@ DEPENDENCIES:
   - Kingfisher
   - lottie-ios
   - naveridlogin-sdk-ios
+  - RealmSwift
   - RMQClient
   - SnapKit
   - Then
@@ -832,6 +838,8 @@ SPEC REPOS:
     - nanopb
     - naveridlogin-sdk-ios
     - PromisesObjC
+    - Realm
+    - RealmSwift
     - RMQClient
     - SnapKit
     - Then
@@ -863,10 +871,12 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   naveridlogin-sdk-ios: 4351fe7162cd6b8b6dbb37bd7cc205304fa1d889
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
+  Realm: a11d133606e898ee43ddd3c24050a382c8d3eab1
+  RealmSwift: f796f7701a5efa031554d5639ef5b2d4c850bc74
   RMQClient: 74776ee4d0f891f71667a2629f26a26de5ad3e90
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
 
-PODFILE CHECKSUM: 66307645f9f058ceaad4aaf386ac68993f831682
+PODFILE CHECKSUM: 800fabeca36120fabb0de5549ede0648bae25f71
 
 COCOAPODS: 1.11.3
