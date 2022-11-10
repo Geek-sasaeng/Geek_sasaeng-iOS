@@ -31,4 +31,20 @@ extension String {
         
         return nicknameValidation.evaluate(with: self)
     }
+    
+    /* limit만큼 text를 잘라서 return 해주는 함수 */
+    func createSlicedText(_ limit: Int) -> String {
+        if self.count > limit {
+            return self.truncated(after: limit)
+        } else {
+            return self
+        }
+    }
+    
+    /* count 뒤로는 자르고 ...을 붙여서 byTruncatingTail 처럼 보이게 만들어 주는 함수 */
+    private func truncated(after count: Int) -> String {
+        let truncateAfter = index(startIndex, offsetBy: count)
+        guard endIndex > truncateAfter else { return self }
+        return String(self[startIndex..<truncateAfter]) + "…"
+    }
 }
