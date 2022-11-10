@@ -1004,6 +1004,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
     }
     
+    // cell 클릭시 실행할 동작 정의
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? RecentSearchCollectionViewCell else { return }
+        // 검색 텍스트 필드 값을 클릭한 셀의 text 내용으로 설정
+        self.searchTextField.text = selectedCell.recentSearchLabel.text
+    }
+    
     // 각 cell의 크기 설정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView.tag == 1 {
