@@ -242,10 +242,12 @@ class SearchViewController: UIViewController {
     }
     
     /* 검색 결과 없을 때 띄울 뷰 */
-    lazy var noResultLabel = UILabel().then {
-        $0.textColor = .init(hex: 0x2F2F2F)
-    }
     lazy var noSearchResultView = UIView().then { view in
+        let noResultLabel = UILabel().then {
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.text = "요청하신 검색 결과가 없습니다."
+            $0.font = .customFont(.neoRegular, size: 14)
+        }
         let resultImageView = UIImageView(image: UIImage(named: "NoSearchResult"))
         let guideLabel = UILabel().then {
             $0.text = "보다 일반적인 단어로 입력해보세요.\n검색어의 철자 혹은 띄어쓰기를 다시 확인해보세요."
@@ -790,14 +792,6 @@ class SearchViewController: UIViewController {
         // 뷰 띄우기
         self.noSearchResultView.isHidden = false
         self.partyTableView.isHidden = true
-        
-        // attributedStr 설정
-        self.noResultLabel.text = "에 대한 검색결과가 없습니다."    // text 내용 초기화!
-        print("test2 nowSearchKeyword", nowSearchKeyword)
-        let attributedStr = NSMutableAttributedString()
-        attributedStr.append(NSAttributedString(string: nowSearchKeyword, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 14), NSAttributedString.Key.foregroundColor: UIColor.mainColor]))
-        attributedStr.append(NSAttributedString(string: self.noResultLabel.text!, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 14)]))
-        noResultLabel.attributedText = attributedStr
     }
     
     // 최근 검색어 객체 생성 후 로컬에 저장하는 함수.
