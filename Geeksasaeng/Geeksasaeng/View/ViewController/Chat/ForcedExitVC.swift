@@ -12,13 +12,19 @@ import Then
 class ForcedExitViewController: UIViewController {
     // MARK: - SubViews
     let containerView = UIView().then {
-        $0.backgroundColor = .green
+        $0.backgroundColor = .white
     }
     
     let userTableView = UITableView()
     
+    let noticeLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 12)
+        $0.textColor = .mainColor
+        $0.text = "* 송급을 완료한 사용자는 강제퇴장이 불가합니다"
+    }
+    
     let bottomView = UIView().then {
-        $0.backgroundColor = .mainColor
+        $0.backgroundColor = .init(hex: 0x94D5F1)
     }
     let countNumLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 16)
@@ -26,7 +32,8 @@ class ForcedExitViewController: UIViewController {
     }
     lazy var nextButton = UIButton().then {
         $0.titleLabel?.font = .customFont(.neoBold, size: 16)
-        $0.setTitle("다음", for: .normal)
+        $0.isEnabled = false
+        $0.setTitle("퇴장시킬 파티원을 선택해 주세요", for: .normal)
         $0.setImage(UIImage(named: "Arrow"), for: .normal)
         $0.semanticContentAttribute = .forceRightToLeft
         $0.imageEdgeInsets = .init(top: 0, left: 11, bottom: 0, right: 0)
@@ -46,7 +53,7 @@ class ForcedExitViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        userTableView.backgroundColor = .red
+        userTableView.backgroundColor = .white
         
         setAttributes()
         setTableView()
@@ -79,7 +86,7 @@ class ForcedExitViewController: UIViewController {
         [countNumLabel, nextButton].forEach {
             bottomView.addSubview($0)
         }
-        [userTableView, bottomView].forEach {
+        [userTableView, noticeLabel, bottomView].forEach {
             containerView.addSubview($0)
         }
         view.addSubview(containerView)
@@ -96,6 +103,11 @@ class ForcedExitViewController: UIViewController {
             make.top.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview().inset(55)
+        }
+        
+        noticeLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(83)
         }
 
         bottomView.snp.makeConstraints { make in
@@ -320,6 +332,17 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
             selectedCell.userProfileImage.image = UIImage(named: "ForcedExit_unSelectedProfile")
             selectedCell.userName.font = .customFont(.neoMedium, size: 14)
             countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
+        }
+        
+        /* selectedUsers의 수가 0이면 other color + "선택해 주세요" / 1이상이면 mainColor + "다음" */
+        if selectedUsers?.count == 0 {
+            bottomView.backgroundColor = .init(hex: 0x94D5F1)
+            nextButton.isEnabled = false
+            nextButton.setTitle("퇴장시킬 파티원을 선택해 주세요", for: .normal)
+        } else {
+            bottomView.backgroundColor = .mainColor
+            nextButton.isEnabled = true
+            nextButton.setTitle("다음", for: .normal)
         }
     }
 }
