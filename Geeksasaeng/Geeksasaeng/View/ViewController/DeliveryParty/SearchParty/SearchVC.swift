@@ -84,7 +84,9 @@ class SearchViewController: UIViewController {
     }
     
     var noSearchRecordsLabel = UILabel().then {
-        $0.text = "검색어 기록이 없어요!"
+        $0.text = "검색어 기록이 없어요"
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = UIColor(hex: 0x5B5B5B)
     }
     
     // 최근 검색어 기록 Collection View의 레이아웃 설정
@@ -619,8 +621,8 @@ class SearchViewController: UIViewController {
             recentSearchCollectionView.isHidden = true
             noSearchRecordsLabel.isHidden = false
             noSearchRecordsLabel.snp.makeConstraints { make in
-                make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
-                make.left.right.equalToSuperview().inset(28)
+                make.top.equalTo(recentSearchLabel.snp.bottom).offset(15)
+                make.left.equalToSuperview().inset(28)
             }
         } else {
             // 데이터가 있으면 컬렉션뷰 보이게 하고 안내 text 숨기기
@@ -979,7 +981,6 @@ class SearchViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
-// MARK: - 최근 검색어 기록
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -1035,20 +1036,23 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     // cell 클릭시 실행할 동작 정의
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? RecentSearchCollectionViewCell else { return }
-        // 검색 텍스트 필드 값을 클릭한 셀의 text 내용으로 설정
-        self.searchTextField.text = selectedCell.recentSearchLabel.text
+        if collectionView.tag == 1 {
+            guard let selectedCell = collectionView.cellForItem(at: indexPath) as? RecentSearchCollectionViewCell else { return }
+            // 검색 텍스트 필드 값을 클릭한 셀의 text 내용으로 설정
+            self.searchTextField.text = selectedCell.recentSearchLabel.text
+        }
     }
     
     // 각 cell의 크기 설정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView.tag == 1 {
-            guard let searchRecords = recentSearchDataArray else { return CGSize() }
-            if (searchRecords[indexPath.item].content.size(withAttributes: nil).width > 50) {
-                return CGSize(width: 100, height: 28)
-            } else {
-                return CGSize(width: searchRecords[indexPath.item].content.size(withAttributes: nil).width + 25, height: 28)
-            }
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as? RecentSearchCollectionViewCell else { return .zero }
+            // 들어간 검색어 텍스트 + 20만큼 셀의 width를 설정한다. -> 최근 검색어 text 길이 제한 없음
+            cell.recentSearchLabel.text = recentSearchDataArray?[indexPath.item].content
+            cell.recentSearchLabel.sizeToFit()
+            
+            let cellWidth = cell.recentSearchLabel.frame.width + 20
+            return CGSize(width: cellWidth, height: 28)
         } else if collectionView.tag == 2 {
             return CGSize(width: 75, height: 28)
         } else {
@@ -1146,7 +1150,8 @@ extension SearchViewController: UITextFieldDelegate {
             showSearchMainView()
         }
         
-        return newLength <= 20
+        // 100자 제한
+        return newLength <= 100
     }
     
     // 키보드의 return 버튼 누르면 내려가게, 검색 실행되게
