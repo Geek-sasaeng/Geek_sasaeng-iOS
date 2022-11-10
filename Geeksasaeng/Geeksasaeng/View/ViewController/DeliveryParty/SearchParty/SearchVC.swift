@@ -813,6 +813,23 @@ class SearchViewController: UIViewController {
         }
     }
     
+    /* 최근 검색어 목록에서 X 버튼 클릭시 실행되는 함수 */
+    @objc
+    private func tapXButton(_ sender: UIButton) {
+        guard let searchRecords = recentSearchDataArray else { return }
+        // 클릭된 X 버튼이 컬렉션뷰 내에서 몇 번째 셀이었는지 변환
+        let hitPoint = sender.convert(CGPoint.zero, to: recentSearchCollectionView)
+        // 해당 위치의 indexPath 값
+        if let indexPath = recentSearchCollectionView.indexPathForItem(at: hitPoint) {
+            // 그 위치에 해당하는 로컬 데이터를 삭제
+            try! localRealm.write {
+                localRealm.delete(searchRecords[indexPath.item])
+            }
+            // 컬렉션뷰를 리로드
+            recentSearchCollectionView.reloadData()
+        }
+    }
+    
     /* peopleFilterView 탭하면 DropDown 뷰를 보여준다 */
     @objc
     private func tapPeopleFilterView() {
@@ -959,6 +976,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             // cell의 텍스트(검색어 기록) 설정
             cell.recentSearchLabel.text = searchRecords[indexPath.item].content
+            cell.xButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
             return cell
         } else if collectionView.tag == 2 {
             // WeeklyTopCollectionViewCell 타입의 cell 생성
