@@ -55,7 +55,7 @@ class ChattingStorageChatViewController: UIViewController {
         $0.minimumLineSpacing = 9
     }
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout).then {
-        $0.backgroundColor = .red
+        $0.backgroundColor = .white
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapCollectionView))
         $0.addGestureRecognizer(gesture)
     }

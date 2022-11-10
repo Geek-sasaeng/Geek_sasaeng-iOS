@@ -20,6 +20,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     // 콘텐츠뷰
+    // 콘텐츠뷰
     lazy var contentView = UIView().then {
         $0.backgroundColor = .white
         $0.isUserInteractionEnabled = true

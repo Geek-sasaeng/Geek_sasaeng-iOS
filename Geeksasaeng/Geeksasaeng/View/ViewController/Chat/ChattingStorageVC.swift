@@ -258,4 +258,9 @@ extension ChattingStorageViewController: UITableViewDelegate, UITableViewDataSou
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let chattingStorageChatVC = ChattingStorageChatViewController()
+        navigationController?.pushViewController(chattingStorageChatVC, animated: true)
+    }
+    
 }
