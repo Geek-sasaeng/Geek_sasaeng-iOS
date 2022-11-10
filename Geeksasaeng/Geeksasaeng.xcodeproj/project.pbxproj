@@ -1171,6 +1171,14 @@
 		A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A9286F58C100278F92 /* DeliveryVC.swift */; };
 		A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
+
+		A2C5B294291926A400BDBAC6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B293291926A400BDBAC6 /* Keys.swift */; };
+		A2C5B295291926A400BDBAC6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B293291926A400BDBAC6 /* Keys.swift */; };
+		A2C5B296291926A400BDBAC6 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B293291926A400BDBAC6 /* Keys.swift */; };
+		A2C5B2992919430400BDBAC6 /* SearchRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B2982919430400BDBAC6 /* SearchRecord.swift */; };
+		A2C5B29A2919430400BDBAC6 /* SearchRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B2982919430400BDBAC6 /* SearchRecord.swift */; };
+		A2C5B29B2919430400BDBAC6 /* SearchRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C5B2982919430400BDBAC6 /* SearchRecord.swift */; };
+
 		A2D2047928885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
@@ -1643,6 +1651,10 @@
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
+
+		A2C5B293291926A400BDBAC6 /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		A2C5B2982919430400BDBAC6 /* SearchRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRecord.swift; sourceTree = "<group>"; };
+
 		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
@@ -1708,6 +1720,7 @@
 				A29F6F842885454200350744 /* Login */,
 				A29F6F852885455700350744 /* Register */,
 				10E8E71A288D735900AF4581 /* DeliveryParty */,
+				A2C5B297291942ED00BDBAC6 /* Search */,
 				10EBEFE7289F557900038EFC /* Chat */,
 				A25D125F28F079E300B4B6AD /* Profile */,
 			);
@@ -2612,6 +2625,14 @@
 				1036F0A5291A7E1500306840 /* Keys.swift */,
 			);
 			path = Secret;
+			sourceTree = "<group>";
+		};
+		A2C5B297291942ED00BDBAC6 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				A2C5B2982919430400BDBAC6 /* SearchRecord.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		A2D2047728885A14002350C8 /* ReportParty */ = {
@@ -3757,6 +3778,7 @@
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
 				1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				A2AF5395289696810052F734 /* ReportAPI.swift in Sources */,
+				A2C5B2992919430400BDBAC6 /* SearchRecord.swift in Sources */,
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				106D78A928F7B8D500CA6F4A /* ChattingStorageChatVC.swift in Sources */,
 				A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
@@ -3909,6 +3931,7 @@
 				10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				108B6335288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
+				A2C5B29A2919430400BDBAC6 /* SearchRecord.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A225E10B28ADE06A00029686 /* CommunityVC.swift in Sources */,
@@ -3978,6 +4001,7 @@
 				10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513F1F287872D70029C279 /* EmailAuthModel.swift in Sources */,
 				A248D89F289FF344000E2422 /* BankAccountVC.swift in Sources */,
+				A2C5B29B2919430400BDBAC6 /* SearchRecord.swift in Sources */,
 				A2B420A7286F370F00278F92 /* PartyVC.swift in Sources */,
 				A26780B628AD64050078350D /* RecentPartyViewModel.swift in Sources */,
 				A2E6416C2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,

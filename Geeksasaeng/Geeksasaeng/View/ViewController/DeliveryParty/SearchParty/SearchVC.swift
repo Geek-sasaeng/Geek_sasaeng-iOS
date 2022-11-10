@@ -7,6 +7,7 @@
 
 import UIKit
 
+import RealmSwift
 import SnapKit
 import Then
 
@@ -15,8 +16,7 @@ class SearchViewController: UIViewController {
     // MARK: - Properties
     
     // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
-    var recentSearchDataArray = ["중식", "한식", "이야기", "이야기", "이야기",
-                                 "중식", "한식", "이야기", "이야기", "이야기"]
+    var recentSearchDataArray: Results<SearchRecord>?
     var weeklyTopDataArray = ["치킨", "마라샹궈", "마라탕", "탕수육", "피자",
                               "족발", "빵", "냉면", "커피", "떡볶이"]
     var timeDataArray = ["아침", "점심", "저녁", "야식"]
@@ -46,6 +46,9 @@ class SearchViewController: UIViewController {
     var deliveryCellDataArray: [DeliveryListModelResult] = []
     // 현재 검색하고 있는 키워드를 저장 (구별을 위해)
     var nowSearchKeyword: String = ""
+    
+    // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
+    let localRealm = try! Realm()
     
     // MARK: - Subviews
     
@@ -78,6 +81,10 @@ class SearchViewController: UIViewController {
         if let name = dormitoryInfo?.name {
             $0.text = "\("제" + name) Weekly TOP 10"
         }
+    }
+    
+    var noSearchRecordsLabel = UILabel().then {
+        $0.text = "검색어 기록이 없어요!"
     }
     
     // 최근 검색어 기록 Collection View의 레이아웃 설정
@@ -211,7 +218,7 @@ class SearchViewController: UIViewController {
         // 셀 사이 좌우 간격 설정
         $0.minimumInteritemSpacing = 9
     }
-   
+    
     /* Time Filter -> 컬렉션뷰로 */
     lazy var timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout).then {
         $0.backgroundColor = .white
@@ -234,7 +241,6 @@ class SearchViewController: UIViewController {
     
     /* 검색 결과 없을 때 띄울 뷰 */
     lazy var noResultLabel = UILabel().then {
-        $0.text = "에 대한 검색 결과가 없습니다."
         $0.textColor = .init(hex: 0x2F2F2F)
     }
     lazy var noSearchResultView = UIView().then { view in
@@ -307,12 +313,18 @@ class SearchViewController: UIViewController {
             weeklyTopCollectionView,
             timeCollectionView
         ].forEach { setCollectionView($0) }
-
+        
         setTableView()
         
         // 검색 결과 화면 숨기기 - 초기화
         showSearchMainView()
         setTapGestures()
+        
+        // 최근 검색어 기록 불러오기
+        loadSearchRecords()
+        
+        // Realm 파일 위치
+        print("DEBUG: ", Realm.Configuration.defaultConfiguration.fileURL!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -340,6 +352,7 @@ class SearchViewController: UIViewController {
     
     private func addSubViews() {
         [
+            noSearchRecordsLabel,
             searchTextField,
             searchButton,
             recentSearchLabel, dormitoryWeeklyTopLabel,
@@ -374,28 +387,27 @@ class SearchViewController: UIViewController {
             make.left.equalToSuperview().inset(23)
             make.top.equalTo(searchTextField.snp.bottom).offset(45)
         }
+        recentSearchCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(28)
+        }
+        
+        firstSeparateView.snp.makeConstraints { make in
+            make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(17)
+            make.width.equalToSuperview()
+            make.height.equalTo(8)
+        }
+        
         dormitoryWeeklyTopLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(23)
             make.top.equalTo(firstSeparateView.snp.bottom).offset(21)
         }
-        
-        recentSearchCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
-            make.left.right.equalToSuperview().inset(28)
-            make.bottom.equalTo(firstSeparateView.snp.top).offset(-17)
-        }
-        
         weeklyTopCollectionView.snp.makeConstraints { make in
             make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(15)
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(70)
             make.height.equalTo(170)
-        }
-        
-        firstSeparateView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchLabel.snp.bottom).offset(61)
-            make.width.equalToSuperview()
-            make.height.equalTo(8)
         }
         
         logoImageView.snp.makeConstraints { make in
@@ -468,13 +480,13 @@ class SearchViewController: UIViewController {
         
         if collectionView.tag == 1 {
             collectionView.register(RecentSearchCollectionViewCell.self,
-                                      forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
+                                    forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
         } else if collectionView.tag == 2 {
             collectionView.register(WeeklyTopCollectionViewCell.self,
-                                      forCellWithReuseIdentifier: WeeklyTopCollectionViewCell.identifier)
+                                    forCellWithReuseIdentifier: WeeklyTopCollectionViewCell.identifier)
         } else {
             collectionView.register(TimeCollectionViewCell.self,
-                                      forCellWithReuseIdentifier: TimeCollectionViewCell.identifier)
+                                    forCellWithReuseIdentifier: TimeCollectionViewCell.identifier)
         }
     }
     
@@ -512,6 +524,16 @@ class SearchViewController: UIViewController {
         }
     }
     
+    /* 로컬에서 최근 검색어 기록 불러오기 */
+    private func loadSearchRecords() {
+        self.recentSearchDataArray = localRealm.objects(SearchRecord.self).sorted(byKeyPath: "createdAt", ascending: false)
+        recentSearchCollectionView.reloadData()
+        print("[TEST] 최근 검색어 몇개?", self.recentSearchDataArray?.count)
+        
+        // 최근 검색어 갯수 점검
+        checkSearchRecordsNum()
+    }
+    
     /* 배달 파티 검색 */
     private func getSearchedDeliveryList(_ input: DeliveryListInput) {
         guard let keyword = searchTextField.text,
@@ -541,6 +563,7 @@ class SearchViewController: UIViewController {
     /* 검색 메인 화면을 숨겨서 검색 결과 화면을 보여준다! */
     private func showSearchResultView() {
         [
+            noSearchRecordsLabel,
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
@@ -564,6 +587,7 @@ class SearchViewController: UIViewController {
     /* 검색 결과 화면을 숨겨서 검색 메인 화면을 보여준다! */
     private func showSearchMainView() {
         [
+            noSearchRecordsLabel,
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
@@ -582,6 +606,27 @@ class SearchViewController: UIViewController {
             blurView,
             noSearchResultView
         ].forEach { $0.isHidden = true }
+        
+        // 검색 메인 화면 보여줄 때마다 최근 검색어 기록 불러오기 (업데이트)
+        loadSearchRecords()
+    }
+    
+    // 최근 검색어 기록의 갯수에 따라 알맞은 동작 실행
+    private func checkSearchRecordsNum() {
+        guard let searchRecords = recentSearchDataArray else { return }
+        // 0개이면 컬렉션뷰 숨기고 안내 text 띄우기
+        if searchRecords.isEmpty {
+            recentSearchCollectionView.isHidden = true
+            noSearchRecordsLabel.isHidden = false
+            noSearchRecordsLabel.snp.makeConstraints { make in
+                make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
+                make.left.right.equalToSuperview().inset(28)
+            }
+        } else {
+            // 데이터가 있으면 컬렉션뷰 보이게 하고 안내 text 숨기기
+            recentSearchCollectionView.isHidden = false
+            noSearchRecordsLabel.isHidden = true
+        }
     }
     
     /* peopleFilter를 사용하여 데이터 가져오기 */
@@ -613,7 +658,7 @@ class SearchViewController: UIViewController {
             num = nil
         }
         print("TEST: ", num ?? -1)
-
+        
         if let num = num {
             nowPeopleFilter = num
             print("DEBUG:", nowPeopleFilter as Any, nowTimeFilter as Any)
@@ -622,11 +667,11 @@ class SearchViewController: UIViewController {
             getSearchedDeliveryList(input)
         }
     }
-
+    
     /* timeFilter를 사용하여 데이터 가져오기 */
     private func getTimeFilterList(text: String?) {
         removeCellData()
-
+        
         // label에 따라 다른 값을 넣어 시간으로 필터링된 배달 목록을 불러온다
         enum TimeOption: String {
             case breakfast = "BREAKFAST"
@@ -745,16 +790,32 @@ class SearchViewController: UIViewController {
         self.partyTableView.isHidden = true
         
         // attributedStr 설정
+        self.noResultLabel.text = "에 대한 검색결과가 없습니다."    // text 내용 초기화!
+        print("test2 nowSearchKeyword", nowSearchKeyword)
         let attributedStr = NSMutableAttributedString()
         attributedStr.append(NSAttributedString(string: nowSearchKeyword, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 14), NSAttributedString.Key.foregroundColor: UIColor.mainColor]))
         attributedStr.append(NSAttributedString(string: self.noResultLabel.text!, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 14)]))
         noResultLabel.attributedText = attributedStr
     }
     
+    // 최근 검색어 객체 생성 후 로컬에 저장하는 함수.
+    private func saveSearchRecords(_ data: String) {
+        if !(data.isEmpty) {
+            // 로컬에 최근 검색어 객체 저장.
+            let searchRecord = SearchRecord(content: data)
+            
+            print("[TEST]", data)
+            try! localRealm.write {
+                localRealm.add(searchRecord)
+            }
+        }
+    }
+    
     // MARK: - @objc Functions
     
     /*
      검색 버튼을 눌렀을 때 실행되는 함수
+     - 최근 검색어 목록에 항목 추가됨
      - API를 통해 검색어가 들어간 배달 파티 리스트를 불러옴
      - 검색 결과 화면을 보여줌
      */
@@ -769,12 +830,32 @@ class SearchViewController: UIViewController {
             nowSearchKeyword = searchTextField.text!
             print("DEBUG: 검색 키워드", nowSearchKeyword)
             showSearchResultView()
+            saveSearchRecords(nowSearchKeyword)
             
             // 검색 결과에 해당하는 데이터가 없으면
             if (deliveryCellDataArray.isEmpty) {
                 // 검색 결과 없다는 뷰 띄우기
                 showNoSearchResult()
             }
+        }
+    }
+    
+    /* 최근 검색어 목록에서 X 버튼 클릭시 실행되는 함수 */
+    @objc
+    private func tapXButton(_ sender: UIButton) {
+        guard let searchRecords = recentSearchDataArray else { return }
+        // 클릭된 X 버튼이 컬렉션뷰 내에서 몇 번째 셀이었는지 변환
+        let hitPoint = sender.convert(CGPoint.zero, to: recentSearchCollectionView)
+        // 해당 위치의 indexPath 값
+        if let indexPath = recentSearchCollectionView.indexPathForItem(at: hitPoint) {
+            // 그 위치에 해당하는 로컬 데이터를 삭제
+            try! localRealm.write {
+                localRealm.delete(searchRecords[indexPath.item])
+            }
+            // 컬렉션뷰를 리로드
+            recentSearchCollectionView.reloadData()
+            // 최근 검색어 기록 점검 -> 빈 값 없는지
+            checkSearchRecordsNum()
         }
     }
     
@@ -898,13 +979,15 @@ class SearchViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+// MARK: - 최근 검색어 기록
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // cell 갯수 설정
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag == 1 {
-            return recentSearchDataArray.count
+            guard let searchRecords = recentSearchDataArray else { return 0 }
+            return searchRecords.count
         } else if collectionView.tag == 2 {
             return weeklyTopDataArray.count
         } else {
@@ -914,13 +997,15 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     // cell 내용 구성
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let searchRecords = recentSearchDataArray else { return UICollectionViewCell() }
         if collectionView.tag == 1 {
             // RecentSearchCollectionViewCell 타입의 cell 생성
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as? RecentSearchCollectionViewCell else {
                 return UICollectionViewCell() }
             
             // cell의 텍스트(검색어 기록) 설정
-            cell.recentSearchLabel.text = recentSearchDataArray[indexPath.item]
+            cell.recentSearchLabel.text = searchRecords[indexPath.item].content
+            cell.xButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
             return cell
         } else if collectionView.tag == 2 {
             // WeeklyTopCollectionViewCell 타입의 cell 생성
@@ -948,10 +1033,22 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
     }
     
+    // cell 클릭시 실행할 동작 정의
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? RecentSearchCollectionViewCell else { return }
+        // 검색 텍스트 필드 값을 클릭한 셀의 text 내용으로 설정
+        self.searchTextField.text = selectedCell.recentSearchLabel.text
+    }
+    
     // 각 cell의 크기 설정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView.tag == 1 {
-            return CGSize(width: recentSearchDataArray[indexPath.item].size(withAttributes: nil).width + 25, height: 28)
+            guard let searchRecords = recentSearchDataArray else { return CGSize() }
+            if (searchRecords[indexPath.item].content.size(withAttributes: nil).width > 50) {
+                return CGSize(width: 100, height: 28)
+            } else {
+                return CGSize(width: searchRecords[indexPath.item].content.size(withAttributes: nil).width + 25, height: 28)
+            }
         } else if collectionView.tag == 2 {
             return CGSize(width: 75, height: 28)
         } else {

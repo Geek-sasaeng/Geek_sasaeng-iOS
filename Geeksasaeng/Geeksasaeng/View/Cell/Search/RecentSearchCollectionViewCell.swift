@@ -21,10 +21,11 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
     var recentSearchLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 14)
         $0.textColor = .init(hex: 0x5B5B5B)
+        $0.lineBreakMode = .byTruncatingTail
     }
     
-    var xImageView = UIImageView().then {
-        $0.image = UIImage(systemName: "xmark")
+    var xButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "xmark"), for: .normal)
         $0.tintColor = .init(hex: 0x5B5B5B)
     }
     
@@ -50,15 +51,16 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
             make.edges.equalToSuperview()
         }
         
-        [recentSearchLabel, xImageView].forEach { contentView.addSubview($0) }
+        [recentSearchLabel, xButton].forEach { contentView.addSubview($0) }
         
         recentSearchLabel.snp.makeConstraints { make in
             make.centerY.left.equalToSuperview()
         }
         
-        xImageView.snp.makeConstraints { make in
+        xButton.snp.makeConstraints { make in
             make.centerY.equalTo(recentSearchLabel)
             make.right.equalToSuperview()
+            make.left.equalTo(recentSearchLabel.snp.right).offset(3)
             make.width.equalTo(13)
             make.height.equalTo(16)
         }

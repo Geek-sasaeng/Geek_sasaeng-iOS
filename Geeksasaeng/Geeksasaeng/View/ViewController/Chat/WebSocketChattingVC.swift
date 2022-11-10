@@ -36,8 +36,8 @@ class WebSocketChattingVC: UIViewController {
     
     // MARK: - Variables
     
-    let exchangeName = "chatting-room-exchange-test5"
-    let queueName = "chatting-room-queue-test5"
+    let exchangeName = "chatting-room-exchange-test2"
+    let queueName = "chatting-room-queue-test2"
     let routingKey = ["chatting.test.room.6368f06515794524d1468be4"]
     let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
@@ -85,7 +85,7 @@ class WebSocketChattingVC: UIViewController {
         let ch = conn.createChannel()
         
         let x = ch.topic(exchangeName)
-        let q = ch.queue(queueName, options: .exclusive)
+        let q = ch.queue(queueName, options: .durable)
         for key in routingKey {
             q.bind(x, routingKey: key)
         }

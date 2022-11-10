@@ -18,6 +18,7 @@ target 'Geeksasaeng' do
   pod 'lottie-ios'
   pod 'Then'
   pod 'RMQClient'
+  pod 'RealmSwift'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths
