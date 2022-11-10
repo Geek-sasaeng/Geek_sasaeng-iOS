@@ -83,6 +83,10 @@ class SearchViewController: UIViewController {
         }
     }
     
+    var noSearchRecordsLabel = UILabel().then {
+        $0.text = "검색어 기록이 없어요!"
+    }
+    
     // 최근 검색어 기록 Collection View의 레이아웃 설정
     let recentSearchCollectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
@@ -348,6 +352,7 @@ class SearchViewController: UIViewController {
     
     private func addSubViews() {
         [
+            noSearchRecordsLabel,
             searchTextField,
             searchButton,
             recentSearchLabel, dormitoryWeeklyTopLabel,
@@ -382,28 +387,27 @@ class SearchViewController: UIViewController {
             make.left.equalToSuperview().inset(23)
             make.top.equalTo(searchTextField.snp.bottom).offset(45)
         }
+        recentSearchCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
+            make.left.right.equalToSuperview().inset(28)
+            make.height.equalTo(28)
+        }
+        
+        firstSeparateView.snp.makeConstraints { make in
+            make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(17)
+            make.width.equalToSuperview()
+            make.height.equalTo(8)
+        }
+        
         dormitoryWeeklyTopLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(23)
             make.top.equalTo(firstSeparateView.snp.bottom).offset(21)
         }
-        
-        recentSearchCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
-            make.left.right.equalToSuperview().inset(28)
-            make.bottom.equalTo(firstSeparateView.snp.top).offset(-17)
-        }
-        
         weeklyTopCollectionView.snp.makeConstraints { make in
             make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(15)
             make.left.equalToSuperview().inset(28)
             make.right.equalToSuperview().inset(70)
             make.height.equalTo(170)
-        }
-        
-        firstSeparateView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchLabel.snp.bottom).offset(61)
-            make.width.equalToSuperview()
-            make.height.equalTo(8)
         }
         
         logoImageView.snp.makeConstraints { make in
@@ -524,7 +528,10 @@ class SearchViewController: UIViewController {
     private func loadSearchRecords() {
         self.recentSearchDataArray = localRealm.objects(SearchRecord.self).sorted(byKeyPath: "createdAt", ascending: false)
         recentSearchCollectionView.reloadData()
-        print("[TEST]", self.recentSearchDataArray?.count)
+        print("[TEST] 최근 검색어 몇개?", self.recentSearchDataArray?.count)
+        
+        // 최근 검색어 갯수 점검
+        checkSearchRecordsNum()
     }
     
     /* 배달 파티 검색 */
@@ -556,6 +563,7 @@ class SearchViewController: UIViewController {
     /* 검색 메인 화면을 숨겨서 검색 결과 화면을 보여준다! */
     private func showSearchResultView() {
         [
+            noSearchRecordsLabel,
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
@@ -579,6 +587,7 @@ class SearchViewController: UIViewController {
     /* 검색 결과 화면을 숨겨서 검색 메인 화면을 보여준다! */
     private func showSearchMainView() {
         [
+            noSearchRecordsLabel,
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
@@ -600,6 +609,24 @@ class SearchViewController: UIViewController {
         
         // 검색 메인 화면 보여줄 때마다 최근 검색어 기록 불러오기 (업데이트)
         loadSearchRecords()
+    }
+    
+    // 최근 검색어 기록의 갯수에 따라 알맞은 동작 실행
+    private func checkSearchRecordsNum() {
+        guard let searchRecords = recentSearchDataArray else { return }
+        // 0개이면 컬렉션뷰 숨기고 안내 text 띄우기
+        if searchRecords.isEmpty {
+            recentSearchCollectionView.isHidden = true
+            noSearchRecordsLabel.isHidden = false
+            noSearchRecordsLabel.snp.makeConstraints { make in
+                make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
+                make.left.right.equalToSuperview().inset(28)
+            }
+        } else {
+            // 데이터가 있으면 컬렉션뷰 보이게 하고 안내 text 숨기기
+            recentSearchCollectionView.isHidden = false
+            noSearchRecordsLabel.isHidden = true
+        }
     }
     
     /* peopleFilter를 사용하여 데이터 가져오기 */
@@ -827,6 +854,8 @@ class SearchViewController: UIViewController {
             }
             // 컬렉션뷰를 리로드
             recentSearchCollectionView.reloadData()
+            // 최근 검색어 기록 점검 -> 빈 값 없는지
+            checkSearchRecordsNum()
         }
     }
     
