@@ -17,8 +17,6 @@ class SearchViewController: UIViewController {
     
     // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
     var recentSearchDataArray: Results<SearchRecord>?
-    var weeklyTopDataArray = ["치킨", "마라샹궈", "마라탕", "탕수육", "피자",
-                              "족발", "빵", "냉면", "커피", "떡볶이"]
     var timeDataArray = ["아침", "점심", "저녁", "야식"]
     
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
@@ -100,22 +98,6 @@ class SearchViewController: UIViewController {
     lazy var recentSearchCollectionView =  UICollectionView(frame: .zero, collectionViewLayout: recentSearchCollectionViewLayout).then {
         $0.backgroundColor = .white
         $0.tag = 1
-        // indicator 숨김
-        $0.showsHorizontalScrollIndicator = false
-    }
-    
-    // Weekly Top 10 Collection View의 레이아웃 설정
-    let weeklyTopCollectionViewLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .horizontal
-        // 셀 사이 좌우 간격 설정
-        $0.minimumLineSpacing = 70
-        $0.minimumInteritemSpacing = 3
-    }
-    
-    /* Weekly Top 10 Collection View */
-    lazy var weeklyTopCollectionView = UICollectionView(frame: .zero, collectionViewLayout: weeklyTopCollectionViewLayout).then {
-        $0.backgroundColor = .white
-        $0.tag = 2
         // indicator 숨김
         $0.showsHorizontalScrollIndicator = false
     }
@@ -224,7 +206,7 @@ class SearchViewController: UIViewController {
     /* Time Filter -> 컬렉션뷰로 */
     lazy var timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout).then {
         $0.backgroundColor = .white
-        $0.tag = 3
+        $0.tag = 2
         // indicator 숨김
         $0.showsHorizontalScrollIndicator = false
     }
@@ -314,7 +296,6 @@ class SearchViewController: UIViewController {
         // collection view 설정
         [
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             timeCollectionView
         ].forEach { setCollectionView($0) }
         
@@ -361,7 +342,6 @@ class SearchViewController: UIViewController {
             searchButton,
             recentSearchLabel, dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             firstSeparateView,
             logoImageView,
             // 이 아래는 검색 결과 화면에 쓰이는 서브뷰들
@@ -396,22 +376,10 @@ class SearchViewController: UIViewController {
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(28)
         }
-        
         firstSeparateView.snp.makeConstraints { make in
             make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(17)
             make.width.equalToSuperview()
             make.height.equalTo(8)
-        }
-        
-        dormitoryWeeklyTopLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
-            make.top.equalTo(firstSeparateView.snp.bottom).offset(21)
-        }
-        weeklyTopCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(15)
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(70)
-            make.height.equalTo(170)
         }
         
         logoImageView.snp.makeConstraints { make in
@@ -485,9 +453,6 @@ class SearchViewController: UIViewController {
         if collectionView.tag == 1 {
             collectionView.register(RecentSearchCollectionViewCell.self,
                                     forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
-        } else if collectionView.tag == 2 {
-            collectionView.register(WeeklyTopCollectionViewCell.self,
-                                    forCellWithReuseIdentifier: WeeklyTopCollectionViewCell.identifier)
         } else {
             collectionView.register(TimeCollectionViewCell.self,
                                     forCellWithReuseIdentifier: TimeCollectionViewCell.identifier)
@@ -571,7 +536,6 @@ class SearchViewController: UIViewController {
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             firstSeparateView,
             logoImageView,
             noSearchResultView
@@ -595,7 +559,6 @@ class SearchViewController: UIViewController {
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             firstSeparateView,
             logoImageView
         ].forEach { $0.isHidden = false }
@@ -983,8 +946,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if collectionView.tag == 1 {
             guard let searchRecords = recentSearchDataArray else { return 0 }
             return searchRecords.count
-        } else if collectionView.tag == 2 {
-            return weeklyTopDataArray.count
         } else {
             return timeDataArray.count
         }
@@ -1001,15 +962,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             // cell의 텍스트(검색어 기록) 설정
             cell.recentSearchLabel.text = searchRecords[indexPath.item].content
             cell.xButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
-            return cell
-        } else if collectionView.tag == 2 {
-            // WeeklyTopCollectionViewCell 타입의 cell 생성
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyTopCollectionViewCell.identifier, for: indexPath) as? WeeklyTopCollectionViewCell else {
-                return UICollectionViewCell() }
-            
-            // cell의 텍스트(검색어 순위, 검색어) 설정
-            cell.rankLabel.text = String(indexPath.item + 1)
-            cell.searchLabel.text = weeklyTopDataArray[indexPath.item]
             return cell
         } else {
             // TimeCollectionViewCell 타입의 cell 생성
@@ -1047,8 +999,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             
             let cellWidth = cell.recentSearchLabel.frame.width + 20
             return CGSize(width: cellWidth, height: 28)
-        } else if collectionView.tag == 2 {
-            return CGSize(width: 75, height: 28)
         } else {
             return CGSize(width: 54, height: 34)
         }
