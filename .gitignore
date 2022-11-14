@@ -4,7 +4,7 @@
 # Ignore Realm pods for watchOS -> upload it all, the file capacity is too large to go upload to github
 /Pods/Realm/core/realm-monorepo.xcframework/watchos-arm64_i386_x86_64-simulator/librealm-monorepo.a
 /Pods/Realm/core/realm-monorepo.xcframework/watchos-armv7k_arm64_32/librealm-monorepo.a
-Geeksasaeng/Pods/Realm/core/realm-monorepo.xcframework/watchos-arm64_i386_x86_64-simulator
+Geeksasaeng/Pods/Realm/core/realm-monorepo.xcframework/watchos-arm64_i386_x86_64-simulator/
 
 ### Swift ###
 Info.plist
