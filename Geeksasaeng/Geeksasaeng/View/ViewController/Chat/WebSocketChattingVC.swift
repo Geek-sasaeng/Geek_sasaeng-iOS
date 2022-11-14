@@ -36,9 +36,9 @@ class WebSocketChattingVC: UIViewController {
     
     // MARK: - Variables
     
-    let exchangeName = "chatting-room-exchange-test2"
-    let queueName = "chatting-room-queue-test2"
-    let routingKey = ["chatting.test.room.6368f06515794524d1468be4"]
+    let exchangeName = "chatting-room-exchange-test10"
+    var queueName = "test1"
+    let routingKey = ["chatting.test.room3.#"]
     let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
     // MARK: - Life Cycle
@@ -47,7 +47,7 @@ class WebSocketChattingVC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setLayouts()
-        emitLogTopic("Hello World")
+//        emitLogTopic("Hello World")
         receiveLogsTopic()
         print("[Rabbit]", rabbitMQUri)
     }
@@ -93,7 +93,7 @@ class WebSocketChattingVC: UIViewController {
         print("[Rabbbit] Waiting for logs.")
         q.subscribe({(_ message: RMQMessage) -> Void in
             guard let msg = String(data: message.body, encoding: .utf8) else { return }
-            
+
             // str - decode
             do {
                 // Chatting 구조체로 decode.
@@ -101,17 +101,17 @@ class WebSocketChattingVC: UIViewController {
                 let data = try decoder.decode(Chatting.self, from: message.body)
                 print("[Rabbit]", data)
                 // Chatting(id=6359598f3391e75a148b7dce, content=태규3, baseEntity=BaseEntity(createdAt=10/26/22, 4:00 PM, updatedAt=10/26/22, 4:00 PM, status=ACTIVE))
-                
+
                 guard let id = data.chattingRoomId, let content = data.content, let createdAt = data.createdAt else { return }
                 print("[Rabbit] 값 가져오기: ", id, content, createdAt) // 6359598f3391e75a148b7dce, 태규3, 2022-10-29 16:02:17
-                
+
                 DispatchQueue.main.async {
                     self.receivedText.text = "\(id)\n\(content)\n\(createdAt)"
                 }
             } catch {
                 print(error)
             }
-            
+
             print("[Rabbit] Received RoutingKey: \(message.routingKey!), Message: \(msg)")
             print("[Rabbit] Message Info: \n consumerTag \(message.consumerTag ?? "nil값"), deliveryTag \(message.deliveryTag ?? 0), exchangeName \(message.exchangeName ?? "nil값")")
         })
