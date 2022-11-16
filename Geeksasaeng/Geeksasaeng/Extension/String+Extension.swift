@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 extension String {
     func isValidId() -> Bool {
@@ -30,6 +31,12 @@ extension String {
         let nicknameValidation = NSPredicate.init(format: "SELF MATCHES %@", nicknameExpression)
         
         return nicknameValidation.evaluate(with: self)
+    }
+    
+    // 계좌 번호 Validation 확인 -> 숫자로만 이루어져 있는지
+    func isValidAccountNum() -> Bool {
+        let accountExpression = "^[0-9]*$"
+        return (self.range(of: accountExpression, options: .regularExpression ) != nil)
     }
     
     /* limit만큼 text를 잘라서 return 해주는 함수 */
