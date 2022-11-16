@@ -131,6 +131,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             $0.setDeactivatedButton()
             $0.setTitleColor(.init(hex: 0xD8D8D8), for: .normal)
             $0.backgroundColor = .white
+            $0.addTarget(self, action: #selector(tapCheckButton(sender: )), for: .touchUpInside)
         }
         
         /* 비밀번호 표시 버튼 공통 설정 */
@@ -360,6 +361,48 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
+    
+    @objc
+    private func tapCheckButton(sender: UIButton) {
+        if sender == nicknameCheckButton { // 닉네임 중복 확인 버튼일 경우
+            guard let isValidNickname = nicknameDataTextField.text?.isValidNickname() else { return }
+            if isValidNickname { // validation 적합한 경우 -> 닉네임 중복 확인 API 호출
+                guard let newNickname = nicknameDataTextField.text else { return }
+                let input = NickNameRepetitionInput(nickName: newNickname)
+                RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
+                    switch isSuccess {
+                    case .success:
+                        self.showToast(viewController: self, message: "사용 가능한 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    case .onlyRequestSuccess:
+                        self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    case .failure:
+                        self.showToast(viewController: self, message: "중복되는 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    }
+                }
+            } else { // validation 부적합한 경우 -> Alert
+                self.showToast(viewController: self, message: "입력 조건을 확인해주세요", font: .customFont(.neoBold, size: 15), color: .red)
+            }
+            
+        } else { // 아이디 중복 확인 버튼일 경우
+            guard let isValidId = idDataTextField.text?.isValidId() else { return }
+            if isValidId { // validation 적합한 경우 -> 아이디 중복 확인 API 호출
+                guard let newId = idDataTextField.text else { return }
+                let input = IdRepetitionInput(loginId: newId)
+                RepetitionAPI.checkIdRepetition(input) { isSuccess, message in
+                    switch isSuccess {
+                    case .success:
+                        self.showToast(viewController: self, message: "사용 가능한 아이디입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    case .onlyRequestSuccess:
+                        self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    case .failure:
+                        self.showToast(viewController: self, message: "중복되는 아이디입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    }
+                }
+            } else { // validation 부적합한 경우 -> Alert
+                self.showToast(viewController: self, message: "입력 조건을 확인해주세요", font: .customFont(.neoBold, size: 15), color: .red)
+            }
+        }
+    }
 }
 
 extension EditMyInfoViewController: UITextFieldDelegate {
@@ -401,9 +444,25 @@ extension EditMyInfoViewController: UITextFieldDelegate {
             idCheckButton.setTitleColor(.init(hex: 0xD8D8D8), for: .normal)
             idCheckButton.backgroundColor = .white
         case passwordDataTextField:
-            passwordChangeValidationLabel.isHidden = true
+            if let isValidPassword = passwordDataTextField.text?.isValidPassword() {
+                if isValidPassword == false { // password validation에 적합하지 않다면
+                    passwordDataTextField.subviews.first?.backgroundColor = .red
+                    passwordChangeValidationLabel.textColor = .red
+                } else {
+                    passwordChangeValidationLabel.isHidden = true
+                    passwordDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
+                }
+            }
         case passwordCheckDataTextField:
-            passwordCheckValidationLabel.isHidden = true
+            guard let passwordCheckText = passwordCheckDataTextField.text else { return }
+            if passwordCheckText == passwordDataTextField.text { // 비밀번호가 같다면
+                passwordCheckValidationLabel.isHidden = true
+                passwordCheckDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
+            } else {
+                passwordCheckDataTextField.subviews.first?.backgroundColor = .red
+                passwordCheckValidationLabel.textColor = .red
+                passwordCheckValidationLabel.text = "비밀번호가 다릅니다"
+            }
         default:
             return
         }
