@@ -21,7 +21,6 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
     var recentSearchLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 14)
         $0.textColor = .init(hex: 0x5B5B5B)
-        $0.lineBreakMode = .byTruncatingTail
     }
     
     var xButton = UIButton().then {

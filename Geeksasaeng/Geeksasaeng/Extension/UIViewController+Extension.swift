@@ -23,7 +23,7 @@ extension UIViewController {
         
         viewController.view.addSubview(toastLabel)
         toastLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(viewController.view.center)
+            make.centerX.equalToSuperview()
             make.width.equalTo(width)
             make.height.equalTo(height)
             make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)

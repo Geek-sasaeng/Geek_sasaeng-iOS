@@ -17,8 +17,6 @@ class SearchViewController: UIViewController {
     
     // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
     var recentSearchDataArray: Results<SearchRecord>?
-    var weeklyTopDataArray = ["치킨", "마라샹궈", "마라탕", "탕수육", "피자",
-                              "족발", "빵", "냉면", "커피", "떡볶이"]
     var timeDataArray = ["아침", "점심", "저녁", "야식"]
     
     // 필터뷰가 DropDown 됐는지 안 됐는지 확인하기 위한 변수
@@ -84,7 +82,9 @@ class SearchViewController: UIViewController {
     }
     
     var noSearchRecordsLabel = UILabel().then {
-        $0.text = "검색어 기록이 없어요!"
+        $0.text = "검색어 기록이 없어요"
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = UIColor(hex: 0x5B5B5B)
     }
     
     // 최근 검색어 기록 Collection View의 레이아웃 설정
@@ -98,22 +98,6 @@ class SearchViewController: UIViewController {
     lazy var recentSearchCollectionView =  UICollectionView(frame: .zero, collectionViewLayout: recentSearchCollectionViewLayout).then {
         $0.backgroundColor = .white
         $0.tag = 1
-        // indicator 숨김
-        $0.showsHorizontalScrollIndicator = false
-    }
-    
-    // Weekly Top 10 Collection View의 레이아웃 설정
-    let weeklyTopCollectionViewLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .horizontal
-        // 셀 사이 좌우 간격 설정
-        $0.minimumLineSpacing = 70
-        $0.minimumInteritemSpacing = 3
-    }
-    
-    /* Weekly Top 10 Collection View */
-    lazy var weeklyTopCollectionView = UICollectionView(frame: .zero, collectionViewLayout: weeklyTopCollectionViewLayout).then {
-        $0.backgroundColor = .white
-        $0.tag = 2
         // indicator 숨김
         $0.showsHorizontalScrollIndicator = false
     }
@@ -222,7 +206,7 @@ class SearchViewController: UIViewController {
     /* Time Filter -> 컬렉션뷰로 */
     lazy var timeCollectionView = UICollectionView(frame: .zero, collectionViewLayout: timeCollectionViewLayout).then {
         $0.backgroundColor = .white
-        $0.tag = 3
+        $0.tag = 2
         // indicator 숨김
         $0.showsHorizontalScrollIndicator = false
     }
@@ -240,10 +224,12 @@ class SearchViewController: UIViewController {
     }
     
     /* 검색 결과 없을 때 띄울 뷰 */
-    lazy var noResultLabel = UILabel().then {
-        $0.textColor = .init(hex: 0x2F2F2F)
-    }
     lazy var noSearchResultView = UIView().then { view in
+        let noResultLabel = UILabel().then {
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.text = "요청하신 검색 결과가 없습니다."
+            $0.font = .customFont(.neoRegular, size: 14)
+        }
         let resultImageView = UIImageView(image: UIImage(named: "NoSearchResult"))
         let guideLabel = UILabel().then {
             $0.text = "보다 일반적인 단어로 입력해보세요.\n검색어의 철자 혹은 띄어쓰기를 다시 확인해보세요."
@@ -310,7 +296,6 @@ class SearchViewController: UIViewController {
         // collection view 설정
         [
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             timeCollectionView
         ].forEach { setCollectionView($0) }
         
@@ -357,7 +342,6 @@ class SearchViewController: UIViewController {
             searchButton,
             recentSearchLabel, dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             firstSeparateView,
             logoImageView,
             // 이 아래는 검색 결과 화면에 쓰이는 서브뷰들
@@ -392,22 +376,10 @@ class SearchViewController: UIViewController {
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(28)
         }
-        
         firstSeparateView.snp.makeConstraints { make in
             make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(17)
             make.width.equalToSuperview()
             make.height.equalTo(8)
-        }
-        
-        dormitoryWeeklyTopLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
-            make.top.equalTo(firstSeparateView.snp.bottom).offset(21)
-        }
-        weeklyTopCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(dormitoryWeeklyTopLabel.snp.bottom).offset(15)
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(70)
-            make.height.equalTo(170)
         }
         
         logoImageView.snp.makeConstraints { make in
@@ -481,9 +453,6 @@ class SearchViewController: UIViewController {
         if collectionView.tag == 1 {
             collectionView.register(RecentSearchCollectionViewCell.self,
                                     forCellWithReuseIdentifier: RecentSearchCollectionViewCell.identifier)
-        } else if collectionView.tag == 2 {
-            collectionView.register(WeeklyTopCollectionViewCell.self,
-                                    forCellWithReuseIdentifier: WeeklyTopCollectionViewCell.identifier)
         } else {
             collectionView.register(TimeCollectionViewCell.self,
                                     forCellWithReuseIdentifier: TimeCollectionViewCell.identifier)
@@ -567,7 +536,6 @@ class SearchViewController: UIViewController {
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             firstSeparateView,
             logoImageView,
             noSearchResultView
@@ -591,7 +559,6 @@ class SearchViewController: UIViewController {
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            weeklyTopCollectionView,
             firstSeparateView,
             logoImageView
         ].forEach { $0.isHidden = false }
@@ -619,8 +586,8 @@ class SearchViewController: UIViewController {
             recentSearchCollectionView.isHidden = true
             noSearchRecordsLabel.isHidden = false
             noSearchRecordsLabel.snp.makeConstraints { make in
-                make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
-                make.left.right.equalToSuperview().inset(28)
+                make.top.equalTo(recentSearchLabel.snp.bottom).offset(15)
+                make.left.equalToSuperview().inset(28)
             }
         } else {
             // 데이터가 있으면 컬렉션뷰 보이게 하고 안내 text 숨기기
@@ -788,14 +755,6 @@ class SearchViewController: UIViewController {
         // 뷰 띄우기
         self.noSearchResultView.isHidden = false
         self.partyTableView.isHidden = true
-        
-        // attributedStr 설정
-        self.noResultLabel.text = "에 대한 검색결과가 없습니다."    // text 내용 초기화!
-        print("test2 nowSearchKeyword", nowSearchKeyword)
-        let attributedStr = NSMutableAttributedString()
-        attributedStr.append(NSAttributedString(string: nowSearchKeyword, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 14), NSAttributedString.Key.foregroundColor: UIColor.mainColor]))
-        attributedStr.append(NSAttributedString(string: self.noResultLabel.text!, attributes: [NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 14)]))
-        noResultLabel.attributedText = attributedStr
     }
     
     // 최근 검색어 객체 생성 후 로컬에 저장하는 함수.
@@ -979,7 +938,6 @@ class SearchViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
-// MARK: - 최근 검색어 기록
 
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -988,8 +946,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if collectionView.tag == 1 {
             guard let searchRecords = recentSearchDataArray else { return 0 }
             return searchRecords.count
-        } else if collectionView.tag == 2 {
-            return weeklyTopDataArray.count
         } else {
             return timeDataArray.count
         }
@@ -1006,15 +962,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             // cell의 텍스트(검색어 기록) 설정
             cell.recentSearchLabel.text = searchRecords[indexPath.item].content
             cell.xButton.addTarget(self, action: #selector(tapXButton), for: .touchUpInside)
-            return cell
-        } else if collectionView.tag == 2 {
-            // WeeklyTopCollectionViewCell 타입의 cell 생성
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeeklyTopCollectionViewCell.identifier, for: indexPath) as? WeeklyTopCollectionViewCell else {
-                return UICollectionViewCell() }
-            
-            // cell의 텍스트(검색어 순위, 검색어) 설정
-            cell.rankLabel.text = String(indexPath.item + 1)
-            cell.searchLabel.text = weeklyTopDataArray[indexPath.item]
             return cell
         } else {
             // TimeCollectionViewCell 타입의 cell 생성
@@ -1035,22 +982,23 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     // cell 클릭시 실행할 동작 정의
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? RecentSearchCollectionViewCell else { return }
-        // 검색 텍스트 필드 값을 클릭한 셀의 text 내용으로 설정
-        self.searchTextField.text = selectedCell.recentSearchLabel.text
+        if collectionView.tag == 1 {
+            guard let selectedCell = collectionView.cellForItem(at: indexPath) as? RecentSearchCollectionViewCell else { return }
+            // 검색 텍스트 필드 값을 클릭한 셀의 text 내용으로 설정
+            self.searchTextField.text = selectedCell.recentSearchLabel.text
+        }
     }
     
     // 각 cell의 크기 설정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView.tag == 1 {
-            guard let searchRecords = recentSearchDataArray else { return CGSize() }
-            if (searchRecords[indexPath.item].content.size(withAttributes: nil).width > 50) {
-                return CGSize(width: 100, height: 28)
-            } else {
-                return CGSize(width: searchRecords[indexPath.item].content.size(withAttributes: nil).width + 25, height: 28)
-            }
-        } else if collectionView.tag == 2 {
-            return CGSize(width: 75, height: 28)
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecentSearchCollectionViewCell.identifier, for: indexPath) as? RecentSearchCollectionViewCell else { return .zero }
+            // 들어간 검색어 텍스트 + 20만큼 셀의 width를 설정한다. -> 최근 검색어 text 길이 제한 없음
+            cell.recentSearchLabel.text = recentSearchDataArray?[indexPath.item].content
+            cell.recentSearchLabel.sizeToFit()
+            
+            let cellWidth = cell.recentSearchLabel.frame.width + 20
+            return CGSize(width: cellWidth, height: 28)
         } else {
             return CGSize(width: 54, height: 34)
         }
@@ -1146,7 +1094,8 @@ extension SearchViewController: UITextFieldDelegate {
             showSearchMainView()
         }
         
-        return newLength <= 20
+        // 100자 제한
+        return newLength <= 100
     }
     
     // 키보드의 return 버튼 누르면 내려가게, 검색 실행되게
