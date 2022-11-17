@@ -84,7 +84,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
     
-    
     // MARK: - Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,7 +111,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.leftBarButtonItem?.tintColor = .black
         
         navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
-        navigationItem.rightBarButtonItem?.tintColor = .mainColor
     }
     
     private func setAttributes() {
@@ -335,6 +333,16 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func activeRightBarButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(tapConfirmButton))
+        navigationItem.rightBarButtonItem?.tintColor = .mainColor
+    }
+    
+    @objc
+    private func tapConfirmButton() {
+        print("tapConfirmButton")
+    }
+    
     @objc
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -373,6 +381,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                     switch isSuccess {
                     case .success:
                         self.showToast(viewController: self, message: "사용 가능한 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        self.activeRightBarButton()
                     case .onlyRequestSuccess:
                         self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     case .failure:
@@ -392,6 +401,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                     switch isSuccess {
                     case .success:
                         self.showToast(viewController: self, message: "사용 가능한 아이디입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        self.activeRightBarButton()
                     case .onlyRequestSuccess:
                         self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     case .failure:
@@ -458,6 +468,7 @@ extension EditMyInfoViewController: UITextFieldDelegate {
             if passwordCheckText == passwordDataTextField.text { // 비밀번호가 같다면
                 passwordCheckValidationLabel.isHidden = true
                 passwordCheckDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
+                activeRightBarButton()
             } else {
                 passwordCheckDataTextField.subviews.first?.backgroundColor = .red
                 passwordCheckValidationLabel.textColor = .red
