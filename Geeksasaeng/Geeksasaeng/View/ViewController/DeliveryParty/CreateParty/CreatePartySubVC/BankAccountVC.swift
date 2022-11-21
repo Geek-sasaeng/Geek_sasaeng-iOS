@@ -41,12 +41,13 @@ class BankAccountViewController: UIViewController {
         $0.font = .customFont(.neoMedium, size: 15)
         $0.textColor = .init(hex: 0x5B5B5B)
         $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+        $0.delegate = self
     }
     
     /* 계좌 번호 입력하는 텍스트 필드 */
     lazy var accountNumberTextField = UITextField().then {
         $0.attributedPlaceholder = NSAttributedString(
-            string: "계좌번호를 입력하세요",
+            string: "(- 제외) 계좌번호를 입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8),
                          NSAttributedString.Key.font: UIFont.customFont(.neoRegular, size: 15)]
         )
@@ -54,6 +55,7 @@ class BankAccountViewController: UIViewController {
         $0.font = .customFont(.neoMedium, size: 15)
         $0.textColor = .init(hex: 0x5B5B5B)
         $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+        $0.delegate = self
     }
     
     /* 추후 수정이 가능합니다 */
@@ -323,9 +325,37 @@ class BankAccountViewController: UIViewController {
     private func changeValueTitleTextField() {
         guard let bankText = bankTextField.text,
               let accountNumberText = accountNumberTextField.text else { return }
-                
-        if bankText.count >= 1 && accountNumberText.count >= 1 {
+        
+        if bankText.count >= 1
+            && accountNumberText.count >= 1
+            && accountNumberText.isValidAccountNum() {
             confirmButton.setActivatedNextButton()
+        } else {
+            confirmButton.setDeactivatedButton()
         }
+    }
+}
+
+extension BankAccountViewController: UITextFieldDelegate {
+    
+    /* 은행 이름, 계좌번호 글자수 제한 걸어놓은 함수 */
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let bankName = bankTextField.text,
+              let accountNum = accountNumberTextField.text
+        else { return false }
+        
+        // 최대 글자수 이상을 입력한 이후에는 다른 글자를 추가할 수 없게끔 설정
+        // 은행 이름 최대 10글자 제한
+        let bankMax = 10
+        if bankName.count > bankMax && range.length == 0 {
+            return false
+        }
+        
+        // 계좌번호는 최대 15글자 제한
+        let accountMax = 15
+        if accountNum.count > accountMax && range.length == 0 {
+            return false
+        }
+        return true
     }
 }
