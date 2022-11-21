@@ -5,8 +5,6 @@
 //  Created by 조동진 on 2022/07/12.
 //
 
-// TODO: - datePicker에서 year 지우기 -> 는 좀 어려워서 최소/최대 날짜 설정하는 건 어때?
-
 import UIKit
 import SnapKit
 import Then
@@ -187,6 +185,14 @@ class OrderForecastTimeViewController: UIViewController {
         }
     }
     
+    /* 떠있던 pickerView를 아래로 내린다. */
+    private func goDownPicker() {
+        self.dateTextField.resignFirstResponder()
+        self.timeTextField.resignFirstResponder()
+    }
+    
+    // MARK: - @objc Functions
+    
     @objc
     private func changedDatePickerValue() {
         let formatter = DateFormatter()
@@ -219,6 +225,9 @@ class OrderForecastTimeViewController: UIViewController {
         formatter.dateFormat = "HH:mm:ss"
         let time = formatter.string(from: timePicker.date)
         CreateParty.orderTime = "\(date) \(time)"
+        
+        // pickerview 내리기
+        goDownPicker()
         
         // addSubview animation 처리
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
