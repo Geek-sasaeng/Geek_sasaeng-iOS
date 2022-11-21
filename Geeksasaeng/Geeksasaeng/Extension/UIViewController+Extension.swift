@@ -26,7 +26,8 @@ extension UIViewController {
             make.centerX.equalToSuperview()
             make.width.equalTo(width)
             make.height.equalTo(height)
-            make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)
+//            make.top.equalTo(viewController.view.safeAreaInsets.top).offset(75)
+            make.top.equalTo(UIScreen.main.bounds.size.height * 0.15)
         }
         UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {
             toastLabel.alpha = 0.0
