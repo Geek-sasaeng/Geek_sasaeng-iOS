@@ -553,12 +553,19 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             mapView.isUserInteractionEnabled = false
             
             // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526,
-                                                                    longitude: detailData.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            // 마커의 좌표 설정
-            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555))
+            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
             
-            mapView.addPOIItems([marker])
+            // 원래 위치를 표시하던 마커가 있었는지 없었는지를 조건문으로 확인
+            if self.marker.mapPoint != nil {
+                // 원래 있던 마커의 좌표를 이동
+                self.marker.move(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)), withAnimation: true)
+            } else {
+                // 새 마커를 만들어서 좌표 설정
+                self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555))
+                // 맵에 마커 추가
+                mapView.addPOIItems([marker])
+            }
+            
             mapSubView.addSubview(mapView)
         }
     }
