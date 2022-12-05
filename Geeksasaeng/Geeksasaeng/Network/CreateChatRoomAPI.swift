@@ -33,7 +33,7 @@ struct CreateChatRoomModelResult: Decodable {
 /* 배달파티 채팅방 생성 API 연동 */
 class CreateChatRoomAPI {
     
-    /* 신고하기 버튼을 눌러서 파티 신고 요청 */
+    /* 생성된 배달파티의 채팅방 생성 요청 */
     public static func requestCreateChatRoom(_ input : CreateChatRoomInput,
                                              completion: @escaping (Bool, CreateChatRoomModelResult?) -> Void) {
         let url = "https://geeksasaeng.shop/party-chat-room"

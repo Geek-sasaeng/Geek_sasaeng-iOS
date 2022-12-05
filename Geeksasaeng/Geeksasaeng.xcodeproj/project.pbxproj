@@ -1171,6 +1171,9 @@
 		A2CB1F12293DE29E008FAC46 /* CreateChatRoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */; };
 		A2CB1F13293DE29E008FAC46 /* CreateChatRoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */; };
 		A2CB1F14293DE29E008FAC46 /* CreateChatRoomAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */; };
+		A2CB1F16293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB1F15293DF44D008FAC46 /* GetChatRoomListAPI.swift */; };
+		A2CB1F17293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB1F15293DF44D008FAC46 /* GetChatRoomListAPI.swift */; };
+		A2CB1F18293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2CB1F15293DF44D008FAC46 /* GetChatRoomListAPI.swift */; };
 		A2D2047928885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
 		A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D2047828885A65002350C8 /* ReportVC.swift */; };
@@ -1643,6 +1646,7 @@
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
 		A2C5B2982919430400BDBAC6 /* SearchRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRecord.swift; sourceTree = "<group>"; };
 		A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatRoomAPI.swift; sourceTree = "<group>"; };
+		A2CB1F15293DF44D008FAC46 /* GetChatRoomListAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetChatRoomListAPI.swift; sourceTree = "<group>"; };
 		A2D2047828885A65002350C8 /* ReportVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		A2E641652879DD6100B40A63 /* UniversityListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityListViewModel.swift; sourceTree = "<group>"; };
 		A2E641692879DE4700B40A63 /* UniversityNameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityNameModel.swift; sourceTree = "<group>"; };
@@ -2215,6 +2219,7 @@
 				A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */,
 				1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */,
 				A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */,
+				A2CB1F15293DF44D008FAC46 /* GetChatRoomListAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3762,6 +3767,7 @@
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				10AC8B0E2916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				A2E6416A2879DE4700B40A63 /* UniversityNameModel.swift in Sources */,
+				A2CB1F16293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */,
 				1031AAA228981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				A2AF5395289696810052F734 /* ReportAPI.swift in Sources */,
 				A2C5B2992919430400BDBAC6 /* SearchRecord.swift in Sources */,
@@ -3945,6 +3951,7 @@
 				A2085AD3287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				108D5973289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
+				A2CB1F17293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */,
 				A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */,
 				A20B53F7288D7F27006C695E /* TimeCollectionViewCell.swift in Sources */,
 				A26780B528AD64050078350D /* RecentPartyViewModel.swift in Sources */,
@@ -4013,6 +4020,7 @@
 				108B633A28899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				10223104289E68F600042ACC /* MessageModel.swift in Sources */,
 				108D5974289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
+				A2CB1F18293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */,
 				A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				A2035EA7288341B00051498A /* AdModel.swift in Sources */,
