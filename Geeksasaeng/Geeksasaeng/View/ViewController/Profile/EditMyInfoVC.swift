@@ -43,19 +43,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     let passwordLabel = UILabel()
     let passwordCheckLabel = UILabel()
     
-    /* content labels */
-    let dormitoryDataLabel = PaddingLabel().then {
-        $0.backgroundColor = .init(hex: 0xEFEFEF)
-        $0.textColor = .mainColor
-        $0.font = .customFont(.neoMedium, size: 15)
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 5
-        $0.paddingTop = 7
-        $0.paddingBottom = 7
-        $0.paddingLeft = 15
-        $0.paddingRight = 15
-    }
-    
     /* Data TextField */
     lazy var nicknameDataTextField = UITextField()
     lazy var idDataTextField = UITextField()
@@ -83,6 +70,17 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     let editPasswordCheckButton = UIButton()
     
     // MARK: - Properties
+    /* 회원정보 (수정 시 변경) */
+    var checkPassword: String?
+    var dormitoryId: Int?
+    var loginId: String?
+    var nickname: String?
+    var password: String?
+    var profileImg: UIImage?
+    
+    var dormitoryList: [Dormitory]?
+    
+    var selectedDormitory: UIButton?
     
     // MARK: - Life Cycles
     override func viewDidLoad() {
@@ -151,11 +149,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         passwordLabel.text = "비밀번호 변경"
         passwordCheckLabel.text = "비밀번호 확인"
         
-        /* 비밀번호는 일단 더미 데이터 -> API res에 추가해야 할 듯 */
-        /* placeholder로 할 경우 -> 비밀번호 placeholder 보안은 비밀번호 길이만큼 dots를 추가해야 할 듯 */
-        passwordDataTextField.text = "password123!"
-        passwordCheckDataTextField.text = "password123!"
-        
         /* 비밀번호 입력 텍스트 필드 입력 값 가리기 */
         [passwordDataTextField, passwordCheckDataTextField].forEach {
             $0.isSecureTextEntry = true
@@ -187,7 +180,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         
         [
             userImageView,
-            dormitoryLabel, dormitoryDataLabel,
+            dormitoryLabel,
             nicknameLabel, nicknameDataTextField, nicknameCheckButton, editNicknameButton, nicknameValidationLabel,
             idLabel, idDataTextField, idCheckButton, editIdButton, idValidationLabel,
             passwordLabel, passwordDataTextField, showPasswordChangeTextFieldButton, editPasswordChangeButton, passwordChangeValidationLabel,
@@ -217,13 +210,9 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(userImageView.snp.bottom).offset(64)
             make.left.equalToSuperview().inset(23)
         }
-        dormitoryDataLabel.snp.makeConstraints { make in
-            make.top.equalTo(dormitoryLabel.snp.bottom).offset(12)
-            make.left.equalToSuperview().inset(28)
-        }
         
         nicknameLabel.snp.makeConstraints { make in
-            make.top.equalTo(dormitoryDataLabel.snp.bottom).offset(47)
+            make.top.equalTo(dormitoryLabel.snp.bottom).offset(59)
             make.left.equalToSuperview().inset(23)
         }
         nicknameDataTextField.snp.makeConstraints { make in
@@ -323,13 +312,65 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     private func setUserInfo() {
         /* textfield로 변경 */
-        UserInfoAPI.getUserInfo { isSuccess, result in
-            self.dormitoryDataLabel.text = result.dormitoryName
+        UserInfoAPI.getEditUserInfo { isSuccess, result in
             self.nicknameDataTextField.text = result.nickname
             self.idDataTextField.text = result.loginId
             
-            /* passwordDataTextField, passwordDataCheckTextField 초기값 필요 */
+            self.dormitoryId = result.dormitoryId
+            self.loginId = result.loginId
+            self.nickname = result.nickname
             
+            self.dormitoryList = result.dormitoryList
+            
+            self.setDormitoryList(dormitoryList: self.dormitoryList!)
+        }
+    }
+    
+    private func setDormitoryList(dormitoryList: [Dormitory]) {
+        var views: [UIView] = []
+        
+        dormitoryList.forEach { dormitory in
+            let view = UIView().then {
+                $0.clipsToBounds = true
+                $0.layer.cornerRadius = 5
+                $0.snp.makeConstraints { make in
+                    make.width.equalTo(86)
+                    make.height.equalTo(33)
+                }
+            }
+            
+            let button = UIButton().then {
+                $0.setTitle(dormitory.dormitoryName, for: .normal)
+                $0.backgroundColor = .init(hex: 0xF8F8F8)
+                $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
+                $0.addTarget(self, action: #selector(tapDormitoryButton(_:)), for: .touchUpInside)
+                if dormitory.dormitoryId == self.dormitoryId {
+                    $0.setTitleColor(.mainColor, for: .normal)
+                    self.selectedDormitory = $0
+                } else {
+                    $0.setTitleColor(.init(hex: 0xA8A8A8), for: .normal)
+                }
+            }
+            
+            view.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.width.height.equalToSuperview()
+            }
+            
+            views.append(view)
+        }
+        
+        let stackView = UIStackView(arrangedSubviews: views).then {
+            $0.axis = .horizontal
+            $0.spacing = 23
+            $0.distribution = .fillEqually
+            $0.alignment = .center
+        }
+        
+        self.view.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(dormitoryLabel.snp.bottom).offset(12)
         }
     }
     
@@ -340,7 +381,35 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapConfirmButton() {
-        print("tapConfirmButton")
+        let input: EditUserInput?
+        // TODO: - 기숙사, 이미지 처리
+        if let _ = self.checkPassword { // 비밀번호를 변경했을 경우
+            input = EditUserInput(
+                checkPassword: self.checkPassword,
+                dormitoryId: self.dormitoryId,
+                loginId: self.loginId,
+                nickname: self.nickname,
+                password: self.password
+            )
+        } else { // 비밀번호를 변경하지 않았을 경우
+            input = EditUserInput(
+                checkPassword: "",
+                dormitoryId: self.dormitoryId,
+                loginId: self.loginId,
+                nickname: self.nickname,
+                password: ""
+            )
+        }
+        
+        UserInfoAPI.editUser(input!, imageData: UIImage(systemName: "pencil")!) { isSuccess, result in
+            if isSuccess {
+                print("회원정보 수정 완료")
+                self.setUserInfo()
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                print("회원정보 수정 실패")
+            }
+        }
     }
     
     @objc
@@ -380,6 +449,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
                     switch isSuccess {
                     case .success:
+                        self.nickname = newNickname
                         self.showToast(viewController: self, message: "사용 가능한 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                         self.activeRightBarButton()
                     case .onlyRequestSuccess:
@@ -400,6 +470,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 RepetitionAPI.checkIdRepetition(input) { isSuccess, message in
                     switch isSuccess {
                     case .success:
+                        self.loginId = newId
                         self.showToast(viewController: self, message: "사용 가능한 아이디입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                         self.activeRightBarButton()
                     case .onlyRequestSuccess:
@@ -410,6 +481,23 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 }
             } else { // validation 부적합한 경우 -> Alert
                 self.showToast(viewController: self, message: "입력 조건을 확인해주세요", font: .customFont(.neoBold, size: 15), color: .red)
+            }
+        }
+    }
+    
+    @objc
+    private func tapDormitoryButton(_ sender: UIButton) {
+        if sender != selectedDormitory {
+            activeRightBarButton()
+            
+            selectedDormitory?.setTitleColor(.init(hex: 0xA8A8A8), for: .normal)
+            selectedDormitory = sender
+            selectedDormitory?.setTitleColor(.mainColor, for: .normal)
+            
+            dormitoryList?.forEach {
+                if $0.dormitoryName == sender.titleLabel?.text {
+                    self.dormitoryId = $0.dormitoryId
+                }
             }
         }
     }
@@ -459,6 +547,7 @@ extension EditMyInfoViewController: UITextFieldDelegate {
                     passwordDataTextField.subviews.first?.backgroundColor = .red
                     passwordChangeValidationLabel.textColor = .red
                 } else {
+                    password = passwordDataTextField.text
                     passwordChangeValidationLabel.isHidden = true
                     passwordDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
                 }
@@ -466,6 +555,7 @@ extension EditMyInfoViewController: UITextFieldDelegate {
         case passwordCheckDataTextField:
             guard let passwordCheckText = passwordCheckDataTextField.text else { return }
             if passwordCheckText == passwordDataTextField.text { // 비밀번호가 같다면
+                checkPassword = passwordCheckText
                 passwordCheckValidationLabel.isHidden = true
                 passwordCheckDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
                 activeRightBarButton()
