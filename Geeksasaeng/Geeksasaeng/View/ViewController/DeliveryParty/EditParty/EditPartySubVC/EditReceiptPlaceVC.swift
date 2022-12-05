@@ -217,8 +217,8 @@ class EditReceiptPlaceViewController: UIViewController {
                 let coordinate = location?.coordinate
                 
                 // 검색된 위치로 맵의 중심을 이동
-                let searchedPlace = MTMapPointGeo(latitude: coordinate?.latitude ?? 0, longitude: coordinate?.longitude ?? 0)
-                self.mapView!.setMapCenter(MTMapPoint(geoCoord: searchedPlace), zoomLevel: 5, animated: true)
+                let searchedMapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: coordinate?.latitude ?? 0, longitude: coordinate?.longitude ?? 0))
+                self.mapView!.setMapCenter(searchedMapPoint, zoomLevel: 5, animated: true)
                 
                 // API Request를 위해 전역에 좌표 저장
                 self.latitude = coordinate?.latitude ?? 0
@@ -228,8 +228,9 @@ class EditReceiptPlaceViewController: UIViewController {
                 CreateParty.latitude = self.latitude
                 CreateParty.longitude = self.longitude
                 
-                // 검색된 위치로 마커 이동
-                self.marker.mapPoint = MTMapPoint(geoCoord: searchedPlace)
+                // 위치를 검색할 때에는 당연히 이미 마커가 놓여진 상태니까
+                // 분기 처리할 필요없이 지금 있는 마커의 좌표만 이동시키면 된다.
+                self.marker.move(searchedMapPoint, withAnimation: true)
                 
                 // 주소 추출
                 if let administrativeArea = placemark?.administrativeArea,
