@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-class PaaswordCheckViewController: UIViewController {
+class PasswordCheckViewController: UIViewController {
     
     // MARK: - SubViews
     
@@ -68,6 +68,7 @@ class PaaswordCheckViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
 
+        setNotificationCenter()
         setViewLayout()
         addSubViews()
         setLayouts()
@@ -77,6 +78,16 @@ class PaaswordCheckViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+    }
+    
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("ClosePasswordCheckVC"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                self.view.removeFromSuperview()
+                self.removeFromParent()
+            }
+        }
     }
 
     private func setViewLayout() {
@@ -131,17 +142,19 @@ class PaaswordCheckViewController: UIViewController {
     /* 다음 버튼 누르면 실행되는 함수 */
     @objc
     private func tapNextButton() {
-        // API 호출 (비밀번호 맞는지 확인)
+        guard let password = passwordTextField.text else { return }
+        let passwordInput = PasswordCheckInput(password: password)
         
-        
-        // 비밀번호 틀렸을 때 -> TextField 하단에 notice
-//        passwordCheckLabel.isHidden = false
-//        passwordTextField.subviews.first?.backgroundColor = .red
-        
-        
-        // 비밀번호 맞았을 때 -> 수정 화면으로 이동
-        let editMyInfoVC = EditMyInfoViewController()
-        navigationController?.pushViewController(editMyInfoVC, animated: true)
+        UserInfoAPI.passwordCheck(passwordInput) { isSuccess, message in
+            if isSuccess { // 비밀번호 맞았을 때 -> 수정 화면으로 이동
+                let editMyInfoVC = EditMyInfoViewController()
+                self.navigationController?.pushViewController(editMyInfoVC, animated: true)
+                self.tapBackButton()
+            } else { // 비밀번호 틀렸을 때 -> TextField 하단에 notice
+                self.passwordCheckLabel.isHidden = false
+                self.passwordTextField.subviews.first?.backgroundColor = .red
+            }
+        }
     }
     
     /* 백버튼 눌렀을 때 실행 -> 이전 화면으로 돌아간다 */

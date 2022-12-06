@@ -319,16 +319,6 @@ class ChattingViewController: UIViewController {
         view.backgroundColor = .init(hex: 0xF6F9FB)
         view.layer.opacity = 0.9
         
-        let orderCompletedImageView = UIImageView().then {
-            $0.image = UIImage(named: "OrderCompletedIcon")
-        }
-        
-        let showMenuLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 14)
-            $0.textColor = .init(hex: 0x2F2F2F)
-            $0.text = "메뉴판 보기"
-        }
-        
         let orderCompletedButton = UIButton().then {
             $0.setTitle("주문 완료", for: .normal)
             $0.titleLabel?.font = .customFont(.neoMedium, size: 11)
@@ -339,21 +329,9 @@ class ChattingViewController: UIViewController {
             // TODO: - 채팅 구현 후 addTarget 설정
         }
         
-        [orderCompletedImageView, showMenuLabel, orderCompletedButton].forEach {
-            view.addSubview($0)
-        }
-        orderCompletedImageView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(29)
-            make.width.height.equalTo(24)
-        }
-        showMenuLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalTo(orderCompletedImageView.snp.right).offset(8)
-        }
+        view.addSubview(orderCompletedButton)
         orderCompletedButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(28)
+            make.center.equalToSuperview()
             make.width.equalTo(67)
             make.height.equalTo(29)
         }
