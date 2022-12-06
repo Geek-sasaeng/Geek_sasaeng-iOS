@@ -8,13 +8,13 @@
 import Foundation
 import Alamofire
 
+/* 회원정보 화면을 위한 모델 */
 struct UserInfoModel: Decodable {
-    var isSuccess: Bool?
     var code: Int?
+    var isSuccess: Bool?
     var message: String?
     var result: UserInfoModelResult?
 }
-
 struct UserInfoModelResult: Decodable {
     var id: Int?
     var loginId: String?
@@ -35,6 +35,66 @@ struct UserInfoModelResult: Decodable {
     var fcmToken: String?
 }
 
+/* 회원정보 수정 시 비밀번호 확인을 위한 모델 */
+struct PasswordCheckInput: Encodable {
+    var password: String?
+}
+struct PasswordCheckModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
+}
+
+/* 회원정보 수정화면을 위한 모델 */
+struct EditUserInfoModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: EditUserInfoModelResult?
+}
+struct EditUserInfoModelResult: Decodable {
+    var dormitoryId: Int?
+    var dormitoryList: [Dormitory]?
+    var dormitoryName: String?
+    var imgUrl: String?
+    var loginId: String?
+    var nickname: String?
+}
+struct Dormitory: Decodable {
+    var dormitoryId: Int?
+    var dormitoryName: String?
+}
+
+/* 회원정보 수정 POST를 위한 모델 */
+struct EditUserInput: Encodable {
+    var checkPassword: String?
+    var dormitoryId: Int?
+    var loginId: String?
+    var nickname: String?
+    var password: String?
+//    var profileImg: imageFile?
+}
+//struct imageFile: Codable {
+//    private let image: Data
+//    private init(image: UIImage) {
+//        self.image = image.pngData()!
+//    }
+//}
+struct EditUserModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: EditUserModelResult?
+}
+struct EditUserModelResult: Decodable {
+    var dormitoryId: Int?
+    var dormitoryName: String?
+    var loginId: String?
+    var nickname: String?
+    var profileImgUrl: String?
+}
+
 class UserInfoAPI {
     public static func getUserInfo(completion: @escaping (Bool, UserInfoModelResult) -> Void) {
         AF.request("https://geeksasaeng.shop/members", method: .get, parameters: nil,
@@ -51,6 +111,81 @@ class UserInfoAPI {
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+            }
+        }
+    }
+    
+    public static func passwordCheck(_ parameter: PasswordCheckInput, completion: @escaping (Bool, String) -> Void) {
+        AF.request("https://geeksasaeng.shop/members/password", method: .post ,parameters: parameter, encoder: JSONParameterEncoder.default, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+            .validate()
+            .responseDecodable(of: PasswordCheckModel.self) { response in
+                switch response.result {
+                case .success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 비밀번호 일치")
+                        completion(true, result.message!)
+                    } else {
+                        completion(false, "password is not correct")
+                        print("DEBUG: 비밀번호 불일치")
+                    }
+                case .failure(let error):
+                    print("DEBUG: ", error.localizedDescription)
+                }
+            }
+    }
+    
+    public static func getEditUserInfo(completion: @escaping (Bool, EditUserInfoModelResult) -> Void) {
+        AF.request("https://geeksasaeng.shop/members/info", method: .get, parameters: nil,
+        headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: EditUserInfoModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 유저 정보 불러오기 성공")
+                    completion(result.isSuccess!, result.result!)
+                } else {
+                    print("DEBUG:", result.message!)
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+            }
+        }
+    }
+    
+    public static func editUser(_ parameter: EditUserInput, imageData: UIImage, completion: @escaping (Bool, EditUserModelResult) -> Void) {
+        let URL = "https://geeksasaeng.shop/members/info"
+        let header : HTTPHeaders = [
+            "Content-Type" : "multipart/form-data",
+            "Authorization": "Bearer " + (LoginModel.jwt ?? "")
+        ]
+        let parameters: [String: Any] = [
+            "checkPassword": parameter.checkPassword!,
+            "dormitoryId": parameter.dormitoryId!,
+            "loginId": parameter.loginId!,
+            "nickname": parameter.nickname!,
+            "password": parameter.password!
+        ]
+        
+        AF.upload(multipartFormData: { multipartFormData in
+            for (key, value) in parameters {
+                multipartFormData.append("\(value)".data(using: .utf8)!, withName: key)
+            }
+            if let image = imageData.pngData() {
+                multipartFormData.append(image, withName: "profileImg", fileName: "\(image).png", mimeType: "image/png")
+            }
+        }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header).validate().responseDecodable(of: EditUserModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 사용자 정보 수정 성공")
+                    completion(true, result.result!)
+                } else {
+                    completion(false, result.result!)
+                    print("DEBUG: 사용자 정보 수정 실패")
+                }
+            case .failure(let error):
+                print("DEBUG: ", error.localizedDescription)
             }
         }
     }

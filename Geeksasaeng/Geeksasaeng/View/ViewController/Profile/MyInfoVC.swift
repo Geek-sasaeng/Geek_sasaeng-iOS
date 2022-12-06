@@ -168,6 +168,13 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     
     // MARK: - Life Cycles
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setUserInfo()
+        removeBlurView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -177,7 +184,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         setAttributes()
         addSubViews()
         setLayouts()
-        setUserInfo()
+//        setUserInfo()
     }
     
     // MARK: - Functions
@@ -326,6 +333,13 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func removeBlurView() {
+        if visualEffectView != nil {
+            visualEffectView?.removeFromSuperview()
+            visualEffectView = nil
+        }
+    }
+    
     @objc
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -337,7 +351,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         // 비밀번호 확인 창 띄우기
         createBlurView()
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = PaaswordCheckViewController()
+            let childView = PasswordCheckViewController()
             self.addChild(childView)
             self.view.addSubview(childView.view)
             childView.view.snp.makeConstraints { make in
@@ -383,6 +397,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
             visualEffectView?.removeFromSuperview()
             visualEffectView = nil
             logoutView.removeFromSuperview()
+            NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
         }
     }
 }
