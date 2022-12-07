@@ -29,25 +29,27 @@ struct JoinPartyModelResult: Decodable {
 class JoinPartyAPI {
     
     /* 파티장이 아닌 유저가 신청하기 눌렀을 때 유저를 partyMember로 추가할 때 사용 */
-    public static func requestJoinParty(_ parameter : JoinPartyInput, completion: @escaping () -> Void) {
+    public static func requestJoinParty(_ parameter : JoinPartyInput,
+                                        completion: @escaping (Bool) -> Void)
+    {
         let url = "https://geeksasaeng.shop/delivery-party-member"
         
         AF.request(url, method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: JoinPartyModel.self) { response in
-            print("왜?", response)
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 배달파티 신청(채팅방에 초대) 성공", result)
-                    // 신청 성공했을 때만 completion 보내준다
-                    completion()
+                    print("DEBUG: 배달파티 신청 성공", result)
+                    completion(result.isSuccess!)
                 } else {
-                    print("DEBUG:", result.message!)
+                    print("DEBUG: 배달파티 신청 실패", result.message!)
+                    completion(result.isSuccess!)
                 }
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
+                print("DEBUG: 배달파티 신청 실패", error.localizedDescription)
+                completion(false)
             }
         }
     }

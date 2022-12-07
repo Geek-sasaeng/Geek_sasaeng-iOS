@@ -87,6 +87,9 @@ class BankAccountViewController: UIViewController {
     // MARK: - Properties
     
     var dormitoryInfo: DormitoryNameResult?
+    // 채팅방 생성 시 받는 채팅방 id값
+    var partyChatRoomId: String?
+    
     // 프로토콜의 함수를 실행하기 위해 delegate를 설정
     var delegate: UpdateDeliveryDelegate?
     let db = Firestore.firestore()
@@ -240,9 +243,10 @@ class BankAccountViewController: UIViewController {
                 ) { isSuccess, result in
                     guard let result = result else { return }
                     if isSuccess {
-                        print("Seori: 성공 \(result)")
+                        self.partyChatRoomId = result.partyChatRoomId
+                        print("DEBUG: 채팅방 생성 성공 \(result)")
                     } else {
-                        print("Seori: 실패 \(result)")
+                        print("DEBUG: 채팅방 생성 실패 \(result)")
                     }
                 }
                 
