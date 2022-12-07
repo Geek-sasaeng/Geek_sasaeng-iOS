@@ -2984,6 +2984,12 @@ The externally maintained libraries used by libuv are:
     n° 289016). Three clause BSD license.
 
 
+## NMapsMap
+
+Copyright © 2018 NAVER Corp.
+All rights reserved.
+
+
 ## PromisesObjC
 
 

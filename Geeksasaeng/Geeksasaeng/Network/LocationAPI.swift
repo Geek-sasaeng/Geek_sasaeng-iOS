@@ -21,7 +21,7 @@ struct LocationModelResult: Decodable {
 }
 
 class LocationAPI {
-    public static func getLocation(_ dormitoryId : Int) {
+    public static func getLocation(_ dormitoryId : Int, completion: @escaping (Bool) -> Void) {
         AF.request("https://geeksasaeng.shop/\(dormitoryId)/default-location", method: .get, parameters: nil,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
@@ -33,11 +33,17 @@ class LocationAPI {
                     
                     CreateParty.latitude = result.result?.latitude
                     CreateParty.longitude = result.result?.longitude
+                    
+                    completion(true)
                 } else {
                     print("DEBUG:", result.message!)
+                    
+                    completion(false)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+                
+                completion(false)
             }
         }
     }

@@ -65,6 +65,9 @@
 #include "absl/strings/match.h"
 
 namespace nanopb = firebase::firestore::nanopb;
+using firebase::firestore::google_firestore_v1_ArrayValue;
+using firebase::firestore::google_firestore_v1_Value;
+using firebase::firestore::google_firestore_v1_Value_fields;
 using firebase::firestore::api::Firestore;
 using firebase::firestore::api::Query;
 using firebase::firestore::api::QueryListenerRegistration;
@@ -74,19 +77,15 @@ using firebase::firestore::api::SnapshotMetadata;
 using firebase::firestore::api::Source;
 using firebase::firestore::core::AsyncEventListener;
 using firebase::firestore::core::Bound;
+using firebase::firestore::core::CompositeFilter;
 using firebase::firestore::core::Direction;
 using firebase::firestore::core::EventListener;
 using firebase::firestore::core::FieldFilter;
 using firebase::firestore::core::Filter;
-using firebase::firestore::core::CompositeFilter;
 using firebase::firestore::core::ListenOptions;
 using firebase::firestore::core::OrderBy;
-using firebase::firestore::core::OrderByList;
 using firebase::firestore::core::QueryListener;
 using firebase::firestore::core::ViewSnapshot;
-using firebase::firestore::google_firestore_v1_ArrayValue;
-using firebase::firestore::google_firestore_v1_Value;
-using firebase::firestore::google_firestore_v1_Value_fields;
 using firebase::firestore::model::DatabaseId;
 using firebase::firestore::model::DeepClone;
 using firebase::firestore::model::Document;
@@ -99,10 +98,10 @@ using firebase::firestore::model::ResourcePath;
 using firebase::firestore::model::TypeOrder;
 using firebase::firestore::nanopb::CheckedSize;
 using firebase::firestore::nanopb::MakeArray;
+using firebase::firestore::nanopb::MakeSharedMessage;
 using firebase::firestore::nanopb::MakeString;
 using firebase::firestore::nanopb::Message;
 using firebase::firestore::nanopb::SharedMessage;
-using firebase::firestore::nanopb::MakeSharedMessage;
 using firebase::firestore::util::MakeNSError;
 using firebase::firestore::util::MakeString;
 using firebase::firestore::util::StatusOr;
@@ -574,7 +573,7 @@ int32_t SaturatedLimitValue(NSInteger limit) {
   }
   const Document &document = *snapshot.internalDocument;
   const DatabaseId &databaseID = self.firestore.databaseID;
-  const OrderByList &order_bys = self.query.order_bys();
+  const std::vector<OrderBy> &order_bys = self.query.order_bys();
 
   SharedMessage<google_firestore_v1_ArrayValue> components{{}};
   components->values_count = CheckedSize(order_bys.size());
@@ -615,7 +614,7 @@ int32_t SaturatedLimitValue(NSInteger limit) {
 /** Converts a list of field values to an Bound. */
 - (Bound)boundFromFieldValues:(NSArray<id> *)fieldValues isInclusive:(BOOL)isInclusive {
   // Use explicit sort order because it has to match the query the user made
-  const OrderByList &explicitSortOrders = self.query.explicit_order_bys();
+  const std::vector<OrderBy> &explicitSortOrders = self.query.explicit_order_bys();
   if (fieldValues.count > explicitSortOrders.size()) {
     ThrowInvalidArgument("Invalid query. You are trying to start or end a query using more values "
                          "than were specified in the order by.");

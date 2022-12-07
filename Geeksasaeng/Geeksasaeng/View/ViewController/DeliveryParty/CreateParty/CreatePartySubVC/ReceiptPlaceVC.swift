@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import CoreLocation
 import Then
+import NMapsMap
 
 class ReceiptPlaceViewController: UIViewController {
     // MARK: - SubViews
@@ -53,10 +54,11 @@ class ReceiptPlaceViewController: UIViewController {
         }
     }
     
-    let mapSubView = UIView().then {
-        $0.backgroundColor = .gray
-        $0.layer.masksToBounds = true
+    let naverMapView = NMFNaverMapView().then {
+        $0.clipsToBounds = true
         $0.layer.cornerRadius = 5
+        $0.showZoomControls = true
+        $0.showLocationButton = false
     }
     
     /* confirmButton: 완료 버튼 */
@@ -79,28 +81,19 @@ class ReceiptPlaceViewController: UIViewController {
     }
     
     // MARK: - Properties
-    var mapView: MTMapView?
+//    var mapView: MTMapView?
     let geocoder = CLGeocoder()
     var latitude: Double? // 현재 위도
     var longitude: Double? // 현재 경도
-    var markerLocation: MTMapPoint? // 마커 좌표
-    var marker: MTMapPOIItem = {
-        let marker = MTMapPOIItem()
-        marker.showAnimationType = .noAnimation
-        marker.markerType = .redPin
-        marker.itemName = "요기?"
-        marker.showDisclosureButtonOnCalloutBalloon = false
-        marker.draggable = true
-        return marker
-    }()
-    var markerAddress: String? // 마커 좌표의 주소
+    var marker = NMFMarker() // 마커
+    var address: String? // 좌표의 주소
     
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setLocation()
+        
         setMapView()
         setViewLayout()
         addSubViews()
@@ -113,16 +106,13 @@ class ReceiptPlaceViewController: UIViewController {
         view.endEditing(true)
     }
     
-    private func setLocation() {
+    private func setMapView() {
         if let latitude = CreateParty.latitude,
            let longitude = CreateParty.longitude {
             self.latitude = latitude
             self.longitude = longitude
-        }
-        
-        // 기숙사 좌표를 한글로 저장 (검색 안 하고 바로 완료 누를 경우, API에서 불러온 기본 기숙사 주소로)
-        if let latitude = latitude,
-           let longitude = longitude {
+            
+            // 기숙사 좌표를 한글로 저장 (검색 안 하고 바로 완료 누를 경우, API에서 불러온 기본 기숙사 주소로)
             let locationNow = CLLocation(latitude: latitude, longitude: longitude)
             let locale = Locale(identifier: "ko_kr")
             geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { placemarks, error in
@@ -130,33 +120,27 @@ class ReceiptPlaceViewController: UIViewController {
                     if let administrativeArea = address.last?.administrativeArea,
                        let locality = address.last?.locality,
                        let name = address.last?.name {
-                        self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+                        self.address = "\(administrativeArea) \(locality) \(name)"
+                        self.marker.captionText = "\(administrativeArea) \(locality) \(name)"
                     }
                 }
             }
+            
+            /* naverMapView, marker 설정 */
+            if let latitude = CreateParty.latitude,
+               let longitude = CreateParty.longitude {
+                self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: latitude, lng: longitude)))
+                
+                marker.position = NMGLatLng(lat: latitude, lng: longitude)
+                marker.captionAligns = [NMFAlignType.top]
+                marker.touchHandler = { (overlay) -> Bool in
+                    print("마커터치")
+                    return true
+                    
+                }
+                marker.mapView = self.naverMapView.mapView
+            }
         }
-    }
-    
-    private func setMapView() {
-        // 지도 불러오기
-        mapView = MTMapView(frame: mapSubView.frame)
-        
-        if let mapView = mapView {
-            // 델리게이트 연결
-            mapView.delegate = self
-            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
-            mapView.baseMapType = .standard
-            
-            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.456518177069526,
-                                                                    longitude: longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            
-            // 마커의 좌표 설정
-            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: latitude ?? 37.456518177069526, longitude: longitude ?? 126.70531256589555))
-            
-            mapSubView.addSubview(mapView)
-        }
-        mapView?.addPOIItems([marker])
     }
     
     private func setViewLayout() {
@@ -169,7 +153,7 @@ class ReceiptPlaceViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [titleLabel, backButton, searchTextField, searchButton, mapSubView, confirmButton, pageLabel].forEach {
+        [titleLabel, backButton, searchTextField, searchButton, naverMapView, confirmButton, pageLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -197,7 +181,7 @@ class ReceiptPlaceViewController: UIViewController {
             make.width.height.equalTo(30)
         }
         
-        mapSubView.snp.makeConstraints { make in
+        naverMapView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(106)
             make.centerX.equalToSuperview()
             make.width.equalTo(262)
@@ -219,8 +203,7 @@ class ReceiptPlaceViewController: UIViewController {
     
     @objc
     private func tapConfirmButton() {
-        CreateParty.address = markerAddress ?? "주소를 찾지 못했습니다"
-        self.mapView = nil
+        CreateParty.address = address ?? "주소를 찾지 못했습니다"
         
         NotificationCenter.default.post(name: NSNotification.Name("TapConfirmButton"), object: "true")
     }
@@ -245,67 +228,28 @@ class ReceiptPlaceViewController: UIViewController {
                 let coordinate = location?.coordinate
                 
                 // 검색된 위치로 맵의 중심을 이동
-                let searchedPlace = MTMapPointGeo(latitude: coordinate?.latitude ?? 0, longitude: coordinate?.longitude ?? 0)
-                self.mapView!.setMapCenter(MTMapPoint(geoCoord: searchedPlace), zoomLevel: 5, animated: true)
+                self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: coordinate?.latitude ?? 0.0, lng: coordinate?.longitude ?? 0.0)))
                 
                 // API Request를 위해 전역에 좌표 저장
                 self.latitude = coordinate?.latitude ?? 0
                 self.longitude = coordinate?.longitude ?? 0
                 
-                // 마커 이동 안 했을 때를 대비하여 전역에 좌표 저장
+                // 마커 이동 안 했을 때를 대비하여 전역에 좌표 저장 -> notification에서 사용하기 위해 저장
                 CreateParty.latitude = self.latitude
                 CreateParty.longitude = self.longitude
-                
-                // 검색된 위치로 마커 이동
-                self.marker.mapPoint = MTMapPoint(geoCoord: searchedPlace)
                 
                 // 주소 추출
                 if let administrativeArea = placemark?.administrativeArea,
                    let locality = placemark?.locality,
                    let name = placemark?.name {
                     // 일단 검색 결과 주소를 넣고 마커 이동하면 갱신된 주소를 대입
-                    self.markerAddress = "\(administrativeArea) \(locality) \(name)"
+                    self.address = "\(administrativeArea) \(locality) \(name)"
                     print("Seori Test \(administrativeArea) \(locality) \(name)")
                 }
-            }
-        }
-    }
-}
-
-extension ReceiptPlaceViewController: MTMapViewDelegate {
-    // poiItem 클릭 이벤트
-    func mapView(_ mapView: MTMapView!, touchedCalloutBalloonOf poiItem: MTMapPOIItem!) {
-        // 인덱스는 poiItem의 태그로 접근
-        let _ = poiItem.tag
-    }
-    
-    func mapView(_ mapView: MTMapView!, updateCurrentLocation location: MTMapPoint!, withAccuracy accuracy: MTMapLocationAccuracy) {
-        let currentLocation = location.mapPointGeo()
-        print("MTMapView updateCurrentLocation (\(currentLocation.latitude), \(currentLocation.longitude)) accuracy (\(accuracy))")
-        
-    }
-    
-    func mapView(_ mapView: MTMapView!, updateDeviceHeading headingAngle: MTMapRotationAngle) {
-        print("MTMapView updateDeviceHeading (\(headingAngle)) degrees")
-    }
-    
-    func mapView(_ mapView: MTMapView!, draggablePOIItem poiItem: MTMapPOIItem!, movedToNewMapPoint newMapPoint: MTMapPoint!) {
-        CreateParty.latitude = newMapPoint.mapPointGeo().latitude
-        CreateParty.longitude = newMapPoint.mapPointGeo().longitude
-        
-        /* 현재 위치를 한글 데이터로 받아오기 */
-        let locationNow = CLLocation(latitude: newMapPoint.mapPointGeo().latitude, longitude: newMapPoint.mapPointGeo().longitude) // 마커 위치
-        let geocoder = CLGeocoder()
-        let locale = Locale(identifier: "ko_kr")
-        // 위치 받기 (국적, 도시, 동&구, 상세 주소)
-        geocoder.reverseGeocodeLocation(locationNow, preferredLocale: locale) { (placemarks, error) in
-            if let address = placemarks {
-                if let administrativeArea = address.last?.administrativeArea,
-                   let locality = address.last?.locality,
-                   let name = address.last?.name {
-                    /* 마커의 주소를 저장 */
-                    self.markerAddress = "\(administrativeArea) \(locality) \(name)"
-                }
+                
+                // 검색된 위치로 마커 이동, captionText 변경
+                self.marker.position = NMGLatLng(lat: coordinate?.latitude ?? 0.0, lng: coordinate?.longitude ?? 0.0)
+                self.marker.captionText = self.address ?? "요기?"
             }
         }
     }
