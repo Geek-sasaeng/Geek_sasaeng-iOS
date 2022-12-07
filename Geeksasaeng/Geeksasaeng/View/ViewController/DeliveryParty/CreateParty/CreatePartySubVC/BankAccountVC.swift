@@ -219,58 +219,32 @@ class BankAccountViewController: UIViewController {
             if isSuccess {
                 guard let model = model,
                       let result = model.result,
-                      let uuid = result.uuid,
-                      let title = result.chatRoomName,
-                      let bank = result.bank,
                       let accountNumber = result.accountNumber,
-                      let maxMatching = result.maxMatching else { return }
+                      let bank = result.bank,
+                      let category = result.foodCategory,
+                      let maxMatching = result.maxMatching,
+                      let title = result.chatRoomName else { return }
                 
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 formatter.locale = Locale(identifier: "ko_KR")
                 
                 // 파티 생성 성공 시, 파티 채팅방도 생성한다!
-                db.collection("Rooms").document(uuid).setData(
-                    ["roomInfo" :
-                        [
-                            "title": title,
-                            "participants": [["participant": LoginModel.nickname as Any, "enterTime": formatter.string(from: Date()), "isRemittance": true]],  // 방장은 무조건 송금 완료로 둔다.
-                            "maxMatching": maxMatching,
-                            "category": "배달파티",
-                            "bank": bank,
-                            "accountNumber": accountNumber,
-                            "isFinish": false,
-                            "updatedAt": formatter.string(from: Date())
-                        ]
-                    ]) { err in
-                        if let e = err {
-                            print(e.localizedDescription)
-                            // TODO: 파티 생성은 잘 됐는데, 파티 채팅방 생성이 안 될 경우에는 어떻게 해야하나...?
-                            print("Seori Test: 채팅방 생성 실패")
-                            // 배달 채팅방 생성 실패
-                            self.showToast(viewController: self, message: "채팅방 생성이 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
-                        } else {
-                            // 배달 채팅방 생성 성공
-                            print("DEBUG: 배달 채팅방 생성 완료")
-                            print(uuid)
-                            
-                            // 방장 참가 시스템 메세지 업로드
-                            self.db.collection("Rooms").document(uuid).collection("Messages").document(UUID().uuidString).setData([
-                                "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
-                                "nickname": LoginModel.nickname ?? "홍길동",
-                                "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                                "time": formatter.string(from: Date()),
-                                "isSystemMessage": true,
-                                "readUsers": [LoginModel.nickname ?? "홍길동"]
-                            ]) { error in
-                                if let e = error {
-                                    print(e.localizedDescription)
-                                } else {
-                                    print("Success save data")
-                                }
-                            }
-                        }
+                // 채팅방 생성 API 요청
+                CreateChatRoomAPI.requestCreateChatRoom(
+                    CreateChatRoomInput(accountNumber:accountNumber,
+                                        bank: bank,
+                                        category: category,
+                                        maxMatching: maxMatching,
+                                        title: title)
+                ) { isSuccess, result in
+                    guard let result = result else { return }
+                    if isSuccess {
+                        print("Seori: 성공 \(result)")
+                    } else {
+                        print("Seori: 실패 \(result)")
                     }
+                }
                 
                 /* 생성된 파티의 상세 조회 화면으로 이동 */
                 guard let partyId = result.id,
