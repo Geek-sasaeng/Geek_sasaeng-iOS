@@ -22,11 +22,11 @@ class DeliveryListDetailViewModel {
                     // 성공 시에 completion에 result 전달
                     completion(result.result!)
                 } else {
-                    print("DEBUG: 디테일", result.message!)
+                    print("DEBUG: 디테일 정보 불러오기 실패", result.message!)
                     completion(nil)
                 }
             case .failure(let error):
-                print("DEBUG: 디테일", error.localizedDescription)
+                print("DEBUG: 디테일 정보 불러오기 실패", error.localizedDescription)
                 completion(nil)
             }
         }
