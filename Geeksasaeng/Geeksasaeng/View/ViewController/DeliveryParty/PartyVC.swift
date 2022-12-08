@@ -18,7 +18,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     
     var partyId: Int?
-    var partyChatRoomId: String?
     var detailData = DeliveryListDetailModelResult()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var createdData: DeliveryListDetailModelResult?
@@ -443,10 +442,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 setDetailData()
             } else {
                 DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
-                    // detailData에 데이터 넣기
-                    if let self = self {
-                        self.detailData = result
-                        self.setDetailData()
+                    if let result = result {
+                        // detailData에 데이터 넣기
+                        if let self = self {
+                            self.detailData = result
+                            self.setDetailData()
+                        }
+                    } else {
+                        print("DEBUG: 파티 상세 조회 실패")
                     }
                 })
             }
@@ -1143,9 +1146,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 신청하기 뷰 없애고
         removeRegisterView()
         
-//        guard let uuid = detailData.uuid else { return }
-//        print("DEBUG: 이 채팅방의 uuid값은", uuid)
-        
         // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
         // 배달 파티 신청하기 API 호출
         guard let partyId = self.partyId else { return }
@@ -1155,9 +1155,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             // 배달파티 신청 성공
             if isSuccess {
                 // 만들어진 배달파티의 채팅방의 멤버로 추가하기
-//                partyChatRoomId = "638dae800aa80d40617ebe10"
-//                -> 서버에서 partyChatRoomId를 안 줘서 일단 더미데이터로 테스트 성공
-                let input = JoinChatInput(partyChatRoomId: partyChatRoomId)
+                let input = JoinChatInput(partyChatRoomId: self.detailData.partyChatRoomId)
                 JoinChatAPI.requestJoinChat(input) { [self] isSuccess, result in
                     if isSuccess {
                         print("DEBUG: 채팅방 초대까지 성공", result?.enterTime)

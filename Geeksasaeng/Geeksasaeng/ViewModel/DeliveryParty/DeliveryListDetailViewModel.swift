@@ -10,7 +10,7 @@ import Alamofire
 
 class DeliveryListDetailViewModel {
     
-    public static func getDetailInfo(partyId : Int, completion: @escaping (DeliveryListDetailModelResult) -> Void) {
+    public static func getDetailInfo(partyId : Int, completion: @escaping (DeliveryListDetailModelResult?) -> Void) {
         AF.request("https://geeksasaeng.shop/delivery-party/\(partyId)", method: .get, parameters: nil,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
@@ -23,9 +23,11 @@ class DeliveryListDetailViewModel {
                     completion(result.result!)
                 } else {
                     print("DEBUG: 디테일", result.message!)
+                    completion(nil)
                 }
             case .failure(let error):
                 print("DEBUG: 디테일", error.localizedDescription)
+                completion(nil)
             }
         }
     }
