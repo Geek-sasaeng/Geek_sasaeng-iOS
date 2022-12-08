@@ -407,6 +407,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 self.setUserInfo()
                 self.navigationController?.popViewController(animated: true)
             } else {
+                self.showToast(viewController: self, message: "회원정보 수정 실패", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
                 print("회원정보 수정 실패")
             }
         }
