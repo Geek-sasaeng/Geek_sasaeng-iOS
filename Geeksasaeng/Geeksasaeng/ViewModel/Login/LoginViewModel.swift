@@ -10,7 +10,6 @@ import Alamofire
 // 자동로그인 체크 -> jwt 로컬에 저장 -> attempAutoLogin: header에 jwt 넣어서 API 호출
 
 // 로그인 API 연동
-// TODO: - viewController를 넘기지 않는 방법 생각해보기
 class LoginViewModel {
     public static func login(_ parameter : LoginInput, completion: @escaping (ResponseCase, LoginModelResult?, String?) -> Void) {
         AF.request("https://geeksasaeng.shop/login", method: .post,
@@ -33,6 +32,7 @@ class LoginViewModel {
         }
     }
     
+    // TODO: - viewController를 넘기지 않는 방식으로 변경 필요.
     /* loginNaver는 네아로에서 제공하는 메서드에서 호출 중이라 일단 보류 */
     public static func loginNaver(viewController: LoginViewController, _ parameter : NaverLoginInput) {
         AF.request("https://geeksasaeng.shop/login/social", method: .post,

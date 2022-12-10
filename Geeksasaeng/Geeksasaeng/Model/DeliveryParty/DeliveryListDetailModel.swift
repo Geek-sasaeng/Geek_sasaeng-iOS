@@ -35,4 +35,5 @@ struct DeliveryListDetailModelResult: Decodable {
     var dormitory: Int?
     var uuid: String?
     var belongStatus: String?
+    var partyChatRoomId: String?
 }

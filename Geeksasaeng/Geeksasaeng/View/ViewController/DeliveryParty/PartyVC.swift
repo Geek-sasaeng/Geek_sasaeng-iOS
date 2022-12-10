@@ -32,8 +32,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var timer: DispatchSourceTimer?
     // 프로토콜의 함수를 실행하기 위해 delegate를 설정
     var delegate: UpdateDeliveryDelegate?
-    // 유저가 초대됐는지 아닌지 여부 확인
-    var isInvited: Bool = false
     
     // MARK: - Subviews
     
@@ -437,10 +435,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 setDetailData()
             } else {
                 DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
-                    // detailData에 데이터 넣기
-                    if let self = self {
-                        self.detailData = result
-                        self.setDetailData()
+                    if let result = result {
+                        // detailData에 데이터 넣기
+                        if let self = self {
+                            self.detailData = result
+                            self.setDetailData()
+                        }
+                    } else {
+                        print("DEBUG: 파티 상세 조회 실패")
                     }
                 })
             }
@@ -801,82 +803,85 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         timer?.resume()
     }
     
+    // TODO: - 채팅방 입장 시스템 메세지 서버에서 됐는지 확인 필요
     /* (방장이 아닌) 유저를 채팅방에 초대하는 함수 (= 참여자로 추가) */
     private func addParticipant(roomUUID: String, completion: @escaping () -> ()) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.locale = Locale(identifier: "ko_KR")
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        formatter.locale = Locale(identifier: "ko_KR")
+//
+        //        // 해당 채팅방의 participants에 본인 닉네임을 append
+        //        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+        //            if let e = error {
+        //                print(e.localizedDescription)
+        //                self.isInvited = false
+        //            } else {
+        //                if let document = documentSnapshot {
+        //                    // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
+        //                    if document.exists {
+        //                        do {
+        //                            let data = try document.data(as: RoomInfoModel.self)
+        //                            guard let roomInfo = data.roomInfo,
+        //                                  let participants = roomInfo.participants else { return }
+        //
+        //                            guard let nickName = LoginModel.nickname else { return }
+        //                            /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
+        //                            let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
+        //
+        //                            self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
+        //
+        //                            // 참가자 참가 시스템 메세지 업로드
+        //                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+        //                                "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
+        //                                "nickname": LoginModel.nickname ?? "홍길동",
+        //                                "userImgUrl": LoginModel.userImgUrl ?? "https://",
+        //                                "time": formatter.string(from: Date()),
+        //                                "isSystemMessage": true,
+        //                                "readUsers": [LoginModel.nickname ?? "홍길동"]
+        //                            ]) { error in
+        //                                if let e = error {
+        //                                    print(e.localizedDescription)
+        //                                } else {
+        //                                    print("DEBUG: 입장 메세지 띄우기 완료")
+        //                                }
+        //                            }
+        //
+        //                            if participants.count == roomInfo.maxMatching! - 1 {
+        //                                let formatter = DateFormatter()
+        //                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        //                                formatter.locale = Locale(identifier: "ko_KR")
+        //
+        //                                // 모든 참가자 참여 완료 시스템 메세지 업로드
+        //                                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+        //                                    "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
+        //                                    "nickname": "SystemMessage",
+        //                                    "userImgUrl": "SystemMessage",
+        //                                    "time": formatter.string(from: Date()),
+        //                                    "isSystemMessage": true,
+        //                                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+        //                                ]) { error in
+        //                                    if let e = error {
+        //                                        print(e.localizedDescription)
+        //                                    } else {
+        //                                        print("Success save data")
+        //                                    }
+        //                                }
+        //                            }
+        //
+        //                            print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
+        //                        } catch {
+        //                            print(error.localizedDescription)
+        //                        }
+        //
+        //                        self.isInvited = true
+        //                    }
+        //                }
+        //            }
+        //            // 비동기 처리를 위해 completion 사용 -> 이 함수가 끝난 뒤에 실행되게 하려고
+        //            completion()
+        //        }
         
-        // 해당 채팅방의 participants에 본인 닉네임을 append
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let e = error {
-                print(e.localizedDescription)
-                self.isInvited = false
-            } else {
-                if let document = documentSnapshot {
-                    // 해당 uuid의 채팅방이 존재할 때에만 초대 로직을 실행한다
-                    if document.exists {
-                        do {
-                            let data = try document.data(as: RoomInfoModel.self)
-                            guard let roomInfo = data.roomInfo,
-                                  let participants = roomInfo.participants else { return }
-                            
-                            guard let nickName = LoginModel.nickname else { return }
-                            /* roomInfo 안의 participants 배열에 nickName을 추가해주는 코드 */
-                            let input = ["participant": nickName, "enterTime": formatter.string(from: Date()), "isRemittance": false] as [String : Any]
-
-                            self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayUnion([input])])
-                            
-                            // 참가자 참가 시스템 메세지 업로드
-                            self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                                "content": "\(LoginModel.nickname ?? "홍길동")님이 입장하셨습니다",
-                                "nickname": LoginModel.nickname ?? "홍길동",
-                                "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                                "time": formatter.string(from: Date()),
-                                "isSystemMessage": true,
-                                "readUsers": [LoginModel.nickname ?? "홍길동"]
-                            ]) { error in
-                                if let e = error {
-                                    print(e.localizedDescription)
-                                } else {
-                                    print("DEBUG: 입장 메세지 띄우기 완료")
-                                }
-                            }
-                            
-                            if participants.count == roomInfo.maxMatching! - 1 {
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                formatter.locale = Locale(identifier: "ko_KR")
-                                
-                                // 모든 참가자 참여 완료 시스템 메세지 업로드
-                                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                                    "content": "모든 파티원이 입장을 마쳤습니다 !\n안내에 따라 메뉴를 입력해주세요",
-                                    "nickname": "SystemMessage",
-                                    "userImgUrl": "SystemMessage",
-                                    "time": formatter.string(from: Date()),
-                                    "isSystemMessage": true,
-                                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                                ]) { error in
-                                    if let e = error {
-                                        print(e.localizedDescription)
-                                    } else {
-                                        print("Success save data")
-                                    }
-                                }
-                            }
-                            
-                            print("DEBUG: 채팅방 \(roomUUID)에 참가자 \(nickName) 추가 완료")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                        
-                        self.isInvited = true
-                    }
-                }
-            }
-            // 비동기 처리를 위해 completion 사용 -> 이 함수가 끝난 뒤에 실행되게 하려고
-            completion()
-        }
+        
     }
     
     private func showCompleteRegisterView() {
@@ -1106,22 +1111,28 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 신청하기 뷰 없애고
         removeRegisterView()
         
-        guard let uuid = detailData.uuid else { return }
-        print("DEBUG: 이 채팅방의 uuid값은", uuid)
-        addParticipant(roomUUID: uuid) { [self] in
-            print("DEBUG: 초대 상황은?", isInvited)
-            // 초대하기 성공했을 때만 성공 메세지 띄우기
-            if isInvited {
-                // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
-                // 배달 파티 신청하기 API 호출
-                guard let partyId = self.partyId else { return }
-                JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) {
-                    print("DEBUG: 배달 파티멤버로 추가 완료")
+        // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
+        // 배달 파티 신청하기 API 호출
+        guard let partyId = self.partyId else { return }
+        JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) { [self] isSuccess in
+            print("DEBUG: 배달파티 신청 API 호출")
+            
+            // 배달파티 신청 성공
+            if isSuccess {
+                // 만들어진 배달파티의 채팅방의 멤버로 추가하기
+                let input = JoinChatInput(partyChatRoomId: self.detailData.partyChatRoomId)
+                JoinChatAPI.requestJoinChat(input) { [self] isSuccess, result in
+                    if isSuccess {
+                        print("DEBUG: 채팅방 초대까지 성공", result?.enterTime)
+                        showCompleteRegisterView()
+                    } else {
+                        print("DEBUG: 채팅방 초대 실패", result?.enterTime)
+                        // TODO: - 파티에는 추가가 됐는데 채팅방에 추가가 안 됐을 경우 어떻게 처리하면 되는지 확정 안 남
+                        showToast(viewController: self, message: "배달파티 채팅방 초대에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
+                    }
                 }
-                
-                showCompleteRegisterView()
             } else {
-                // 초대 실패 시 실패 메세지 띄우기
+                // 배달파티 신청 실패 시 실패 메세지 띄우기
                 showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
             }
         }

@@ -15,6 +15,7 @@ struct CreateChatRoomInput : Encodable {
     var category: String?
     var maxMatching: Int?
     var title: String?
+    var deliveryPartyId: Int?
 }
 
 /* 배달파티 채팅방 생성 API의 Response */
