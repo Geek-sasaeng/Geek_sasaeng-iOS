@@ -281,10 +281,10 @@ class ChattingListViewController: UIViewController {
                 if !isFinalPage {
                     cursor += 1
                     print("DEBUG: cursor", cursor)
-                    // 다음 커서의 채팅방 목록 조회 API 호출
-                    getChatRoomList()
                     // 데이터 로딩 표시 띄우기
                     self.chattingTableView.tableFooterView = createSpinnerFooter()
+                    // 다음 커서의 채팅방 목록 조회 API 호출
+                    getChatRoomList()
                 }
             }
         }
