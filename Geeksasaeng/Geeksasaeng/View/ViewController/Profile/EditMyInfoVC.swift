@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import Then
+import PhotosUI
+import Kingfisher
 
 class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
@@ -32,8 +34,9 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.isUserInteractionEnabled = true
     }
     
-    let userImageView = UIImageView().then {
-        $0.image = UIImage(named: "EditUserImage")
+    lazy var userImageView = UIImageView().then {
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 83
     }
     
     /* title labels */
@@ -76,7 +79,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     var loginId: String?
     var nickname: String?
     var password: String?
-    var profileImg: UIImage?
     
     var dormitoryList: [Dormitory]?
     
@@ -112,6 +114,11 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setAttributes() {
+        /* 프로필 이미지 뷰 설정 */
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapUserImageView))
+        userImageView.addGestureRecognizer(tapGesture)
+        userImageView.isUserInteractionEnabled = true
+        
         /* 각 항목 타이틀 라벨 공통 설정 */
         [dormitoryLabel, nicknameLabel, idLabel, passwordLabel, passwordCheckLabel].forEach {
             $0.textColor = .init(hex: 0xA8A8A8)
@@ -313,6 +320,9 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     private func setUserInfo() {
         /* textfield로 변경 */
         UserInfoAPI.getEditUserInfo { isSuccess, result in
+            let url = URL(string: result.imgUrl!)
+            self.userImageView.kf.setImage(with: url)
+            
             self.nicknameDataTextField.text = result.nickname
             self.idDataTextField.text = result.loginId
             
@@ -380,9 +390,20 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc
+    private func tapUserImageView() {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        configuration.filter = .images
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        
+        self.present(picker, animated: true, completion: nil)
+    }
+    
+    @objc
     private func tapConfirmButton() {
         let input: EditUserInput?
-        // TODO: - 기숙사, 이미지 처리
         if let _ = self.checkPassword { // 비밀번호를 변경했을 경우
             input = EditUserInput(
                 checkPassword: self.checkPassword,
@@ -401,7 +422,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             )
         }
         
-        UserInfoAPI.editUser(input!, imageData: UIImage(systemName: "pencil")!) { isSuccess, result in
+        UserInfoAPI.editUser(input!, imageData: UIImage(systemName: "mic")!) { isSuccess, result in
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()
@@ -568,5 +589,24 @@ extension EditMyInfoViewController: UITextFieldDelegate {
         default:
             return
         }
+    }
+}
+
+extension EditMyInfoViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                DispatchQueue.main.async {
+                    self.userImageView.image = image as? UIImage
+                }
+            }
+        }
+        
+        self.activeRightBarButton()
     }
 }
