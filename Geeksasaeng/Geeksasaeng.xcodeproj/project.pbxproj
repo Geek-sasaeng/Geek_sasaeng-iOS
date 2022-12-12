@@ -1004,9 +1004,6 @@
 		10FECB1B28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
 		10FECB1C28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
 		53D177D39533B7DBA84281B1 /* Pods_GeeksasaengTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7AD5A92A3BCB27BBAB05F60 /* Pods_GeeksasaengTests.framework */; };
-		A202D66028F73E98006CD1B3 /* WebSocketChattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A202D65F28F73E98006CD1B3 /* WebSocketChattingVC.swift */; };
-		A202D66128F73E98006CD1B3 /* WebSocketChattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A202D65F28F73E98006CD1B3 /* WebSocketChattingVC.swift */; };
-		A202D66228F73E98006CD1B3 /* WebSocketChattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A202D65F28F73E98006CD1B3 /* WebSocketChattingVC.swift */; };
 		A2035EA128833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
 		A2035EA228833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
 		A2035EA328833ED60051498A /* AdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2035EA028833ED60051498A /* AdViewModel.swift */; };
@@ -1588,7 +1585,6 @@
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
 		724884CEEFB929FF25B554A0 /* Pods-Geeksasaeng.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.debug.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.debug.xcconfig"; sourceTree = "<group>"; };
 		8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A202D65F28F73E98006CD1B3 /* WebSocketChattingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketChattingVC.swift; sourceTree = "<group>"; };
 		A2035EA028833ED60051498A /* AdViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdViewModel.swift; sourceTree = "<group>"; };
 		A2035EA4288341B00051498A /* AdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdModel.swift; sourceTree = "<group>"; };
 		A2085AD1287048A800D6CF79 /* RegisterAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterAPI.swift; sourceTree = "<group>"; };
@@ -2324,7 +2320,6 @@
 		A24F0B29289D88AF007A9C5C /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				A202D65F28F73E98006CD1B3 /* WebSocketChattingVC.swift */,
 				A21DB933289D896B00A523F1 /* ChattingListVC.swift */,
 				102230F9289E640700042ACC /* ChattingVC.swift */,
 				A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */,
@@ -3800,7 +3795,6 @@
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				102230FA289E640700042ACC /* ChattingVC.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
-				A202D66028F73E98006CD1B3 /* WebSocketChattingVC.swift in Sources */,
 				A274DE7728E0F68800F5024E /* CreateMenuVC.swift in Sources */,
 				10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
@@ -3913,7 +3907,6 @@
 				10C8D26928770D310044552A /* NaverRegisterVC.swift in Sources */,
 				10A4A35628E3734E00AF4235 /* ForcedExitVC.swift in Sources */,
 				A2CB1F13293DE29E008FAC46 /* CreateChatRoomAPI.swift in Sources */,
-				A202D66128F73E98006CD1B3 /* WebSocketChattingVC.swift in Sources */,
 				10A53C742882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				108B6335288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */,
@@ -4069,7 +4062,6 @@
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,
 				10D4D6C12894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
-				A202D66228F73E98006CD1B3 /* WebSocketChattingVC.swift in Sources */,
 				10E8E715288C3E9700AF4581 /* EditPartyModel.swift in Sources */,
 				102B35DA2879BD050042F691 /* UIButton+Extension.swift in Sources */,
 				A2EE2BC5294727B200335680 /* MessageData.swift in Sources */,

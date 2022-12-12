@@ -438,6 +438,7 @@ class ChattingViewController: UIViewController {
     // MARK: - Properties
     
     private var socket: WebSocket?
+    private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
     var contents: [cellContents] = []
     var userNickname: String?
@@ -470,6 +471,7 @@ class ChattingViewController: UIViewController {
         setCollectionView()
         addSubViews()
         setLayouts()
+        receiveMsgs()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -808,6 +810,37 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // RabbitMQ를 통해 채팅 수신
+    private func receiveMsgs() {
+        let conn = RMQConnection(uri: rabbitMQUri, delegate: RMQConnectionDelegateLogger())
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.fanout("chatting-exchange-\(String(describing: roomId))")
+        let q = ch.queue("88", options: .durable)
+        q.bind(x)
+        print("DEBUG: [Rabbit] Waiting for logs.", ch, x, q)
+        q.subscribe({(_ message: RMQMessage) -> Void in
+            print("DEBUG: [Rabbit] subscribe")
+            guard let msg = String(data: message.body, encoding: .utf8) else { return }
+
+            // str - decode
+            do {
+                // Chatting 구조체로 decode.
+                let decoder = JSONDecoder()
+                let data = try decoder.decode(MsgResponse.self, from: message.body)
+                print("[Rabbit]", data)
+
+                guard let id = data.chatRoomId, let content = data.content, let createdAt = data.createdAt else { return }
+                print("[Rabbit] 값 가져오기: ", id, content, createdAt)
+            } catch {
+                print(error)
+            }
+
+            print("DEBUG: [Rabbit] Received RoutingKey: \(message.routingKey!), Message: \(msg)")
+            print("DEBUG: [Rabbit] Message Info: \n consumerTag \(message.consumerTag ?? "nil값"), deliveryTag \(message.deliveryTag ?? 0), exchangeName \(message.exchangeName ?? "nil값")")
+        })
+    }
+    
     private func getMessageLabelHeight(text: String) -> CGFloat {
         let label = PaddingLabel()
         label.paddingLeft = 18
@@ -917,7 +950,7 @@ class ChattingViewController: UIViewController {
             let input = MsgRequest(content: message,
                                    chatRoomId: roomId,
                                    isSystemMessage: false,
-                                   memberId: 1, // 아직 서버가 안 줌
+                                   memberId: 88, // 아직 서버가 안 줌
                                    email: "dmstn@gachon.ac.kr", // ^ㅡ^ 안 줌
                                    profileImgUrl: "더미",
                                    chatType: "publish",
