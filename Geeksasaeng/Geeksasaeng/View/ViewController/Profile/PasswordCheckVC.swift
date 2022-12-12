@@ -145,7 +145,7 @@ class PasswordCheckViewController: UIViewController {
         guard let password = passwordTextField.text else { return }
         let passwordInput = PasswordCheckInput(password: password)
         
-        UserInfoAPI.passwordCheck(passwordInput) { isSuccess, message in
+        UserInfoAPI.passwordCheck(passwordInput) { isSuccess in
             if isSuccess { // 비밀번호 맞았을 때 -> 수정 화면으로 이동
                 let editMyInfoVC = EditMyInfoViewController()
                 self.navigationController?.pushViewController(editMyInfoVC, animated: true)

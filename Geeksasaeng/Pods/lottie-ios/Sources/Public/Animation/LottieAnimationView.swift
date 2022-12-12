@@ -16,10 +16,11 @@ public enum LottieBackgroundBehavior {
   case stop
 
   /// Pause the animation in its current state. The completion block is called.
-  ///  - This is the default when using the Main Thread rendering engine.
   case pause
 
-  /// Pause the animation and restart it when the application moves to the foreground. The completion block is stored and called when the animation completes.
+  /// Pause the animation and restart it when the application moves to the foreground.
+  /// The completion block is stored and called when the animation completes.
+  ///  - This is the default when using the Main Thread rendering engine.
   case pauseAndRestore
 
   /// Stops the animation and sets it to the end of its current play time. The completion block is called.
@@ -43,7 +44,7 @@ public enum LottieBackgroundBehavior {
   public static func `default`(for renderingEngine: RenderingEngine) -> LottieBackgroundBehavior {
     switch renderingEngine {
     case .mainThread:
-      return .pause
+      return .pauseAndRestore
     case .coreAnimation:
       return .continuePlaying
     }
@@ -84,14 +85,6 @@ extension LottieLoopMode: Equatable {
   }
 }
 
-// MARK: - AnimationView
-
-@available(*, deprecated, renamed: "LottieAnimationView", message: """
-  `AnimationView` has been renamed to `LottieAnimationView`, for consistency with \
-  the new `LottieAnimation` type. This notice will be removed in Lottie 4.0.
-  """)
-public typealias AnimationView = LottieAnimationView
-
 // MARK: - LottieAnimationView
 
 @IBDesignable
@@ -118,6 +111,32 @@ final public class LottieAnimationView: LottieAnimationViewBase {
     self.logger = logger
     super.init(frame: .zero)
     commonInit()
+    makeAnimationLayer(usingEngine: configuration.renderingEngine)
+    if let animation = animation {
+      frame = animation.bounds
+    }
+  }
+
+  /// Initializes an AnimationView with a .lottie file.
+  public init(
+    dotLottie: DotLottieFile?,
+    animationId: String? = nil,
+    textProvider: AnimationTextProvider = DefaultTextProvider(),
+    fontProvider: AnimationFontProvider = DefaultFontProvider(),
+    configuration: LottieConfiguration = .shared,
+    logger: LottieLogger = .shared)
+  {
+    let dotLottieAnimation = dotLottie?.animation(for: animationId)
+    animation = dotLottieAnimation?.animation
+    imageProvider = dotLottie?.imageProvider ?? BundleImageProvider(bundle: Bundle.main, searchPath: nil)
+    self.textProvider = textProvider
+    self.fontProvider = fontProvider
+    self.configuration = configuration
+    self.logger = logger
+    super.init(frame: .zero)
+    commonInit()
+    loopMode = dotLottieAnimation?.configuration.loopMode ?? .playOnce
+    animationSpeed = CGFloat(dotLottieAnimation?.configuration.speed ?? 1)
     makeAnimationLayer(usingEngine: configuration.renderingEngine)
     if let animation = animation {
       frame = animation.bounds
@@ -206,6 +225,45 @@ final public class LottieAnimationView: LottieAnimationViewBase {
   public var animation: LottieAnimation? {
     didSet {
       makeAnimationLayer(usingEngine: configuration.renderingEngine)
+
+      if let animation = animation {
+        animationLoaded?(self, animation)
+      }
+    }
+  }
+
+  /// A closure that is called when `self.animation` is loaded. When setting this closure,
+  /// it is called immediately if `self.animation` is non-nil.
+  ///
+  /// When initializing a `LottieAnimationView`, the animation will either be loaded
+  /// synchronously (when loading a `LottieAnimation` from a .json file on disk)
+  /// or asynchronously (when loading a `DotLottieFile` from disk, or downloading
+  /// an animation from a URL). This closure is called in both cases once the
+  /// animation is loaded and applied, so can be a useful way to configure this
+  /// `LottieAnimationView` regardless of which initializer was used. For example:
+  ///
+  /// ```
+  /// let animationView: LottieAnimationView
+  ///
+  /// if loadDotLottieFile {
+  ///   // Loads the .lottie file asynchronously
+  ///   animationView = LottieAnimationView(dotLottieName: "animation")
+  /// } else {
+  ///   // Loads the .json file synchronously
+  ///   animationView = LottieAnimationView(name: "animation")
+  /// }
+  ///
+  /// animationView.animationLoaded = { animationView, animation in
+  ///   // If using a .lottie file, this is called once the file finishes loading.
+  ///   // If using a .json file, this is called immediately (since the animation is loaded synchronously).
+  ///   animationView.play()
+  /// }
+  /// ```
+  public var animationLoaded: ((_ animationView: LottieAnimationView, _ animation: LottieAnimation) -> Void)? {
+    didSet {
+      if let animation = animation {
+        animationLoaded?(self, animation)
+      }
     }
   }
 
@@ -409,6 +467,31 @@ final public class LottieAnimationView: LottieAnimationViewBase {
     }
   }
 
+  /// Sets the lottie file backing the animation view. Setting this will clear the
+  /// view's contents, completion blocks and current state. The new animation will
+  /// be loaded up and set to the beginning of its timeline.
+  /// The loopMode, animationSpeed and imageProvider will be set according
+  /// to lottie file settings
+  /// - Parameters:
+  ///   - animationId: Internal animation id to play. Optional
+  ///   Defaults to play first animation in file.
+  ///   - dotLottieFile: Lottie file to play
+  public func loadAnimation(
+    _ animationId: String? = nil,
+    from dotLottieFile: DotLottieFile)
+  {
+    guard let dotLottieAnimation = dotLottieFile.animation(for: animationId) else { return }
+
+    loopMode = dotLottieAnimation.configuration.loopMode
+    animationSpeed = CGFloat(dotLottieAnimation.configuration.speed)
+
+    if let imageProvider = dotLottieAnimation.configuration.imageProvider {
+      self.imageProvider = imageProvider
+    }
+
+    animation = dotLottieAnimation.animation
+  }
+
   /// Plays the animation from its current state to the end.
   ///
   /// - Parameter completion: An optional completion closure to be called when the animation completes playing.
@@ -489,11 +572,15 @@ final public class LottieAnimationView: LottieAnimationViewBase {
   /// - Parameter fromMarker: The start marker for the animation playback. If `nil` the
   /// animation will start at the current progress.
   /// - Parameter toMarker: The end marker for the animation playback.
+  /// - Parameter playEndMarkerFrame: A flag to determine whether or not to play the frame of the end marker. If the
+  /// end marker represents the end of the section to play, it should be to true. If the provided end marker
+  /// represents the beginning of the next section, it should be false.
   /// - Parameter loopMode: The loop behavior of the animation. If `nil` the view's `loopMode` property will be used.
   /// - Parameter completion: An optional completion closure to be called when the animation stops.
   public func play(
     fromMarker: String? = nil,
     toMarker: String,
+    playEndMarkerFrame: Bool = true,
     loopMode: LottieLoopMode? = nil,
     completion: LottieCompletionBlock? = nil)
   {
@@ -514,9 +601,10 @@ final public class LottieAnimationView: LottieAnimationViewBase {
       fromTime = currentFrame
     }
 
+    let playTo = playEndMarkerFrame ? CGFloat(to.frameTime) : CGFloat(to.frameTime) - 1
     let context = AnimationContext(
       playFrom: fromTime,
-      playTo: CGFloat(to.frameTime),
+      playTo: playTo,
       closure: completion)
     addNewAnimationForContext(context)
   }
@@ -1123,8 +1211,8 @@ final public class LottieAnimationView: LottieAnimationViewBase {
 
           """)
 
-    let animationContext = self.animationContext
-    let currentFrame = self.currentFrame
+    let animationContext = animationContext
+    let currentFrame = currentFrame
 
     makeAnimationLayer(usingEngine: .mainThread)
 

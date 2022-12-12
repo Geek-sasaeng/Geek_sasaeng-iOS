@@ -12,6 +12,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import SnapKit
 import Then
+import NMapsMap
 
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
@@ -23,17 +24,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var createdData: DeliveryListDetailModelResult?
     var ChatRoomName: String?
     var fromCreated: Bool?
-    
-    var mapView: MTMapView? // 카카오맵
-    var marker: MTMapPOIItem = {
-        let marker = MTMapPOIItem()
-        marker.showAnimationType = .dropFromHeaven
-        marker.markerType = .redPin
-        marker.itemName = "요기?"
-        marker.showDisclosureButtonOnCalloutBalloon = false
-        marker.draggable = true
-        return marker
-    }()
     
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
@@ -148,11 +138,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     let pickupLocationDataLabel = UILabel().then {
         $0.textColor = .init(hex: 0x2F2F2F)
         $0.font = .customFont(.neoMedium, size: 13)
-    }
-    
-    let mapSubView = UIView().then {
-        $0.layer.masksToBounds = true
-        $0.layer.cornerRadius = 5
     }
     
     let matchingStatusView = UIView().then {
@@ -372,6 +357,21 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var toastView: UIView? = nil
     
+    /* 네이버 지도 */
+    let naverMapView = NMFNaverMapView().then {
+        $0.isUserInteractionEnabled = true
+        $0.showLocationButton = false
+        $0.showZoomControls = true
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+    }
+    
+    
+    // MARK: - Properties
+    /* 네이버 지도 마커 */
+    var naverMarker = NMFMarker()
+    
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -380,7 +380,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .white
         
         setFirestore()
-        setMapView()
         getDetailData(createdData)
         addSubViews()
         setLayouts()
@@ -392,7 +391,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let result = notification.object as! String
             if result == "true" {
                 print("수정 완료 버튼이 눌렸당")
-                self.setMapView()
                 self.getDetailData(self.createdData)
             }
         }
@@ -402,11 +400,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         super.viewWillAppear(animated)
         // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
         navigationController?.isNavigationBarHidden = false
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        mapView = nil
     }
     
     // MARK: - Initialization
@@ -483,8 +476,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
         
         // MARK: - nil bounding error
-        self.mapView!.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude!, longitude: detailData.longitude!)), zoomLevel: 5, animated: true)
-        self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude!, longitude: detailData.longitude!))
+        self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: detailData.latitude!, lng: detailData.longitude!)))
+        self.naverMarker.position = NMGLatLng(lat: detailData.latitude!, lng: detailData.longitude!)
+        self.naverMarker.captionAligns = [NMFAlignType.top]
+        self.naverMarker.mapView = self.naverMapView.mapView
         
         setDefaultValue()
         
@@ -542,36 +537,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    public func setMapView() {
-        print("setMapView 호출 시점")
-        // 지도 불러오기
-        mapView = MTMapView(frame: mapSubView.frame)
-        
-        if let mapView = mapView {
-            // 델리게이트 연결
-            mapView.delegate = self
-            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
-            mapView.baseMapType = .standard
-            mapView.isUserInteractionEnabled = false
-            
-            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            
-            // 원래 위치를 표시하던 마커가 있었는지 없었는지를 조건문으로 확인
-            if self.marker.mapPoint != nil {
-                // 원래 있던 마커의 좌표를 이동
-                self.marker.move(MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)), withAnimation: true)
-            } else {
-                // 새 마커를 만들어서 좌표 설정
-                self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555))
-                // 맵에 마커 추가
-                mapView.addPOIItems([marker])
-            }
-            
-            mapSubView.addSubview(mapView)
-        }
-    }
-    
     private func addSubViews() {
         self.view.addSubview(scrollView)
         self.scrollView.addSubview(contentView)
@@ -585,7 +550,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             separateView,
             orderLabel, matchingLabel, categoryLabel, storeLinkLabel, pickupLocationLabel,
             orderReserveLabel, matchingDataLabel, categoryDataLabel, storeLinkDataLabel, pickupLocationDataLabel,
-            mapSubView
+            naverMapView
         ].forEach { contentView.addSubview($0) }
         [
             matchingDataWhiteLabel,
@@ -604,7 +569,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.bottom.equalTo(mapSubView.snp.bottom).offset(55 + 20)
+            make.bottom.equalTo(naverMapView.snp.bottom).offset(55 + 20)
         }
         
         // 신청하기 뷰를 고정시켜 놓을 컨테이너 뷰
@@ -708,7 +673,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(pickupLocationLabel.snp.top)
         }
         
-        mapSubView.snp.makeConstraints { make in
+        naverMapView.snp.makeConstraints { make in
             make.top.equalTo(pickupLocationLabel.snp.bottom).offset(24)
             make.left.right.equalToSuperview().inset(23)
             make.height.equalTo(205)
@@ -1218,8 +1183,4 @@ extension PartyViewController: EdittedDelegate {
             delegate?.updateDeliveryList()
         }
     }
-}
-
-extension PartyViewController: MTMapViewDelegate {
-    
 }

@@ -20,6 +20,7 @@ target 'Geeksasaeng' do
   pod 'RMQClient'
   pod 'RealmSwift'
   pod 'Starscream'
+  pod 'NMapsMap', '3.10.0'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths
