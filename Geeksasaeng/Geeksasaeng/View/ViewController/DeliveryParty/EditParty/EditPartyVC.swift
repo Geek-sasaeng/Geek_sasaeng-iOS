@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import CoreLocation
 import Then
+import NMapsMap
 
 /* 이전 뷰로 수정되었음을 전달해주기 위한 Protocol (delegate pattern) */
 protocol EdittedDelegate: AnyObject { // delegate pattern을 위한 protocol 정의
@@ -120,33 +121,24 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
     
-    let mapSubView = UIView().then {
-        $0.backgroundColor = .gray
-        $0.layer.masksToBounds = true
+    /* 네이버 지도 */
+    let naverMapView = NMFNaverMapView().then {
+        $0.isUserInteractionEnabled = false
+        $0.showZoomControls = false
+        $0.showLocationButton = false
+        $0.clipsToBounds = true
         $0.layer.cornerRadius = 5
     }
-    
-    let blockedView = UIView().then {
-        $0.backgroundColor = .gray
-    }
-    
     
     // MARK: - Properties
     
     weak var isEdittiedDelegate: EdittedDelegate?
     var isEditedContentsTextView = false // 내용이 수정되었는지
-    var mapView: MTMapView? // 카카오맵
-    var marker: MTMapPOIItem = {
-        let marker = MTMapPOIItem()
-        marker.showAnimationType = .dropFromHeaven
-        marker.markerType = .redPin
-        marker.itemName = "요기?"
-        marker.showDisclosureButtonOnCalloutBalloon = false
-        marker.draggable = true
-        return marker
-    }()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var detailData: DeliveryListDetailModelResult?
+    
+    /* 네이버 지도 마커 */
+    var naverMarker = NMFMarker()
     
     // MARK: - Life Cycle
     
@@ -164,6 +156,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         setDefaultValue()
         addSubViews()
         setLayouts()
+        setMapView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -172,8 +165,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditCategoryButton"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditUrlButton"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapEditLocationButton"), object: nil)
-        
-        mapView = nil // 맵뷰 초기화
         
         // 전역변수 초기화
         CreateParty.orderForecastTime = nil
@@ -188,39 +179,15 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Functions
     
     private func setMapView() {
-        // 지도 불러오기
-        mapView = MTMapView(frame: mapSubView.frame)
-        
-        if let mapView = mapView {
-            // 지도의 타입 설정 - hybrid: 하이브리드, satellite: 위성지도, standard: 기본지도
-            mapView.baseMapType = .standard
-            mapView.isUserInteractionEnabled = false
+        if let latitude = CreateParty.latitude,
+           let longitude = CreateParty.longitude {
+            self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: latitude, lng: longitude)))
             
-            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            
-            // 원래 위치를 표시하던 마커가 있었는지 없었는지를 조건문으로 확인
-            if self.marker.mapPoint != nil {
-                // 원래 있던 마커의 좌표를 이동
-                self.marker.move(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ??     37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555)), withAnimation: true)
-            } else {
-                // 새 마커를 만들어서 좌표 설정
-                self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ??     37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
-                // 맵에 마커 추가
-                mapView.addPOIItems([marker])
-            }
-            mapSubView.addSubview(mapView)
+            self.naverMarker.position = NMGLatLng(lat: latitude, lng: longitude)
+            self.naverMarker.captionText = CreateParty.address ?? "요기?"
+            self.naverMarker.captionAligns = [NMFAlignType.top]
+            self.naverMarker.mapView = self.naverMapView.mapView
         }
-        
-        view.addSubview(mapSubView)
-        mapSubView.snp.makeConstraints { make in
-            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.left.equalToSuperview().offset(28)
-            make.width.equalTo(314)
-            make.height.equalTo(144)
-        }
-        
-        view.layoutSubviews()
     }
     
     private func setNotificationCenter() {
@@ -297,7 +264,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                 self.visualEffectView?.removeFromSuperview()
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
-                self.blockedView.removeFromSuperview()
                 self.setMapView()
             }
         }
@@ -468,7 +434,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
          orderEditImageView, matchingEditImageView, categoryEditImageView, urlEditImageView, locationEditImageView,
-         blockedView].forEach {
+         naverMapView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -598,7 +564,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
             make.right.equalTo(selectedLocationLabel.snp.right).inset(14)
         }
         
-        blockedView.snp.makeConstraints { make in
+        naverMapView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.width.equalTo(314)

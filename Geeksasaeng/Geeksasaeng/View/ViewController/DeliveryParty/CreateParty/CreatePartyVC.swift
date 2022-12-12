@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import QuartzCore
 import Then
+import NMapsMap
 
 class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
 
@@ -19,7 +20,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         $0.backgroundColor = .white
     }
     
-    // 콘텐츠뷰
     // 콘텐츠뷰
     lazy var contentView = UIView().then {
         $0.backgroundColor = .white
@@ -106,44 +106,33 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     var selectedUrlLabel = UILabel()
     var selectedLocationLabel = UILabel()
     
-    let mapSubView = UIView().then {
-        $0.backgroundColor = .gray
-        $0.layer.masksToBounds = true
-        $0.layer.cornerRadius = 5
-    }
-    
-    let blockedView = UIView().then {
-        $0.backgroundColor = .gray
-    }
-    
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
     
-    // MARK: - Properties
+    /* 네이버 지도 */
+    let naverMapView = NMFNaverMapView().then {
+        $0.isUserInteractionEnabled = false
+        $0.showZoomControls = false
+        $0.showLocationButton = false
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+    }
     
+    
+    // MARK: - Properties
     var isSettedOptions = false // 옵션이 모두 설정되었는지
     var isEditedContentsTextView = false // 내용이 수정되었는지
-    var mapView: MTMapView? // 카카오맵
-    var marker: MTMapPOIItem = {
-        let marker = MTMapPOIItem()
-        marker.showAnimationType = .dropFromHeaven
-        marker.markerType = .redPin
-        marker.itemName = "요기?"
-        marker.showDisclosureButtonOnCalloutBalloon = false
-        marker.draggable = true
-        return marker
-    }()
     
     var dormitoryInfo: DormitoryNameResult?
     var delegate: UpdateDeliveryDelegate?
+    
+    /* 네이버 지도 마커 */
+    var naverMarker = NMFMarker()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        /* 기숙사 좌표 불러오기 */
-        LocationAPI.getLocation(dormitoryInfo?.id ?? 1)
         
         setAttributeOfOptionLabel()
         setAttributeOfSelectedLabel()
@@ -154,12 +143,12 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         setTapGestureToLabels()
         addSubViews()
         setLayouts()
+        setMapView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapConfirmButton"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("TapBackButtonFromBankAccountVC"), object: nil)
-        mapView = nil // 맵뷰 초기화
         
         // 전역변수 초기화
         CreateParty.orderForecastTime = nil
@@ -177,32 +166,22 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Functions
     
     private func setMapView() {
-        // 지도 불러오기
-        mapView = MTMapView(frame: mapSubView.frame)
-        
-        if let mapView = mapView {
-            mapView.baseMapType = .standard
-            mapView.isUserInteractionEnabled = false
-            
-            // 지도의 센터를 설정 (x와 y 좌표, 줌 레벨 등)
-            mapView.setMapCenter(MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526,
-                                                                    longitude: CreateParty.longitude ?? 126.70531256589555)), zoomLevel: 5, animated: true)
-            // 마커의 좌표 설정
-            self.marker.mapPoint = MTMapPoint(geoCoord: MTMapPointGeo(latitude: CreateParty.latitude ?? 37.456518177069526, longitude: CreateParty.longitude ?? 126.70531256589555))
-            
-            mapView.addPOIItems([marker])
-            mapSubView.addSubview(mapView)
+        /* 기숙사 좌표 불러오기 */
+        LocationAPI.getLocation(dormitoryInfo?.id ?? 1) { isSuccess in
+            if isSuccess {
+                /* 수령 장소로 지도 카메라 이동, 마커 표시 */
+                if let latitude = CreateParty.latitude,
+                   let longitude = CreateParty.longitude {
+                    print("기숙사 좌표 불러오기 성공, 좌표: ", latitude, longitude)
+                    self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: latitude, lng: longitude)))
+                    
+                    self.naverMarker.position = NMGLatLng(lat: latitude, lng: longitude)
+                    self.naverMarker.captionText = CreateParty.address ?? "요기?"
+                    self.naverMarker.captionAligns = [NMFAlignType.top]
+                    self.naverMarker.mapView = self.naverMapView.mapView
+                }
+            }
         }
-        
-        view.addSubview(mapSubView)
-        mapSubView.snp.makeConstraints { make in
-            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.left.equalToSuperview().offset(28)
-            make.left.right.equalToSuperview().inset(23)
-            make.height.equalTo(205)
-        }
-        
-        view.layoutSubviews()
     }
     
     private func setTapGestureToLabels() {
@@ -289,12 +268,17 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             if result == "true" {
                 // 각 서브뷰에서 저장된 전역변수 데이터 출력
                 self.setLabelsData()
-                
-                // 좌표가 있으면 기존의 blockedView를 없애고 그 자리에 카카오맵 노출
-                if let _ = CreateParty.latitude,
-                   let _ = CreateParty.longitude {
-                    self.blockedView.removeFromSuperview()
-                    self.setMapView()
+
+                /* 수령 장소로 지도 카메라 이동, 마커 표시 */
+                if let latitude = CreateParty.latitude,
+                   let longitude = CreateParty.longitude {
+                    print("기숙사 좌표 불러오기 성공, 좌표: ", latitude, longitude)
+                    self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: latitude, lng: longitude)))
+                    
+                    self.naverMarker.position = NMGLatLng(lat: latitude, lng: longitude)
+                    self.naverMarker.captionText = CreateParty.address ?? "요기?"
+                    self.naverMarker.captionAligns = [NMFAlignType.top]
+                    self.naverMarker.mapView = self.naverMapView.mapView
                 }
                 
                 // Blur View 제거
@@ -372,7 +356,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         [eatTogetherButton, titleTextField, contentsTextView, separateView,
          orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel,
          orderForecastTimeButton, selectedPersonLabel, selectedCategoryLabel, selectedUrlLabel, selectedLocationLabel,
-         blockedView].forEach {
+         naverMapView].forEach {
             contentView.addSubview($0)
         }
     }
@@ -475,7 +459,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             make.height.equalTo(38)
         }
         
-        blockedView.snp.makeConstraints { make in
+        naverMapView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
             make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
             make.left.right.equalToSuperview().inset(23)
@@ -509,6 +493,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.popViewController(animated:true)
     }
     
+    /* 함께 먹어요 버튼 */
     @objc
     private func tapEatTogetherButton() {
         if eatTogetherButton.currentImage == UIImage(systemName: "checkmark.circle") {
@@ -645,6 +630,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    /* 파티 생성 버튼 */
     @objc
     private func tapRegisterButton() {
         if let title = titleTextField.text,

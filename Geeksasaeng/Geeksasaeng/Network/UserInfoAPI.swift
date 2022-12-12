@@ -115,7 +115,7 @@ class UserInfoAPI {
         }
     }
     
-    public static func passwordCheck(_ parameter: PasswordCheckInput, completion: @escaping (Bool, String) -> Void) {
+    public static func passwordCheck(_ parameter: PasswordCheckInput, completion: @escaping (Bool) -> Void) {
         AF.request("https://geeksasaeng.shop/members/password", method: .post ,parameters: parameter, encoder: JSONParameterEncoder.default, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
             .validate()
             .responseDecodable(of: PasswordCheckModel.self) { response in
@@ -123,13 +123,14 @@ class UserInfoAPI {
                 case .success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 비밀번호 일치")
-                        completion(true, result.message!)
+                        completion(true)
                     } else {
-                        completion(false, "password is not correct")
+                        completion(false)
                         print("DEBUG: 비밀번호 불일치")
                     }
                 case .failure(let error):
                     print("DEBUG: ", error.localizedDescription)
+                    completion(false)
                 }
             }
     }
@@ -146,9 +147,11 @@ class UserInfoAPI {
                     completion(result.isSuccess!, result.result!)
                 } else {
                     print("DEBUG:", result.message!)
+                    completion(false, EditUserInfoModelResult()) // 비어있는 객체 return
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
+                completion(false, EditUserInfoModelResult())
             }
         }
     }
@@ -186,6 +189,7 @@ class UserInfoAPI {
                 }
             case .failure(let error):
                 print("DEBUG: ", error.localizedDescription)
+                completion(false, EditUserModelResult())
             }
         }
     }

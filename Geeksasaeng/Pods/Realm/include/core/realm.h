@@ -59,6 +59,7 @@ typedef struct shared_realm realm_t;
 typedef struct realm_schema realm_schema_t;
 typedef struct realm_scheduler realm_scheduler_t;
 typedef struct realm_thread_safe_reference realm_thread_safe_reference_t;
+typedef struct realm_callback_interface_thread_observer realm_interface_callback_thread_observer_t;
 typedef void (*realm_free_userdata_func_t)(realm_userdata_t userdata);
 typedef realm_userdata_t (*realm_clone_userdata_func_t)(const realm_userdata_t userdata);
 
@@ -1071,15 +1072,16 @@ RLM_API bool realm_rollback(realm_t*);
 /**
  * start a new write transaction asynchronously for the realm passed as argument.
  */
-RLM_API unsigned int realm_async_begin_write(realm_t* realm, realm_async_begin_write_func_t,
-                                             realm_userdata_t userdata, realm_free_userdata_func_t userdata_free,
-                                             bool notify_only);
+RLM_API bool realm_async_begin_write(realm_t* realm, realm_async_begin_write_func_t, realm_userdata_t userdata,
+                                     realm_free_userdata_func_t userdata_free, bool notify_only,
+                                     unsigned int* transaction_id);
 
 /**
  * commit a transaction asynchronously for the realm passed as argument.
  */
-RLM_API unsigned int realm_async_commit(realm_t* realm, realm_async_commit_func_t, realm_userdata_t userdata,
-                                        realm_free_userdata_func_t userdata_free, bool allow_grouping);
+RLM_API bool realm_async_commit(realm_t* realm, realm_async_commit_func_t, realm_userdata_t userdata,
+                                realm_free_userdata_func_t userdata_free, bool allow_grouping,
+                                unsigned int* transaction_id);
 
 /**
  * Cancel the transaction referenced by the token passed as argument and set the optional boolean flag in order to
@@ -1744,6 +1746,15 @@ RLM_API bool realm_list_set(realm_list_t*, size_t index, realm_value_t value);
  * @return True if no exception occurred.
  */
 RLM_API bool realm_list_insert(realm_list_t*, size_t index, realm_value_t value);
+
+/**
+ * Move the element at @a from_index to @a to_index.
+ *
+ * @param from_index The index of the element to move.
+ * @param to_index The index to move the element to.
+ * @return True if no exception occurred.
+ */
+RLM_API bool realm_list_move(realm_list_t*, size_t from_index, size_t to_index);
 
 /**
  * Insert an embedded object at a given position.
@@ -2839,6 +2850,8 @@ typedef void (*realm_return_apikey_func_t)(realm_userdata_t userdata, realm_app_
 typedef void (*realm_return_apikey_list_func_t)(realm_userdata_t userdata, realm_app_user_apikey_t[], size_t count,
                                                 realm_app_error_t*);
 
+typedef void (*realm_return_string_func_t)(realm_userdata_t userdata, const char* serialized_ejson_response,
+                                           const realm_app_error_t*);
 /**
  * Generic completion callback for asynchronous Realm App operations.
  *
@@ -3218,9 +3231,7 @@ RLM_API bool realm_app_push_notification_client_deregister_device(const realm_ap
  * @return true, if no error occurred.
  */
 RLM_API bool realm_app_call_function(const realm_app_t*, const realm_user_t*, const char* function_name,
-                                     const char* serialized_ejson_args,
-                                     void (*)(realm_userdata_t userdata, const char* serialized_ejson_response,
-                                              const realm_app_error_t*),
+                                     const char* serialized_ejson_args, realm_return_string_func_t callback,
                                      realm_userdata_t userdata, realm_free_userdata_func_t userdata_free);
 
 /**
@@ -3566,10 +3577,11 @@ typedef struct realm_flx_sync_subscription_desc realm_flx_sync_subscription_desc
 typedef enum realm_flx_sync_subscription_set_state {
     RLM_SYNC_SUBSCRIPTION_UNCOMMITTED = 0,
     RLM_SYNC_SUBSCRIPTION_PENDING,
-    RLM_SYNC_BOOTSTRAPPING,
+    RLM_SYNC_SUBSCRIPTION_BOOTSTRAPPING,
     RLM_SYNC_SUBSCRIPTION_COMPLETE,
     RLM_SYNC_SUBSCRIPTION_ERROR,
     RLM_SYNC_SUBSCRIPTION_SUPERSEDED,
+    RLM_SYNC_SUBSCRIPTION_AWAITING_MARK,
 } realm_flx_sync_subscription_set_state_e;
 typedef void (*realm_sync_on_subscription_state_changed_t)(realm_userdata_t userdata,
                                                            realm_flx_sync_subscription_set_state_e state);
@@ -3997,6 +4009,14 @@ RLM_API void realm_sync_session_handle_error_for_testing(const realm_sync_sessio
  */
 RLM_API void realm_register_user_code_callback_error(void* usercode_error) RLM_API_NOEXCEPT;
 
+/**
+ * Register a callback handler for bindings interested in registering callbacks before/after the ObjectStore thread
+ * runs.
+ * @param thread_observer a ptr to an implementation class that can receive these notifications. If nullptr is passed
+ * instead, this will have the effect of unregistering the callback.
+ */
+RLM_API void realm_set_binding_callback_thread_observer(realm_interface_callback_thread_observer_t* thread_observer)
+    RLM_API_NOEXCEPT;
 
 typedef struct realm_mongodb_collection realm_mongodb_collection_t;
 

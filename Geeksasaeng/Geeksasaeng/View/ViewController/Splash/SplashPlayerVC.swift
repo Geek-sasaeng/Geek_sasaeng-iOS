@@ -17,7 +17,7 @@ class SplashPlayerViewController: UIViewController {
         super.viewDidLoad()
         
         // Lottie AnimationView 생성
-        let animationView = AnimationView(name: "splash")
+        let animationView = LottieAnimationView(name: "splash")
 
         // 메인 뷰에 삽입
         view.addSubview(animationView)
