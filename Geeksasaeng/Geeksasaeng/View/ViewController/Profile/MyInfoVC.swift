@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import Kingfisher
 
 class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
@@ -24,9 +25,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.addGestureRecognizer(gesture)
     }
     
-    let userImageView = UIImageView().then {
-        $0.image = UIImage(named: "EditUserImage")
-    }
+    let userImageView = UIImageView()
     
     /* title labels */
     let dormitoryLabel = UILabel()
@@ -184,7 +183,6 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         setAttributes()
         addSubViews()
         setLayouts()
-//        setUserInfo()
     }
     
     // MARK: - Functions
@@ -314,6 +312,8 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     private func setUserInfo() {
         UserInfoAPI.getUserInfo { isSuccess, result in
+            let url = URL(string: result.profileImgUrl!)
+            self.userImageView.kf.setImage(with: url)
             self.dormitoryDataLabel.text = result.dormitoryName
             self.nicknameDataLabel.text = result.nickname
             self.idDataLabel.text = result.loginId
