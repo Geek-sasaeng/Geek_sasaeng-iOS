@@ -7,11 +7,10 @@
 
 import UIKit
 
-import FirebaseFirestore
-import FirebaseFirestoreSwift
 import Kingfisher
 import RMQClient
 import SnapKit
+import Starscream
 import Then
 
 // Delegate Pattern을 통해 pushVC 구현
@@ -438,15 +437,15 @@ class ChattingViewController: UIViewController {
     
     // MARK: - Properties
     
-    let db = Firestore.firestore()
-    let settings = FirestoreSettings()
+    private var socket: WebSocket?
     
     var contents: [cellContents] = []
     var userNickname: String?
     var maxMatching: Int?
     var currentMatching: Int?
-    // 선택한 채팅방의 uuid값
-    var roomUUID: String?
+    
+    // 선택한 채팅방의 id값
+    var roomId: String?
     var roomName: String?
     
     var firstRoomInfo = true
@@ -459,21 +458,16 @@ class ChattingViewController: UIViewController {
     var accountNumber: String?
     var enterTimeToDate: Date?    // 내가 이 방에 들어온 시간
     
-    var loadMessageListener: ListenerRegistration?
-    var loadParticipantsListener: ListenerRegistration?
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        contentsTextView.delegate = self
         
-        setFirestore()
-        loadParticipants()
-        loadMessages()
+        setupWebSocket()
+        
+        contentsTextView.delegate = self
         setCollectionView()
-        setEnterTime()
         addSubViews()
         setLayouts()
     }
@@ -499,17 +493,30 @@ class ChattingViewController: UIViewController {
         
         // 사라질 때 다시 탭바 보이게 설정
         self.tabBarController?.tabBar.isHidden = false
-        
-        self.loadMessageListener?.remove()
-        self.loadParticipantsListener?.remove()
     }
     
+    // MARK: - deinit
     
+    // 웹소켓 해제
+    deinit {
+        socket?.disconnect()
+        socket?.delegate = nil
+    }
     
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         collectionView.endEditing(true)
+    }
+    
+    // 웹소켓 설정
+    private func setupWebSocket() {
+        let url = URL(string: "ws://geeksasaeng.shop:8080/chatting")!
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 5
+        socket = WebSocket(request: request)
+        socket!.delegate = self
+        socket!.connect()
     }
     
     private func setCollectionView() {
@@ -565,154 +572,147 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    private func setFirestore() {
-        settings.isPersistenceEnabled = false
-        db.settings = settings
-        
-        db.clearPersistence()
-    }
-    
-    /* 참여자가 채팅방에 처음 입장한 시간 설정 */
-    private func setEnterTime() {
-        guard let roomUUID = roomUUID else { return }
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let e = error {
-                print(e.localizedDescription)
-            } else {
-                print("DEBUG: setEnterTime")
-                if let document = documentSnapshot {
-                    let roomInfo = try? document.data(as: RoomInfoModel.self)
-                    guard let roomInfo = roomInfo,
-                          let roomDetailInfo = roomInfo.roomInfo,
-                          let participants = roomDetailInfo.participants else { return }
-                    
-                    participants.forEach {
-                        if $0.participant == LoginModel.nickname {
-                            guard let enterTime = $0.enterTime else { return }
-                            guard let enterTimeToDate = FormatCreater.sharedLongFormat.date(from: enterTime) else { return } // 참가자가 참가한 시간 Date Type
-                            self.enterTimeToDate = enterTimeToDate  // 로컬 변수에 저장
-                        }
-                    }
-                    
-                    /* 입장 시간 세팅 끝난 후에 리스너 세팅 */
-                    self.loadParticipants()
-                    self.loadMessages()
-                }
-            }
-        }
-    }
+//    /* 참여자가 채팅방에 처음 입장한 시간 설정 */
+//    private func setEnterTime() {
+//        guard let roomUUID = roomUUID else { return }
+//        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+//            if let e = error {
+//                print(e.localizedDescription)
+//            } else {
+//                print("DEBUG: setEnterTime")
+//                if let document = documentSnapshot {
+//                    let roomInfo = try? document.data(as: RoomInfoModel.self)
+//                    guard let roomInfo = roomInfo,
+//                          let roomDetailInfo = roomInfo.roomInfo,
+//                          let participants = roomDetailInfo.participants else { return }
+//
+//                    participants.forEach {
+//                        if $0.participant == LoginModel.nickname {
+//                            guard let enterTime = $0.enterTime else { return }
+//                            guard let enterTimeToDate = FormatCreater.sharedLongFormat.date(from: enterTime) else { return } // 참가자가 참가한 시간 Date Type
+//                            self.enterTimeToDate = enterTimeToDate  // 로컬 변수에 저장
+//                        }
+//                    }
+//
+//                    /* 입장 시간 세팅 끝난 후에 리스너 세팅 */
+//                    self.loadParticipants()
+//                    self.loadMessages()
+//                }
+//            }
+//        }
+//    }
     
     /* Rooms에 리스너 설정 */
-    private func loadParticipants() {
-        guard let roomUUID = roomUUID else { return }
-        loadParticipantsListener = db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
-            if let e = error {
-                print(e.localizedDescription)
-            } else {
-                print("DEBUG: loadParticipants")
-                if let document = documentSnapshot {
-                    if let data = try? document.data(as: RoomInfoModel.self) {
-                        guard let roomInfo = data.roomInfo,
-                              let participants = roomInfo.participants,
-                              let bank = roomInfo.bank,
-                              let accountNumber = roomInfo.accountNumber else { return }
-                        
-                        // 방장, 현재 매칭 유저 수 설정
-                        if participants.count >= 1 {
-                            self.roomMaster = participants[0].participant
-                            self.currentMatching = participants.count
-                        }
-                        
-                        // 은행 & 계좌 설정
-                        self.bank = bank
-                        self.accountNumber = accountNumber
-                        
-                        if self.roomMaster == LoginModel.nickname { // 방장일 때 주문 완료 상단바 노출
-                            self.view.addSubview(self.orderCompletedView)
-                            self.orderCompletedView.snp.makeConstraints { make in
-                                if let navigationBar = self.navigationController?.navigationBar {
-                                    make.top.equalTo(self.collectionView.snp.top).offset(navigationBar.frame.height + 55)
-                                }
-                                make.width.equalToSuperview()
-                                make.height.equalTo(55)
-                            }
-                        } else { // 방장이 아닐 때 && 해당 참여자가 송금을 하지 않은 상태일 때 remittanceView 노출
-                            participants.forEach {
-                                if $0.participant == LoginModel.nickname {
-                                    guard let isRemittance = $0.isRemittance else { return }
-                                    if !isRemittance {
-                                        self.view.addSubview(self.remittanceView)
-                                        self.remittanceView.snp.makeConstraints { make in
-                                            if let navigationBar = self.navigationController?.navigationBar {
-                                                make.top.equalTo(self.collectionView.snp.top).offset(navigationBar.frame.height + 55)
-                                            }
-                                            make.width.equalToSuperview()
-                                            make.height.equalTo(55)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    private func loadParticipants() {
+//        guard let roomUUID = roomUUID else { return }
+//        loadParticipantsListener = db.collection("Rooms").document(roomUUID).addSnapshotListener { documentSnapshot, error in
+//            if let e = error {
+//                print(e.localizedDescription)
+//            } else {
+//                print("DEBUG: loadParticipants")
+//                if let document = documentSnapshot {
+//                    if let data = try? document.data(as: RoomInfoModel.self) {
+//                        guard let roomInfo = data.roomInfo,
+//                              let participants = roomInfo.participants,
+//                              let bank = roomInfo.bank,
+//                              let accountNumber = roomInfo.accountNumber else { return }
+//
+//                        // 방장, 현재 매칭 유저 수 설정
+//                        if participants.count >= 1 {
+//                            self.roomMaster = participants[0].participant
+//                            self.currentMatching = participants.count
+//                        }
+//
+//                        // 은행 & 계좌 설정
+//                        self.bank = bank
+//                        self.accountNumber = accountNumber
+//
+//                        if self.roomMaster == LoginModel.nickname { // 방장일 때 주문 완료 상단바 노출
+//                            self.view.addSubview(self.orderCompletedView)
+//                            self.orderCompletedView.snp.makeConstraints { make in
+//                                if let navigationBar = self.navigationController?.navigationBar {
+//                                    make.top.equalTo(self.collectionView.snp.top).offset(navigationBar.frame.height + 55)
+//                                }
+//                                make.width.equalToSuperview()
+//                                make.height.equalTo(55)
+//                            }
+//                        } else { // 방장이 아닐 때 && 해당 참여자가 송금을 하지 않은 상태일 때 remittanceView 노출
+//                            participants.forEach {
+//                                if $0.participant == LoginModel.nickname {
+//                                    guard let isRemittance = $0.isRemittance else { return }
+//                                    if !isRemittance {
+//                                        self.view.addSubview(self.remittanceView)
+//                                        self.remittanceView.snp.makeConstraints { make in
+//                                            if let navigationBar = self.navigationController?.navigationBar {
+//                                                make.top.equalTo(self.collectionView.snp.top).offset(navigationBar.frame.height + 55)
+//                                            }
+//                                            make.width.equalToSuperview()
+//                                            make.height.equalTo(55)
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     /* messages에 리스너 설정 */
-    private func loadMessages() {
-        guard let roomUUID = roomUUID else { return }
-        loadMessageListener =  db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
-            if let e = error {
-                print(e.localizedDescription)
-            } else {
-                print("DEBUG: loadMessages")
-                self.contents.removeAll()
-                if let snapshotDocuments = querySnapshot?.documents {
-                    // Document 하나씩 확인하면서 보낸 사람이 누구냐에 따라 다른 셀 타입으로 contents에 추가
-                    for document in snapshotDocuments {
-                        if let data = try? document.data(as: MessageModel.self) {
-                            guard let sendTime = data.time,
-                                  let sendTimeToDate = FormatCreater.sharedLongFormat.date(from: sendTime),
-                                  let enterTimeToDate = self.enterTimeToDate else { return }
-                            
-                            let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
-                            if timeInterval <= 0 {
-                                if let content = data.content,
-                                   let nickname = data.nickname,
-                                   let userImgUrl = data.userImgUrl,
-                                   let time = data.time,
-                                   let isSystemMessage = data.isSystemMessage {
-                                    
-                                    if isSystemMessage == true {
-                                        self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
-                                        self.lastSender = "system"
-                                    } else if self.lastSender == nil { // 첫 메세지일 때
-                                        self.contents.append(cellContents(cellType: .message,
-                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
-                                        self.lastSender = nickname
-                                    } else if self.lastSender == nickname { // 같은 사람이 연속으로 보낼 때
-                                        self.contents.append(cellContents(cellType: .sameSenderMessage,
-                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
-                                        self.lastSender = nickname
-                                    } else { // 다른 사람이 보낼 때
-                                        self.contents.append(cellContents(cellType: .message,
-                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
-                                        self.lastSender = nickname
-                                    }
-                                    
-                                    DispatchQueue.main.async {
-                                        self.collectionView.reloadData()
-                                        self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    private func loadMessages() {
+//        guard let roomUUID = roomUUID else { return }
+//        loadMessageListener =  db.collection("Rooms").document(roomUUID).collection("Messages").order(by: "time").addSnapshotListener { querySnapshot, error in
+//            if let e = error {
+//                print(e.localizedDescription)
+//            } else {
+//                print("DEBUG: loadMessages")
+//                self.contents.removeAll()
+//                if let snapshotDocuments = querySnapshot?.documents {
+//                    // Document 하나씩 확인하면서 보낸 사람이 누구냐에 따라 다른 셀 타입으로 contents에 추가
+//                    for document in snapshotDocuments {
+//                        if let data = try? document.data(as: MessageModel.self) {
+//                            guard let sendTime = data.time,
+//                                  let sendTimeToDate = FormatCreater.sharedLongFormat.date(from: sendTime),
+//                                  let enterTimeToDate = self.enterTimeToDate else { return }
+//
+//                            let timeInterval = Int(enterTimeToDate.timeIntervalSince(sendTimeToDate))
+//                            if timeInterval <= 0 {
+//                                if let content = data.content,
+//                                   let nickname = data.nickname,
+//                                   let userImgUrl = data.userImgUrl,
+//                                   let time = data.time,
+//                                   let isSystemMessage = data.isSystemMessage {
+//
+//                                    if isSystemMessage == true {
+//                                        self.contents.append(cellContents(cellType: .systemMessage, message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time, isSystemMessage: isSystemMessage)))
+//                                        self.lastSender = "system"
+//                                    } else if self.lastSender == nil { // 첫 메세지일 때
+//                                        self.contents.append(cellContents(cellType: .message,
+//                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
+//                                        self.lastSender = nickname
+//                                    } else if self.lastSender == nickname { // 같은 사람이 연속으로 보낼 때
+//                                        self.contents.append(cellContents(cellType: .sameSenderMessage,
+//                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
+//                                        self.lastSender = nickname
+//                                    } else { // 다른 사람이 보낼 때
+//                                        self.contents.append(cellContents(cellType: .message,
+//                                                                          message: MessageModel(content: content, nickname: nickname, userImgUrl: userImgUrl, time: time)))
+//                                        self.lastSender = nickname
+//                                    }
+//
+//                                    DispatchQueue.main.async {
+//                                        self.collectionView.reloadData()
+//                                        self.collectionView.scrollToItem(at: IndexPath(row: self.contents.count-1, section: 0), at: .top, animated: true)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     // 배경을 흐리게, 블러뷰로 설정
     private func showBlurBackground() {
@@ -734,52 +734,77 @@ class ChattingViewController: UIViewController {
     }
     
     /* 나간 유저의 데이터를 firestore에 업데이트(삭제), 방장이 나간 거면 새 방장까지 선정 */
-    private func updateExitedMember(completion: @escaping ()->Void) {
-        guard let roomUUID = roomUUID else { return }
-        
-        // map 삭제로 변경
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                do {
-                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
-                    guard let roomInfo = data?.roomInfo else { return }
-                    let participants = roomInfo.participants
-                    
-                    var targetParticipant: String? // 삭제 대상 딕셔너리를 만들기 위해
-                    var time: String?
-                    var isRemittance: Bool?
-                    
-                    if self.roomMaster == LoginModel.nickname { // 본인이 방장이면
-                        if participants?.count ?? 0 >= 2 {
-                            self.roomMaster = participants?[1].participant // 다음 인덱스를 방장으로
-                        } else {
-                            self.db.collection("Rooms").document(roomUUID).delete() // 방에 한 명이라면 채팅방 삭제
-                        }
+//    private func updateExitedMember(completion: @escaping ()->Void) {
+//        guard let roomUUID = roomUUID else { return }
+//
+//        // map 삭제로 변경
+//        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+//            if let error = error {
+//                print(error.localizedDescription)
+//            } else {
+//                do {
+//                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+//                    guard let roomInfo = data?.roomInfo else { return }
+//                    let participants = roomInfo.participants
+//
+//                    var targetParticipant: String? // 삭제 대상 딕셔너리를 만들기 위해
+//                    var time: String?
+//                    var isRemittance: Bool?
+//
+//                    if self.roomMaster == LoginModel.nickname { // 본인이 방장이면
+//                        if participants?.count ?? 0 >= 2 {
+//                            self.roomMaster = participants?[1].participant // 다음 인덱스를 방장으로
+//                        } else {
+//                            self.db.collection("Rooms").document(roomUUID).delete() // 방에 한 명이라면 채팅방 삭제
+//                        }
+//                    }
+//
+//                    // 파베에서 내 이름 삭제
+//                    participants?.forEach {
+//                        if $0.participant == LoginModel.nickname {
+//                            targetParticipant = $0.participant
+//                            time = $0.enterTime
+//                            isRemittance = $0.isRemittance
+//                        }
+//                    }
+//
+//                    guard let targetParticipant = targetParticipant,
+//                          let time = time,
+//                          let isRemittance = isRemittance else { return }
+//
+//                    let input = ["participant": targetParticipant, "enterTime": time, "isRemittance": isRemittance] as [String : Any]
+//                    self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayRemove([input])])
+//
+//                    completion()
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        }
+//    }
+    
+    // 연결된 웹소켓을 통해 메세지 전송
+    private func sendMessage(input: MsgRequest) {
+        print("DEBUG: sendMessage")
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(input)
+            if let jsonString = String(data: data, encoding: .utf8),
+               let socket = socket {
+                print("DEBUG: 웹소켓에 write하는 Json String", jsonString)
+                socket.write(string: jsonString) {
+                    print("DEBUG: write success")
+                    // 전송 성공 시 tf 값 비우기
+                    DispatchQueue.main.async {
+                        self.contentsTextView.text = ""
                     }
-                
-                    // 파베에서 내 이름 삭제
-                    participants?.forEach {
-                        if $0.participant == LoginModel.nickname {
-                            targetParticipant = $0.participant
-                            time = $0.enterTime
-                            isRemittance = $0.isRemittance
-                        }
-                    }
-                    
-                    guard let targetParticipant = targetParticipant,
-                          let time = time,
-                          let isRemittance = isRemittance else { return }
-
-                    let input = ["participant": targetParticipant, "enterTime": time, "isRemittance": isRemittance] as [String : Any]
-                    self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants": FieldValue.arrayRemove([input])])
-                    
-                    completion()
-                } catch {
-                    print(error.localizedDescription)
                 }
             }
+        } catch {
+            // TODO: - 실패하면 사용자에게 어떻게? 일단은 토스트 메세지 띄움
+            print(error)
+            showToast(viewController: self, message: "채팅 전송에 실패하였습니다.",
+                      font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
         }
     }
     
@@ -875,7 +900,7 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    /* 메세지 전송 */
+    /* 메세지 전송 버튼 클릭 */
     @objc
     private func tapSendButton() {
         sendButton.isEnabled = false
@@ -885,36 +910,20 @@ class ChattingViewController: UIViewController {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         formatter.locale = Locale(identifier: "ko_KR")
         
+        /* 웹소켓 통신으로 채팅 전송 */
         if let message = contentsTextView.text {
-            guard let roomUUID = roomUUID else { return }
-            db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                "content": message,
-                "nickname": LoginModel.nickname ?? "홍길동",
-                "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                "time": formatter.string(from: Date()),
-                "isSystemMessage": false,
-                "readUsers": [LoginModel.nickname ?? "홍길동"]
-            ]) { error in
-                if let e = error {
-                    print(e.localizedDescription)
-                } else {
-                    print("Success save data")
-                    
-                    DispatchQueue.main.async {
-                        self.contentsTextView.text = ""
-                    }
-                }
-            }
-            
-            /* 메세지 전송시 roomInfo의 updatedAt값도 바꿔주기 */
-            db.collection("Rooms").document(roomUUID).updateData(["roomInfo.updatedAt" : formatter.string(from: Date())])
-            { error in
-                if let e = error {
-                    print(e.localizedDescription)
-                } else {
-                    print("DEBUG: updatedAt 값 업데이트")
-                }
-            }
+            // TODO: - 서버가 필요한 값들 주면 그때 연결하면 됨
+            // 현재는 memberId email profileImgUrl chatId는 더미 데이터
+            let input = MsgRequest(content: message,
+                                   chatRoomId: roomId,
+                                   isSystemMessage: false,
+                                   memberId: 1, // 아직 서버가 안 줌
+                                   email: "dmstn@gachon.ac.kr", // ^ㅡ^ 안 줌
+                                   profileImgUrl: "더미",
+                                   chatType: "publish",
+                                   chatId: "none",
+                                   isImageMessage: false)
+            sendMessage(input: input)
         }
     }
     
@@ -922,59 +931,59 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapRemittanceButton() {
         // 파이어스토어에 isRemittance = true로 바꾸고 remittanceView remove
-        guard let roomUUID = roomUUID else { return }
-
-        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                do {
-                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
-                    guard let roomInfo = data?.roomInfo,
-                          let participants = roomInfo.participants else { return }
-                    
-                    var targetEnterTime: String?
-                    
-                    participants.forEach {
-                        if $0.participant == LoginModel.nickname {
-                            targetEnterTime = $0.enterTime
-                        }
-                    }
-                    
-                    guard let targetEnterTime = targetEnterTime else { return }
-                    // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
-                    if let nickname = LoginModel.nickname {
-                        let removeData = ["enterTime": targetEnterTime, "isRemittance": false, "participant": nickname] as [String : Any]
-                        let newData = ["enterTime": targetEnterTime, "isRemittance": true, "participant": nickname] as [String : Any]
-                        
-                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
-                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
-                    }
-                    
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    formatter.locale = Locale(identifier: "ko_KR")
-                    
-                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
-                        "nickname": "SystemMessage",
-                        "userImgUrl": "SystemMessage",
-                        "time": formatter.string(from: Date()),
-                        "isSystemMessage": true,
-                        "readUsers": [LoginModel.nickname ?? "홍길동"]
-                    ]) { error in
-                        if let e = error {
-                            print(e.localizedDescription)
-                        } else {
-                            print("Success save data")
-                        }
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        
+//        guard let roomUUID = roomUUID else { return }
+//
+//        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
+//            if let error = error {
+//                print(error.localizedDescription)
+//            } else {
+//                do {
+//                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
+//                    guard let roomInfo = data?.roomInfo,
+//                          let participants = roomInfo.participants else { return }
+//
+//                    var targetEnterTime: String?
+//
+//                    participants.forEach {
+//                        if $0.participant == LoginModel.nickname {
+//                            targetEnterTime = $0.enterTime
+//                        }
+//                    }
+//
+//                    guard let targetEnterTime = targetEnterTime else { return }
+//                    // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
+//                    if let nickname = LoginModel.nickname {
+//                        let removeData = ["enterTime": targetEnterTime, "isRemittance": false, "participant": nickname] as [String : Any]
+//                        let newData = ["enterTime": targetEnterTime, "isRemittance": true, "participant": nickname] as [String : Any]
+//
+//                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
+//                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
+//                    }
+//
+//                    let formatter = DateFormatter()
+//                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//                    formatter.locale = Locale(identifier: "ko_KR")
+//
+//                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+//                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
+//                        "nickname": "SystemMessage",
+//                        "userImgUrl": "SystemMessage",
+//                        "time": formatter.string(from: Date()),
+//                        "isSystemMessage": true,
+//                        "readUsers": [LoginModel.nickname ?? "홍길동"]
+//                    ]) { error in
+//                        if let e = error {
+//                            print(e.localizedDescription)
+//                        } else {
+//                            print("Success save data")
+//                        }
+//                    }
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        }
+//
         self.remittanceView.removeFromSuperview()
     }
     
@@ -1013,7 +1022,7 @@ class ChattingViewController: UIViewController {
         removeNotificationSendView()
         
         // 서버에 요청
-        let input = DeliveryNotificationInput(uuid: roomUUID)
+        let input = DeliveryNotificationInput(uuid: roomId)
         DeliveryNotificationAPI.requestPushNotification(input) { [self] isSuccess in
             // 토스트 메세지 띄우기
             if isSuccess {
@@ -1055,30 +1064,30 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        let input = CloseMatchingInput(uuid: roomUUID)
-        CloseMatchingAPI.requestCloseMatching(input) { isSuccess in
-            if isSuccess {
-                // 매칭 마감 시스템 메세지 업로드
-                self.db.collection("Rooms").document(self.roomUUID!).collection("Messages").document(UUID().uuidString).setData([
-                    "content": "매칭이 마감되었습니다",
-                    "nickname": LoginModel.nickname ?? "홍길동",
-                    "userImgUrl": LoginModel.userImgUrl ?? "https://",
-                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true,
-                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                ]) { error in
-                    if let e = error {
-                        print(e.localizedDescription)
-                    } else {
-                        print("Success save data")
-                    }
-                }
+//        let input = CloseMatchingInput(uuid: roomUUID)
+//        CloseMatchingAPI.requestCloseMatching(input) { isSuccess in
+//            if isSuccess {
+                // TODO: - 매칭 마감 시스템 메세지 업로드
+//                self.db.collection("Rooms").document(self.roomUUID!).collection("Messages").document(UUID().uuidString).setData([
+//                    "content": "매칭이 마감되었습니다",
+//                    "nickname": LoginModel.nickname ?? "홍길동",
+//                    "userImgUrl": LoginModel.userImgUrl ?? "https://",
+//                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+//                    "isSystemMessage": true,
+//                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+//                ]) { error in
+//                    if let e = error {
+//                        print(e.localizedDescription)
+//                    } else {
+//                        print("Success save data")
+//                    }
+//                }
                 
                 // 매칭 마감 버튼 비활성화
-                self.ownerAlertController.actions[1].isEnabled = false
-                self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
-            }
-        }
+//                self.ownerAlertController.actions[1].isEnabled = false
+//                self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+//            }
+//        }
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
@@ -1115,62 +1124,62 @@ class ChattingViewController: UIViewController {
     /* 채팅 나가기에서 '확인' 버튼 클릭시 실행 */
     @objc
     private func tapExitConfirmButton() {
-        guard let roomUUID = roomUUID else { return }
+//        guard let roomUUID = roomUUID else { return }
         
-        // 본인이 방장일 때
-        if roomMaster == LoginModel.nickname {
-            // 파이어 스토어 participants에서도 이름 제거
-            updateExitedMember { [self] in
-                /* 파베에서 새 방장 선정 완료되면 실행 */
-                
-                // 서버에 알려줘서 서버의 방장도 바꿔줌
-                let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
-                ChatRoomExitAPI.patchExitCheif(input)
-                
-                // 새 방장 선정 시스템 메세지 출력
-                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                    "content": "방장의 활동 중단에 따라 새로운\n방장으로 \'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
-                    "nickname": "SystemMessage",
-                    "userImgUrl": "SystemMessage",
-                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true,
-                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                ]) { error in
-                    if let e = error {
-                        print(e.localizedDescription)
-                    } else {
-                        print("Success save data")
-                    }
-                }
-            }
-        } else { // 본인이 방장이 아닐 때
-            // 파이어 스토어 participants에서도 이름 제거
-            updateExitedMember { [self] in
-                /* 파베에서 이름 지우는 거 완료되면 실행 */
-                // 서버에 나간 사람 알려줌
-                let input = ChatRoomExitInput(uuid: roomUUID)
-                ChatRoomExitAPI.patchExitUser(input)
-                
-                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-                    "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
-                    "nickname": "SystemMessage",
-                    "userImgUrl": "SystemMessage",
-                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
-                    "isSystemMessage": true,
-                    "readUsers": [LoginModel.nickname ?? "홍길동"]
-                ]) { error in
-                    if let e = error {
-                        print(e.localizedDescription)
-                    } else {
-                        print("Success save data")
-                    }
-                }
-            }
-        }
-//        if var currentMatching = currentMatching {
-//            currentMatching -= 1
+//        // 본인이 방장일 때
+//        if roomMaster == LoginModel.nickname {
+//            // 파이어 스토어 participants에서도 이름 제거
+//            updateExitedMember { [self] in
+//                /* 파베에서 새 방장 선정 완료되면 실행 */
+//
+//                // 서버에 알려줘서 서버의 방장도 바꿔줌
+//                let input = ChatRoomExitForCheifInput(nickName: roomMaster, uuid: roomUUID)
+//                ChatRoomExitAPI.patchExitCheif(input)
+//
+//                // 새 방장 선정 시스템 메세지 출력
+//                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+//                    "content": "방장의 활동 중단에 따라 새로운\n방장으로 \'\(roomMaster ?? "홍길동")\'님이 선정되었습니다",
+//                    "nickname": "SystemMessage",
+//                    "userImgUrl": "SystemMessage",
+//                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+//                    "isSystemMessage": true,
+//                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+//                ]) { error in
+//                    if let e = error {
+//                        print(e.localizedDescription)
+//                    } else {
+//                        print("Success save data")
+//                    }
+//                }
+//            }
+//        } else { // 본인이 방장이 아닐 때
+//            // 파이어 스토어 participants에서도 이름 제거
+//            updateExitedMember { [self] in
+//                /* 파베에서 이름 지우는 거 완료되면 실행 */
+//                // 서버에 나간 사람 알려줌
+//                let input = ChatRoomExitInput(uuid: roomUUID)
+//                ChatRoomExitAPI.patchExitUser(input)
+//
+//                self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
+//                    "content": "\(LoginModel.nickname ?? "홍길동")님이 방에서 나갔습니다",
+//                    "nickname": "SystemMessage",
+//                    "userImgUrl": "SystemMessage",
+//                    "time": FormatCreater.sharedLongFormat.string(from: Date()),
+//                    "isSystemMessage": true,
+//                    "readUsers": [LoginModel.nickname ?? "홍길동"]
+//                ]) { error in
+//                    if let e = error {
+//                        print(e.localizedDescription)
+//                    } else {
+//                        print("Success save data")
+//                    }
+//                }
+//            }
 //        }
-        navigationController?.popViewController(animated: true)
+////        if var currentMatching = currentMatching {
+////            currentMatching -= 1
+////        }
+        self.navigationController?.popViewController(animated: true)
     }
     
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
@@ -1196,63 +1205,64 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch contents[indexPath.row].cellType {
-        case .systemMessage: // 시스템 메세지
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
-            cell.systemMessageLabel.text = contents[indexPath.row].message?.content
-            print("Seori Test: sys #\(indexPath.item)", cell)
-            return cell
-        case .sameSenderMessage: // 같은 사람이 연속 전송
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
-            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
-                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
-                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
-            } else {
-                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
-                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-            }
-            print("Seori Test: same #\(indexPath.item)", cell)
-            return cell
-        default: // 다른 사람이 전송
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-            cell.nicknameLabel.text = contents[indexPath.row].message?.nickname
-            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
-                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
-                cell.nicknameLabel.textAlignment = .right
-                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
-                cell.leftImageView.isHidden = true
-                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
-                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-                }
-                
-                print("Seori Test: me #\(indexPath.item)", cell)
-            } else {
-                cell.leftImageView.isUserInteractionEnabled = true
-                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
-                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
-                cell.nicknameLabel.textAlignment = .left
-                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-                cell.rightImageView.isHidden = true
-                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
-                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
-                }
-                
-                print("Seori Test: other #\(indexPath.item)", cell)
-            }
-            return cell
-        }
+        return UICollectionViewCell()
+//        switch contents[indexPath.row].cellType {
+//        case .systemMessage: // 시스템 메세지
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
+//            cell.systemMessageLabel.text = contents[indexPath.row].message?.content
+//            print("Seori Test: sys #\(indexPath.item)", cell)
+//            return cell
+//        case .sameSenderMessage: // 같은 사람이 연속 전송
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
+//            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
+//                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.leftTimeLabel.isHidden = true
+//                cell.leftMessageLabel.isHidden = true
+//            } else {
+//                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.rightTimeLabel.isHidden = true
+//                cell.rightMessageLabel.isHidden = true
+//            }
+//            print("Seori Test: same #\(indexPath.item)", cell)
+//            return cell
+//        default: // 다른 사람이 전송
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+//            cell.nicknameLabel.text = contents[indexPath.row].message?.nickname
+//            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
+//                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.nicknameLabel.textAlignment = .right
+//                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.leftTimeLabel.isHidden = true
+//                cell.leftMessageLabel.isHidden = true
+//                cell.leftImageView.isHidden = true
+//                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+//                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
+//                }
+//
+//                print("Seori Test: me #\(indexPath.item)", cell)
+//            } else {
+//                cell.leftImageView.isUserInteractionEnabled = true
+//                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
+//                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.nicknameLabel.textAlignment = .left
+//                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.rightTimeLabel.isHidden = true
+//                cell.rightMessageLabel.isHidden = true
+//                cell.rightImageView.isHidden = true
+//                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+//                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
+//                }
+//                
+//                print("Seori Test: other #\(indexPath.item)", cell)
+//            }
+//            return cell
+//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -1286,7 +1296,7 @@ enum cellType {
 
 struct cellContents {
     var cellType: cellType?
-    var message: MessageModel?
+    var message: MsgResponse?
 }
 
 // MARK: - UITextViewDelegate
@@ -1323,5 +1333,44 @@ extension ChattingViewController: PushReportUserDelegate {
     public func pushReportUserVC() {
         let reportUserVC = ReportUserViewController()
         self.navigationController?.pushViewController(reportUserVC, animated: true)
+    }
+}
+
+// MARK: - WebSocketDelegate
+
+extension ChattingViewController: WebSocketDelegate {
+    func didReceive(event: WebSocketEvent, client: WebSocket) {
+        switch event {
+        case .connected(let headers):
+            print("DEBUG: 웹소켓 연결 완료 - \(headers)")
+        case .disconnected(let reason, let code):
+            print("DEBUG: 웹소켓 연결 끊어짐 - \(reason) with code: \(code)")
+        case .text(let text):
+            print("DEBUG: 메세지 수신")
+            guard let data = text.data(using: .utf16),
+                  let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
+                  let res = jsonData as? MsgRequest,
+                  let message = res.content else {
+                return
+            }
+        case .binary(let data):
+            print("DEBUG: binary - Received data: \(data.count)")
+        case .ping(_):
+            print("DEBUG: ping")
+            break
+        case .pong(_):
+            print("DEBUG: pong")
+            break
+        case .viabilityChanged(_):
+            print("DEBUG: viabilityChanged")
+            break
+        case .reconnectSuggested(_):
+            print("DEBUG: reconnectSuggested")
+            break
+        case .cancelled:
+            print("DEBUG: websocket is cancelled")
+        case .error(let error):
+            print("DEBUG: 에러 websocket is error = \(error!)")
+        }
     }
 }

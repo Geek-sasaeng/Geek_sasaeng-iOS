@@ -1101,43 +1101,43 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapSignUpButton(_ sender: UIButton) {
         // 파티장이라면 채팅방으로 가는 로직을 연결
-        if sender.title(for: .normal) == "채팅방 가기" {
-            guard let roomUUID = detailData.uuid else { return }
-            db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
-                if let document = document {
-                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                    print("Cached document data: \(dataDescription)")
-                    
-                    do {
-                        let data = try document.data(as: RoomInfoModel.self)
-                        guard let roomInfo = data.roomInfo else { return }
-                        
-                        self.ChatRoomName = roomInfo.title
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    
-                    // 해당 채팅방으로 이동
-                    let chattingVC = ChattingViewController()
-                    chattingVC.roomName = self.ChatRoomName
-                    chattingVC.roomUUID = roomUUID
-                    chattingVC.maxMatching = self.detailData.maxMatching
-                    self.navigationController?.pushViewController(chattingVC, animated: true)
-                } else {
-                    print("Document does not exist in cache")
-                }
-            }
-        } else {
-            // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
-            // 배경을 흐리게, 블러뷰로 설정
-            showBlurBackground()
-            
-            /* 신청하기 뷰 보여줌 */
-            view.addSubview(registerView)
-            registerView.snp.makeConstraints { make in
-                make.centerX.centerY.equalToSuperview()
-            }
-        }
+//        if sender.title(for: .normal) == "채팅방 가기" {
+//            guard let roomUUID = detailData.uuid else { return }
+//            db.collection("Rooms").document(roomUUID).getDocument { (document, error) in
+//                if let document = document {
+//                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+//                    print("Cached document data: \(dataDescription)")
+//                    
+//                    do {
+//                        let data = try document.data(as: RoomInfoModel.self)
+//                        guard let roomInfo = data.roomInfo else { return }
+//                        
+//                        self.ChatRoomName = roomInfo.title
+//                    } catch {
+//                        print(error.localizedDescription)
+//                    }
+//                    
+//                    // 해당 채팅방으로 이동
+//                    let chattingVC = ChattingViewController()
+//                    chattingVC.roomName = self.ChatRoomName
+//                    chattingVC.roomUUID = roomUUID
+//                    chattingVC.maxMatching = self.detailData.maxMatching
+//                    self.navigationController?.pushViewController(chattingVC, animated: true)
+//                } else {
+//                    print("Document does not exist in cache")
+//                }
+//            }
+//        } else {
+//            // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
+//            // 배경을 흐리게, 블러뷰로 설정
+//            showBlurBackground()
+//            
+//            /* 신청하기 뷰 보여줌 */
+//            view.addSubview(registerView)
+//            registerView.snp.makeConstraints { make in
+//                make.centerX.centerY.equalToSuperview()
+//            }
+//        }
     }
     
     /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
