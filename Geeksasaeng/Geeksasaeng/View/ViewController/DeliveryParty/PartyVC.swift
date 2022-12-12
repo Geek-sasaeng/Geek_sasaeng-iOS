@@ -13,6 +13,7 @@ import FirebaseFirestoreSwift
 import SnapKit
 import Then
 import NMapsMap
+import Kingfisher
 
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
@@ -52,7 +53,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var visualEffectView: UIVisualEffectView?
     
     let profileImageView = UIImageView().then {
-        $0.image =  UIImage(named: "ProfileImage")
         $0.layer.cornerRadius = 13
     }
     
@@ -496,6 +496,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                                                           
     
     private func setDefaultValue() {
+        let url = URL(string: detailData.chiefProfileImgUrl!)
+        profileImageView.kf.setImage(with: url)
         nickNameLabel.text = detailData.chief
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"

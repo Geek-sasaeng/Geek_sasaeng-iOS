@@ -175,6 +175,7 @@ class UserInfoAPI {
                 multipartFormData.append("\(value)".data(using: .utf8)!, withName: key)
             }
             if let image = imageData.pngData() {
+                print("pngData success")
                 multipartFormData.append(image, withName: "profileImg", fileName: "\(image).png", mimeType: "image/png")
             }
         }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header).validate().responseDecodable(of: EditUserModel.self) { response in
