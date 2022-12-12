@@ -15924,7 +15924,7 @@
 		72831A4F7DC98B140D8A814E7E44BA3A /* stream_lists.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = stream_lists.cc; path = src/core/ext/transport/chttp2/transport/stream_lists.cc; sourceTree = "<group>"; };
 		728AE0F249B924CE1429C9D9807EEE12 /* RMQFramesetValidator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQFramesetValidator.m; path = RMQClient/RMQFramesetValidator.m; sourceTree = "<group>"; };
 		728C8E2A411AC25D0D33E0AA6955BF5B /* RMQConnectionConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQConnectionConfig.m; path = RMQClient/RMQConnectionConfig.m; sourceTree = "<group>"; };
-		72912491CFB5CFD43782AB70CD0DEF2F /* Pods-Geeksasaeng */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Geeksasaeng"; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		72912491CFB5CFD43782AB70CD0DEF2F /* Pods_Geeksasaeng.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geeksasaeng.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72A32E0A8D3776216711F8F639B34267 /* tls.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tls.h; path = src/core/lib/gpr/tls.h; sourceTree = "<group>"; };
 		72A82A17CAC35A4268C02379E198BAAA /* route_components.upbdefs.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = route_components.upbdefs.h; path = "src/core/ext/upbdefs-generated/envoy/config/route/v3/route_components.upbdefs.h"; sourceTree = "<group>"; };
 		72CD79AFBDB1BFA6FCF6D1D9AD2DBE6C /* SectionedResults.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SectionedResults.swift; path = RealmSwift/SectionedResults.swift; sourceTree = "<group>"; };
@@ -16307,7 +16307,7 @@
 		890C8BDF49BFA8C59A30CB0317EA50E2 /* writer.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = writer.cc; path = Firestore/core/src/nanopb/writer.cc; sourceTree = "<group>"; };
 		8917E15415238A80C1A45B45366A1678 /* lottie-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "lottie-ios-Info.plist"; sourceTree = "<group>"; };
 		891AC8EEAC9E626612C0239B5B79EBA3 /* v3_pcia.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = v3_pcia.c; path = src/crypto/x509v3/v3_pcia.c; sourceTree = "<group>"; };
-		891B2270823847ED23F2ECFC28F935EC /* Starscream */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Starscream; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		891B2270823847ED23F2ECFC28F935EC /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89218ABAF5BA62212BA8BBA0106F3BE2 /* FIRInstallationsStoredItem.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRInstallationsStoredItem.h; path = FirebaseInstallations/Source/Library/InstallationsStore/FIRInstallationsStoredItem.h; sourceTree = "<group>"; };
 		8925A169DDD1906691129CBC8010E0ED /* RLMResults.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RLMResults.h; path = include/RLMResults.h; sourceTree = "<group>"; };
 		896779725A71A4B87F7FC0F5A3C9131E /* FIRAggregateSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRAggregateSource.h; path = Firestore/Source/Public/FirebaseFirestore/FIRAggregateSource.h; sourceTree = "<group>"; };
@@ -22251,7 +22251,7 @@
 				6BC54C3D03DEBF9C3A40965E69CAE039 /* Libuv-gRPC */,
 				51BA97E8B5085EFFB47BC9C0B785CEA7 /* lottie-ios */,
 				06FC5C9CF96D60C50FCD47D339C91951 /* nanopb */,
-				72912491CFB5CFD43782AB70CD0DEF2F /* Pods-Geeksasaeng */,
+				72912491CFB5CFD43782AB70CD0DEF2F /* Pods_Geeksasaeng.framework */,
 				B4497F3DA70F39533E3D0CBA730E8922 /* Pods-Geeksasaeng-GeeksasaengUITests */,
 				1E68D6A6B9D543E5B21CFD4549F3F207 /* Pods-GeeksasaengTests */,
 				3347A1AB6546F0A3977529B8F199DC41 /* PromisesObjC */,
@@ -22259,7 +22259,7 @@
 				437919EE08EC6BFCCBAC3BD346309742 /* RealmSwift */,
 				2319F14FAA0573F951D9976032AB010C /* RMQClient */,
 				979486118B3E90C08386079D57962701 /* SnapKit */,
-				891B2270823847ED23F2ECFC28F935EC /* Starscream */,
+				891B2270823847ED23F2ECFC28F935EC /* Starscream.framework */,
 				9317E4947CA2FE1B5D5999034C09CCA7 /* Then */,
 			);
 			name = Products;
@@ -28819,7 +28819,7 @@
 			);
 			name = "Pods-Geeksasaeng";
 			productName = Pods_Geeksasaeng;
-			productReference = 72912491CFB5CFD43782AB70CD0DEF2F /* Pods-Geeksasaeng */;
+			productReference = 72912491CFB5CFD43782AB70CD0DEF2F /* Pods_Geeksasaeng.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		73CDC3D182DB953135F62609681B443D /* abseil */ = {
@@ -28983,7 +28983,7 @@
 			);
 			name = Starscream;
 			productName = Starscream;
-			productReference = 891B2270823847ED23F2ECFC28F935EC /* Starscream */;
+			productReference = 891B2270823847ED23F2ECFC28F935EC /* Starscream.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		C17AEFC79E770A2906EFAAB1A3757406 /* Then */ = {
