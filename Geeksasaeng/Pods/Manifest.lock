@@ -777,7 +777,7 @@ PODS:
   - Libuv-gRPC/Implementation (0.0.10):
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
-  - lottie-ios (4.0.0)
+  - lottie-ios (4.0.1)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -795,6 +795,7 @@ PODS:
     - CocoaAsyncSocket (~> 7.6)
     - JKVValue (~> 1.3)
   - SnapKit (5.6.0)
+  - Starscream (4.0.4)
   - Then (3.0.0)
 
 DEPENDENCIES:
@@ -810,6 +811,7 @@ DEPENDENCIES:
   - RealmSwift
   - RMQClient
   - SnapKit
+  - Starscream
   - Then
 
 SPEC REPOS:
@@ -846,6 +848,7 @@ SPEC REPOS:
     - RealmSwift
     - RMQClient
     - SnapKit
+    - Starscream
     - Then
 
 SPEC CHECKSUMS:
@@ -872,7 +875,7 @@ SPEC CHECKSUMS:
   Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
-  lottie-ios: 0b5919ae7673fd7a1c36122b7cb6a9050e9c9f58
+  lottie-ios: 54d22edf55b839f0929cabbfe609c9aa548b1145
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   naveridlogin-sdk-ios: 4351fe7162cd6b8b6dbb37bd7cc205304fa1d889
   NMapsMap: 17caab4af9a3fc5c25b79858de18bdeab1eaff87
@@ -881,8 +884,9 @@ SPEC CHECKSUMS:
   RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
   RMQClient: 74776ee4d0f891f71667a2629f26a26de5ad3e90
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
 
-PODFILE CHECKSUM: c34c614398e25861a898f184ace286f880629294
+PODFILE CHECKSUM: c0a786a640fbac846f11c68e1eea51453178309d
 
 COCOAPODS: 1.11.3
