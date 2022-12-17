@@ -930,6 +930,9 @@
 		1078713F286F7A97008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
 		10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
 		10787141286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */; };
+		107D30A1294E3E1200CFE75C /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107D30A0294E3E1200CFE75C /* ChatAPI.swift */; };
+		107D30A2294E3E1200CFE75C /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107D30A0294E3E1200CFE75C /* ChatAPI.swift */; };
+		107D30A3294E3E1200CFE75C /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107D30A0294E3E1200CFE75C /* ChatAPI.swift */; };
 		108B6330288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */; };
 		108B6331288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */; };
 		108B6332288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */; };
@@ -1565,6 +1568,7 @@
 		1078711C286EBAC3008EDF78 /* SpoqaHanSansNeo-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Light.otf"; sourceTree = "<group>"; };
 		1078712C286EBB8A008EDF78 /* GmarketSansMedium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansMedium.otf; sourceTree = "<group>"; };
 		1078713E286F7A97008EDF78 /* PartyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyTableViewCell.swift; sourceTree = "<group>"; };
+		107D30A0294E3E1200CFE75C /* ChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPI.swift; sourceTree = "<group>"; };
 		108B632F288998CD008C4F65 /* DeliveryListDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListDetailModel.swift; sourceTree = "<group>"; };
 		108B6333288998F9008C4F65 /* CreatePartyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyModel.swift; sourceTree = "<group>"; };
 		108B633728899A4C008C4F65 /* DeliveryListDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListDetailViewModel.swift; sourceTree = "<group>"; };
@@ -2225,6 +2229,7 @@
 				A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */,
 				A2CB1F15293DF44D008FAC46 /* GetChatRoomListAPI.swift */,
 				A28F45F7294100D60097714E /* JoinChatAPI.swift */,
+				107D30A0294E3E1200CFE75C /* ChatAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3738,6 +3743,7 @@
 			files = (
 				A248D89D289FF344000E2422 /* BankAccountVC.swift in Sources */,
 				A2085ADF2870550200D6CF79 /* LoginModel.swift in Sources */,
+				107D30A1294E3E1200CFE75C /* ChatAPI.swift in Sources */,
 				A2B42099286F249800278F92 /* TabBarController.swift in Sources */,
 				A2513ECA28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2513F0D2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
@@ -3879,6 +3885,7 @@
 				A2035EA6288341B00051498A /* AdModel.swift in Sources */,
 				106093D128A81981007FD463 /* ChatRoomExitAPI.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
+				107D30A2294E3E1200CFE75C /* ChatAPI.swift in Sources */,
 				A20FC0EA287F1B1F0095224C /* DeliveryListViewModel.swift in Sources */,
 				A2513F1228785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2B420AB286F58C100278F92 /* DeliveryVC.swift in Sources */,
@@ -4095,6 +4102,7 @@
 				103F5E49289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
+				107D30A3294E3E1200CFE75C /* ChatAPI.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				10E8E71E288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,

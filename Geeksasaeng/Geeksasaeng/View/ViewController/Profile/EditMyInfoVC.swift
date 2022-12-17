@@ -422,7 +422,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             )
         }
         
-        UserInfoAPI.editUser(input!, imageData: UIImage(systemName: "mic")!) { isSuccess, result in
+        UserInfoAPI.editUser(input!, imageData: UIImage(systemName: "sun.min")!) { isSuccess, result in
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()

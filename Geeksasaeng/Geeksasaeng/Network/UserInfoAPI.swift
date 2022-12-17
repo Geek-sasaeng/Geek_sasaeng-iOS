@@ -73,7 +73,6 @@ struct EditUserInput: Encodable {
     var loginId: String?
     var nickname: String?
     var password: String?
-//    var profileImg: imageFile?
 }
 //struct imageFile: Codable {
 //    private let image: Data

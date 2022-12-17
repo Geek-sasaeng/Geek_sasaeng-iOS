@@ -9,6 +9,7 @@ import UIKit
 
 import SnapKit
 import Then
+import Kingfisher
 
 class ProfileViewController: UIViewController {
 
@@ -30,7 +31,9 @@ class ProfileViewController: UIViewController {
         $0.backgroundColor = .white
     }
     
-    let profileImageView = UIImageView(image: UIImage(named: "DefaultProfile")).then {
+    let profileImageView = UIImageView().then {
+//        let url = URL(string: LoginModel.userImgUrl!)
+//        $0.kf.setImage(with: url)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 118 / 2
     }
