@@ -309,7 +309,7 @@ class SearchViewController: UIViewController {
         loadSearchRecords()
         
         // Realm 파일 위치
-        print("DEBUG: ", Realm.Configuration.defaultConfiguration.fileURL!)
+        print("DEBUG: 최근 검색어 경로", Realm.Configuration.defaultConfiguration.fileURL!)
     }
     
     override func viewWillAppear(_ animated: Bool) {

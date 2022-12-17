@@ -887,63 +887,64 @@ extension ChattingStorageChatViewController: UICollectionViewDelegate, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch contents[indexPath.row].cellType {
-        case .systemMessage: // 시스템 메세지
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
-            cell.systemMessageLabel.text = contents[indexPath.row].message?.content
-            print("Seori Test: sys #\(indexPath.item)", cell)
-            return cell
-        case .sameSenderMessage: // 같은 사람이 연속 전송
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
-            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
-                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
-                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
-            } else {
-                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
-                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-            }
-            print("Seori Test: same #\(indexPath.item)", cell)
-            return cell
-        default: // 다른 사람이 전송
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-            cell.nicknameLabel.text = contents[indexPath.row].message?.nickname
-            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
-                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
-                cell.nicknameLabel.textAlignment = .right
-                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
-                cell.leftImageView.isHidden = true
-                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
-                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-                }
-                
-                print("Seori Test: me #\(indexPath.item)", cell)
-            } else {
-                cell.leftImageView.isUserInteractionEnabled = true
-                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
-                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
-                cell.nicknameLabel.textAlignment = .left
-                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-                cell.rightImageView.isHidden = true
-                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
-                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
-                }
-                
-                print("Seori Test: other #\(indexPath.item)", cell)
-            }
-            return cell
-        }
+        return UICollectionViewCell()
+//        switch contents[indexPath.row].cellType {
+//        case .systemMessage: // 시스템 메세지
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
+//            cell.systemMessageLabel.text = contents[indexPath.row].message?.content
+//            print("Seori Test: sys #\(indexPath.item)", cell)
+//            return cell
+//        case .sameSenderMessage: // 같은 사람이 연속 전송
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
+//            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신
+//                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.leftTimeLabel.isHidden = true
+//                cell.leftMessageLabel.isHidden = true
+//            } else {
+//                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.rightTimeLabel.isHidden = true
+//                cell.rightMessageLabel.isHidden = true
+//            }
+//            print("Seori Test: same #\(indexPath.item)", cell)
+//            return cell
+//        default: // 다른 사람이 전송
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+//            cell.nicknameLabel.text = contents[indexPath.row].message?.nickname
+//            if contents[indexPath.row].message?.nickname == LoginModel.nickname { // 보낸 사람이 자신이면
+//                cell.rightMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.nicknameLabel.textAlignment = .right
+//                cell.rightTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.leftTimeLabel.isHidden = true
+//                cell.leftMessageLabel.isHidden = true
+//                cell.leftImageView.isHidden = true
+//                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+//                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
+//                }
+//                
+//                print("Seori Test: me #\(indexPath.item)", cell)
+//            } else {
+//                cell.leftImageView.isUserInteractionEnabled = true
+//                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
+//                cell.leftMessageLabel.text = contents[indexPath.row].message?.content
+//                cell.nicknameLabel.textAlignment = .left
+//                cell.leftTimeLabel.text = formatTime(str: (contents[indexPath.row].message?.time)!)
+//                cell.rightTimeLabel.isHidden = true
+//                cell.rightMessageLabel.isHidden = true
+//                cell.rightImageView.isHidden = true
+//                if self.roomMaster == contents[indexPath.row].message?.nickname { // 방장이라면
+//                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
+//                }
+//                
+//                print("Seori Test: other #\(indexPath.item)", cell)
+//            }
+//            return cell
+//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
