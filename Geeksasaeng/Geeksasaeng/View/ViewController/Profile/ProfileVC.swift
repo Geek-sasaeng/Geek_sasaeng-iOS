@@ -15,7 +15,7 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Properties
     
-    var ongoingPartyList: [RecentPartyModelResult] = [] {
+    var ongoingPartyList: [UserInfoPartiesModel] = [] {
         didSet {
             ongoingTableView.reloadData()
         }
@@ -32,8 +32,6 @@ class ProfileViewController: UIViewController {
     }
     
     let profileImageView = UIImageView().then {
-//        let url = URL(string: LoginModel.userImgUrl!)
-//        $0.kf.setImage(with: url)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 118 / 2
     }
@@ -50,19 +48,16 @@ class ProfileViewController: UIViewController {
     }
     
     let degreeLabel = UILabel().then {
-        $0.text = "별별학사"
         $0.font = .customFont(.neoMedium, size: 15)
         $0.textColor = .init(hex: 0x2F2F2F)
     }
     let dotImageView = UIImageView(image: UIImage(named: "Dot"))
     let univLabel = UILabel().then {
-        $0.text = "별별대학교"
         $0.font = .customFont(.neoMedium, size: 15)
         $0.textColor = .init(hex: 0x2F2F2F)
     }
     
     let nickNameLabel = UILabel().then {
-        $0.text = LoginModel.nickname
         $0.font = .customFont(.neoBold, size: 17)
         $0.textColor = .init(hex: 0x2F2F2F)
     }
@@ -71,6 +66,7 @@ class ProfileViewController: UIViewController {
         $0.backgroundColor = .init(hex: 0xF1F5F9)
         $0.layer.cornerRadius = 39 / 2
         let guideLabel = UILabel().then {
+            // TODO: - 남은 학기 계산해서 표시
             $0.text = "복학까지 2학기 남았어요"
             $0.font = .customFont(.neoMedium, size: 14)
             $0.textColor = .mainColor
@@ -206,20 +202,24 @@ class ProfileViewController: UIViewController {
         setStackView(passedArray: [freshmanView, returningStudentView, graduateView], stackView: levelViewStackView)
         setStackView(passedArray: ["신입생", "복학생", "졸업생"], stackView: levelLabelStackView)
         
+        setUserInfo()
         addSubViews()
         setLayouts()
         setTableView()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        /* 가장 최근에 참여한 배달 파티 3개 가져오는 API 호출 */
-        RecentPartyViewModel.requestGetRecentPartyList { result in
-            // 성공 시에 값 추가
-            self.ongoingPartyList = result
+    // MARK: - Functions
+    
+    private func setUserInfo() {
+        UserInfoAPI.getUserInfo { isSuccess, result in
+            let url = URL(string: result.profileImgUrl!)
+            self.profileImageView.kf.setImage(with: url)
+            self.degreeLabel.text = result.dormitoryName
+            self.univLabel.text = result.universityName
+            self.nickNameLabel.text = result.nickname
+            self.ongoingPartyList = result.parties!
         }
     }
-    
-    // MARK: - Functions
     
     private func setAttributes() {
         /* Navigation Bar Attrs */

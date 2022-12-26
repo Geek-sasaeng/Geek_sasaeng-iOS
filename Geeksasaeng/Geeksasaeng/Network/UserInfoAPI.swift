@@ -33,6 +33,12 @@ struct UserInfoModelResult: Decodable {
     var perDayReportingCount: Int?
     var reportedCount: Int?
     var fcmToken: String?
+    var parties: [UserInfoPartiesModel]?
+}
+struct UserInfoPartiesModel: Decodable {
+    var id: Int?
+    var title: String?
+    var createdAt: String?
 }
 
 /* 회원정보 수정 시 비밀번호 확인을 위한 모델 */
@@ -107,6 +113,7 @@ class UserInfoAPI {
                     completion(result.isSuccess!, result.result!)
                 } else {
                     print("DEBUG:", result.message!)
+                    completion(result.isSuccess!, result.result!)
                 }
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
