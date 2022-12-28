@@ -26,6 +26,7 @@ class MsgResponse: Object, Decodable {
     @Persisted var chatRoomId: String? = nil
     @Persisted var isSystemMessage: Bool? = nil
     @Persisted var memberId: Int? = nil
+    @Persisted var nickName: String? = nil
     @Persisted var profileImgUrl: String? = nil
     @Persisted var readMembers = List<Int>()
     @Persisted var createdAt: String? = nil
@@ -39,6 +40,7 @@ class MsgResponse: Object, Decodable {
                      chatRoomId: String,
                      isSystemMessage: Bool,
                      memberId: Int,
+                     nickName: String,
                      profileImgUrl: String,
                      readMembers: List<Int>,
                      createdAt: String,
@@ -51,6 +53,7 @@ class MsgResponse: Object, Decodable {
         self.chatRoomId = chatRoomId
         self.isSystemMessage = isSystemMessage
         self.memberId = memberId
+        self.nickName = nickName
         self.profileImgUrl = profileImgUrl
         self.readMembers = readMembers
         self.createdAt = createdAt

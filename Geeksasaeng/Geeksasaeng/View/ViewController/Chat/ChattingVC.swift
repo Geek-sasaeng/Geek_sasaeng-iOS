@@ -491,7 +491,7 @@ class ChattingViewController: UIViewController {
         
         do {
             // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 6)
+            let configuration = Realm.Configuration(schemaVersion: 7)
             localRealm = try Realm(configuration: configuration)
             
             // Realm 파일 위치
@@ -608,11 +608,14 @@ class ChattingViewController: UIViewController {
     
     // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
     
+    // TODO: - 사진 데이터도 저장해야 함
+    
     // 로컬에서 이전 채팅 불러오기
     private func loadMessages() {
         print("DEBUG: loadMessages")
-        // 로컬에서 데이터 가져오기
-        self.msgRecords = localRealm!.objects(MsgResponse.self).sorted(byKeyPath: "createdAt")
+        // 로컬에서 해당 채팅방의 채팅 데이터 가져오기
+        let predicate = NSPredicate(format: "chatRoomId = %@", self.roomId!)
+        self.msgRecords = localRealm!.objects(MsgResponse.self).filter(predicate).sorted(byKeyPath: "createdAt")
         
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
@@ -648,7 +651,7 @@ class ChattingViewController: UIViewController {
     private func saveMessage(msgResponse: MsgResponse, completion: CompletionHandler) {
         try! localRealm!.write {
             localRealm!.add(msgResponse)
-            print("DEBUG: local에 채팅을 저장하다", msgResponse)
+            print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
             
             // 채팅 셀에 추가하기
             if msgResponse.isSystemMessage == true {
@@ -668,7 +671,6 @@ class ChattingViewController: UIViewController {
                     MsgContents(msgType: .message, message: msgResponse))
                 self.lastSenderId = msgResponse.memberId
             }
-            self.collectionView.reloadData()
             print("이거", self.msgContents.count)
         }
         completion()
@@ -739,13 +741,15 @@ class ChattingViewController: UIViewController {
                 // MsgResponse 구조체로 decode.
                 let decoder = JSONDecoder()
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
-                print("[Rabbit]", data)
+                print("[Rabbit] 수신", data.content)
                 
                 // 수신한 채팅 로컬에 저장하기
                 DispatchQueue.main.async {
+                    print("이거 저장 전", self.msgContents.last?.message?.content)
                     self.saveMessage(msgResponse: data) {
                         self.collectionView.reloadData()
-                        print("이거", self.msgContents.count, "리로드")
+                        print("이거 저장 후", self.msgContents.last?.message?.content, "리로드")
+                        self.collectionView.scrollToItem(at: IndexPath(row: self.msgContents.count-1, section: 0), at: .top, animated: true)
                     }
                 }
                 
@@ -1041,8 +1045,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             return cell
         case .sameSenderMessage: // 같은 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
-            // TODO: - 나중에 고쳐야 됨. 일단은 프로필 url로...
-            if msg.message?.profileImgUrl == LoginModel.userImgUrl { // 보낸 사람이 자신
+            if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = msg.message?.content
                 cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
                 cell.leftTimeLabel.isHidden = true
@@ -1057,17 +1060,15 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             return cell
         default: // 다른 사람이 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-            // TODO: - 닉네임 아직 안 줘서 일단 memberId로
-            cell.nicknameLabel.text = msg.message?.chatId
-            // TODO: - 나중에 고쳐야 됨. 일단은 프로필 url로...
-            if msg.message?.profileImgUrl == LoginModel.userImgUrl { // 보낸 사람이 자신이면
+            cell.nicknameLabel.text = msg.message?.nickName
+            if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신이면
                 cell.rightMessageLabel.text = msg.message?.content
                 cell.nicknameLabel.textAlignment = .right
                 cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
                 cell.leftTimeLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
                 cell.leftImageView.isHidden = true
-                if self.roomMaster == msg.message?.profileImgUrl { // 방장이라면
+                if self.roomMaster == msg.message?.nickName { // 방장이라면
                     cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
                 } else {// 방장이 아니면 기본 프로필로 설정
                     cell.rightImageView.image = UIImage(named: "DefaultProfile")
@@ -1083,7 +1084,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightTimeLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
                 cell.rightImageView.isHidden = true
-                if self.roomMaster == msg.message?.profileImgUrl { // 방장이라면
+                if self.roomMaster == msg.message?.nickName { // 방장이라면
                     cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
                 } else {// 방장이 아니면 기본 프로필로 설정
                     cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
