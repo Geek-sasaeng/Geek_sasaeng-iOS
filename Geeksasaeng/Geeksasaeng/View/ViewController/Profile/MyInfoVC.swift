@@ -312,13 +312,15 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     private func setUserInfo() {
         UserInfoAPI.getUserInfo { isSuccess, result in
-            let url = URL(string: result.profileImgUrl!)
-            self.userImageView.kf.setImage(with: url)
-            self.dormitoryDataLabel.text = result.dormitoryName
-            self.nicknameDataLabel.text = result.nickname
-            self.idDataLabel.text = result.loginId
-            self.emailDataLabel.text = result.emailAddress
-            self.phoneNumDataLabel.text = result.phoneNumber
+            if isSuccess {
+                let url = URL(string: result.profileImgUrl!)
+                self.userImageView.kf.setImage(with: url)
+                self.dormitoryDataLabel.text = result.dormitoryName
+                self.nicknameDataLabel.text = result.nickname
+                self.idDataLabel.text = result.loginId
+                self.emailDataLabel.text = result.emailAddress
+                self.phoneNumDataLabel.text = result.phoneNumber
+            }
         }
     }
     

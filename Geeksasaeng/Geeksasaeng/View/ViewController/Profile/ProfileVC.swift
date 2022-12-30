@@ -212,12 +212,14 @@ class ProfileViewController: UIViewController {
     
     private func setUserInfo() {
         UserInfoAPI.getUserInfo { isSuccess, result in
-            let url = URL(string: result.profileImgUrl!)
-            self.profileImageView.kf.setImage(with: url)
-            self.degreeLabel.text = result.dormitoryName
-            self.univLabel.text = result.universityName
-            self.nickNameLabel.text = result.nickname
-            self.ongoingPartyList = result.parties!
+            if isSuccess {
+                let url = URL(string: result.profileImgUrl!)
+                self.profileImageView.kf.setImage(with: url)
+                self.degreeLabel.text = result.dormitoryName
+                self.univLabel.text = result.universityName
+                self.nickNameLabel.text = result.nickname
+                self.ongoingPartyList = result.parties!
+            }
         }
     }
     

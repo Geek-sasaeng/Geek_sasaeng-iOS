@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-/* 채팅방 입장 API의 Request body */
+/* 채팅방 사진 전송 API의 Request body */
 struct ChatImageSendInput: Encodable {
     var chatId: String?
     var chatRootId: String?
@@ -20,7 +20,7 @@ struct ChatImageSendInput: Encodable {
     var profileImgUrl: String?
 }
 
-/* 채팅방 입장 API의 Response */
+/* 채팅방 사진 전송 API의 Response */
 struct ChatImageSendModel: Decodable {
     var code : Int?
     var isSuccess : Bool?

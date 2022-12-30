@@ -1003,6 +1003,9 @@
 		10ED0A432883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A442883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
 		10ED0A452883F96F009A0B1F /* CreatePartyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */; };
+		10EEF83B295EDBE0009F878D /* ImageMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */; };
+		10EEF83C295EDBE0009F878D /* ImageMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */; };
+		10EEF83D295EDBE0009F878D /* ImageMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */; };
 		10FECB1A28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
 		10FECB1B28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
 		10FECB1C28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */; };
@@ -1578,6 +1581,7 @@
 		10E8E720288D740100AF4581 /* DeletePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletePartyViewModel.swift; sourceTree = "<group>"; };
 		10EC390F28AD307700A72DC6 /* MyInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoVC.swift; sourceTree = "<group>"; };
 		10ED0A422883F96F009A0B1F /* CreatePartyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePartyViewModel.swift; sourceTree = "<group>"; };
+		10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageCell.swift; sourceTree = "<group>"; };
 		10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sameSenderMessageCell.swift; sourceTree = "<group>"; };
 		3311BB63C2DC143DCABC3A96 /* Pods-Geeksasaeng.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geeksasaeng.release.xcconfig"; path = "Target Support Files/Pods-Geeksasaeng/Pods-Geeksasaeng.release.xcconfig"; sourceTree = "<group>"; };
 		667A6EAACC2A74EF65250952 /* Pods-GeeksasaengTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeeksasaengTests.debug.xcconfig"; path = "Target Support Files/Pods-GeeksasaengTests/Pods-GeeksasaengTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2308,6 +2312,7 @@
 				A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */,
 				A21E82B828E4F17E00D75084 /* ChattingStorageTableViewCell.swift */,
 				10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */,
+				10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3797,6 +3802,7 @@
 				A2EC623D288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				A246E58028A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
+				10EEF83B295EDBE0009F878D /* ImageMessageCell.swift in Sources */,
 				A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */,
 				A248D891289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				10D4D6C32894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
@@ -3918,6 +3924,7 @@
 				A2CB1F17293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */,
 				A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */,
 				A20B53F7288D7F27006C695E /* TimeCollectionViewCell.swift in Sources */,
+				10EEF83C295EDBE0009F878D /* ImageMessageCell.swift in Sources */,
 				A2FA89A7286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
 				106D78AA28F7B8D500CA6F4A /* ChattingStorageChatVC.swift in Sources */,
 				A2513F1E287872D70029C279 /* EmailAuthModel.swift in Sources */,
@@ -4008,6 +4015,7 @@
 				A2B420AF286F5B7A00278F92 /* TabBarController.swift in Sources */,
 				10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				A24D386528D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */,
+				10EEF83D295EDBE0009F878D /* ImageMessageCell.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
 				1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
