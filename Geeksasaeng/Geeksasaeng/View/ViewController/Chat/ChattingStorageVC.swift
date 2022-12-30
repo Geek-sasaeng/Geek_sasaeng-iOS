@@ -259,8 +259,8 @@ extension ChattingStorageViewController: UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chattingStorageChatVC = ChattingStorageChatViewController()
-        navigationController?.pushViewController(chattingStorageChatVC, animated: true)
+//        let chattingStorageChatVC = ChattingStorageChatViewController()
+//        navigationController?.pushViewController(chattingStorageChatVC, animated: true)
     }
     
 }

@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
+// TODO: - 채팅방 구분하기
 class FormatCreater {
     static let sharedLongFormat: DateFormatter = {
         let formatter = DateFormatter()
