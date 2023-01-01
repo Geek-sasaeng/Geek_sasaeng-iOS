@@ -9,14 +9,18 @@ import UIKit
 import SnapKit
 
 class SameSenderMessageCell: UICollectionViewCell {
+    
     // MARK: - SubViews
     
-    let rightTimeLabel = UILabel()
+    let leftUnreadCntLabel = UILabel()
+    let rightUnreadCntLabel = UILabel()
     let leftTimeLabel = UILabel()
-    let leftMessageLabel = PaddingLabel()    
+    let rightTimeLabel = UILabel()
+    let leftMessageLabel = PaddingLabel()
     let rightMessageLabel = PaddingLabel()
     
     // MARK: - Life Cycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width).isActive = true
@@ -36,17 +40,27 @@ class SameSenderMessageCell: UICollectionViewCell {
         leftTimeLabel.text = ""
         rightTimeLabel.text = ""
         
+        leftUnreadCntLabel.text = ""
+        rightUnreadCntLabel.text = ""
+        
         leftMessageLabel.isHidden = false
         rightMessageLabel.isHidden = false
         
         leftTimeLabel.isHidden = false
         rightTimeLabel.isHidden = false
+        
+        leftUnreadCntLabel.isHidden = false
+        rightUnreadCntLabel.isHidden = false
     }
     
     // MARK: - Functions
+    
     private func addSubViews() {
-        [leftMessageLabel, rightMessageLabel,
-         rightTimeLabel, leftTimeLabel].forEach {
+        [
+            leftMessageLabel, rightMessageLabel,
+            leftTimeLabel, rightTimeLabel,
+            leftUnreadCntLabel, rightUnreadCntLabel
+        ].forEach {
             addSubview($0)
         }
     }
@@ -71,11 +85,26 @@ class SameSenderMessageCell: UICollectionViewCell {
             make.bottom.equalTo(rightMessageLabel.snp.bottom)
             make.right.equalTo(rightMessageLabel.snp.left).offset(-3)
         }
+        
+        leftUnreadCntLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(leftTimeLabel.snp.centerY)
+            make.left.equalTo(leftTimeLabel.snp.right).offset(6)
+        }
+        
+        rightUnreadCntLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(rightTimeLabel.snp.centerY)
+            make.right.equalTo(rightTimeLabel.snp.left).offset(-6)
+        }
     }
     
     private func setAttributes() {
-        rightTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
-        leftTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        [leftTimeLabel, rightTimeLabel].forEach {
+            $0.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        }
+        
+        [leftUnreadCntLabel, rightUnreadCntLabel].forEach {
+            $0.setTextAndColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 12))
+        }
         
         [leftMessageLabel, rightMessageLabel].forEach {
             $0.paddingTop = 10
