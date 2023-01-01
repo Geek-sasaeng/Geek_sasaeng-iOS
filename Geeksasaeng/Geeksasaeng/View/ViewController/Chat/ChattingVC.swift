@@ -471,7 +471,9 @@ class ChattingViewController: UIViewController {
     var roomMaster: String? // 내가 현재 방장인지
     var bank: String?
     var accountNumber: String?
-    var enterTimeToDate: Date?    // 내가 이 방에 들어온 시간
+    
+    // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
+    var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
     // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
     var localRealm: Realm? = nil
@@ -502,6 +504,8 @@ class ChattingViewController: UIViewController {
         } catch {
             print(error.localizedDescription)
         }
+        
+        print("확인", self.enterTimeToDate)
         
         // 이전 메세지 불러오기
         loadMessages()
@@ -681,8 +685,13 @@ class ChattingViewController: UIViewController {
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
         for msgRecord in msgRecords {
-            // 불러온 채팅 데이터를 셀에 추가
-            self.updateChattingView(newChat: msgRecord)
+            // 입장 시간 이후의 메세지들만 걸러내기
+            let createdAtDate = FormatCreater.sharedLongFormat.date(from: msgRecord.createdAt!)
+            let timeInterval = Int(enterTimeToDate.timeIntervalSince(createdAtDate!))
+            if timeInterval <= 0 {
+                // 불러온 채팅 데이터를 셀에 추가
+                self.updateChattingView(newChat: msgRecord)
+            }
         }
     }
     
