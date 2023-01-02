@@ -302,6 +302,7 @@ class AgreementViewController: UIViewController {
                         // 네이버 회원가입은 자동 로그인이 default
                         UserDefaults.standard.set(result?.jwt, forKey: "jwt")
                         LoginModel.jwt = result?.jwt
+                        LoginModel.memberId = result?.memberId
                         self.showDomitoryView()
                     case .onlyRequestSuccess:
                         print("onlyRequestSuccess")

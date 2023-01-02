@@ -572,7 +572,7 @@ class ChattingViewController: UIViewController {
         let x = ch.fanout("chatting-exchange-\(String(describing: roomId))")
         
         // 큐 생성, 바인딩
-        let q = ch.queue("88", options: .durable)
+        let q = ch.queue("\(LoginModel.memberId ?? 0)", options: .durable)
         q.bind(x)
         print("DEBUG: [Rabbit] 수신 대기 중", ch, x, q)
         
