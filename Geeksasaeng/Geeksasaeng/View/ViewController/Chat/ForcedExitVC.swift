@@ -232,7 +232,7 @@ class ForcedExitViewController: UIViewController {
             }
             
             let contentLabel = UILabel().then {
-                $0.text = "위 파티원을 강제로\n퇴장시킬 시 이 사용자는\n더 이상 참여할 수 없습니다.\n계속하시겠습니까?"
+                $0.text = "위 파티원을 강제로\n퇴장시킬 시 이 사용자는\n더 이상 참여할 수 없어요.\n퇴장을 진행할까요?"
                 $0.numberOfLines = 0
                 $0.textColor = .init(hex: 0x2F2F2F)
                 $0.font = .customFont(.neoMedium, size: 14)
