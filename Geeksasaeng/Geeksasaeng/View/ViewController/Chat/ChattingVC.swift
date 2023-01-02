@@ -131,7 +131,7 @@ class ChattingViewController: UIViewController {
         }
         
         let contentLabel = UILabel().then {
-            $0.text = "본 채팅방을 나갈 시\n이후로 채팅에 참여할 수\n없습니다. 계속하시겠습니까?"
+            $0.text = "이 채팅방을 나간 후로는\n채팅에 참여할 수 없어요.\n채팅 나가기를 진행할까요?"
             $0.numberOfLines = 0
             $0.textColor = .init(hex: 0x2F2F2F)
             $0.font = .customFont(.neoMedium, size: 14)
