@@ -991,60 +991,7 @@ class ChattingViewController: UIViewController {
     /* 송금 완료 버튼 클릭 */
     @objc
     private func tapRemittanceButton() {
-        // 파이어스토어에 isRemittance = true로 바꾸고 remittanceView remove
-//        guard let roomUUID = roomUUID else { return }
-//
-//        db.collection("Rooms").document(roomUUID).getDocument { documentSnapshot, error in
-//            if let error = error {
-//                print(error.localizedDescription)
-//            } else {
-//                do {
-//                    let data = try documentSnapshot?.data(as: RoomInfoModel.self)
-//                    guard let roomInfo = data?.roomInfo,
-//                          let participants = roomInfo.participants else { return }
-//
-//                    var targetEnterTime: String?
-//
-//                    participants.forEach {
-//                        if $0.participant == LoginModel.nickname {
-//                            targetEnterTime = $0.enterTime
-//                        }
-//                    }
-//
-//                    guard let targetEnterTime = targetEnterTime else { return }
-//                    // roomInfo.participants의 특정 인덱스를 수정할 수 없어서 삭제 후 추가 -> 방장이 나갔을 때 다음 방장은 들어온 순서가 아니게 됨 (상관은 없을 듯?)
-//                    if let nickname = LoginModel.nickname {
-//                        let removeData = ["enterTime": targetEnterTime, "isRemittance": false, "participant": nickname] as [String : Any]
-//                        let newData = ["enterTime": targetEnterTime, "isRemittance": true, "participant": nickname] as [String : Any]
-//
-//                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayRemove([removeData])])
-//                        self.db.collection("Rooms").document(roomUUID).updateData(["roomInfo.participants" : FieldValue.arrayUnion([newData])])
-//                    }
-//
-//                    let formatter = DateFormatter()
-//                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//                    formatter.locale = Locale(identifier: "ko_KR")
-//
-//                    self.db.collection("Rooms").document(roomUUID).collection("Messages").document(UUID().uuidString).setData([
-//                        "content": "\'\(LoginModel.nickname ?? "홍길동")\'님이 송금을 완료하였습니다",
-//                        "nickname": "SystemMessage",
-//                        "userImgUrl": "SystemMessage",
-//                        "time": formatter.string(from: Date()),
-//                        "isSystemMessage": true,
-//                        "readUsers": [LoginModel.nickname ?? "홍길동"]
-//                    ]) { error in
-//                        if let e = error {
-//                            print(e.localizedDescription)
-//                        } else {
-//                            print("Success save data")
-//                        }
-//                    }
-//                } catch {
-//                    print(error.localizedDescription)
-//                }
-//            }
-//        }
-//
+        
         self.remittanceView.removeFromSuperview()
     }
     
