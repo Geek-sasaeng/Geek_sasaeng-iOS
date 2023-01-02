@@ -119,7 +119,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         let contentLabel = UILabel().then {
-            $0.text = "로그아웃 시 서비스 사용이 제한\n되며, 로그인이 필요합니다.\n계속하시겠습니까?"
+            $0.text = "서비스 사용이 제한되며,\n로그인이 필요해요.\n로그아웃을 진행할까요?"
             $0.numberOfLines = 0
             $0.textColor = .init(hex: 0x2F2F2F)
             $0.font = .customFont(.neoMedium, size: 14)
