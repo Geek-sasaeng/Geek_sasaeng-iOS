@@ -229,7 +229,7 @@ class ChattingViewController: UIViewController {
         }
         
         let contentLabel = UILabel().then {
-            $0.text = "매칭을 종료할 시\n본 파티에 대한 추가 인원이\n더 이상 모집되지 않습니다.\n계속하시겠습니까?"
+            $0.text = "매칭을 종료할 시\n본 파티에 대한 추가 인원이\n더 이상 모집되지 않아요.\n매칭 마감을 진행할까요?"
             $0.numberOfLines = 0
             $0.textColor = .init(hex: 0x2F2F2F)
             $0.font = .customFont(.neoMedium, size: 14)
