@@ -991,7 +991,7 @@ class ChattingViewController: UIViewController {
     /* 송금 완료 버튼 클릭 */
     @objc
     private func tapRemittanceButton() {
-        
+        self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
         self.remittanceView.removeFromSuperview()
     }
     
