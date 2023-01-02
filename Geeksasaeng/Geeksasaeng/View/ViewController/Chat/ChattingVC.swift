@@ -561,6 +561,7 @@ class ChattingViewController: UIViewController {
     
     // RabbitMQ를 통해 채팅 수신
     private func setupReceiver() {
+        // TODO: - RabbitMQ 커넥션 시기 변경
         // RabbitMQ 연결
         conn = RMQConnection(uri: rabbitMQUri, delegate: RMQConnectionDelegateLogger())
         conn!.start()
@@ -668,8 +669,6 @@ class ChattingViewController: UIViewController {
         view.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
     }
-    
-    // TODO: - 입장 시간 설정하고 그 이후 메세지만 가져오기
     
     // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
     
@@ -1037,54 +1036,66 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
             cell.systemMessageLabel.text = msg.message?.content
-            print("Seori Test: sys #\(indexPath.item)", cell)
             return cell
-        case .sameSenderMessage: // 같은 사람이 연속 전송
+        case .sameSenderMessage: // 보냈던 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
             if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = msg.message?.content
                 cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                 cell.leftTimeLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
+                cell.leftUnreadCntLabel.isHidden = true
             } else {
                 cell.leftMessageLabel.text = msg.message?.content
                 cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                 cell.rightTimeLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
+                cell.rightUnreadCntLabel.isHidden = true
             }
-            print("Seori Test: same #\(indexPath.item)", cell)
             return cell
-        default: // 다른 사람이 전송
+        default: // new 사람이 채팅 시작
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
             cell.nicknameLabel.text = msg.message?.nickName
-            if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신이면
-                cell.rightMessageLabel.text = msg.message?.content
+            if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
                 cell.nicknameLabel.textAlignment = .right
+                // nil 아니면 프로필 이미지로 설정
+                if let profileImgUrl = msg.message?.profileImgUrl {
+                    cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
+                }
+                cell.rightMessageLabel.text = msg.message?.content
                 cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
+                cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                 cell.leftImageView.isHidden = true
-                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-                }
-
-                print("Seori Test: me #\(indexPath.item)", cell)
-            } else {
+                cell.leftMessageLabel.isHidden = true
+                cell.leftTimeLabel.isHidden = true
+                cell.leftUnreadCntLabel.isHidden = true
+                // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
+//                if self.roomMaster == msg.message?.nickName { // 방장이라면
+//                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
+//                }
+            } else { // 다른 사람이면
                 cell.leftImageView.isUserInteractionEnabled = true
-                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
-                cell.leftMessageLabel.text = msg.message?.content
+                cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
                 cell.nicknameLabel.textAlignment = .left
-                cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-                cell.rightImageView.isHidden = true
-                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
+                if let profileImgUrl = msg.message?.profileImgUrl {
+                    cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
                 }
+                cell.leftMessageLabel.text = msg.message?.content
+                cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                cell.rightImageView.isHidden = true
+                cell.rightMessageLabel.isHidden = true
+                cell.rightTimeLabel.isHidden = true
+                cell.rightUnreadCntLabel.isHidden = true
+//                if self.roomMaster == msg.message?.nickName { // 방장이라면
+//                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
+//                }
             }
             return cell
         }

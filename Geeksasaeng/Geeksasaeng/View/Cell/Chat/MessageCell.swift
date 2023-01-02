@@ -12,9 +12,7 @@ class MessageCell: UICollectionViewCell {
     
     // MARK: - SubViews
     
-    let leftImageView = UIButton().then {
-        $0.isUserInteractionEnabled = true
-    }
+    let leftImageView = UIImageView()
     let rightImageView = UIImageView()
     let nicknameLabel = UILabel()
     
@@ -158,6 +156,13 @@ class MessageCell: UICollectionViewCell {
         
         [leftUnreadCntLabel, rightUnreadCntLabel].forEach {
             $0.setTextAndColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 12))
+        }
+        
+        if leftUnreadCntLabel.text == "0" {
+            leftUnreadCntLabel.text = ""
+        }
+        if rightUnreadCntLabel.text == "0" {
+            rightUnreadCntLabel.text = ""
         }
     }
 }

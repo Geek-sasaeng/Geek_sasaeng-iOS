@@ -122,5 +122,12 @@ class SameSenderMessageCell: UICollectionViewCell {
             $0.sizeToFit()
             $0.setNeedsLayout()
         }
+        
+        if leftUnreadCntLabel.text == "0" {
+            leftUnreadCntLabel.text = ""
+        }
+        if rightUnreadCntLabel.text == "0" {
+            rightUnreadCntLabel.text = ""
+        }
     }
 }
