@@ -54,7 +54,7 @@ class ReportDetailEtcViewController: UIViewController {
     
     let guideLabel = UILabel().then {
         $0.setTextAndColorAndFont(
-            text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다.",
+            text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있어요.",
             textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoRegular, size: 15))
         $0.numberOfLines = 0
     }
@@ -132,7 +132,7 @@ class ReportDetailEtcViewController: UIViewController {
         
         let contentLabel = UILabel().then {
             $0.setTextAndColorAndFont(
-                text: "고객님께서 요청하신 사항에\n따른 신고가 정상적으로\n처리되었습니다.",
+                text: "요청하신 사항에 따른 신고가\n정상적으로 처리되었어요.",
                 textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
             $0.numberOfLines = 0
         }
