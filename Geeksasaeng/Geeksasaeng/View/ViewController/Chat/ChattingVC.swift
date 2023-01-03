@@ -438,7 +438,8 @@ class ChattingViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var socket: WebSocket?
+    private var socket: WebSocket? = nil
+    private var conn: RMQConnection? = nil  // rabbitmq 채널 변수
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
     enum MsgType {
@@ -481,13 +482,15 @@ class ChattingViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        // 웹소켓 설정
         setupWebSocket()
+        // RabbitMq 수신 설정
+        setupReceiver()
         
         contentsTextView.delegate = self
-        setCollectionView()
         addSubViews()
         setLayouts()
-        receiveMsgs()
+        setCollectionView()
         
         do {
             // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
@@ -520,19 +523,20 @@ class ChattingViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        // 웹소켓 해제
+        socket?.disconnect()
+        socket?.delegate = nil
+        
+        // RabbitMQ Connection 끊기
+        if ((conn?.isOpen()) != nil) {
+            conn?.close()
+        }
+        
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         
         // 사라질 때 다시 탭바 보이게 설정
         self.tabBarController?.tabBar.isHidden = false
-    }
-    
-    // MARK: - deinit
-    
-    // 웹소켓 해제
-    deinit {
-        socket?.disconnect()
-        socket?.delegate = nil
     }
     
     // MARK: - Functions
@@ -551,16 +555,42 @@ class ChattingViewController: UIViewController {
         socket!.connect()
     }
     
-    private func setCollectionView() {
-        collectionView.register(SystemMessageCell.self, forCellWithReuseIdentifier: "SystemMessageCell")
-        collectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
-        collectionView.register(SameSenderMessageCell.self, forCellWithReuseIdentifier: "SameSenderMessageCell")
-        collectionView.delegate = self
-        collectionView.dataSource = self
+    // RabbitMQ를 통해 채팅 수신
+    private func setupReceiver() {
+        // RabbitMQ 연결
+        conn = RMQConnection(uri: rabbitMQUri, delegate: RMQConnectionDelegateLogger())
+        conn!.start()
         
-        if let collectionViewLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        }
+        // 채널 생성
+        let ch = conn!.createChannel()
+        // fanout 방식 사용
+        let x = ch.fanout("chatting-exchange-\(String(describing: roomId))")
+        
+        // 큐 생성, 바인딩
+        let q = ch.queue("88", options: .durable)
+        q.bind(x)
+        print("DEBUG: [Rabbit] 수신 대기 중", ch, x, q)
+        
+        // 큐 수신 리스너 설치 -> 메세지 수신 시 실행될 코드 작성
+        q.subscribe({(_ message: RMQMessage) -> Void in
+            // 디코딩
+            do {
+                // MsgResponse 구조체로 decode.
+                let decoder = JSONDecoder()
+                let data = try decoder.decode(MsgResponse.self, from: message.body)
+                print("[Rabbit] 채팅 수신", data.content)
+                
+                DispatchQueue.main.async {
+                    // 수신한 채팅 로컬에 저장하기
+                    self.saveMessage(msgResponse: data)
+                }
+                
+                // 컬렉션뷰 셀 업데이트
+                self.updateChattingView(newChat: data)
+            } catch {
+                print(error)
+            }
+        })
     }
     
     private func addSubViews() {
@@ -604,76 +634,16 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    // TODO: - 입장 시간 설정하고 그 이후 메세지만 가져오기
-    
-    // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
-    
-    // TODO: - 사진 데이터도 저장해야 함
-    
-    // 로컬에서 이전 채팅 불러오기
-    private func loadMessages() {
-        print("DEBUG: loadMessages")
-        // 로컬에서 해당 채팅방의 채팅 데이터 가져오기
-        let predicate = NSPredicate(format: "chatRoomId = %@", self.roomId!)
-        self.msgRecords = localRealm!.objects(MsgResponse.self).filter(predicate).sorted(byKeyPath: "createdAt")
+    private func setCollectionView() {
+        collectionView.register(SystemMessageCell.self, forCellWithReuseIdentifier: "SystemMessageCell")
+        collectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
+        collectionView.register(SameSenderMessageCell.self, forCellWithReuseIdentifier: "SameSenderMessageCell")
+        collectionView.delegate = self
+        collectionView.dataSource = self
         
-        guard let msgRecords = msgRecords else { return }
-        print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
-        for msgRecord in msgRecords {
-            if msgRecord.isSystemMessage == true {
-                self.msgContents.append(
-                    MsgContents(msgType: .systemMessage, message: msgRecord))
-                self.lastSenderId = -1 // 시스템 메세지는 -1로 지정
-            } else if self.lastSenderId == nil { // 첫 메세지일 때
-                self.msgContents.append(
-                    MsgContents(msgType: .message, message: msgRecord))
-                self.lastSenderId = msgRecord.memberId
-            } else if self.lastSenderId == msgRecord.memberId { // 같은 사람이 연속으로 보낼 때
-                self.msgContents.append(
-                    MsgContents(msgType: .sameSenderMessage, message: msgRecord))
-                self.lastSenderId = msgRecord.memberId
-            } else { // 다른 사람이 보낼 때
-                self.msgContents.append(
-                    MsgContents(msgType: .message, message: msgRecord))
-                self.lastSenderId = msgRecord.memberId
-            }
-            
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-                self.collectionView.scrollToItem(at: IndexPath(row: self.msgContents.count-1, section: 0), at: .top, animated: true)
-                print("이거", self.msgContents.count, "이전 메세지 불러온 거")
-            }
+        if let collectionViewLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
-    }
-    
-    typealias CompletionHandler = () -> Void
-    // 채팅 로컬에 저장하기
-    private func saveMessage(msgResponse: MsgResponse, completion: CompletionHandler) {
-        try! localRealm!.write {
-            localRealm!.add(msgResponse)
-            print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
-            
-            // 채팅 셀에 추가하기
-            if msgResponse.isSystemMessage == true {
-                self.msgContents.append(
-                    MsgContents(msgType: .systemMessage, message: msgResponse))
-                self.lastSenderId = -1 // 시스템 메세지는 -1로 지정
-            } else if self.lastSenderId == nil { // 첫 메세지일 때
-                self.msgContents.append(
-                    MsgContents(msgType: .message, message: msgResponse))
-                self.lastSenderId = msgResponse.memberId
-            } else if self.lastSenderId == msgResponse.memberId { // 같은 사람이 연속으로 보낼 때
-                self.msgContents.append(
-                    MsgContents(msgType: .sameSenderMessage, message: msgResponse))
-                self.lastSenderId = msgResponse.memberId
-            } else { // 다른 사람이 보낼 때
-                self.msgContents.append(
-                    MsgContents(msgType: .message, message: msgResponse))
-                self.lastSenderId = msgResponse.memberId
-            }
-            print("이거", self.msgContents.count)
-        }
-        completion()
     }
     
     // 배경을 흐리게, 블러뷰로 설정
@@ -695,21 +665,77 @@ class ChattingViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
     }
     
+    // TODO: - 입장 시간 설정하고 그 이후 메세지만 가져오기
+    
+    // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
+    
+    // TODO: - 사진 데이터도 저장해야 함
+    
+    // 로컬에서 이전 채팅 불러오기
+    private func loadMessages() {
+        print("DEBUG: loadMessages")
+        // 로컬에서 해당 채팅방의 채팅 데이터 가져오기
+        let predicate = NSPredicate(format: "chatRoomId = %@", self.roomId!)
+        self.msgRecords = localRealm!.objects(MsgResponse.self).filter(predicate).sorted(byKeyPath: "createdAt")
+        
+        guard let msgRecords = msgRecords else { return }
+        print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
+        for msgRecord in msgRecords {
+            // 불러온 채팅 데이터를 셀에 추가
+            self.updateChattingView(newChat: msgRecord)
+        }
+    }
+    
+    // 채팅 로컬에 저장하기
+    private func saveMessage(msgResponse: MsgResponse) {
+        try! localRealm!.write {
+            localRealm!.add(msgResponse)
+            print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
+        }
+    }
+    
+    // 새 채팅을 컬렉션뷰 셀에 추가하기
+    private func updateChattingView(newChat: MsgResponse) {
+        if newChat.isSystemMessage == true {
+            self.msgContents.append(
+                MsgContents(msgType: .systemMessage, message: newChat))
+            self.lastSenderId = -1 // 시스템 메세지는 -1로 지정
+        } else if self.lastSenderId == nil { // 첫 메세지일 때
+            self.msgContents.append(
+                MsgContents(msgType: .message, message: newChat))
+            self.lastSenderId = newChat.memberId
+        } else if self.lastSenderId == newChat.memberId { // 같은 사람이 연속으로 보낼 때
+            self.msgContents.append(
+                MsgContents(msgType: .sameSenderMessage, message: newChat))
+            self.lastSenderId = newChat.memberId
+        } else { // 다른 사람이 보낼 때
+            self.msgContents.append(
+                MsgContents(msgType: .message, message: newChat))
+            self.lastSenderId = newChat.memberId
+        }
+        
+        // 컬렉션뷰 리로드, 새로 추가된 셀로 스크롤 이동
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+            self.collectionView.scrollToItem(at: IndexPath(row: self.msgContents.count-1, section: 0), at: .top, animated: true)
+        }
+    }
+    
     // TODO: - 유저 채팅방 나가기 기능
     // TODO: - 방장 나가기 기능 -> 새 방장 선정
     
     // 연결된 웹소켓을 통해 메세지 전송
     private func sendMessage(input: MsgRequest) {
-        print("DEBUG: sendMessage")
         do {
+            // 메세지 string으로 인코딩
             let encoder = JSONEncoder()
             let data = try encoder.encode(input)
             if let jsonString = String(data: data, encoding: .utf8),
                let socket = socket {
                 print("DEBUG: 웹소켓에 write하는 Json String", jsonString)
+                // 웹소켓에 전송
                 socket.write(string: jsonString) {
-                    print("DEBUG: write success")
-                    
+                    print("DEBUG: 웹소켓 전송 성공")
                     // 전송 성공 시 tf 값 비우기
                     DispatchQueue.main.async {
                         self.contentsTextView.text = ""
@@ -722,45 +748,6 @@ class ChattingViewController: UIViewController {
             showToast(viewController: self, message: "채팅 전송에 실패하였습니다.",
                       font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
         }
-    }
-    
-    // RabbitMQ를 통해 채팅 수신
-    private func receiveMsgs() {
-        let conn = RMQConnection(uri: rabbitMQUri, delegate: RMQConnectionDelegateLogger())
-        conn.start()
-        let ch = conn.createChannel()
-        let x = ch.fanout("chatting-exchange-\(String(describing: roomId))")
-        let q = ch.queue("88", options: .durable)
-        q.bind(x)
-        print("DEBUG: [Rabbit] Waiting for logs.", ch, x, q)
-        q.subscribe({(_ message: RMQMessage) -> Void in
-            guard let msg = String(data: message.body, encoding: .utf8) else { return }
-
-            // str - decode
-            do {
-                // MsgResponse 구조체로 decode.
-                let decoder = JSONDecoder()
-                let data = try decoder.decode(MsgResponse.self, from: message.body)
-                print("[Rabbit] 수신", data.content)
-                
-                // 수신한 채팅 로컬에 저장하기
-                DispatchQueue.main.async {
-                    print("이거 저장 전", self.msgContents.last?.message?.content)
-                    self.saveMessage(msgResponse: data) {
-                        self.collectionView.reloadData()
-                        print("이거 저장 후", self.msgContents.last?.message?.content, "리로드")
-                        self.collectionView.scrollToItem(at: IndexPath(row: self.msgContents.count-1, section: 0), at: .top, animated: true)
-                    }
-                }
-                
-            } catch {
-                print(error)
-            }
-
-            print("DEBUG: [Rabbit] Received RoutingKey: \(message.routingKey!), Message: \(msg)")
-            print("DEBUG: [Rabbit] Message Info: \n consumerTag \(message.consumerTag ?? "nil값"), deliveryTag \(message.deliveryTag ?? 0), exchangeName \(message.exchangeName ?? "nil값")")
-            print("DEBUG: [Rabbit] subscribe", self.msgContents.count, msg)
-        })
     }
     
     private func getMessageLabelHeight(text: String) -> CGFloat {
