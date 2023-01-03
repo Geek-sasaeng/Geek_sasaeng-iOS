@@ -325,8 +325,7 @@ class ChattingViewController: UIViewController {
             $0.titleLabel?.textColor = .white
             $0.backgroundColor = .mainColor
             $0.layer.cornerRadius = 5
-//            $0.addTarget(self, action: #selector(tapRemittanceButton), for: .touchUpInside)
-            // TODO: - 채팅 구현 후 addTarget 설정
+            $0.addTarget(self, action: #selector(tapOrderCompleted), for: .touchUpInside)
         }
         
         view.addSubview(orderCompletedButton)
@@ -995,6 +994,20 @@ class ChattingViewController: UIViewController {
         self.remittanceView.removeFromSuperview()
     }
     
+    /* 주문 완료 버튼 클릭 */
+    @objc
+    private func tapOrderCompleted() {
+        guard let roomId = self.roomId else { return }
+        let orderCompletedInput = orderCompletedInput(roomId: roomId)
+        
+        ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
+            if isSuccess {
+                self.showToast(viewController: self, message: "주문완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                self.orderCompletedView.removeFromSuperview()
+            }
+        }
+    }
+    
     /* 배경의 컬렉션뷰 클릭시 띄워져있는 안내뷰와 블러뷰를 없애는 함수 */
     @objc
     private func tapCollectionView() {
@@ -1399,7 +1412,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     guard let imageData = image as? UIImage else { return }
                     let input = ChatImageSendInput(
                         chatId: "none",
-                        chatRootId: self.roomId,
+                        chatRoomId: self.roomId,
                         chatType: "publish",
                         content: "content",
                         email: "dmstn@gachon.ac.kr",

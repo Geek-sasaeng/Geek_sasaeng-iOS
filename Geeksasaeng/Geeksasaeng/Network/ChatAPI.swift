@@ -11,7 +11,7 @@ import Alamofire
 /* 채팅방 사진 전송 API의 Request body */
 struct ChatImageSendInput: Encodable {
     var chatId: String?
-    var chatRootId: String?
+    var chatRoomId: String?
     var chatType: String?
     var content: String?
     var email: String?
@@ -28,6 +28,20 @@ struct ChatImageSendModel: Decodable {
     var result : String?
 }
 
+
+/* 주문 완료 API input */
+struct orderCompletedInput: Encodable {
+    var roomId: String?
+}
+
+/* 주문 완료 API res */
+struct orderCompletedModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
+}
+
 class ChatAPI {
     public static func sendImage(_ parameter: ChatImageSendInput, imageData: UIImage, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chatimage"
@@ -37,7 +51,7 @@ class ChatAPI {
         ]
         let parameters: [String: Any] = [
             "chatId": parameter.chatId!,
-            "chatRootId": parameter.chatRootId!,
+            "chatRoomId": parameter.chatRoomId!,
             "chatType": parameter.chatType!,
             "content": parameter.content!,
             "email": parameter.email!,
@@ -45,6 +59,8 @@ class ChatAPI {
             "isSystemMessage": parameter.isSystemMessage!,
             "profileImgUrl": parameter.profileImgUrl!
         ]
+        
+        print(parameters)
         
         AF.upload(multipartFormData: { multipartFormData in
             for (key, value) in parameters {
@@ -69,4 +85,28 @@ class ChatAPI {
             }
         }
     }
+    
+    public static func orderCompleted(_ parameter: orderCompletedInput, completion: @escaping (Bool) -> Void) {
+        let URL = "https://geeksasaeng.shop/party-chat-room/order"
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: orderCompletedModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("주문완료 처리 성공")
+                    completion(true)
+                } else {
+                    print("DEBUG: ", result.message!)
+                    completion(false)
+                }
+            case .failure(let error):
+                print("DEBUG: ", error.localizedDescription)
+                completion(false)
+            }
+        }   
+    }
 }
+
+
