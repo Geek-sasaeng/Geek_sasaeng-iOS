@@ -197,6 +197,7 @@ class LoginViewController: UIViewController {
             AutoLoginAPI.attemptAutoLogin(jwt: jwt) { result in
                 // static에 필요한 데이터 저장
                 LoginModel.jwt = jwt
+                LoginModel.memberId = result.memberId
                 LoginModel.nickname = result.nickname
                 LoginModel.userImgUrl = result.userImageUrl
                 
@@ -272,6 +273,7 @@ class LoginViewController: UIViewController {
                     LoginModel.jwt = result?.jwt
                     LoginModel.nickname = result?.nickName
                     LoginModel.userImgUrl = result?.userImageUrl
+                    LoginModel.memberId = result?.memberId
                     
                     // dormitoryId, Name 저장
                     self.dormitoryInfo = DormitoryNameResult(id: result?.dormitoryId, name: result?.dormitoryName)

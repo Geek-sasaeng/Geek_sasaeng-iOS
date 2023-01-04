@@ -8,22 +8,6 @@
 import Foundation
 import Alamofire
 
-// 회원가입을 요청했을 때 받게 될 Response의 형태.
-struct RegisterModel : Decodable {
-    var isSuccess : Bool?
-    var code : Int?
-    var message : String?
-    var result : RegisterModelResult?
-}
-
-struct RegisterModelResult : Decodable {
-    var emailId: Int?
-    var loginId: String?
-    var nickname: String?
-    var phoneNumberId: Int?
-    var universityName: String?
-}
-
 // 회원가입을 완료할 때 보낼 Request body의 형태.
 struct RegisterInput : Encodable {
     var checkPassword: String?
@@ -44,6 +28,23 @@ struct NaverRegisterInput: Encodable {
     var universityName: String?
 }
 
+// 회원가입을 요청했을 때 받게 될 Response의 형태.
+struct RegisterModel : Decodable {
+    var isSuccess : Bool?
+    var code : Int?
+    var message : String?
+    var result : RegisterModelResult?
+}
+
+struct RegisterModelResult : Decodable {
+    var emailId: Int?
+    var loginId: String?
+    var memberId: Int?
+    var nickname: String?
+    var phoneNumberId: Int?
+    var universityName: String?
+}
+
 struct NaverRegisterModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
@@ -54,12 +55,12 @@ struct NaverRegisterModel: Decodable {
 struct NaverRegisterModelResult: Decodable {
     var email: Int?
     var loginId: String?
+    var memberId: Int?
     var nickname: String?
     var phoneNumber: Int?
     var universityName: String?
     var jwt: String?
 }
-
 
 // 회원가입 API 연동
 class RegisterAPI {
@@ -92,7 +93,7 @@ class RegisterAPI {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 회원가입 성공")
+                    print("DEBUG: 네이버 회원가입 성공")
                     guard let passedResult = result.result else { return }
                     completion(.success, passedResult)
                 } else {

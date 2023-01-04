@@ -38,13 +38,14 @@ class LoginViewModel {
         AF.request("https://geeksasaeng.shop/login/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
-        .responseDecodable(of: NaverLoginOutput.self) { response in
+        .responseDecodable(of: LoginOutput.self) { response in
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
                     LoginModel.jwt = result.result?.jwt
                     LoginModel.nickname = result.result?.nickName
                     LoginModel.userImgUrl = result.result?.userImageUrl
+                    LoginModel.memberId = result.result?.memberId
                     
                     if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
                         print("DEBUG: 성공")

@@ -471,7 +471,9 @@ class ChattingViewController: UIViewController {
     var roomMaster: String? // 내가 현재 방장인지
     var bank: String?
     var accountNumber: String?
-    var enterTimeToDate: Date?    // 내가 이 방에 들어온 시간
+    
+    // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
+    var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
     var keyboardHeight: CGFloat? // 키보드 높이
     // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
@@ -502,6 +504,8 @@ class ChattingViewController: UIViewController {
         } catch {
             print(error.localizedDescription)
         }
+        
+        print("확인", self.enterTimeToDate)
         
         // 이전 메세지 불러오기
         loadMessages()
@@ -562,6 +566,7 @@ class ChattingViewController: UIViewController {
     
     // RabbitMQ를 통해 채팅 수신
     private func setupReceiver() {
+        // TODO: - RabbitMQ 커넥션 시기 변경
         // RabbitMQ 연결
         conn = RMQConnection(uri: rabbitMQUri, delegate: RMQConnectionDelegateLogger())
         conn!.start()
@@ -572,7 +577,7 @@ class ChattingViewController: UIViewController {
         let x = ch.fanout("chatting-exchange-\(String(describing: roomId))")
         
         // 큐 생성, 바인딩
-        let q = ch.queue("88", options: .durable)
+        let q = ch.queue("\(LoginModel.memberId ?? 0)", options: .durable)
         q.bind(x)
         print("DEBUG: [Rabbit] 수신 대기 중", ch, x, q)
         
@@ -671,8 +676,6 @@ class ChattingViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
     }
     
-    // TODO: - 입장 시간 설정하고 그 이후 메세지만 가져오기
-    
     // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
     
     // TODO: - 사진 데이터도 저장해야 함
@@ -687,8 +690,13 @@ class ChattingViewController: UIViewController {
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
         for msgRecord in msgRecords {
-            // 불러온 채팅 데이터를 셀에 추가
-            self.updateChattingView(newChat: msgRecord)
+            // 입장 시간 이후의 메세지들만 걸러내기
+            let createdAtDate = FormatCreater.sharedLongFormat.date(from: msgRecord.createdAt!)
+            let timeInterval = Int(enterTimeToDate.timeIntervalSince(createdAtDate!))
+            if timeInterval <= 0 {
+                // 불러온 채팅 데이터를 셀에 추가
+                self.updateChattingView(newChat: msgRecord)
+            }
         }
     }
     
@@ -1069,54 +1077,66 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
             cell.systemMessageLabel.text = msg.message?.content
-            print("Seori Test: sys #\(indexPath.item)", cell)
             return cell
-        case .sameSenderMessage: // 같은 사람이 연속 전송
+        case .sameSenderMessage: // 보냈던 사람이 연속 전송
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
             if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
                 cell.rightMessageLabel.text = msg.message?.content
                 cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                 cell.leftTimeLabel.isHidden = true
                 cell.leftMessageLabel.isHidden = true
+                cell.leftUnreadCntLabel.isHidden = true
             } else {
                 cell.leftMessageLabel.text = msg.message?.content
                 cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                 cell.rightTimeLabel.isHidden = true
                 cell.rightMessageLabel.isHidden = true
+                cell.rightUnreadCntLabel.isHidden = true
             }
-            print("Seori Test: same #\(indexPath.item)", cell)
             return cell
-        default: // 다른 사람이 전송
+        default: // new 사람이 채팅 시작
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
             cell.nicknameLabel.text = msg.message?.nickName
-            if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신이면
-                cell.rightMessageLabel.text = msg.message?.content
+            if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
                 cell.nicknameLabel.textAlignment = .right
+                // nil 아니면 프로필 이미지로 설정
+                if let profileImgUrl = msg.message?.profileImgUrl {
+                    cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
+                }
+                cell.rightMessageLabel.text = msg.message?.content
                 cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
+                cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                 cell.leftImageView.isHidden = true
-                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-                }
-
-                print("Seori Test: me #\(indexPath.item)", cell)
-            } else {
+                cell.leftMessageLabel.isHidden = true
+                cell.leftTimeLabel.isHidden = true
+                cell.leftUnreadCntLabel.isHidden = true
+                // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
+//                if self.roomMaster == msg.message?.nickName { // 방장이라면
+//                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
+//                }
+            } else { // 다른 사람이면
                 cell.leftImageView.isUserInteractionEnabled = true
-                cell.leftImageView.addTarget(self, action: #selector(tapProfileImage), for: .touchUpInside)
-                cell.leftMessageLabel.text = msg.message?.content
+                cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
                 cell.nicknameLabel.textAlignment = .left
-                cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-                cell.rightImageView.isHidden = true
-                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    cell.leftImageView.setImage(UIImage(named: "RoomMasterProfile"), for: .normal)
-                } else {// 방장이 아니면 기본 프로필로 설정
-                    cell.leftImageView.setImage(UIImage(named: "DefaultProfile"), for: .normal)
+                if let profileImgUrl = msg.message?.profileImgUrl {
+                    cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
                 }
+                cell.leftMessageLabel.text = msg.message?.content
+                cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                cell.rightImageView.isHidden = true
+                cell.rightMessageLabel.isHidden = true
+                cell.rightTimeLabel.isHidden = true
+                cell.rightUnreadCntLabel.isHidden = true
+//                if self.roomMaster == msg.message?.nickName { // 방장이라면
+//                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+//                } else {// 방장이 아니면 기본 프로필로 설정
+//                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
+//                }
             }
             return cell
         }
