@@ -559,7 +559,7 @@ class ChattingViewController: UIViewController {
         socket!.delegate = self
         socket!.connect()
     }
-
+    
     // RabbitMQ를 통해 채팅 수신
     private func setupReceiver() {
         // RabbitMQ 연결
@@ -643,6 +643,7 @@ class ChattingViewController: UIViewController {
         collectionView.register(SystemMessageCell.self, forCellWithReuseIdentifier: "SystemMessageCell")
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
         collectionView.register(SameSenderMessageCell.self, forCellWithReuseIdentifier: "SameSenderMessageCell")
+        collectionView.register(ImageMessageCell.self, forCellWithReuseIdentifier: "ImageMessageCell")
         collectionView.delegate = self
         collectionView.dataSource = self
         
