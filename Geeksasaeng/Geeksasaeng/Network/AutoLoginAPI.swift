@@ -19,6 +19,7 @@ struct AutoLoginModelResult: Decodable {
     var email: String?
     var loginId: String?
     var loginStatus: String?
+    var memberId: Int?
     var memberLoginType: String?
     var nickname: String?
     var phoneNumber: String?

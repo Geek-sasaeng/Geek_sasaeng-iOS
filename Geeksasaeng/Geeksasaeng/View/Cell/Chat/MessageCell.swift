@@ -12,13 +12,14 @@ class MessageCell: UICollectionViewCell {
     
     // MARK: - SubViews
     
-    let leftImageView = UIButton().then {
-        $0.isUserInteractionEnabled = true
-    }
+    let leftImageView = UIImageView()
     let rightImageView = UIImageView()
     let nicknameLabel = UILabel()
-    let rightTimeLabel = UILabel()
+    
+    let leftUnreadCntLabel = UILabel()
+    let rightUnreadCntLabel = UILabel()
     let leftTimeLabel = UILabel()
+    let rightTimeLabel = UILabel()
     let leftMessageLabel = PaddingLabel()
     let rightMessageLabel = PaddingLabel()
     
@@ -41,6 +42,12 @@ class MessageCell: UICollectionViewCell {
         leftMessageLabel.text = ""
         rightMessageLabel.text = ""
         
+        leftTimeLabel.text = ""
+        rightTimeLabel.text = ""
+        
+        leftUnreadCntLabel.text = ""
+        rightUnreadCntLabel.text = ""
+        
         leftMessageLabel.isHidden = false
         rightMessageLabel.isHidden = false
         
@@ -49,14 +56,21 @@ class MessageCell: UICollectionViewCell {
         
         leftImageView.isHidden = false
         rightImageView.isHidden = false
+        
+        leftUnreadCntLabel.isHidden = false
+        rightUnreadCntLabel.isHidden = false
     }
     
     // MARK: - Functions
     
     private func addSubViews() {
-        [nicknameLabel, leftMessageLabel, rightMessageLabel,
-         rightTimeLabel, leftTimeLabel,
-         leftImageView, rightImageView,].forEach {
+        [
+            leftImageView, rightImageView,
+            nicknameLabel,
+            leftMessageLabel, rightMessageLabel,
+            leftTimeLabel, rightTimeLabel,
+            leftUnreadCntLabel, rightUnreadCntLabel
+        ].forEach {
             addSubview($0)
         }
     }
@@ -82,16 +96,20 @@ class MessageCell: UICollectionViewCell {
             make.right.equalTo(rightMessageLabel.snp.left).offset(-3)
         }
         
+        leftUnreadCntLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(leftTimeLabel.snp.centerY)
+            make.left.equalTo(leftTimeLabel.snp.right).offset(6)
+        }
+        
+        rightUnreadCntLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(rightTimeLabel.snp.centerY)
+            make.right.equalTo(rightTimeLabel.snp.left).offset(-6)
+        }
+        
         leftImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.height.equalTo(32)
             make.left.equalToSuperview().inset(23)
-        }
-        
-        nicknameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalTo(leftImageView.snp.right).offset(10)
-            make.right.equalTo(rightImageView.snp.left).offset(-10)
         }
         
         rightImageView.snp.makeConstraints { make in
@@ -99,12 +117,21 @@ class MessageCell: UICollectionViewCell {
             make.width.height.equalTo(32)
             make.right.equalToSuperview().inset(23)
         }
+        
+        nicknameLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.left.equalTo(leftImageView.snp.right).offset(10)
+            make.right.equalTo(rightImageView.snp.left).offset(-10)
+        }
     }
     
     private func setAttributes() {
+        [leftImageView, rightImageView].forEach {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 16
+        }
+        
         nicknameLabel.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 11))
-        rightTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
-        leftTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
         
         [leftMessageLabel, rightMessageLabel].forEach {
             $0.paddingTop = 10
@@ -123,9 +150,19 @@ class MessageCell: UICollectionViewCell {
             $0.setNeedsLayout()
         }
         
-        [leftImageView, rightImageView].forEach {
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 16
+        [leftTimeLabel, rightTimeLabel].forEach {
+            $0.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
+        }
+        
+        [leftUnreadCntLabel, rightUnreadCntLabel].forEach {
+            $0.setTextAndColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 12))
+        }
+        
+        if leftUnreadCntLabel.text == "0" {
+            leftUnreadCntLabel.text = ""
+        }
+        if rightUnreadCntLabel.text == "0" {
+            rightUnreadCntLabel.text = ""
         }
     }
 }
