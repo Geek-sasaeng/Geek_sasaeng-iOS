@@ -13,6 +13,7 @@ import RMQClient
 import SnapKit
 import Starscream
 import Then
+import PhotosUI
 
 // Delegate Pattern을 통해 pushVC 구현
 protocol PushReportUserDelegate {
@@ -475,6 +476,7 @@ class ChattingViewController: UIViewController {
     // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
     var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
+    var keyboardHeight: CGFloat? // 키보드 높이
     // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
     var localRealm: Realm? = nil
     
@@ -489,7 +491,7 @@ class ChattingViewController: UIViewController {
         // RabbitMq 수신 설정
         setupReceiver()
         
-        contentsTextView.delegate = self
+        setAttributes()
         addSubViews()
         setLayouts()
         setCollectionView()
@@ -547,6 +549,11 @@ class ChattingViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         collectionView.endEditing(true)
+    }
+    
+    private func setAttributes() {
+        contentsTextView.delegate = self
+        sendImageButton.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
     }
     
     // 웹소켓 설정
@@ -643,6 +650,7 @@ class ChattingViewController: UIViewController {
         collectionView.register(SystemMessageCell.self, forCellWithReuseIdentifier: "SystemMessageCell")
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: "MessageCell")
         collectionView.register(SameSenderMessageCell.self, forCellWithReuseIdentifier: "SameSenderMessageCell")
+        collectionView.register(ImageMessageCell.self, forCellWithReuseIdentifier: "ImageMessageCell")
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -814,6 +822,7 @@ class ChattingViewController: UIViewController {
         // 1. 키보드의 높이를 구함
         if let info = sender.userInfo,
            let keyboardHeight = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+            self.keyboardHeight = keyboardHeight
             // 2. collectionView의 contentInset bottom 값을 변경하여 키보드 위로 content가 올라갈 수 있도록 함
             collectionView.contentInset.bottom = keyboardHeight
             // 3. 키보드 높이만큼 bottomView의 y값을 변경
@@ -830,6 +839,24 @@ class ChattingViewController: UIViewController {
         // collectionView의 contentInset 값과 bottomView의 transform을 원래대로 변경
         collectionView.contentInset.bottom = 0
         bottomView.transform = .identity
+    }
+    
+    /* 사진 전송 아이콘 클릭시 실행되는 함수 */
+    @objc
+    private func tapSendImageButton() {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        configuration.filter = .images
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        /* 사진 선택 뷰의 크기 조정, rightBarButton title 변경 코드인데 잘 안 됨
+        guard let keyboardHeight = keyboardHeight else { return }
+        picker.view.frame = CGRect(x: 0, y: -(UIScreen.main.bounds.height - keyboardHeight), width: UIScreen.main.bounds.width, height: keyboardHeight)
+        picker.navigationController?.navigationItem.rightBarButtonItem?.title = "전송"
+        */
+        picker.delegate = self
+        
+        self.present(picker, animated: true, completion: nil)
     }
     
     /* 왼쪽 상단 백버튼 클릭시 실행되는 함수 */
@@ -1197,6 +1224,42 @@ extension ChattingViewController: WebSocketDelegate {
             print("DEBUG: websocket is cancelled")
         case .error(let error):
             print("DEBUG: 에러 websocket is error = \(error!)")
+        }
+    }
+}
+
+extension ChattingViewController: PHPickerViewControllerDelegate {
+    /* 사진 선택이 완료되었을 때 */
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        print("사진 선택 완료")
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                DispatchQueue.main.async {
+                    guard let imageData = image as? UIImage else { return }
+                    let input = ChatImageSendInput(
+                        chatId: "none",
+                        chatRootId: self.roomId,
+                        chatType: "publish",
+                        content: "content",
+                        email: "dmstn@gachon.ac.kr",
+                        isImageMessage: true,
+                        isSystemMessage: false,
+                        profileImgUrl: "더미"
+                    )
+                    
+                    ChatAPI.sendImage(input, imageData: imageData) { isSuccess in
+                        if isSuccess {
+                            print("이미지 전송 성공")
+                        }
+                    }
+                    
+                }
+            }
         }
     }
 }

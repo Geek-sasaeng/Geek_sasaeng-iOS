@@ -320,19 +320,21 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     private func setUserInfo() {
         /* textfield로 변경 */
         UserInfoAPI.getEditUserInfo { isSuccess, result in
-            let url = URL(string: result.imgUrl!)
-            self.userImageView.kf.setImage(with: url)
-            
-            self.nicknameDataTextField.text = result.nickname
-            self.idDataTextField.text = result.loginId
-            
-            self.dormitoryId = result.dormitoryId
-            self.loginId = result.loginId
-            self.nickname = result.nickname
-            
-            self.dormitoryList = result.dormitoryList
-            
-            self.setDormitoryList(dormitoryList: self.dormitoryList!)
+            if isSuccess {
+                let url = URL(string: result.imgUrl!)
+                self.userImageView.kf.setImage(with: url)
+                
+                self.nicknameDataTextField.text = result.nickname
+                self.idDataTextField.text = result.loginId
+                
+                self.dormitoryId = result.dormitoryId
+                self.loginId = result.loginId
+                self.nickname = result.nickname
+                
+                self.dormitoryList = result.dormitoryList
+                
+                self.setDormitoryList(dormitoryList: self.dormitoryList!)
+            }
         }
     }
     
@@ -422,7 +424,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             )
         }
         
-        UserInfoAPI.editUser(input!, imageData: UIImage(systemName: "sun.min")!) { isSuccess, result in
+        UserInfoAPI.editUser(input!, imageData: userImageView.image!) { isSuccess, result in
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()
