@@ -1073,90 +1073,174 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let msg = msgContents[indexPath.row]
+        guard let isImageMessage = msg.message?.isImageMessage else { return UICollectionViewCell() }
         switch msg.msgType {
         case .systemMessage: // 시스템 메세지
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SystemMessageCell", for: indexPath) as! SystemMessageCell
             cell.systemMessageLabel.text = msg.message?.content
             return cell
         case .sameSenderMessage: // 보냈던 사람이 연속 전송
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
-            if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
-                cell.rightMessageLabel.text = msg.message?.content
-                cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
-                cell.leftTimeLabel.isHidden = true
-                cell.leftMessageLabel.isHidden = true
-                cell.leftUnreadCntLabel.isHidden = true
+            // 채팅이 이미지일 때
+            if isImageMessage {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
+                    cell.rightImageView.isHidden = true
+                    cell.nicknameLabel.isHidden = true
+                    if let contentUrl = msg.message?.content {
+                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                    }
+                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+//                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftImageView.isHidden = true
+                    cell.leftImageMessageView.isHidden = true
+                    cell.leftTimeLabel.isHidden = true
+//                    cell.leftUnreadCntLabel.isHidden = true
+                } else {
+                    cell.leftImageView.isHidden = true
+                    cell.nicknameLabel.isHidden = true
+                    if let contentUrl = msg.message?.content {
+                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        print("DEBUG: 사진 Url", contentUrl)
+                    }
+                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+//                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightImageView.isHidden = true
+                    cell.rightImageMessageView.isHidden = true
+                    cell.rightTimeLabel.isHidden = true
+//                    cell.rightUnreadCntLabel.isHidden = true
+                }
+                return cell
             } else {
-                cell.leftMessageLabel.text = msg.message?.content
-                cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
-                cell.rightTimeLabel.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-                cell.rightUnreadCntLabel.isHidden = true
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
+                if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
+                    cell.rightMessageLabel.text = msg.message?.content
+                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftTimeLabel.isHidden = true
+                    cell.leftMessageLabel.isHidden = true
+                    cell.leftUnreadCntLabel.isHidden = true
+                } else {
+                    cell.leftMessageLabel.text = msg.message?.content
+                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightTimeLabel.isHidden = true
+                    cell.rightMessageLabel.isHidden = true
+                    cell.rightUnreadCntLabel.isHidden = true
+                }
+                return cell
             }
-            return cell
         default: // new 사람이 채팅 시작
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-            cell.nicknameLabel.text = msg.message?.nickName
-            if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
-                cell.nicknameLabel.textAlignment = .right
-                // nil 아니면 프로필 이미지로 설정
-                if let profileImgUrl = msg.message?.profileImgUrl {
-                    cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
+            // 채팅이 이미지일 때
+            if isImageMessage {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                cell.nicknameLabel.text = msg.message?.nickName
+                if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
+                    cell.nicknameLabel.textAlignment = .right
+                    // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
+                    // nil 아니면 프로필 이미지로 설정
+                    if let profileImgUrl = msg.message?.profileImgUrl {
+                        cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
+                    }
+                    if let contentUrl = msg.message?.content {
+                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                    }
+                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+//                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftImageView.isHidden = true
+                    cell.leftImageMessageView.isHidden = true
+                    cell.leftTimeLabel.isHidden = true
+//                    cell.leftUnreadCntLabel.isHidden = true
+                } else { // 다른 사람이면
+                    cell.nicknameLabel.textAlignment = .left
+                    // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
+                    if let profileImgUrl = msg.message?.profileImgUrl {
+                        cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
+                    }
+                    if let contentUrl = msg.message?.content {
+                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                    }
+                    cell.leftImageView.isUserInteractionEnabled = true
+                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+                    cell.nicknameLabel.textAlignment = .left
+                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+//                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightImageView.isHidden = true
+                    cell.rightImageMessageView.isHidden = true
+                    cell.rightTimeLabel.isHidden = true
+//                    cell.rightUnreadCntLabel.isHidden = true
                 }
-                cell.rightMessageLabel.text = msg.message?.content
-                cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
-                cell.leftImageView.isHidden = true
-                cell.leftMessageLabel.isHidden = true
-                cell.leftTimeLabel.isHidden = true
-                cell.leftUnreadCntLabel.isHidden = true
-                // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
-//                if self.roomMaster == msg.message?.nickName { // 방장이라면
-//                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-//                } else {// 방장이 아니면 기본 프로필로 설정
-//                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-//                }
-            } else { // 다른 사람이면
-                cell.leftImageView.isUserInteractionEnabled = true
-                cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
-                cell.nicknameLabel.textAlignment = .left
-                if let profileImgUrl = msg.message?.profileImgUrl {
-                    cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+                cell.nicknameLabel.text = msg.message?.nickName
+                if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
+                    cell.nicknameLabel.textAlignment = .right
+                    // nil 아니면 프로필 이미지로 설정
+                    if let profileImgUrl = msg.message?.profileImgUrl {
+                        cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
+                    }
+                    cell.rightMessageLabel.text = msg.message?.content
+                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftImageView.isHidden = true
+                    cell.leftMessageLabel.isHidden = true
+                    cell.leftTimeLabel.isHidden = true
+                    cell.leftUnreadCntLabel.isHidden = true
+                    // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
+                    //                if self.roomMaster == msg.message?.nickName { // 방장이라면
+                    //                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
+                    //                } else {// 방장이 아니면 기본 프로필로 설정
+                    //                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
+                    //                }
+                } else { // 다른 사람이면
+                    cell.leftImageView.isUserInteractionEnabled = true
+                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+                    cell.nicknameLabel.textAlignment = .left
+                    if let profileImgUrl = msg.message?.profileImgUrl {
+                        cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
+                    }
+                    cell.leftMessageLabel.text = msg.message?.content
+                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightImageView.isHidden = true
+                    cell.rightMessageLabel.isHidden = true
+                    cell.rightTimeLabel.isHidden = true
+                    cell.rightUnreadCntLabel.isHidden = true
+                    //                if self.roomMaster == msg.message?.nickName { // 방장이라면
+                    //                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
+                    //                } else {// 방장이 아니면 기본 프로필로 설정
+                    //                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
+                    //                }
                 }
-                cell.leftMessageLabel.text = msg.message?.content
-                cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
-                cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
-                cell.rightImageView.isHidden = true
-                cell.rightMessageLabel.isHidden = true
-                cell.rightTimeLabel.isHidden = true
-                cell.rightUnreadCntLabel.isHidden = true
-//                if self.roomMaster == msg.message?.nickName { // 방장이라면
-//                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
-//                } else {// 방장이 아니면 기본 프로필로 설정
-//                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
-//                }
+                return cell
             }
-            return cell
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellSize: CGSize
         let msg = msgContents[indexPath.row]
+        guard let isImageMessage = msg.message?.isImageMessage else { return CGSize() }
         
         switch msg.msgType {
         case .systemMessage:
             let labelHeight = getSystemMessageLabelHeight(text: msg.message?.content ?? "")
             cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
         case .message:
-            // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
-            let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
+            if isImageMessage {
+                cellSize = CGSize(width: 155, height: 155)
+            } else {
+                // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
+                let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
+                cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
+            }
         case .sameSenderMessage:
-            let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
+            if isImageMessage {
+                cellSize = CGSize(width: 155, height: 155)
+            } else {
+                let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
+                cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
+            }
         default:
             cellSize = CGSize(width: view.bounds.width, height: 40)
         }

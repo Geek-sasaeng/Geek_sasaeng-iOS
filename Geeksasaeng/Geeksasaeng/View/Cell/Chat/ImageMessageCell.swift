@@ -10,11 +10,13 @@ import SnapKit
 
 class ImageMessageCell: UICollectionViewCell {
     
+    // MARK: - Properties
+    
+    static let identifier = "ImageMessageCell"
+    
     // MARK: - SubViews
     
-    let leftImageView = UIButton().then {
-        $0.isUserInteractionEnabled = true
-    }
+    let leftImageView = UIImageView()
     let rightImageView = UIImageView()
     let nicknameLabel = UILabel()
     let rightTimeLabel = UILabel()
@@ -22,7 +24,6 @@ class ImageMessageCell: UICollectionViewCell {
     let leftImageMessageView = UIView()
     let rightImageMessageView = UIView()
     let imageView = UIImageView()
-    let imageData = UIImage()
     
     // MARK: - Life Cycle
     
@@ -40,25 +41,30 @@ class ImageMessageCell: UICollectionViewCell {
         super.prepareForReuse()
         
         // reuse 전에 값들을 다 초기화
+        leftTimeLabel.text = ""
+        rightTimeLabel.text = ""
+        
         leftImageMessageView.isHidden = false
         rightImageMessageView.isHidden = false
         
-        leftTimeLabel.isHidden = false
-        rightTimeLabel.isHidden = false
-        
         leftImageView.isHidden = false
         rightImageView.isHidden = false
+        
+        leftTimeLabel.isHidden = false
+        rightTimeLabel.isHidden = false
+        imageView.isHidden = false
     }
     
     // MARK: - Functions
     
     private func addSubViews() {
-        [nicknameLabel, leftImageMessageView, rightImageMessageView,
+        [nicknameLabel, leftImageMessageView, rightImageMessageView, imageView,
          rightTimeLabel, leftTimeLabel,
-         leftImageView, rightImageView,].forEach {
+         leftImageView, rightImageView].forEach {
             addSubview($0)
         }
-        [leftImageMessageView, rightImageMessageView].forEach {
+        // TODO: - imageView 오른쪽 왼쪽 2개 만들기
+        [leftImageMessageView].forEach {
             $0.addSubview(imageView)
         }
     }
@@ -76,6 +82,10 @@ class ImageMessageCell: UICollectionViewCell {
             make.right.equalTo(rightImageView.snp.left).offset(-10)
             make.width.equalTo(155)
             make.height.equalTo(154)
+        }
+        
+        imageView.snp.makeConstraints { make in
+            make.top.left.right.bottom.equalToSuperview().inset(10)
         }
         
         leftTimeLabel.snp.makeConstraints { make in
@@ -105,12 +115,6 @@ class ImageMessageCell: UICollectionViewCell {
             make.width.height.equalTo(32)
             make.right.equalToSuperview().inset(23)
         }
-        
-        imageView.snp.makeConstraints { make in
-            make.width.equalTo(135)
-            make.height.equalTo(134)
-            make.center.equalToSuperview()
-        }
     }
     
     private func setAttributes() {
@@ -127,5 +131,7 @@ class ImageMessageCell: UICollectionViewCell {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 16
         }
+        
+        imageView.contentMode = .scaleAspectFit
     }
 }
