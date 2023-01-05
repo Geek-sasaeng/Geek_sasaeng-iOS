@@ -16,14 +16,15 @@ class ImageMessageCell: UICollectionViewCell {
     
     // MARK: - SubViews
     
-    let leftImageView = UIImageView()
-    let rightImageView = UIImageView()
+    let leftProfileImageView = UIImageView()
+    let rightProfileImageView = UIImageView()
     let nicknameLabel = UILabel()
     let rightTimeLabel = UILabel()
     let leftTimeLabel = UILabel()
     let leftImageMessageView = UIView()
     let rightImageMessageView = UIView()
-    let imageView = UIImageView()
+    let leftImageView = UIImageView()
+    let rightImageView = UIImageView()
     
     // MARK: - Life Cycle
     
@@ -47,44 +48,51 @@ class ImageMessageCell: UICollectionViewCell {
         leftImageMessageView.isHidden = false
         rightImageMessageView.isHidden = false
         
-        leftImageView.isHidden = false
-        rightImageView.isHidden = false
+        leftProfileImageView.isHidden = false
+        rightProfileImageView.isHidden = false
         
         leftTimeLabel.isHidden = false
         rightTimeLabel.isHidden = false
-        imageView.isHidden = false
+        
+        leftImageView.isHidden = false
+        rightImageView.isHidden = false
     }
     
     // MARK: - Functions
     
     private func addSubViews() {
-        [nicknameLabel, leftImageMessageView, rightImageMessageView, imageView,
+        [nicknameLabel,
+         leftImageMessageView, rightImageMessageView,
+         leftImageView, rightImageView,
          rightTimeLabel, leftTimeLabel,
-         leftImageView, rightImageView].forEach {
+         leftProfileImageView, rightProfileImageView].forEach {
             addSubview($0)
         }
-        // TODO: - imageView 오른쪽 왼쪽 2개 만들기
-        [leftImageMessageView].forEach {
-            $0.addSubview(imageView)
-        }
+        
+        leftImageMessageView.addSubview(leftImageView)
+        rightImageMessageView.addSubview(rightImageView)
     }
     
     private func setLayouts() {
         leftImageMessageView.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
-            make.left.equalTo(leftImageView.snp.right).offset(10)
+            make.left.equalTo(leftProfileImageView.snp.right).offset(10)
             make.width.equalTo(155)
             make.height.equalTo(154)
         }
         
         rightImageMessageView.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
-            make.right.equalTo(rightImageView.snp.left).offset(-10)
+            make.right.equalTo(rightProfileImageView.snp.left).offset(-10)
             make.width.equalTo(155)
             make.height.equalTo(154)
         }
         
-        imageView.snp.makeConstraints { make in
+        leftImageView.snp.makeConstraints { make in
+            make.top.left.right.bottom.equalToSuperview().inset(10)
+        }
+        
+        rightImageView.snp.makeConstraints { make in
             make.top.left.right.bottom.equalToSuperview().inset(10)
         }
         
@@ -98,7 +106,7 @@ class ImageMessageCell: UICollectionViewCell {
             make.right.equalTo(rightImageMessageView.snp.left).offset(-3)
         }
         
-        leftImageView.snp.makeConstraints { make in
+        leftProfileImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.height.equalTo(32)
             make.left.equalToSuperview().inset(23)
@@ -106,11 +114,11 @@ class ImageMessageCell: UICollectionViewCell {
         
         nicknameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.left.equalTo(leftImageView.snp.right).offset(10)
-            make.right.equalTo(rightImageView.snp.left).offset(-10)
+            make.left.equalTo(leftProfileImageView.snp.right).offset(10)
+            make.right.equalTo(rightProfileImageView.snp.left).offset(-10)
         }
         
-        rightImageView.snp.makeConstraints { make in
+        rightProfileImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.height.equalTo(32)
             make.right.equalToSuperview().inset(23)
@@ -127,11 +135,13 @@ class ImageMessageCell: UICollectionViewCell {
             $0.layer.cornerRadius = 5
         }
         
-        [leftImageView, rightImageView].forEach {
+        [leftProfileImageView, rightProfileImageView].forEach {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 16
         }
         
-        imageView.contentMode = .scaleAspectFit
+        [leftImageView, rightImageView].forEach {
+            $0.contentMode = .scaleAspectFit
+        }
     }
 }

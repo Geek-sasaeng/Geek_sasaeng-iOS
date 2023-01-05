@@ -1087,7 +1087,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.rightImageView.isHidden = true
                     cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
 //                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1099,7 +1099,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftImageView.isHidden = true
                     cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                         print("DEBUG: 사진 Url", contentUrl)
                     }
                     cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
@@ -1142,7 +1142,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
 //                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1157,7 +1157,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.leftImageView.isUserInteractionEnabled = true
                     cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
