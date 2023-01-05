@@ -38,8 +38,9 @@ class ChattingViewController: UIViewController {
     let bottomView = UIView().then {
         $0.backgroundColor = .init(hex: 0xEFEFEF)
     }
-    let sendImageButton = UIButton().then {
+    lazy var sendImageButton = UIButton().then {
         $0.setImage(UIImage(named: "SendImage"), for: .normal)
+        $0.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
     }
     let contentsTextView = UITextView().then {
         $0.font = .customFont(.neoMedium, size: 16)
@@ -551,7 +552,6 @@ class ChattingViewController: UIViewController {
     
     private func setAttributes() {
         contentsTextView.delegate = self
-        sendImageButton.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
     }
     
     // 웹소켓 설정
