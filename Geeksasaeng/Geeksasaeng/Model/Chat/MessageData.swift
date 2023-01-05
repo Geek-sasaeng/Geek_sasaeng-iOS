@@ -62,3 +62,5 @@ class MsgResponse: Object, Decodable {
         self.isImageMessage = isImageMessage
     }
 }
+
+// TODO: - 로컬에 저장하는 데이터 모델 따로 isReaded 추가
