@@ -27,6 +27,13 @@ class FormatCreater {
         formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
+    static let sharedTimeFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
+        return formatter
+    }()
     
     private init() { }
 }
@@ -58,6 +65,8 @@ class ChattingListViewController: UIViewController {
     
     // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
     var localRealm: Realm? = nil
+    // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
+    var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
     // 현재 선택되어 있는 필터의 label
     private var selectedLabel: UILabel? = nil {
@@ -241,9 +250,22 @@ class ChattingListViewController: UIViewController {
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
                 print("[Rabbit] 채팅 수신", data.content)
                 
+                // String 날짜를 Date 형태로 변경
+                let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
+                // 로컬에 저장하기 위한 데이터 구조를 만든다.
+                let msgToSave = MsgToSave(chatId: data.chatId!,
+                                          content: data.content!,
+                                          chatRoomId: data.chatRoomId!,
+                                          isSystemMessage: data.isSystemMessage!,
+                                          memberId: data.memberId!,
+                                          nickName: data.nickName!,
+                                          profileImgUrl: data.profileImgUrl!,
+                                          createdAt: createdAtDate ?? Date(),
+                                          unreadMemberCnt: data.unreadMemberCnt!,
+                                          isImageMessage: data.isImageMessage!)
                 
                 // 수신한 채팅 로컬에 저장하기
-                self.saveMessage(msgResponse: data)
+                self.saveMessage(msgToSave: msgToSave)
                 
                 guard let roomIndex = self.chattingRoomList.indices.filter({ self.chattingRoomList[$0].roomId == data.chatRoomId }).first else { return }
                 self.chattingRoomList[roomIndex].recentMsg = data.content
@@ -265,7 +287,7 @@ class ChattingListViewController: UIViewController {
     private func setupRealm() {
         do {
             // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 7)
+            let configuration = Realm.Configuration(schemaVersion: 8)
             localRealm = try Realm(configuration: configuration)
             
             // Realm 파일 위치
@@ -276,11 +298,11 @@ class ChattingListViewController: UIViewController {
     }
     
     // 채팅 로컬에 저장하기
-    private func saveMessage(msgResponse: MsgResponse) {
+    private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
             try! self.localRealm!.write {
-                self.localRealm!.add(msgResponse)
-                print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
+                self.localRealm!.add(msgToSave)
+                print("DEBUG: local에 채팅을 저장하다", msgToSave.content)
             }
         }
     }
@@ -291,16 +313,28 @@ class ChattingListViewController: UIViewController {
         
         // chattingRoomList 배열 내용 재구성 -> 여기서 recentMsg, time 필드가 채워진다.
         self.chattingRoomList = self.chattingRoomList.map { chattingRoom in
-            let predicate = NSPredicate(format: "chatRoomId = %@", chattingRoom.roomId!)
-            let last = localRealm!.objects(MsgResponse.self).filter(predicate).sorted(byKeyPath: "createdAt").last
-            print("DEBUG: \(last?.chatRoomId)방의 마지막 채팅은", last)
-            // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
-            return ChattingRoomInfo(
-                roomId: chattingRoom.roomId,
-                roomTitle: chattingRoom.roomTitle,
-                recentMsg: last?.content,
-                time: last?.createdAt,
-                unreadedMsgCnt: 0)
+            // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", chattingRoom.roomId!, self.enterTimeToDate as CVarArg)
+            // 마지막 메세지가 있는 경우
+            if let last = localRealm!.objects(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt").last {
+                print("DEBUG: \(last.chatRoomId)방의 마지막 채팅은", last)
+                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
+                return ChattingRoomInfo(
+                    roomId: chattingRoom.roomId,
+                    roomTitle: chattingRoom.roomTitle,
+                    recentMsg: last.content,
+                    time: FormatCreater.sharedLongFormat.string(from: last.createdAt!),
+                    unreadedMsgCnt: 0)
+            } else { // 없는 경우
+                print("DEBUG: \(chattingRoom.roomId)방의 마지막 채팅은 아직 없다!")
+                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
+                return ChattingRoomInfo(
+                    roomId: chattingRoom.roomId,
+                    roomTitle: chattingRoom.roomTitle,
+                    recentMsg: nil,
+                    time: nil,
+                    unreadedMsgCnt: 0)
+            }
         }
     }
     
@@ -431,81 +465,82 @@ class ChattingListViewController: UIViewController {
         // 아직 주고받은 메세지가 없으면 안내 문구 띄우기
         if messageContents.isEmpty {
             cell.recentMessageLabel.text = "채팅을 시작해보세요!"
+            cell.receivedTimeString = ""
         } else {
             // 채팅방의 최근 메세지 설정
             cell.recentMessageLabel.text = messageContents
-        }
+            
+            // 현재 시간과 마지막 메세지 전송시간 비교
+            let nowTimeDate = Date()
+            if let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime) {
+                // 현재가 몇 년도 몇 월 며칠인지.
+                let calendar = Calendar.current
+                let todayComponents = calendar.dateComponents([.year, .month, .day],
+                                                         from: nowTimeDate)
+                let todayYear = todayComponents.year
+                let todayMonth = todayComponents.month
+                let todayDay = todayComponents.day
 
-        // 현재 시간과 마지막 메세지 전송시간
-        let nowTimeDate = Date()
-        if let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime) {
-            // 현재가 몇 년도 몇 월 며칠인지.
-            let calendar = Calendar.current
-            let todayComponents = calendar.dateComponents([.year, .month, .day],
-                                                     from: nowTimeDate)
-            let todayYear = todayComponents.year
-            let todayMonth = todayComponents.month
-            let todayDay = todayComponents.day
+                // 마지막 메세지 전송시간이 몇 년도 몇 월 며칠인지.
+                let messageTimeComponents = calendar.dateComponents([.year, .month, .day],
+                                                         from: messageTimeDate)
+                let messageSendedYear = messageTimeComponents.year
+                let messageSendedMonth = messageTimeComponents.month
+                let messageSendedDay = messageTimeComponents.day
 
-            // 마지막 메세지 전송시간이 몇 년도 몇 월 며칠인지.
-            let messageTimeComponents = calendar.dateComponents([.year, .month, .day],
-                                                     from: messageTimeDate)
-            let messageSendedYear = messageTimeComponents.year
-            let messageSendedMonth = messageTimeComponents.month
-            let messageSendedDay = messageTimeComponents.day
+                // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
 
-            // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
-            let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
+                // 각각 일, 시간, 분 단위로 변환
+                let hourTime = intervalSecs / 60 / 60 % 24
+                let minuteTime = intervalSecs / 60 % 60
 
-            // 각각 일, 시간, 분 단위로 변환
-            let hourTime = intervalSecs / 60 / 60 % 24
-            let minuteTime = intervalSecs / 60 % 60
-
-            /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
-            // 같은 해
-            if todayYear == messageSendedYear {
-                // 몇달 전
-                if todayMonth! > messageSendedMonth! {
-                    let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
-                    cell.receivedTimeString = date
-                } else {
-                    // 같은 달
-                    if todayDay! - 1 == messageSendedDay! {
-                        // 하루 전
-                        cell.receivedTimeString = "어제"
-                    } else if (todayDay! - messageSendedDay!) <= 3, (todayDay! - messageSendedDay!) > 0 {
-                        // 3일 이내
-                        cell.receivedTimeString = "\(todayDay! - messageSendedDay!)일 전"
-                    } else if (todayDay! - messageSendedDay!) > 3 {
-                        // 3일 초과
-                        // ex) 22.08.31
+                /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
+                // 같은 해
+                if todayYear == messageSendedYear {
+                    // 몇달 전
+                    if todayMonth! > messageSendedMonth! {
                         let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
                         cell.receivedTimeString = date
                     } else {
-                        // 같은 날
-                        if hourTime == 0 {
-                            if minuteTime <= 9 {
-                                // 최근 메세지의 전송 시간 설정
-                                cell.receivedTimeString = "방금"
-                            } else if minuteTime > 9, minuteTime <= 59 {
-                                // 최근 메세지의 전송 시간 설정
-                                cell.receivedTimeString = "\(minuteTime)분 전"
+                        // 같은 달
+                        if todayDay! - 1 == messageSendedDay! {
+                            // 하루 전
+                            cell.receivedTimeString = "어제"
+                        } else if (todayDay! - messageSendedDay!) <= 3, (todayDay! - messageSendedDay!) > 0 {
+                            // 3일 이내
+                            cell.receivedTimeString = "\(todayDay! - messageSendedDay!)일 전"
+                        } else if (todayDay! - messageSendedDay!) > 3 {
+                            // 3일 초과
+                            // ex) 22.08.31
+                            let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                            cell.receivedTimeString = date
+                        } else {
+                            // 같은 날
+                            if hourTime == 0 {
+                                if minuteTime <= 9 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "방금"
+                                } else if minuteTime > 9, minuteTime <= 59 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "\(minuteTime)분 전"
+                                }
+                            } else if hourTime >= 1, hourTime <= 12 {
+                                cell.receivedTimeString = "\(hourTime)시간 전"
+                            } else if messageSendedDay == todayDay {
+                                cell.receivedTimeString = "오늘"
                             }
-                        } else if hourTime >= 1, hourTime <= 12 {
-                            cell.receivedTimeString = "\(hourTime)시간 전"
-                        } else if messageSendedDay == todayDay {
-                            cell.receivedTimeString = "오늘"
                         }
                     }
+                } else {
+                    // 몇년 전
+                    // ex) 22.08.31
+                    let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                    cell.receivedTimeString = date
                 }
             } else {
-                // 몇년 전
-                // ex) 22.08.31
-                let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
-                cell.receivedTimeString = date
+                cell.receivedTimeString = ""
             }
-        } else {
-            cell.receivedTimeString = ""
         }
     }
     
@@ -634,7 +669,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         cell.titleLabel.text = chattingRoomList[index].roomTitle ?? "배달파티 채팅방"
         // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
         self.setRecentMessageAndTime(cell: cell,
-                                     messageContents: chattingRoomList[index].recentMsg ?? "새 메세지가 있습니다.",
+                                     messageContents: chattingRoomList[index].recentMsg ?? "",
                                      messageTime: chattingRoomList[index].time ?? "",
                                      row: indexPath.row)
         

@@ -454,11 +454,11 @@ class ChattingViewController: UIViewController {
 
     struct MsgContents {
         var msgType: MsgType?
-        var message: MsgResponse?
+        var message: MsgToSave?
     }
     
     var msgContents: [MsgContents] = []
-    var msgRecords: Results<MsgResponse>?
+    var msgRecords: Results<MsgToSave>?
     var userNickname: String?
     var maxMatching: Int?
     var currentMatching: Int?
@@ -499,19 +499,9 @@ class ChattingViewController: UIViewController {
         setLayouts()
         setCollectionView()
         
-        do {
-            // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 7)
-            localRealm = try Realm(configuration: configuration)
-            
-            // Realm 파일 위치
-            print("DEBUG: 채팅 데이터 Realm 파일 경로", Realm.Configuration.defaultConfiguration.fileURL!)
-        } catch {
-            print(error.localizedDescription)
-        }
-        
         print("확인", self.enterTimeToDate)
-        
+        // Realm 설정
+        setupRealm()
         // 이전 메세지 불러오기
         loadMessages()
     }
@@ -593,11 +583,25 @@ class ChattingViewController: UIViewController {
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
                 print("[Rabbit] 채팅 수신", data.content)
                 
+                // String 날짜를 Date 형태로 변경
+                let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
+                // 로컬에 저장하기 위한 데이터 구조를 만든다.
+                let msgToSave = MsgToSave(chatId: data.chatId!,
+                                          content: data.content!,
+                                          chatRoomId: data.chatRoomId!,
+                                          isSystemMessage: data.isSystemMessage!,
+                                          memberId: data.memberId!,
+                                          nickName: data.nickName!,
+                                          profileImgUrl: data.profileImgUrl!,
+                                          createdAt: createdAtDate ?? Date(),
+                                          unreadMemberCnt: data.unreadMemberCnt!,
+                                          isImageMessage: data.isImageMessage!)
+                
                 // 수신한 채팅 로컬에 저장하기
-                self.saveMessage(msgResponse: data)
+                self.saveMessage(msgToSave: msgToSave)
                 
                 // 컬렉션뷰 셀 업데이트
-                self.updateChattingView(newChat: data)
+                self.updateChattingView(newChat: msgToSave)
             } catch {
                 print(error)
             }
@@ -682,6 +686,20 @@ class ChattingViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
     }
     
+    // 로컬 저장을 위해 Realm 세팅
+    private func setupRealm() {
+        do {
+            // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
+            let configuration = Realm.Configuration(schemaVersion: 8)
+            localRealm = try Realm(configuration: configuration)
+            
+            // Realm 파일 위치
+            print("DEBUG: 채팅 데이터 Realm 파일 경로", Realm.Configuration.defaultConfiguration.fileURL!)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
     
     // TODO: - 사진 데이터도 저장해야 함
@@ -689,35 +707,29 @@ class ChattingViewController: UIViewController {
     // 로컬에서 이전 채팅 불러오기
     private func loadMessages() {
         print("DEBUG: loadMessages")
-        // 로컬에서 해당 채팅방의 채팅 데이터 가져오기
-        let predicate = NSPredicate(format: "chatRoomId = %@", self.roomId!)
-        self.msgRecords = localRealm!.objects(MsgResponse.self).filter(predicate).sorted(byKeyPath: "createdAt")
+        // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
+        let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate as CVarArg)
+        self.msgRecords = localRealm!.objects(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
         
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
         for msgRecord in msgRecords {
-            // 입장 시간 이후의 메세지들만 걸러내기
-            let createdAtDate = FormatCreater.sharedLongFormat.date(from: msgRecord.createdAt!)
-            let timeInterval = Int(enterTimeToDate.timeIntervalSince(createdAtDate!))
-            if timeInterval <= 0 {
-                // 불러온 채팅 데이터를 셀에 추가
-                self.updateChattingView(newChat: msgRecord)
-            }
+            self.updateChattingView(newChat: msgRecord)
         }
     }
     
     // 채팅 로컬에 저장하기
-    private func saveMessage(msgResponse: MsgResponse) {
+    private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
             try! self.localRealm!.write {
-                self.localRealm!.add(msgResponse)
-                print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
+                self.localRealm!.add(msgToSave)
+                print("DEBUG: local에 채팅을 저장하다", msgToSave.content)
             }
         }
     }
     
     // 새 채팅을 컬렉션뷰 셀에 추가하기
-    private func updateChattingView(newChat: MsgResponse) {
+    private func updateChattingView(newChat: MsgToSave) {
         if newChat.isSystemMessage == true {
             self.msgContents.append(
                 MsgContents(msgType: .systemMessage, message: newChat))
@@ -888,10 +900,6 @@ class ChattingViewController: UIViewController {
     private func tapSendButton() {
         sendButton.isEnabled = false
         sendButton.setTitleColor(UIColor(hex: 0xD8D8D8), for: .normal)
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.locale = Locale(identifier: "ko_KR")
         
         /* 웹소켓 통신으로 채팅 전송 */
         if let message = contentsTextView.text {
@@ -1081,7 +1089,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     if let contentUrl = msg.message?.content {
                         cell.imageView.kf.setImage(with: URL(string: contentUrl))
                     }
-                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
 //                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
@@ -1094,7 +1102,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.imageView.kf.setImage(with: URL(string: contentUrl))
                         print("DEBUG: 사진 Url", contentUrl)
                     }
-                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
 //                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
@@ -1106,14 +1114,14 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
                 if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
                     cell.rightMessageLabel.text = msg.message?.content
-                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftTimeLabel.isHidden = true
                     cell.leftMessageLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
                 } else {
                     cell.leftMessageLabel.text = msg.message?.content
-                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightTimeLabel.isHidden = true
                     cell.rightMessageLabel.isHidden = true
@@ -1136,7 +1144,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     if let contentUrl = msg.message?.content {
                         cell.imageView.kf.setImage(with: URL(string: contentUrl))
                     }
-                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
 //                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
@@ -1154,7 +1162,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftImageView.isUserInteractionEnabled = true
                     cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
                     cell.nicknameLabel.textAlignment = .left
-                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
 //                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
@@ -1172,7 +1180,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     cell.rightMessageLabel.text = msg.message?.content
-                    cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftMessageLabel.isHidden = true
@@ -1192,7 +1200,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     cell.leftMessageLabel.text = msg.message?.content
-                    cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
+                    cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightMessageLabel.isHidden = true
