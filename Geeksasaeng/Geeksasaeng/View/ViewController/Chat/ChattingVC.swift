@@ -443,6 +443,9 @@ class ChattingViewController: UIViewController {
     private var conn: RMQConnection? = nil  // rabbitmq 채널 변수
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateChattingListDelegate?
+    
     enum MsgType {
         case message
         case sameSenderMessage
@@ -540,6 +543,9 @@ class ChattingViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         
+        // 가장 최근 메세지가 변경됐을 확률이 높으니 채팅방 목록 리로드
+        self.delegate?.updateChattingList()
+        
         // 사라질 때 다시 탭바 보이게 설정
         self.tabBarController?.tabBar.isHidden = false
     }
@@ -550,10 +556,13 @@ class ChattingViewController: UIViewController {
         collectionView.endEditing(true)
     }
     
+<<<<<<< HEAD
     private func setAttributes() {
         contentsTextView.delegate = self
     }
     
+=======
+>>>>>>> 543f9ca672a578c883471c47f3c3c9b6006a137f
     // 웹소켓 설정
     private func setupWebSocket() {
         let url = URL(string: "ws://geeksasaeng.shop:8080/chatting")!
@@ -590,10 +599,8 @@ class ChattingViewController: UIViewController {
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
                 print("[Rabbit] 채팅 수신", data.content)
                 
-                DispatchQueue.main.async {
-                    // 수신한 채팅 로컬에 저장하기
-                    self.saveMessage(msgResponse: data)
-                }
+                // 수신한 채팅 로컬에 저장하기
+                self.saveMessage(msgResponse: data)
                 
                 // 컬렉션뷰 셀 업데이트
                 self.updateChattingView(newChat: data)
@@ -601,6 +608,11 @@ class ChattingViewController: UIViewController {
                 print(error)
             }
         })
+    }
+    
+    private func setAttributes() {
+        contentsTextView.delegate = self
+        sendImageButton.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
     }
     
     private func addSubViews() {
@@ -702,9 +714,11 @@ class ChattingViewController: UIViewController {
     
     // 채팅 로컬에 저장하기
     private func saveMessage(msgResponse: MsgResponse) {
-        try! localRealm!.write {
-            localRealm!.add(msgResponse)
-            print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
+        DispatchQueue.main.async {
+            try! self.localRealm!.write {
+                self.localRealm!.add(msgResponse)
+                print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
+            }
         }
     }
     

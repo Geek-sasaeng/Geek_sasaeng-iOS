@@ -8,6 +8,7 @@ Geeksasaeng/Pods/Realm/core/realm-monorepo.xcframework/watchos-arm64_i386_x86_64
 
 ### Swift ###
 Info.plist
+GoogleService-Info
 APIKEY.swift
 Secret/
 
