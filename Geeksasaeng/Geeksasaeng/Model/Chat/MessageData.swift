@@ -46,7 +46,7 @@ class MsgToSave: Object, Decodable {
     @Persisted var createdAt: Date? = nil
     @Persisted var unreadMemberCnt: Int? = nil
     @Persisted var isImageMessage: Bool? = nil
-    @Persisted var isReaded: Bool = false   // 내가 이 메세지를 읽었는지 안 읽었는지
+    @Persisted var isReaded: Bool? = nil   // 내가 이 메세지를 읽었는지 안 읽었는지
     
     // 생성자
     convenience init(chatId: String,
@@ -58,7 +58,8 @@ class MsgToSave: Object, Decodable {
                      profileImgUrl: String,
                      createdAt: Date,
                      unreadMemberCnt: Int,
-                     isImageMessage: Bool) {
+                     isImageMessage: Bool,
+                     isReaded: Bool = false) {
         self.init()
         self.chatId = chatId
         self.content = content
@@ -70,5 +71,6 @@ class MsgToSave: Object, Decodable {
         self.createdAt = createdAt
         self.unreadMemberCnt = unreadMemberCnt
         self.isImageMessage = isImageMessage
+        self.isReaded = isReaded
     }
 }

@@ -54,6 +54,8 @@ struct ChattingRoomInfo {
     var unreadedMsgCnt: Int?
 }
 
+// TODO: - 방장이 파티 만들고 나서 채팅방 가기 버튼 클릭 시 무반응
+// TODO: - 로컬에 저장하는 DB 구조 수정 필요 -> 한 핸드폰(로컬)로 여러 개의 계정에 로그인하는 경우 대비 안함
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
 class ChattingListViewController: UIViewController {
     
@@ -154,9 +156,7 @@ class ChattingListViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         // RabbitMQ Connection 끊기
-        if ((conn?.isOpen()) != nil) {
-            conn?.close()
-        }
+        conn?.close()
     }
     
     // MARK: - Functions
@@ -248,34 +248,38 @@ class ChattingListViewController: UIViewController {
                 // MsgResponse 구조체로 decode.
                 let decoder = JSONDecoder()
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
-                print("[Rabbit] 채팅 수신", data.content)
                 
-                // String 날짜를 Date 형태로 변경
-                let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
-                // 로컬에 저장하기 위한 데이터 구조를 만든다.
-                let msgToSave = MsgToSave(chatId: data.chatId!,
-                                          content: data.content!,
-                                          chatRoomId: data.chatRoomId!,
-                                          isSystemMessage: data.isSystemMessage!,
-                                          memberId: data.memberId!,
-                                          nickName: data.nickName!,
-                                          profileImgUrl: data.profileImgUrl!,
-                                          createdAt: createdAtDate ?? Date(),
-                                          unreadMemberCnt: data.unreadMemberCnt!,
-                                          isImageMessage: data.isImageMessage!)
-                
-                // 수신한 채팅 로컬에 저장하기
-                self.saveMessage(msgToSave: msgToSave)
-                
-                guard let roomIndex = self.chattingRoomList.indices.filter({ self.chattingRoomList[$0].roomId == data.chatRoomId }).first else { return }
-                self.chattingRoomList[roomIndex].recentMsg = data.content
-                self.chattingRoomList[roomIndex].time = data.createdAt
-                // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
-//                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
-                
-                DispatchQueue.main.async {
-                    // 채팅방 목록 리로드
-                    self.chattingTableView.reloadData()
+                if data.chatType! == "publish" {
+                    print("[Rabbit] 목록에서 채팅 수신", data)
+                    // String 날짜를 Date 형태로 변경
+                    let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
+                    // 로컬에 저장하기 위한 데이터 구조를 만든다.
+                    let msgToSave = MsgToSave(chatId: data.chatId!,
+                                              content: data.content!,
+                                              chatRoomId: data.chatRoomId!,
+                                              isSystemMessage: data.isSystemMessage!,
+                                              memberId: data.memberId!,
+                                              nickName: data.nickName!,
+                                              profileImgUrl: data.profileImgUrl!,
+                                              createdAt: createdAtDate ?? Date(),
+                                              unreadMemberCnt: data.unreadMemberCnt!,
+                                              isImageMessage: data.isImageMessage!)
+                    
+                    // 수신한 채팅 로컬에 저장하기
+                    self.saveMessage(msgToSave: msgToSave)
+                    
+                    guard let roomIndex = self.chattingRoomList.indices.filter({ self.chattingRoomList[$0].roomId == data.chatRoomId }).first else { return }
+                    self.chattingRoomList[roomIndex].recentMsg = data.content
+                    self.chattingRoomList[roomIndex].time = data.createdAt
+                    // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
+    //                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
+                    
+                    DispatchQueue.main.async {
+                        // 채팅방 목록 리로드
+                        self.chattingTableView.reloadData()
+                    }
+                } else {
+                    print("[Rabbit] 목록에서 채팅 읽음 수신???", data)
                 }
             } catch {
                 print(error)
@@ -287,7 +291,7 @@ class ChattingListViewController: UIViewController {
     private func setupRealm() {
         do {
             // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 8)
+            let configuration = Realm.Configuration(schemaVersion: 9)
             localRealm = try Realm(configuration: configuration)
             
             // Realm 파일 위치
@@ -685,6 +689,9 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         
         // delegate로 자기 자신(ChattingListVC)를 넘겨줌
         chattingVC.delegate = self
+        
+        // RabbitMQ Connection 끊기
+        conn?.close()
         navigationController?.pushViewController(chattingVC, animated: true)
     }
 }

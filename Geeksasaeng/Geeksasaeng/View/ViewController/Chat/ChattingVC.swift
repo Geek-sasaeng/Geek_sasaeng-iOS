@@ -527,9 +527,7 @@ class ChattingViewController: UIViewController {
         socket?.delegate = nil
         
         // RabbitMQ Connection 끊기
-        if ((conn?.isOpen()) != nil) {
-            conn?.close()
-        }
+        conn?.close()
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -559,7 +557,6 @@ class ChattingViewController: UIViewController {
     
     // RabbitMQ를 통해 채팅 수신
     private func setupReceiver() {
-        // TODO: - RabbitMQ 커넥션 시기 변경
         // RabbitMQ 연결
         conn = RMQConnection(uri: rabbitMQUri, delegate: RMQConnectionDelegateLogger())
         conn!.start()
@@ -581,27 +578,37 @@ class ChattingViewController: UIViewController {
                 // MsgResponse 구조체로 decode.
                 let decoder = JSONDecoder()
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
-                print("[Rabbit] 채팅 수신", data.content)
                 
-                // String 날짜를 Date 형태로 변경
-                let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
-                // 로컬에 저장하기 위한 데이터 구조를 만든다.
-                let msgToSave = MsgToSave(chatId: data.chatId!,
-                                          content: data.content!,
-                                          chatRoomId: data.chatRoomId!,
-                                          isSystemMessage: data.isSystemMessage!,
-                                          memberId: data.memberId!,
-                                          nickName: data.nickName!,
-                                          profileImgUrl: data.profileImgUrl!,
-                                          createdAt: createdAtDate ?? Date(),
-                                          unreadMemberCnt: data.unreadMemberCnt!,
-                                          isImageMessage: data.isImageMessage!)
-                
-                // 수신한 채팅 로컬에 저장하기
-                self.saveMessage(msgToSave: msgToSave)
-                
-                // 컬렉션뷰 셀 업데이트
-                self.updateChattingView(newChat: msgToSave)
+                // 새 메세지 수신 시
+                if data.chatType! == "publish" {
+                    
+                    print("[Rabbit] 채팅방에서 채팅 수신", data)
+                    // String 날짜를 Date 형태로 변경
+                    let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
+                    
+                    // 로컬에 저장하기 위한 데이터 구조를 만든다.
+                    let msgToSave = MsgToSave(chatId: data.chatId!,
+                                              content: data.content!,
+                                              chatRoomId: data.chatRoomId!,
+                                              isSystemMessage: data.isSystemMessage!,
+                                              memberId: data.memberId!,
+                                              nickName: data.nickName!,
+                                              profileImgUrl: data.profileImgUrl!,
+                                              createdAt: createdAtDate ?? Date(),
+                                              unreadMemberCnt: data.unreadMemberCnt!,
+                                              isImageMessage: data.isImageMessage!)
+                    
+                    // 수신한 채팅 로컬에 저장하기
+                    self.saveMessage(msgToSave: msgToSave)
+                    
+                    // 컬렉션뷰 셀 업데이트
+                    self.updateChattingView(newChat: msgToSave)
+                } else if data.chatType! == "read" {  // 읽음 요청 응답 수신 시
+                    print("[Rabbit] 채팅방에서 채팅 읽음 수신", data)
+                    
+                    // 로컬에 isReaded 값을 true로, unreadedCnt도 수신한 값으로 업데이트
+                    self.updateUnreadToRead(data: data)
+                }
             } catch {
                 print(error)
             }
@@ -755,11 +762,36 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // 로컬에 저장된 isReaded 필드값을 true로 업데이트
+    // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 nickName으로 구분 안 함
+    private func updateUnreadToRead(data: MsgResponse) {
+        DispatchQueue.main.async {
+            print("DEBUG: updateUnreadToRead")
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND isReaded = false", self.roomId!)
+            let unreadedMsgs = self.localRealm!.objects(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+            print("DEBUG: 안 읽은 메세지들", unreadedMsgs)
+            
+            // 하나씩 로컬 데이터 업데이트
+            unreadedMsgs.forEach { unreadedMsg in
+                try! self.localRealm!.write {
+                    unreadedMsg.isReaded = true
+                    unreadedMsg.unreadMemberCnt = data.unreadMemberCnt
+                    print("DEBUG: 읽음 상태 업데이트", unreadedMsg.content)
+                }
+            }
+            
+            // 읽음 표시 UI 업데이트를 위해 채팅 다시 불러오기
+            self.msgContents.removeAll()
+            self.loadMessages()
+        }
+    }
+    
     // TODO: - 유저 채팅방 나가기 기능
     // TODO: - 방장 나가기 기능 -> 새 방장 선정
     
     // 연결된 웹소켓을 통해 메세지 전송
     private func sendMessage(input: MsgRequest) {
+        print("DEBUG: sendMessage", input.chatType, socket)
         do {
             // 메세지 string으로 인코딩
             let encoder = JSONEncoder()
@@ -769,10 +801,17 @@ class ChattingViewController: UIViewController {
                 print("DEBUG: 웹소켓에 write하는 Json String", jsonString)
                 // 웹소켓에 전송
                 socket.write(string: jsonString) {
-                    print("DEBUG: 웹소켓 전송 성공")
-                    // 전송 성공 시 tf 값 비우기
-                    DispatchQueue.main.async {
-                        self.contentsTextView.text = ""
+                    print("TEST: write")
+                    // 새 채팅 전송일 때
+                    if input.chatType! == "publish" {
+                        print("DEBUG: 웹소켓 채팅 전송 성공")
+                        // 전송 성공 시 tf 값 비우기
+                        DispatchQueue.main.async {
+                            self.contentsTextView.text = ""
+                        }
+                    } else if input.chatType! == "read" {
+                        // 읽음 요청 전송일 때
+                        print("DEBUG: 읽음 처리 요청 전송 성공")
                     }
                 }
             }
@@ -903,7 +942,6 @@ class ChattingViewController: UIViewController {
         
         /* 웹소켓 통신으로 채팅 전송 */
         if let message = contentsTextView.text {
-            // TODO: - 읽음 처리 할 때는 chatType read로 주기
             let input = MsgRequest(content: message,
                                    chatRoomId: roomId,
                                    isSystemMessage: false,
@@ -1292,8 +1330,25 @@ extension ChattingViewController: PushReportUserDelegate {
 extension ChattingViewController: WebSocketDelegate {
     func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
+        // 웹소켓 연결 완료됐을 때 실행
         case .connected(let headers):
             print("DEBUG: 웹소켓 연결 완료 - \(headers)")
+            print("DEBUG: 읽음 요청")
+            // 로드된 이전 메세지들 중에 isReaded가 false이고, 상대방이 보낸 메세지만 필터링
+            let unreadedMsgs = self.msgContents.filter { msg in
+                msg.message?.isReaded == false && msg.message?.nickName != LoginModel.nickname
+            }
+            // 하나씩 읽음 처리 요청 보내기
+            for unreadedMsg in unreadedMsgs {
+                print("DEBUG: 읽음 요청", unreadedMsg)
+                self.sendMessage(input: MsgRequest(
+                    content: unreadedMsg.message?.content,
+                    chatRoomId: unreadedMsg.message?.chatRoomId,
+                    isSystemMessage: unreadedMsg.message?.isSystemMessage,
+                    chatType: "read",
+                    chatId: unreadedMsg.message?.chatId,
+                    jwt: "Bearer " + LoginModel.jwt!))
+            }
         case .disconnected(let reason, let code):
             print("DEBUG: 웹소켓 연결 끊어짐 - \(reason) with code: \(code)")
         case .text(let text):
