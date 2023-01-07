@@ -556,13 +556,6 @@ class ChattingViewController: UIViewController {
         collectionView.endEditing(true)
     }
     
-<<<<<<< HEAD
-    private func setAttributes() {
-        contentsTextView.delegate = self
-    }
-    
-=======
->>>>>>> 543f9ca672a578c883471c47f3c3c9b6006a137f
     // 웹소켓 설정
     private func setupWebSocket() {
         let url = URL(string: "ws://geeksasaeng.shop:8080/chatting")!
@@ -857,7 +850,7 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapSendImageButton() {
         var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 1
+        configuration.selectionLimit = 0
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
@@ -1055,6 +1048,7 @@ class ChattingViewController: UIViewController {
     /* 채팅 나가기에서 '확인' 버튼 클릭시 실행 */
     @objc
     private func tapExitConfirmButton() {
+        // TODO: - 방장인지 구별하기
         // TODO: - 방장인지 구별하기
         // TODO: - 방장이면 새 방장 선정
         // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
@@ -1343,7 +1337,6 @@ extension ChattingViewController: WebSocketDelegate {
 extension ChattingViewController: PHPickerViewControllerDelegate {
     /* 사진 선택이 완료되었을 때 */
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print("사진 선택 완료")
         picker.dismiss(animated: true)
         
         let itemProvider = results.first?.itemProvider
@@ -1353,6 +1346,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     guard let imageData = image as? UIImage else { return }
+                    print("이미지 추출 완료")
                     let input = ChatImageSendInput(
                         chatId: "none",
                         chatRoomId: self.roomId,

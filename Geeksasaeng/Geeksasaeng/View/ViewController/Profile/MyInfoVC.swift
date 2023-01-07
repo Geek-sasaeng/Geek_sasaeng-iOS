@@ -25,7 +25,10 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.addGestureRecognizer(gesture)
     }
     
-    let userImageView = UIImageView()
+    let userImageView = UIImageView().then {
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 83
+    }
     
     /* title labels */
     let dormitoryLabel = UILabel()
