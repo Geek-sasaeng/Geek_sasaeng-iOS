@@ -502,6 +502,8 @@ class ChattingViewController: UIViewController {
         print("확인", self.enterTimeToDate)
         // 이전 메세지 불러오기
         loadMessages()
+        // db 경로 출력
+        localRealm.getLocationOfDefaultRealm()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -696,11 +698,12 @@ class ChattingViewController: UIViewController {
     
     // 로컬에서 이전 채팅 불러오기
     private func loadMessages() {
-        print("DEBUG: loadMessages")
-        // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
-        let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate as CVarArg)
-        self.msgRecords = localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
-        
+        DispatchQueue.main.async {
+            print("DEBUG: loadMessages")
+            // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate as CVarArg)
+            self.msgRecords = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+        }
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
         for msgRecord in msgRecords {
@@ -743,12 +746,9 @@ class ChattingViewController: UIViewController {
     }
     
     // 웹소켓을 통해 읽음 요청 보내기
-    private func sendReadRequest() {
+    private func sendReadRequest(_ unreadedMsgs: [MsgContents]) {
         print("DEBUG: 읽음 요청")
-        // 로드된 이전 메세지들 중에 isReaded가 false이고, 상대방이 보낸 메세지만 필터링
-        let unreadedMsgs = self.msgContents.filter { msg in
-            msg.message?.isReaded == false && msg.message?.nickName != LoginModel.nickname
-        }
+        print("TEST: unreadedMsgs", unreadedMsgs)
         // 하나씩 읽음 처리 요청 보내기
         for unreadedMsg in unreadedMsgs {
             print("DEBUG: 읽음 요청", unreadedMsg)
@@ -780,9 +780,8 @@ class ChattingViewController: UIViewController {
                 }
             }
             
-            // 읽음 표시 UI 업데이트를 위해 채팅 다시 불러오기
-            self.msgContents.removeAll()
-            self.loadMessages()
+            // TODO: test 필요
+            self.localRealm.refresh()
         }
     }
     
@@ -1350,7 +1349,17 @@ extension ChattingViewController: WebSocketDelegate {
         // 웹소켓 연결 완료됐을 때 실행
         case .connected(let headers):
             print("DEBUG: 웹소켓 연결 완료 - \(headers)")
-            sendReadRequest()
+            // 로드된 이전 메세지들 중에 isReaded가 false이고, 상대방이 보낸 메세지만 필터링
+            let unreadedMsgs = self.msgContents.filter { msg in
+                msg.message?.isReaded == false && msg.message?.nickName != LoginModel.nickname
+            }
+            if !(unreadedMsgs.isEmpty) {
+                print("DEBUG: 안 읽은 메세지 있음!!")
+                // 읽음 요청 전송
+                sendReadRequest(unreadedMsgs)
+            } else {
+                print("DEBUG: 안 읽은 메세지 없음")
+            }
         case .disconnected(let reason, let code):
             print("DEBUG: 웹소켓 연결 끊어짐 - \(reason) with code: \(code)")
         case .text(let text):
