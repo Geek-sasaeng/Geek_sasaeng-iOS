@@ -321,11 +321,6 @@ class ChattingListViewController: UIViewController {
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "채팅"
-        self.navigationItem.setRightBarButton(
-            UIBarButtonItem(image: UIImage(named: "StorageBox"), style: .plain, target: self, action: #selector(tapStorageBox)
-                           ), animated: true)
-        self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
-        self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
         
         chattingTableView.backgroundColor = .white
         chattingTableView.rowHeight = 81 + 6 + 6
@@ -601,14 +596,6 @@ class ChattingListViewController: UIViewController {
             label.textColor = .mainColor
             selectedLabel = label
         }
-    }
-    
-    /* 채팅 보관함 아이콘 클릭시 실행되는 함수 */
-    @objc
-    private func tapStorageBox() {
-        print("DEBUG: 채팅 보관함 아이콘 클릭")
-        let chattingStorageVC = ChattingStorageViewController()
-        self.navigationController?.pushViewController(chattingStorageVC, animated: true)
     }
     
     /* 새로고침 기능 */
