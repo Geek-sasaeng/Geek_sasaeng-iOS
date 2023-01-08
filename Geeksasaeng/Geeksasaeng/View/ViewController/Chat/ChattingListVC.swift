@@ -44,9 +44,9 @@ protocol UpdateChattingListDelegate {
    func updateChattingList()
 }
 
-/* 서버로부터 받은 ChatRoomInfo 형식의 데이터를 가지고 채팅방 목록을 구성하기 위해
+/* 서버로부터 받은 ChatRoom 형식의 데이터를 가지고 채팅방 목록을 구성하기 위해
  recentMsg, time, unreadedMsgCnt 필드를 추가해서 만든 구조체 */
-struct ChattingRoomInfo {
+struct ChattingRoom {
     var roomId: String?
     var roomTitle: String?
     var recentMsg: String?
@@ -84,7 +84,7 @@ class ChattingListViewController: UIViewController {
     // 채팅방 목록의 마지막 페이지인지 여부 확인
     var isFinalPage = false
     // 채팅방 목록 데이터
-    private var chattingRoomList: [ChattingRoomInfo] = []
+    private var chattingRoomList: [ChattingRoom] = []
     
     // MARK: - SubViews
     
@@ -182,16 +182,16 @@ class ChattingListViewController: UIViewController {
     }
     
     /* 서버로부터 받아온 response를 처리하는 함수. res가 성공이면 배열에 데이터를 추가해준다 */
-    private func addRoomListData(result: [ChatRoomInfo]?) {
+    private func addRoomListData(result: [ChatRoom]?) {
         result?.forEach {
-            // 서버로부터 받은 건 ChatRoomInfo 형식이라서 ChattingRoomInfo로 구조 변경
-            let chattingRoomInfo = ChattingRoomInfo(roomId: $0.roomId,
+            // 서버로부터 받은 건 ChatRoom 형식이라서 ChattingRoom로 구조 변경
+            let chattingRoom = ChattingRoom(roomId: $0.roomId,
                                               roomTitle: $0.roomTitle,
                                               recentMsg: "",
                                               time: "",
                                               unreadedMsgCnt: 0)
             // 데이터를 배열에 추가
-            self.chattingRoomList.append(chattingRoomInfo)
+            self.chattingRoomList.append(chattingRoom)
             
             // 로컬에 저장된 각 채팅방의 최신 메세지 불러오기
             loadRecentMessage()
@@ -298,8 +298,8 @@ class ChattingListViewController: UIViewController {
             // 마지막 메세지가 있는 경우
             if let last = localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt").last {
                 print("DEBUG: \(last.chatRoomId)방의 마지막 채팅은", last)
-                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
-                return ChattingRoomInfo(
+                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoom 구조로 만들어서 리턴
+                return ChattingRoom(
                     roomId: chattingRoom.roomId,
                     roomTitle: chattingRoom.roomTitle,
                     recentMsg: last.content,
@@ -307,8 +307,8 @@ class ChattingListViewController: UIViewController {
                     unreadedMsgCnt: 0)
             } else { // 없는 경우
                 print("DEBUG: \(chattingRoom.roomId)방의 마지막 채팅은 아직 없다!")
-                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
-                return ChattingRoomInfo(
+                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoom 구조로 만들어서 리턴
+                return ChattingRoom(
                     roomId: chattingRoom.roomId,
                     roomTitle: chattingRoom.roomTitle,
                     recentMsg: nil,
@@ -662,6 +662,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         // 해당 채팅방 uuid값 받아서 이동
         chattingVC.roomId = chattingRoomList[indexPath.row].roomId
         chattingVC.roomName = chattingRoomList[indexPath.row].roomTitle
+        // TODO: - 여기서도 MaxMatching 값 넘겨줘야 되지 않나
         
         // delegate로 자기 자신(ChattingListVC)를 넘겨줌
         chattingVC.delegate = self

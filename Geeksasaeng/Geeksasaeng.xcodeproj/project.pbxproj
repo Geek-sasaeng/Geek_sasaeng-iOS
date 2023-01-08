@@ -1131,6 +1131,9 @@
 		A2A6D0B028E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
 		A2A6D0B128E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
 		A2A6D0B228E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
+		A2A7141B296B478A006410E2 /* ChattingRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */; };
+		A2A7141C296B478A006410E2 /* ChattingRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */; };
+		A2A7141D296B478A006410E2 /* ChattingRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */; };
 		A2AC91D82874AECE00C7CF64 /* Pods_Geeksasaeng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FC2013DB24E2A7A85268D59 /* Pods_Geeksasaeng.framework */; };
 		A2AC91DB2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
 		A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100FB99628745DA3008947DD /* NaverLoginViewModel.swift */; };
@@ -1630,6 +1633,7 @@
 		A274DE7628E0F68800F5024E /* CreateMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMenuVC.swift; sourceTree = "<group>"; };
 		A28F45F7294100D60097714E /* JoinChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinChatAPI.swift; sourceTree = "<group>"; };
 		A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePopUpViewController.swift; sourceTree = "<group>"; };
+		A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingRoomModel.swift; sourceTree = "<group>"; };
 		A2AF5394289696810052F734 /* ReportAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAPI.swift; sourceTree = "<group>"; };
 		A2AF539C2896C0680052F734 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
@@ -2280,6 +2284,7 @@
 			isa = PBXGroup;
 			children = (
 				A2EE2BC2294727B200335680 /* MessageData.swift */,
+				A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3824,6 +3829,7 @@
 				A2F54FD728757CDF0094C18D /* AdCollectionViewCell.swift in Sources */,
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				A248D895289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
+				A2A7141B296B478A006410E2 /* ChattingRoomModel.swift in Sources */,
 				106093D028A81981007FD463 /* ChatRoomExitAPI.swift in Sources */,
 				106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */,
@@ -3924,6 +3930,7 @@
 				A248D896289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
 				10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
+				A2A7141C296B478A006410E2 /* ChattingRoomModel.swift in Sources */,
 				A2A6D0B128E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				A248D892289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
@@ -4005,6 +4012,7 @@
 				A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
 				A2035EA7288341B00051498A /* AdModel.swift in Sources */,
+				A2A7141D296B478A006410E2 /* ChattingRoomModel.swift in Sources */,
 				108B6336288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
 				A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */,
 				107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,

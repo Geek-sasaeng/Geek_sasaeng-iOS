@@ -284,7 +284,7 @@ class ChattingViewController: UIViewController {
         let accountLabel = UILabel().then {
             $0.font = .customFont(.neoMedium, size: 14)
             $0.textColor = .init(hex: 0x2F2F2F)
-            $0.text = "\(self.bank ?? "은행")  \(self.accountNumber ?? "000-0000-0000-00")"
+            $0.text = "\(self.roomInfo?.bank ?? "은행")  \(self.roomInfo?.accountNumber ?? "000-0000-0000-00")"
         }
         
         let remittanceConfirmButton = UIButton().then {
@@ -466,18 +466,9 @@ class ChattingViewController: UIViewController {
     // 선택한 채팅방의 id값
     var roomId: String?
     var roomName: String?
-    
-    var firstRoomInfo = true
-    var firstMessage = true
-    
     var lastSenderId: Int? = nil
-    
-    var roomMaster: String? // 내가 현재 방장인지
-    var bank: String?
-    var accountNumber: String?
-    
-    // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
-    var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
+    var roomInfo: ChattingRoomResult? // 채팅방의 상세 정보
+    var enterTimeToDate: Date?  // 채팅방 입장 시간 - Date 타입
     
     var keyboardHeight: CGFloat? // 키보드 높이
     
@@ -494,14 +485,14 @@ class ChattingViewController: UIViewController {
         setupWebSocket()
         // RabbitMq 수신 설정
         setupReceiver()
+        // 채팅방 정보 요청
+        requestRoomInfo()
+        
         setAttributes()
         setCollectionView()
         addSubViews()
         setLayouts()
         
-        print("확인", self.enterTimeToDate)
-        // 이전 메세지 불러오기
-        loadMessages()
         // db 경로 출력
         localRealm.getLocationOfDefaultRealm()
     }
@@ -614,6 +605,26 @@ class ChattingViewController: UIViewController {
         })
     }
     
+    // 채팅방 상세조회 API 호출
+    private func requestRoomInfo() {
+        print("DEBUG: requestRoomInfo")
+        ChatAPI.getChattingRoomInfo(ChattingRoomInput(chatRoomId: roomId)) { result in
+            // 조회 성공 시
+            if let res = result {
+                print("DEBUG: 채팅방 \(self.roomId!)의 상세 정보", res)
+                self.roomInfo = res
+                self.enterTimeToDate = FormatCreater.sharedLongFormat.date(from: self.roomInfo?.enterTime ?? "2023-01-01 00:00:00")
+                print("DEBUG: 내 입장 시간", self.enterTimeToDate)
+                
+                // 성공 시에만 이전 메세지 불러오기 -> 동기적으로 처리하기 위해
+                self.loadMessages()
+            } else { // 실패 시
+                self.showToast(viewController: self, message: "채팅방 정보 조회에 실패하였습니다.",
+                          font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+            }
+        }
+    }
+    
     private func setAttributes() {
         contentsTextView.delegate = self
         sendImageButton.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
@@ -698,12 +709,15 @@ class ChattingViewController: UIViewController {
     
     // 로컬에서 이전 채팅 불러오기
     private func loadMessages() {
-        DispatchQueue.main.async {
-            print("DEBUG: loadMessages")
-            // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
-            let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate as CVarArg)
-            self.msgRecords = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+        if self.enterTimeToDate == nil {
+            self.enterTimeToDate = Date()
         }
+        
+        print("DEBUG: loadMessages")
+        // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
+        let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate! as CVarArg)
+        self.msgRecords = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
         for msgRecord in msgRecords {
@@ -767,7 +781,7 @@ class ChattingViewController: UIViewController {
     private func updateUnreadToRead(data: MsgResponse) {
         DispatchQueue.main.async {
             print("DEBUG: updateUnreadToRead")
-            let predicate = NSPredicate(format: "chatRoomId = %@ AND isReaded = false", self.roomId!)
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND isReaded = false AND isSystemMessage = false", self.roomId!)
             let unreadedMsgs = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
             print("DEBUG: 안 읽은 메세지들", unreadedMsgs)
             
@@ -780,8 +794,9 @@ class ChattingViewController: UIViewController {
                 }
             }
             
-            // TODO: test 필요
-            self.localRealm.refresh()
+            // 읽음 표시 UI 업데이트를 위해 채팅 다시 불러오기
+            self.msgContents.removeAll()
+            self.loadMessages()
         }
     }
     
@@ -863,13 +878,6 @@ class ChattingViewController: UIViewController {
         return label.frame.height
     }
     
-    private func formatTime(str: String) -> String {
-        let startIdx = str.index(str.startIndex, offsetBy: 11)
-        let endIdx = str.index(startIdx, offsetBy: 5)
-        let range = startIdx..<endIdx
-        return String(str[range])
-    }
-    
     // MARK: - @objc Functions
     
     /* 키보드가 올라올 때 실행되는 함수 */
@@ -924,7 +932,7 @@ class ChattingViewController: UIViewController {
     /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
     @objc
     private func tapOptionButton() {
-        if roomMaster == LoginModel.nickname {
+        if self.roomInfo?.cheifId == LoginModel.memberId {
             /* 방장인 경우의 액션 시트 띄우기 */
             present(ownerAlertController, animated: true)
         } else {
@@ -967,7 +975,7 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapOrderCompleted() {
         guard let roomId = self.roomId else { return }
-        let orderCompletedInput = orderCompletedInput(roomId: roomId)
+        let orderCompletedInput = OrderCompletedInput(roomId: roomId)
         
         ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
             if isSuccess {
@@ -1240,12 +1248,10 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftMessageLabel.isHidden = true
                     cell.leftTimeLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
-                    // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
-                    //                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    //                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-                    //                } else {// 방장이 아니면 기본 프로필로 설정
-                    //                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-                    //                }
+                    if self.roomInfo?.cheifId == msg.message?.memberId { // 방장이라면
+                        // TODO: - 프로필에 테두리 둘러주기
+                        print("방장 프로필")
+                    }
                 } else { // 다른 사람이면
                     cell.leftImageView.isUserInteractionEnabled = true
                     cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
@@ -1260,11 +1266,9 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.rightMessageLabel.isHidden = true
                     cell.rightTimeLabel.isHidden = true
                     cell.rightUnreadCntLabel.isHidden = true
-                    //                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    //                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
-                    //                } else {// 방장이 아니면 기본 프로필로 설정
-                    //                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
-                    //                }
+                    if self.roomInfo?.cheifId == msg.message?.memberId { // 방장이라면
+                        // TODO: - 방장 프로필 테두리 둘러주기
+                    }
                 }
                 return cell
             }
@@ -1349,9 +1353,11 @@ extension ChattingViewController: WebSocketDelegate {
         // 웹소켓 연결 완료됐을 때 실행
         case .connected(let headers):
             print("DEBUG: 웹소켓 연결 완료 - \(headers)")
-            // 로드된 이전 메세지들 중에 isReaded가 false이고, 상대방이 보낸 메세지만 필터링
+            // 로드된 이전 메세지들 중에 안 읽은 메세지이고, 시스템 메세지가 아니고, 상대방이 보낸 메세지만 필터링
             let unreadedMsgs = self.msgContents.filter { msg in
-                msg.message?.isReaded == false && msg.message?.nickName != LoginModel.nickname
+                msg.message?.isReaded == false
+                && msg.message?.nickName != LoginModel.nickname
+                && msg.message?.isSystemMessage == false
             }
             if !(unreadedMsgs.isEmpty) {
                 print("DEBUG: 안 읽은 메세지 있음!!")
