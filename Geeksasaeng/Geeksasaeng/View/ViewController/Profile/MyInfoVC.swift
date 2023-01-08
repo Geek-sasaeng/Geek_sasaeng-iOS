@@ -25,7 +25,10 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.addGestureRecognizer(gesture)
     }
     
-    let userImageView = UIImageView()
+    let userImageView = UIImageView().then {
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 83
+    }
     
     /* title labels */
     let dormitoryLabel = UILabel()
@@ -66,13 +69,14 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
         $0.makeBottomLine(color: 0xA8A8A8, width: 48, height: 1, offsetToTop: -8)
         $0.setTitle("회원탈퇴", for: .normal)
+        $0.addTarget(self, action: #selector(tapWithdrawalMembershipButton), for: .touchUpInside)
     }
     
     lazy var logoutView = UIView().then {
         $0.backgroundColor = .white
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 7
-  
+        
         let topSubView = UIView().then {
             $0.backgroundColor = UIColor(hex: 0xF8F8F8)
         }
@@ -119,7 +123,7 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         let contentLabel = UILabel().then {
-            $0.text = "로그아웃 시 서비스 사용이 제한\n되며, 로그인이 필요합니다.\n계속하시겠습니까?"
+            $0.text = "서비스 사용이 제한되며,\n로그인이 필요해요.\n로그아웃을 진행할까요?"
             $0.numberOfLines = 0
             $0.textColor = .init(hex: 0x2F2F2F)
             $0.font = .customFont(.neoMedium, size: 14)
@@ -138,6 +142,98 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
             $0.setTitle("확인", for: .normal)
             $0.titleLabel?.font = .customFont(.neoBold, size: 18)
             $0.addTarget(self, action: #selector(self.tapLogoutConfirmButton), for: .touchUpInside)
+        }
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(25)
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
+        }
+    }
+    
+    lazy var withdrawalMembershipView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "회원탈퇴"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
+        }
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(162)
+        }
+        
+        let contentLabel = UILabel().then {
+            $0.text = "긱사생 서비스를 더 이상\n이용할 수 없어요.\n탈퇴를 진행할까요?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapWithdrawalMembershipConfirmButton), for: .touchUpInside)
         }
         
         [contentLabel, lineView, confirmButton].forEach {
@@ -361,13 +457,26 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
             }
         }, completion: nil)
     }
-
+    
     @objc
     private func tapLogoutButton() {
         if visualEffectView == nil {
             createBlurView()
             view.addSubview(logoutView)
             logoutView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(256)
+                make.height.equalTo(236)
+            }
+        }
+    }
+    
+    @objc
+    private func tapWithdrawalMembershipButton() {
+        if visualEffectView == nil {
+            createBlurView()
+            view.addSubview(withdrawalMembershipView)
+            withdrawalMembershipView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
                 make.width.equalTo(256)
                 make.height.equalTo(236)
@@ -390,6 +499,12 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         let rootVC = LoginViewController()
         UIApplication.shared.windows.first?.rootViewController = rootVC
         self.view.window?.rootViewController?.dismiss(animated: true)
+    }
+    
+    @objc
+    private func tapWithdrawalMembershipConfirmButton() {
+        print("회원탈퇴")
+        // TODO: - 회원탈퇴 처리
     }
     
     @objc

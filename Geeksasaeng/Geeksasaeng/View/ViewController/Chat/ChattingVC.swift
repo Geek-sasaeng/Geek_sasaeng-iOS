@@ -38,8 +38,9 @@ class ChattingViewController: UIViewController {
     let bottomView = UIView().then {
         $0.backgroundColor = .init(hex: 0xEFEFEF)
     }
-    let sendImageButton = UIButton().then {
+    lazy var sendImageButton = UIButton().then {
         $0.setImage(UIImage(named: "SendImage"), for: .normal)
+        $0.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
     }
     let contentsTextView = UITextView().then {
         $0.font = .customFont(.neoMedium, size: 16)
@@ -132,7 +133,7 @@ class ChattingViewController: UIViewController {
         }
         
         let contentLabel = UILabel().then {
-            $0.text = "본 채팅방을 나갈 시\n이후로 채팅에 참여할 수\n없습니다. 계속하시겠습니까?"
+            $0.text = "이 채팅방을 나간 후로는\n채팅에 참여할 수 없어요.\n채팅 나가기를 진행할까요?"
             $0.numberOfLines = 0
             $0.textColor = .init(hex: 0x2F2F2F)
             $0.font = .customFont(.neoMedium, size: 14)
@@ -230,7 +231,7 @@ class ChattingViewController: UIViewController {
         }
         
         let contentLabel = UILabel().then {
-            $0.text = "매칭을 종료할 시\n본 파티에 대한 추가 인원이\n더 이상 모집되지 않습니다.\n계속하시겠습니까?"
+            $0.text = "매칭을 종료할 시\n본 파티에 대한 추가 인원이\n더 이상 모집되지 않아요.\n매칭 마감을 진행할까요?"
             $0.numberOfLines = 0
             $0.textColor = .init(hex: 0x2F2F2F)
             $0.font = .customFont(.neoMedium, size: 14)
@@ -326,8 +327,7 @@ class ChattingViewController: UIViewController {
             $0.titleLabel?.textColor = .white
             $0.backgroundColor = .mainColor
             $0.layer.cornerRadius = 5
-//            $0.addTarget(self, action: #selector(tapRemittanceButton), for: .touchUpInside)
-            // TODO: - 채팅 구현 후 addTarget 설정
+            $0.addTarget(self, action: #selector(tapOrderCompleted), for: .touchUpInside)
         }
         
         view.addSubview(orderCompletedButton)
@@ -493,11 +493,10 @@ class ChattingViewController: UIViewController {
         setupWebSocket()
         // RabbitMq 수신 설정
         setupReceiver()
-        
         setAttributes()
+        setCollectionView()
         addSubViews()
         setLayouts()
-        setCollectionView()
         
         do {
             // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
@@ -851,7 +850,7 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapSendImageButton() {
         var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 1
+        configuration.selectionLimit = 0
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
@@ -909,11 +908,27 @@ class ChattingViewController: UIViewController {
     /* 송금 완료 버튼 클릭 */
     @objc
     private func tapRemittanceButton() {
+        self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
+        self.remittanceView.removeFromSuperview()
         // TODO: - 송금 완료 뷰 지우기
         // TODO: - 송금 완료한 사람 저장
         // TODO: - 송금 완료 시스템 메세지 전송
         
 //        self.remittanceView.removeFromSuperview()
+    }
+    
+    /* 주문 완료 버튼 클릭 */
+    @objc
+    private func tapOrderCompleted() {
+        guard let roomId = self.roomId else { return }
+        let orderCompletedInput = orderCompletedInput(roomId: roomId)
+        
+        ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
+            if isSuccess {
+                self.showToast(viewController: self, message: "주문완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                self.orderCompletedView.removeFromSuperview()
+            }
+        }
     }
     
     /* 배경의 컬렉션뷰 클릭시 띄워져있는 안내뷰와 블러뷰를 없애는 함수 */
@@ -1034,6 +1049,7 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapExitConfirmButton() {
         // TODO: - 방장인지 구별하기
+        // TODO: - 방장인지 구별하기
         // TODO: - 방장이면 새 방장 선정
         // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
         // TODO: - 방장 아니면 나갔다는 시스템 메세지만
@@ -1079,7 +1095,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.rightImageView.isHidden = true
                     cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
 //                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1091,7 +1107,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftImageView.isHidden = true
                     cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                         print("DEBUG: 사진 Url", contentUrl)
                     }
                     cell.leftTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
@@ -1134,7 +1150,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = formatTime(str: (msg.message?.createdAt)!)
 //                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1149,7 +1165,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     if let contentUrl = msg.message?.content {
-                        cell.imageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.leftImageView.isUserInteractionEnabled = true
                     cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
@@ -1321,7 +1337,6 @@ extension ChattingViewController: WebSocketDelegate {
 extension ChattingViewController: PHPickerViewControllerDelegate {
     /* 사진 선택이 완료되었을 때 */
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print("사진 선택 완료")
         picker.dismiss(animated: true)
         
         let itemProvider = results.first?.itemProvider
@@ -1331,9 +1346,10 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     guard let imageData = image as? UIImage else { return }
+                    print("이미지 추출 완료")
                     let input = ChatImageSendInput(
                         chatId: "none",
-                        chatRootId: self.roomId,
+                        chatRoomId: self.roomId,
                         chatType: "publish",
                         content: "content",
                         email: "dmstn@gachon.ac.kr",

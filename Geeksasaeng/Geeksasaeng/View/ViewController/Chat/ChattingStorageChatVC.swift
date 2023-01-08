@@ -949,7 +949,7 @@
 //    
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 //        let cellSize: CGSize
-//        
+//
 //        switch contents[indexPath.row].cellType {
 //        case .systemMessage:
 //            let labelHeight = getSystemMessageLabelHeight(text: contents[indexPath.row].message?.content ?? "")
