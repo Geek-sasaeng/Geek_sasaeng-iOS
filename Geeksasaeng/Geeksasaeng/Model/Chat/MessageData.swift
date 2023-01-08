@@ -46,7 +46,7 @@ class MsgToSave: Object, Decodable {
     @Persisted var createdAt: Date? = nil
     @Persisted var unreadMemberCnt: Int? = nil
     @Persisted var isImageMessage: Bool? = nil
-    @Persisted var isReaded: Bool? = nil   // 내가 이 메세지를 읽었는지 안 읽었는지
+    @Persisted var isReaded: Bool   // 내가 이 메세지를 읽었는지 안 읽었는지
     
     // 생성자
     convenience init(chatId: String,

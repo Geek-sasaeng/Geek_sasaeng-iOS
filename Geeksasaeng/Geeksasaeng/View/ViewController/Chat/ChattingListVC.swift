@@ -65,8 +65,8 @@ class ChattingListViewController: UIViewController {
     private var conn: RMQConnection? = nil
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
-    // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
-    var localRealm: Realm? = nil
+    // Realm 싱글톤 객체 가져오기
+    private let localRealm = DataBaseManager.shared
     // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
     var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
@@ -146,8 +146,6 @@ class ChattingListViewController: UIViewController {
         getChatRoomList()
         // RabbitMQ 수신 리스너 설정
         setupReceiver()
-        // realm 설정
-        setupRealm()
         // 로컬로부터 채팅방의 가장 최근 메세지 불러오기
         loadRecentMessage()
     }
@@ -185,11 +183,6 @@ class ChattingListViewController: UIViewController {
     
     /* 서버로부터 받아온 response를 처리하는 함수. res가 성공이면 배열에 데이터를 추가해준다 */
     private func addRoomListData(result: [ChatRoomInfo]?) {
-        // 배열이 비어있지 않다면 비우고 시작
-        if !self.chattingRoomList.isEmpty {
-            self.removeRoomListData()
-        }
-        
         result?.forEach {
             // 서버로부터 받은 건 ChatRoomInfo 형식이라서 ChattingRoomInfo로 구조 변경
             let chattingRoomInfo = ChattingRoomInfo(roomId: $0.roomId,
@@ -287,27 +280,10 @@ class ChattingListViewController: UIViewController {
         })
     }
     
-    // 로컬 저장을 위해 Realm 세팅
-    private func setupRealm() {
-        do {
-            // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 9)
-            localRealm = try Realm(configuration: configuration)
-            
-            // Realm 파일 위치
-            print("DEBUG: 채팅 데이터 Realm 파일 경로", Realm.Configuration.defaultConfiguration.fileURL!)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     // 채팅 로컬에 저장하기
     private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
-            try! self.localRealm!.write {
-                self.localRealm!.add(msgToSave)
-                print("DEBUG: local에 채팅을 저장하다", msgToSave.content)
-            }
+            self.localRealm.write(msgToSave)
         }
     }
     
@@ -320,7 +296,7 @@ class ChattingListViewController: UIViewController {
             // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
             let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", chattingRoom.roomId!, self.enterTimeToDate as CVarArg)
             // 마지막 메세지가 있는 경우
-            if let last = localRealm!.objects(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt").last {
+            if let last = localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt").last {
                 print("DEBUG: \(last.chatRoomId)방의 마지막 채팅은", last)
                 // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
                 return ChattingRoomInfo(

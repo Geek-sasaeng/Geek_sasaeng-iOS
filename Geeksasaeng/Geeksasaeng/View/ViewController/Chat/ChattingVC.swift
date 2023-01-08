@@ -480,8 +480,9 @@ class ChattingViewController: UIViewController {
     var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
     var keyboardHeight: CGFloat? // 키보드 높이
-    // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
-    var localRealm: Realm? = nil
+    
+    // Realm 싱글톤 객체 가져오기
+    private let localRealm = DataBaseManager.shared
     
     // MARK: - Life Cycle
     
@@ -500,8 +501,6 @@ class ChattingViewController: UIViewController {
         setCollectionView()
         
         print("확인", self.enterTimeToDate)
-        // Realm 설정
-        setupRealm()
         // 이전 메세지 불러오기
         loadMessages()
     }
@@ -581,7 +580,6 @@ class ChattingViewController: UIViewController {
                 
                 // 새 메세지 수신 시
                 if data.chatType! == "publish" {
-                    
                     print("[Rabbit] 채팅방에서 채팅 수신", data)
                     // String 날짜를 Date 형태로 변경
                     let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
@@ -693,20 +691,6 @@ class ChattingViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
     }
     
-    // 로컬 저장을 위해 Realm 세팅
-    private func setupRealm() {
-        do {
-            // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 8)
-            localRealm = try Realm(configuration: configuration)
-            
-            // Realm 파일 위치
-            print("DEBUG: 채팅 데이터 Realm 파일 경로", Realm.Configuration.defaultConfiguration.fileURL!)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
     
     // TODO: - 사진 데이터도 저장해야 함
@@ -716,7 +700,7 @@ class ChattingViewController: UIViewController {
         print("DEBUG: loadMessages")
         // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
         let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate as CVarArg)
-        self.msgRecords = localRealm!.objects(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+        self.msgRecords = localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
         
         guard let msgRecords = msgRecords else { return }
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
@@ -728,10 +712,7 @@ class ChattingViewController: UIViewController {
     // 채팅 로컬에 저장하기
     private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
-            try! self.localRealm!.write {
-                self.localRealm!.add(msgToSave)
-                print("DEBUG: local에 채팅을 저장하다", msgToSave.content)
-            }
+            self.localRealm.write(msgToSave)
         }
     }
     
@@ -762,21 +743,41 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // 웹소켓을 통해 읽음 요청 보내기
+    private func sendReadRequest() {
+        print("DEBUG: 읽음 요청")
+        // 로드된 이전 메세지들 중에 isReaded가 false이고, 상대방이 보낸 메세지만 필터링
+        let unreadedMsgs = self.msgContents.filter { msg in
+            msg.message?.isReaded == false && msg.message?.nickName != LoginModel.nickname
+        }
+        // 하나씩 읽음 처리 요청 보내기
+        for unreadedMsg in unreadedMsgs {
+            print("DEBUG: 읽음 요청", unreadedMsg)
+            self.sendMessage(input: MsgRequest(
+                content: unreadedMsg.message?.content,
+                chatRoomId: unreadedMsg.message?.chatRoomId,
+                isSystemMessage: unreadedMsg.message?.isSystemMessage,
+                chatType: "read",
+                chatId: unreadedMsg.message?.chatId,
+                jwt: "Bearer " + LoginModel.jwt!))
+        }
+    }
+    
     // 로컬에 저장된 isReaded 필드값을 true로 업데이트
     // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 nickName으로 구분 안 함
     private func updateUnreadToRead(data: MsgResponse) {
         DispatchQueue.main.async {
             print("DEBUG: updateUnreadToRead")
             let predicate = NSPredicate(format: "chatRoomId = %@ AND isReaded = false", self.roomId!)
-            let unreadedMsgs = self.localRealm!.objects(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+            let unreadedMsgs = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
             print("DEBUG: 안 읽은 메세지들", unreadedMsgs)
             
             // 하나씩 로컬 데이터 업데이트
             unreadedMsgs.forEach { unreadedMsg in
-                try! self.localRealm!.write {
+                self.localRealm.update(unreadedMsg) { unreadedMsg in
                     unreadedMsg.isReaded = true
                     unreadedMsg.unreadMemberCnt = data.unreadMemberCnt
-                    print("DEBUG: 읽음 상태 업데이트", unreadedMsg.content)
+                    print("DEBUG: 읽음 상태 업데이트", data.content)
                 }
             }
             
@@ -1333,22 +1334,7 @@ extension ChattingViewController: WebSocketDelegate {
         // 웹소켓 연결 완료됐을 때 실행
         case .connected(let headers):
             print("DEBUG: 웹소켓 연결 완료 - \(headers)")
-            print("DEBUG: 읽음 요청")
-            // 로드된 이전 메세지들 중에 isReaded가 false이고, 상대방이 보낸 메세지만 필터링
-            let unreadedMsgs = self.msgContents.filter { msg in
-                msg.message?.isReaded == false && msg.message?.nickName != LoginModel.nickname
-            }
-            // 하나씩 읽음 처리 요청 보내기
-            for unreadedMsg in unreadedMsgs {
-                print("DEBUG: 읽음 요청", unreadedMsg)
-                self.sendMessage(input: MsgRequest(
-                    content: unreadedMsg.message?.content,
-                    chatRoomId: unreadedMsg.message?.chatRoomId,
-                    isSystemMessage: unreadedMsg.message?.isSystemMessage,
-                    chatType: "read",
-                    chatId: unreadedMsg.message?.chatId,
-                    jwt: "Bearer " + LoginModel.jwt!))
-            }
+            sendReadRequest()
         case .disconnected(let reason, let code):
             print("DEBUG: 웹소켓 연결 끊어짐 - \(reason) with code: \(code)")
         case .text(let text):

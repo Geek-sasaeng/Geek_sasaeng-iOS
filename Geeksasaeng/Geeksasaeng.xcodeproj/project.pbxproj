@@ -1108,6 +1108,9 @@
 		A25766D328AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25766D528AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
+		A25825F62969A00100BC3FF7 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25825F52969A00100BC3FF7 /* DataBaseManager.swift */; };
+		A25825F72969A00100BC3FF7 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25825F52969A00100BC3FF7 /* DataBaseManager.swift */; };
+		A25825F82969A00100BC3FF7 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25825F52969A00100BC3FF7 /* DataBaseManager.swift */; };
 		A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26780B228AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
@@ -1619,6 +1622,7 @@
 		A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckModel.swift; sourceTree = "<group>"; };
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		A25825F52969A00100BC3FF7 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geeksasaeng.entitlements; sourceTree = "<group>"; };
 		A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OngoingTableViewCell.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
@@ -1768,13 +1772,14 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
-				A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */,
 				10543E64287F0054003B8799 /* IOS_DaumMap_SDK_1.4.0 */,
 				10C8D26F287735E60044552A /* Network */,
 				A2B4208F286F1F1300278F92 /* App */,
+				A25825F429699FD500BC3FF7 /* Manager */,
 				100FB99328745AA6008947DD /* Model */,
 				100FB99528745BE3008947DD /* View */,
 				100FB99428745AAC008947DD /* ViewModel */,
+				A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */,
 				A2B4208E286F1F0500278F92 /* Extension */,
 				103F145C286ACA86004B637B /* Assets.xcassets */,
 				103F145E286ACA86004B637B /* LaunchScreen.storyboard */,
@@ -2330,6 +2335,14 @@
 				A274DE7528E0F5DC00F5024E /* Menu */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		A25825F429699FD500BC3FF7 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				A25825F52969A00100BC3FF7 /* DataBaseManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		A25D124C28F0516B00B4B6AD /* Dormitory */ = {
@@ -3769,6 +3782,7 @@
 				10E6956528885589000B7309 /* LocationAPI.swift in Sources */,
 				105E60A9287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A21DB934289D896B00A523F1 /* ChattingListVC.swift in Sources */,
+				A25825F62969A00100BC3FF7 /* DataBaseManager.swift in Sources */,
 				106D9751287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				103F1484286ACB95004B637B /* LoginVC.swift in Sources */,
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
@@ -3844,6 +3858,7 @@
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
 				A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */,
 				A2035EA6288341B00051498A /* AdModel.swift in Sources */,
+				A25825F72969A00100BC3FF7 /* DataBaseManager.swift in Sources */,
 				106093D128A81981007FD463 /* ChatRoomExitAPI.swift in Sources */,
 				A2B420AE286F5B7900278F92 /* TabBarController.swift in Sources */,
 				107D30A2294E3E1200CFE75C /* ChatAPI.swift in Sources */,
@@ -4032,6 +4047,7 @@
 				106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
 				A274DE7928E0F68800F5024E /* CreateMenuVC.swift in Sources */,
 				A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */,
+				A25825F82969A00100BC3FF7 /* DataBaseManager.swift in Sources */,
 				A2513F232878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B045D42889923200B97636 /* ReportDetailVC.swift in Sources */,
 				A2513F172878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
