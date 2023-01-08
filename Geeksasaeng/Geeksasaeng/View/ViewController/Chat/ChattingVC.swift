@@ -1054,7 +1054,17 @@ class ChattingViewController: UIViewController {
         // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
         // TODO: - 방장 아니면 나갔다는 시스템 메세지만
         
-//        self.navigationController?.popViewController(animated: true)
+        // 채팅방 나가기 테스트
+        let input = exitMemberInput(roomId: roomId)
+        ChatAPI.exitMember(input) { isSuccess in
+            if isSuccess {
+                print("파티원 나가기 성공")
+            } else {
+                print("파티원 나가기 실패")
+            }
+        }
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
@@ -1196,10 +1206,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftUnreadCntLabel.isHidden = true
                     // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
                     //                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    //                    cell.rightImageView.image = UIImage(named: "RoomMasterProfile")
-                    //                } else {// 방장이 아니면 기본 프로필로 설정
-                    //                    cell.rightImageView.image = UIImage(named: "DefaultProfile")
-                    //                }
+                    //                    cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                    //                    cell.rightImageView.layer.borderWidth = 1
                 } else { // 다른 사람이면
                     cell.leftImageView.isUserInteractionEnabled = true
                     cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
@@ -1215,10 +1223,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.rightTimeLabel.isHidden = true
                     cell.rightUnreadCntLabel.isHidden = true
                     //                if self.roomMaster == msg.message?.nickName { // 방장이라면
-                    //                    cell.leftImageView.image = UIImage(named: "RoomMasterProfile")
-                    //                } else {// 방장이 아니면 기본 프로필로 설정
-                    //                    cell.leftImageView.image = UIImage(named: "DefaultProfile")
-                    //                }
+                    //                    cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                    //                    cell.rightImageView.layer.borderWidth = 1
                 }
                 return cell
             }

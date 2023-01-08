@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-/* 채팅방 사진 전송 API req */
+/* 채팅방 사진 전송 */
 struct ChatImageSendInput: Encodable {
     var chatId: String?
     var chatRoomId: String?
@@ -19,8 +19,6 @@ struct ChatImageSendInput: Encodable {
     var isSystemMessage: Bool?
     var profileImgUrl: String?
 }
-
-/* 채팅방 사진 전송 API의 Response */
 struct ChatImageSendModel: Decodable {
     var code : Int?
     var isSuccess : Bool?
@@ -28,13 +26,10 @@ struct ChatImageSendModel: Decodable {
     var result : String?
 }
 
-
-/* 주문 완료 API req */
+/* 주문 완료 */
 struct orderCompletedInput: Encodable {
     var roomId: String?
 }
-
-/* 주문 완료 API res */
 struct orderCompletedModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
@@ -42,40 +37,48 @@ struct orderCompletedModel: Decodable {
     var result: String?
 }
 
-/* 방장 퇴장 API req */
+/* 방장 퇴장 */
 struct exitChiefInput: Encodable {
     var roomId: String?
 }
-
-/* 방장 퇴장 API res */
 struct exitChiefModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
     var message: String?
     var result: exitChiefModelResult?
 }
-
 struct exitChiefModelResult: Decodable {
     var message: String?
 }
 
-/* 파티원 퇴장 API req */
+/* 파티원 퇴장 */
 struct exitMemberInput: Encodable {
     var roomId: String?
 }
-
 struct exitMemberModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
     var message: String?
     var result: exitMemberModelResult?
 }
-
 struct exitMemberModelResult: Decodable {
     var message: String?
 }
 
+/* 송금 완료 */
+struct CompleteRemittanceInput: Encodable {
+    var roomId: String?
+}
+struct CompleteRemittanceModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
+}
+
+
 class ChatAPI {
+    /* 이미지 전송 */
     public static func sendImage(_ parameter: ChatImageSendInput, imageData: UIImage, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chatimage"
         let header : HTTPHeaders = [
@@ -119,6 +122,7 @@ class ChatAPI {
         }
     }
     
+    /* 주문 완료 */
     public static func orderCompleted(_ parameter: orderCompletedInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/order"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
@@ -141,6 +145,7 @@ class ChatAPI {
         }   
     }
     
+    /* 방장 나가기 */
     public static func exitChief(_ parameter: exitChiefInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chief"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
@@ -163,6 +168,7 @@ class ChatAPI {
         }
     }
     
+    /* 파티원 나가기 */
     public static func exitMember(_ parameter: exitMemberInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members/self"
         AF.request(URL, method: .delete, parameters: parameter, encoder: JSONParameterEncoder.default,
@@ -170,12 +176,35 @@ class ChatAPI {
         .validate()
         .responseDecodable(of: exitMemberModel.self) { response in
             switch response.result {
-            case . success(let result):
+            case .success(let result):
                 if result.isSuccess! {
                     print("파티원 퇴장 완료")
                     completion(true)
                 } else {
                     print("DEBUG: ", result.message!)
+                    completion(false)
+                }
+            case .failure(let error):
+                print("DEBUG: ", error.localizedDescription)
+                completion(false)
+            }
+        }
+    }
+    
+    /* 송금 완료 */
+    public static func completeRemittance(_ parameter: CompleteRemittanceInput, completion: @escaping (Bool) -> Void) {
+        let URL = "https://geeksasaeng.shop/party-chat-room/members/remittance"
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
+        headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: CompleteRemittanceModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("송금 완료")
+                    completion(true)
+                } else {
+                    print("송금 완료 실패")
                     completion(false)
                 }
             case .failure(let error):
