@@ -72,6 +72,101 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     let editPasswordChangeButton = UIButton()
     let editPasswordCheckButton = UIButton()
     
+    /* 수정 완료하기 View */
+    lazy var editConfirmView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "수정 완료하기"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
+        }
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(162)
+        }
+        
+        let contentLabel = UILabel().then {
+            $0.text = "지금 수정하신 정보로\n수정을 완료할까요?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapEditConfirmButton), for: .touchUpInside)
+        }
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(25)
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
+        }
+    }
+    
+    var visualEffectView: UIVisualEffectView?
+    
     // MARK: - Properties
     /* 회원정보 (수정 시 변경) */
     var checkPassword: String?
@@ -317,6 +412,17 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func createBlurView() {
+        if visualEffectView == nil {
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            visualEffectView.isUserInteractionEnabled = false
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+        }
+    }
+    
     private func setUserInfo() {
         /* textfield로 변경 */
         UserInfoAPI.getEditUserInfo { isSuccess, result in
@@ -387,7 +493,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func activeRightBarButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(tapConfirmButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(tapRightBarButton))
         navigationItem.rightBarButtonItem?.tintColor = .mainColor
     }
     
@@ -404,7 +510,20 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc
-    private func tapConfirmButton() {
+    private func tapRightBarButton() {
+        if visualEffectView == nil {
+            createBlurView()
+            view.addSubview(editConfirmView)
+            editConfirmView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(256)
+                make.height.equalTo(202)
+            }
+        }
+    }
+    
+    @objc
+    private func tapEditConfirmButton() {
         let input: EditUserInput?
         if let _ = self.checkPassword { // 비밀번호를 변경했을 경우
             input = EditUserInput(
@@ -428,12 +547,21 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()
+                self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
             } else {
                 self.showToast(viewController: self, message: "회원정보 수정 실패", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
                 print("회원정보 수정 실패")
+                self.editConfirmView.removeFromSuperview()
             }
         }
+    }
+    
+    @objc
+    private func tapXButton() {
+        visualEffectView?.removeFromSuperview()
+        visualEffectView = nil
+        editConfirmView.removeFromSuperview()
     }
     
     @objc

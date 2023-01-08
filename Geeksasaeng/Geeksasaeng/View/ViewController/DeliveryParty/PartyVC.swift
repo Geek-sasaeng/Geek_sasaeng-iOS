@@ -218,7 +218,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* set contentLabel */
-        contentLabel.text = "파티글 삭제하기를 누를 시\n해당 글을 영구적으로\n지워집니다.\n삭제하시겠습니까?"
+        contentLabel.text = "이 배달 파티가 삭제됩니다.\n계속할까요?"
         contentLabel.numberOfLines = 0
         contentLabel.textColor = .black
         contentLabel.font = .customFont(.neoRegular, size: 14)
@@ -315,7 +315,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         /* set contentLabel */
-        contentLabel.text = "이 파티를\n신청하시겠습니까?"
+        contentLabel.text = "파티에 참여해볼까요?"
         contentLabel.numberOfLines = 0
         contentLabel.textColor = .init(hex: 0x2F2F2F)
         contentLabel.font = .customFont(.neoMedium, size: 14)

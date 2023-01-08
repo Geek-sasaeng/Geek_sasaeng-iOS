@@ -28,7 +28,7 @@ class ReportDetailViewController: UIViewController {
         $0.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoMedium, size: 16))
     }
     
-    let textViewPlaceHolder = "(선택) 어떤 상황인가요? 긱사생에게 알려주시면 문제 해결에 도움이 됩니다"
+    let textViewPlaceHolder = "(선택) 어떤 상황인가요? 긱사생에게 알려주시면 문제 해결에 도움이 될 수 있어요."
     lazy var reportTextView = UITextView().then {
         $0.backgroundColor = .white
         $0.text = textViewPlaceHolder
@@ -53,7 +53,7 @@ class ReportDetailViewController: UIViewController {
     }
     
     let guideLabel = UILabel().then {
-        $0.setTextAndColorAndFont(text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있습니다.",
+        $0.setTextAndColorAndFont(text: "[프로필] >  [설정] > [사용자 관리]에서 취소할 수 있어요.",
                                      textColor: .init(hex: 0xA8A8A8),
                                      font: .customFont(.neoRegular, size: 15))
         $0.numberOfLines = 0
@@ -134,7 +134,7 @@ class ReportDetailViewController: UIViewController {
         let contentLabel = UILabel().then {
             /* set contentLabel */
             $0.setTextAndColorAndFont(
-                text: "고객님께서 요청하신 사항에\n따른 신고가 정상적으로\n처리되었습니다.",
+                text: "요청하신 사항에 따른 신고가\n정상적으로 처리되었어요.",
                 textColor: .init(hex: 0x2F2F2F), font: .customFont(.neoMedium, size: 14))
             $0.numberOfLines = 0
             let attrString = NSMutableAttributedString(string: $0.text!)
