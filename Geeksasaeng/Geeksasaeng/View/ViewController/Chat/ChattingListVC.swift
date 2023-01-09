@@ -27,6 +27,13 @@ class FormatCreater {
         formatter.timeZone = TimeZone(abbreviation: "KST")
         return formatter
     }()
+    static let sharedTimeFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.timeZone = TimeZone(abbreviation: "KST")
+        return formatter
+    }()
     
     private init() { }
 }
@@ -37,9 +44,9 @@ protocol UpdateChattingListDelegate {
    func updateChattingList()
 }
 
-/* 서버로부터 받은 ChatRoomInfo 형식의 데이터를 가지고 채팅방 목록을 구성하기 위해
+/* 서버로부터 받은 ChatRoom 형식의 데이터를 가지고 채팅방 목록을 구성하기 위해
  recentMsg, time, unreadedMsgCnt 필드를 추가해서 만든 구조체 */
-struct ChattingRoomInfo {
+struct ChattingRoom {
     var roomId: String?
     var roomTitle: String?
     var recentMsg: String?
@@ -47,6 +54,8 @@ struct ChattingRoomInfo {
     var unreadedMsgCnt: Int?
 }
 
+// TODO: - 방장이 파티 만들고 나서 채팅방 가기 버튼 클릭 시 무반응
+// TODO: - 로컬에 저장하는 DB 구조 수정 필요 -> 한 핸드폰(로컬)로 여러 개의 계정에 로그인하는 경우 대비 안함
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
 class ChattingListViewController: UIViewController {
     
@@ -56,8 +65,10 @@ class ChattingListViewController: UIViewController {
     private var conn: RMQConnection? = nil
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
-    // 로컬에 데이터를 저장하기 위해 Realm 객체 생성
-    var localRealm: Realm? = nil
+    // Realm 싱글톤 객체 가져오기
+    private let localRealm = DataBaseManager.shared
+    // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
+    var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
     // 현재 선택되어 있는 필터의 label
     private var selectedLabel: UILabel? = nil {
@@ -73,7 +84,7 @@ class ChattingListViewController: UIViewController {
     // 채팅방 목록의 마지막 페이지인지 여부 확인
     var isFinalPage = false
     // 채팅방 목록 데이터
-    private var chattingRoomList: [ChattingRoomInfo] = []
+    private var chattingRoomList: [ChattingRoom] = []
     
     // MARK: - SubViews
     
@@ -135,8 +146,6 @@ class ChattingListViewController: UIViewController {
         getChatRoomList()
         // RabbitMQ 수신 리스너 설정
         setupReceiver()
-        // realm 설정
-        setupRealm()
         // 로컬로부터 채팅방의 가장 최근 메세지 불러오기
         loadRecentMessage()
     }
@@ -145,9 +154,7 @@ class ChattingListViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         // RabbitMQ Connection 끊기
-        if ((conn?.isOpen()) != nil) {
-            conn?.close()
-        }
+        conn?.close()
     }
     
     // MARK: - Functions
@@ -175,21 +182,16 @@ class ChattingListViewController: UIViewController {
     }
     
     /* 서버로부터 받아온 response를 처리하는 함수. res가 성공이면 배열에 데이터를 추가해준다 */
-    private func addRoomListData(result: [ChatRoomInfo]?) {
-        // 배열이 비어있지 않다면 비우고 시작
-        if !self.chattingRoomList.isEmpty {
-            self.removeRoomListData()
-        }
-        
+    private func addRoomListData(result: [ChatRoom]?) {
         result?.forEach {
-            // 서버로부터 받은 건 ChatRoomInfo 형식이라서 ChattingRoomInfo로 구조 변경
-            let chattingRoomInfo = ChattingRoomInfo(roomId: $0.roomId,
+            // 서버로부터 받은 건 ChatRoom 형식이라서 ChattingRoom로 구조 변경
+            let chattingRoom = ChattingRoom(roomId: $0.roomId,
                                               roomTitle: $0.roomTitle,
                                               recentMsg: "",
                                               time: "",
                                               unreadedMsgCnt: 0)
             // 데이터를 배열에 추가
-            self.chattingRoomList.append(chattingRoomInfo)
+            self.chattingRoomList.append(chattingRoom)
             
             // 로컬에 저장된 각 채팅방의 최신 메세지 불러오기
             loadRecentMessage()
@@ -239,21 +241,38 @@ class ChattingListViewController: UIViewController {
                 // MsgResponse 구조체로 decode.
                 let decoder = JSONDecoder()
                 let data = try decoder.decode(MsgResponse.self, from: message.body)
-                print("[Rabbit] 채팅 수신", data.content)
                 
-                
-                // 수신한 채팅 로컬에 저장하기
-                self.saveMessage(msgResponse: data)
-                
-                guard let roomIndex = self.chattingRoomList.indices.filter({ self.chattingRoomList[$0].roomId == data.chatRoomId }).first else { return }
-                self.chattingRoomList[roomIndex].recentMsg = data.content
-                self.chattingRoomList[roomIndex].time = data.createdAt
-                // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
-//                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
-                
-                DispatchQueue.main.async {
-                    // 채팅방 목록 리로드
-                    self.chattingTableView.reloadData()
+                if data.chatType! == "publish" {
+                    print("[Rabbit] 목록에서 채팅 수신", data)
+                    // String 날짜를 Date 형태로 변경
+                    let createdAtDate = FormatCreater.sharedLongFormat.date(from: data.createdAt!)
+                    // 로컬에 저장하기 위한 데이터 구조를 만든다.
+                    let msgToSave = MsgToSave(chatId: data.chatId!,
+                                              content: data.content!,
+                                              chatRoomId: data.chatRoomId!,
+                                              isSystemMessage: data.isSystemMessage!,
+                                              memberId: data.memberId!,
+                                              nickName: data.nickName!,
+                                              profileImgUrl: data.profileImgUrl!,
+                                              createdAt: createdAtDate ?? Date(),
+                                              unreadMemberCnt: data.unreadMemberCnt!,
+                                              isImageMessage: data.isImageMessage!)
+                    
+                    // 수신한 채팅 로컬에 저장하기
+                    self.saveMessage(msgToSave: msgToSave)
+                    
+                    guard let roomIndex = self.chattingRoomList.indices.filter({ self.chattingRoomList[$0].roomId == data.chatRoomId }).first else { return }
+                    self.chattingRoomList[roomIndex].recentMsg = data.content
+                    self.chattingRoomList[roomIndex].time = data.createdAt
+                    // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
+    //                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
+                    
+                    DispatchQueue.main.async {
+                        // 채팅방 목록 리로드
+                        self.chattingTableView.reloadData()
+                    }
+                } else {
+                    print("[Rabbit] 목록에서 채팅 읽음 수신???", data)
                 }
             } catch {
                 print(error)
@@ -261,27 +280,10 @@ class ChattingListViewController: UIViewController {
         })
     }
     
-    // 로컬 저장을 위해 Realm 세팅
-    private func setupRealm() {
-        do {
-            // 스키마 버전 명시 -> migration 할 때 버전 업데이트 필요.
-            let configuration = Realm.Configuration(schemaVersion: 7)
-            localRealm = try Realm(configuration: configuration)
-            
-            // Realm 파일 위치
-            print("DEBUG: 채팅 데이터 Realm 파일 경로", Realm.Configuration.defaultConfiguration.fileURL!)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     // 채팅 로컬에 저장하기
-    private func saveMessage(msgResponse: MsgResponse) {
+    private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
-            try! self.localRealm!.write {
-                self.localRealm!.add(msgResponse)
-                print("DEBUG: local에 채팅을 저장하다", msgResponse.content)
-            }
+            self.localRealm.write(msgToSave)
         }
     }
     
@@ -291,27 +293,34 @@ class ChattingListViewController: UIViewController {
         
         // chattingRoomList 배열 내용 재구성 -> 여기서 recentMsg, time 필드가 채워진다.
         self.chattingRoomList = self.chattingRoomList.map { chattingRoom in
-            let predicate = NSPredicate(format: "chatRoomId = %@", chattingRoom.roomId!)
-            let last = localRealm!.objects(MsgResponse.self).filter(predicate).sorted(byKeyPath: "createdAt").last
-            print("DEBUG: \(last?.chatRoomId)방의 마지막 채팅은", last)
-            // 로컬에서 가장 최근 메세지 얻어서 ChattingRoomInfo 구조로 만들어서 리턴
-            return ChattingRoomInfo(
-                roomId: chattingRoom.roomId,
-                roomTitle: chattingRoom.roomTitle,
-                recentMsg: last?.content,
-                time: last?.createdAt,
-                unreadedMsgCnt: 0)
+            // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", chattingRoom.roomId!, self.enterTimeToDate as CVarArg)
+            // 마지막 메세지가 있는 경우
+            if let last = localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt").last {
+                print("DEBUG: \(last.chatRoomId)방의 마지막 채팅은", last)
+                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoom 구조로 만들어서 리턴
+                return ChattingRoom(
+                    roomId: chattingRoom.roomId,
+                    roomTitle: chattingRoom.roomTitle,
+                    recentMsg: last.content,
+                    time: FormatCreater.sharedLongFormat.string(from: last.createdAt!),
+                    unreadedMsgCnt: 0)
+            } else { // 없는 경우
+                print("DEBUG: \(chattingRoom.roomId)방의 마지막 채팅은 아직 없다!")
+                // 로컬에서 가장 최근 메세지 얻어서 ChattingRoom 구조로 만들어서 리턴
+                return ChattingRoom(
+                    roomId: chattingRoom.roomId,
+                    roomTitle: chattingRoom.roomTitle,
+                    recentMsg: nil,
+                    time: nil,
+                    unreadedMsgCnt: 0)
+            }
         }
     }
     
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "채팅"
-        self.navigationItem.setRightBarButton(
-            UIBarButtonItem(image: UIImage(named: "StorageBox"), style: .plain, target: self, action: #selector(tapStorageBox)
-                           ), animated: true)
-        self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
-        self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
         
         chattingTableView.backgroundColor = .white
         chattingTableView.rowHeight = 81 + 6 + 6
@@ -431,81 +440,82 @@ class ChattingListViewController: UIViewController {
         // 아직 주고받은 메세지가 없으면 안내 문구 띄우기
         if messageContents.isEmpty {
             cell.recentMessageLabel.text = "채팅을 시작해보세요!"
+            cell.receivedTimeString = ""
         } else {
             // 채팅방의 최근 메세지 설정
             cell.recentMessageLabel.text = messageContents
-        }
+            
+            // 현재 시간과 마지막 메세지 전송시간 비교
+            let nowTimeDate = Date()
+            if let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime) {
+                // 현재가 몇 년도 몇 월 며칠인지.
+                let calendar = Calendar.current
+                let todayComponents = calendar.dateComponents([.year, .month, .day],
+                                                         from: nowTimeDate)
+                let todayYear = todayComponents.year
+                let todayMonth = todayComponents.month
+                let todayDay = todayComponents.day
 
-        // 현재 시간과 마지막 메세지 전송시간
-        let nowTimeDate = Date()
-        if let messageTimeDate = FormatCreater.sharedLongFormat.date(from: messageTime) {
-            // 현재가 몇 년도 몇 월 며칠인지.
-            let calendar = Calendar.current
-            let todayComponents = calendar.dateComponents([.year, .month, .day],
-                                                     from: nowTimeDate)
-            let todayYear = todayComponents.year
-            let todayMonth = todayComponents.month
-            let todayDay = todayComponents.day
+                // 마지막 메세지 전송시간이 몇 년도 몇 월 며칠인지.
+                let messageTimeComponents = calendar.dateComponents([.year, .month, .day],
+                                                         from: messageTimeDate)
+                let messageSendedYear = messageTimeComponents.year
+                let messageSendedMonth = messageTimeComponents.month
+                let messageSendedDay = messageTimeComponents.day
 
-            // 마지막 메세지 전송시간이 몇 년도 몇 월 며칠인지.
-            let messageTimeComponents = calendar.dateComponents([.year, .month, .day],
-                                                     from: messageTimeDate)
-            let messageSendedYear = messageTimeComponents.year
-            let messageSendedMonth = messageTimeComponents.month
-            let messageSendedDay = messageTimeComponents.day
+                // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
 
-            // (메세지 전송 시간 - 현재 시간) 의 값을 초 단위로 받아온다
-            let intervalSecs = Int(nowTimeDate.timeIntervalSince(messageTimeDate))
+                // 각각 일, 시간, 분 단위로 변환
+                let hourTime = intervalSecs / 60 / 60 % 24
+                let minuteTime = intervalSecs / 60 % 60
 
-            // 각각 일, 시간, 분 단위로 변환
-            let hourTime = intervalSecs / 60 / 60 % 24
-            let minuteTime = intervalSecs / 60 % 60
-
-            /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
-            // 같은 해
-            if todayYear == messageSendedYear {
-                // 몇달 전
-                if todayMonth! > messageSendedMonth! {
-                    let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
-                    cell.receivedTimeString = date
-                } else {
-                    // 같은 달
-                    if todayDay! - 1 == messageSendedDay! {
-                        // 하루 전
-                        cell.receivedTimeString = "어제"
-                    } else if (todayDay! - messageSendedDay!) <= 3, (todayDay! - messageSendedDay!) > 0 {
-                        // 3일 이내
-                        cell.receivedTimeString = "\(todayDay! - messageSendedDay!)일 전"
-                    } else if (todayDay! - messageSendedDay!) > 3 {
-                        // 3일 초과
-                        // ex) 22.08.31
+                /* 포맷팅 기준에 따라 최근 메세지의 전송 시간 설정 */
+                // 같은 해
+                if todayYear == messageSendedYear {
+                    // 몇달 전
+                    if todayMonth! > messageSendedMonth! {
                         let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
                         cell.receivedTimeString = date
                     } else {
-                        // 같은 날
-                        if hourTime == 0 {
-                            if minuteTime <= 9 {
-                                // 최근 메세지의 전송 시간 설정
-                                cell.receivedTimeString = "방금"
-                            } else if minuteTime > 9, minuteTime <= 59 {
-                                // 최근 메세지의 전송 시간 설정
-                                cell.receivedTimeString = "\(minuteTime)분 전"
+                        // 같은 달
+                        if todayDay! - 1 == messageSendedDay! {
+                            // 하루 전
+                            cell.receivedTimeString = "어제"
+                        } else if (todayDay! - messageSendedDay!) <= 3, (todayDay! - messageSendedDay!) > 0 {
+                            // 3일 이내
+                            cell.receivedTimeString = "\(todayDay! - messageSendedDay!)일 전"
+                        } else if (todayDay! - messageSendedDay!) > 3 {
+                            // 3일 초과
+                            // ex) 22.08.31
+                            let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                            cell.receivedTimeString = date
+                        } else {
+                            // 같은 날
+                            if hourTime == 0 {
+                                if minuteTime <= 9 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "방금"
+                                } else if minuteTime > 9, minuteTime <= 59 {
+                                    // 최근 메세지의 전송 시간 설정
+                                    cell.receivedTimeString = "\(minuteTime)분 전"
+                                }
+                            } else if hourTime >= 1, hourTime <= 12 {
+                                cell.receivedTimeString = "\(hourTime)시간 전"
+                            } else if messageSendedDay == todayDay {
+                                cell.receivedTimeString = "오늘"
                             }
-                        } else if hourTime >= 1, hourTime <= 12 {
-                            cell.receivedTimeString = "\(hourTime)시간 전"
-                        } else if messageSendedDay == todayDay {
-                            cell.receivedTimeString = "오늘"
                         }
                     }
+                } else {
+                    // 몇년 전
+                    // ex) 22.08.31
+                    let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
+                    cell.receivedTimeString = date
                 }
             } else {
-                // 몇년 전
-                // ex) 22.08.31
-                let date = FormatCreater.sharedShortFormat.string(from: messageTimeDate)
-                cell.receivedTimeString = date
+                cell.receivedTimeString = ""
             }
-        } else {
-            cell.receivedTimeString = ""
         }
     }
     
@@ -588,14 +598,6 @@ class ChattingListViewController: UIViewController {
         }
     }
     
-    /* 채팅 보관함 아이콘 클릭시 실행되는 함수 */
-    @objc
-    private func tapStorageBox() {
-        print("DEBUG: 채팅 보관함 아이콘 클릭")
-        let chattingStorageVC = ChattingStorageViewController()
-        self.navigationController?.pushViewController(chattingStorageVC, animated: true)
-    }
-    
     /* 새로고침 기능 */
     @objc
     private func pullToRefresh() {
@@ -634,7 +636,7 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         cell.titleLabel.text = chattingRoomList[index].roomTitle ?? "배달파티 채팅방"
         // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
         self.setRecentMessageAndTime(cell: cell,
-                                     messageContents: chattingRoomList[index].recentMsg ?? "새 메세지가 있습니다.",
+                                     messageContents: chattingRoomList[index].recentMsg ?? "",
                                      messageTime: chattingRoomList[index].time ?? "",
                                      row: indexPath.row)
         
@@ -647,9 +649,13 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         // 해당 채팅방 uuid값 받아서 이동
         chattingVC.roomId = chattingRoomList[indexPath.row].roomId
         chattingVC.roomName = chattingRoomList[indexPath.row].roomTitle
+        // TODO: - 여기서도 MaxMatching 값 넘겨줘야 되지 않나
         
         // delegate로 자기 자신(ChattingListVC)를 넘겨줌
         chattingVC.delegate = self
+        
+        // RabbitMQ Connection 끊기
+        conn?.close()
         navigationController?.pushViewController(chattingVC, animated: true)
     }
 }

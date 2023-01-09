@@ -9,19 +9,19 @@ import Foundation
 import Alamofire
 
 /* 채팅방 목록 조회 API의 Response */
-struct GetChatRoomListModel : Decodable {
+struct ChatRoomListModel : Decodable {
     var code : Int?
     var isSuccess : Bool?
     var message : String?
-    var result : GetChatRoomListModelResult?
+    var result : ChatRoomListModelResult?
 }
 
-struct GetChatRoomListModelResult: Decodable {
+struct ChatRoomListModelResult: Decodable {
     var finalPage: Bool?
-    var parties: [ChatRoomInfo]?
+    var parties: [ChatRoom]?
 }
 
-struct ChatRoomInfo: Decodable {
+struct ChatRoom: Decodable {
     var roomId: String?
     var roomTitle: String?
 }
@@ -31,7 +31,7 @@ class GetChatRoomListAPI {
     
     /* 채팅방 탭에 왔을 때 채팅방 목록 조회 요청 */
     public static func requestGetChatRoomList(cursor: Int,
-                                             completion: @escaping (GetChatRoomListModel?, String?) -> Void)
+                                             completion: @escaping (ChatRoomListModel?, String?) -> Void)
     {
         let url = "https://geeksasaeng.shop/party-chat-room"
         let headers: HTTPHeaders = ["Authorization": "Bearer " + (LoginModel.jwt ?? "")]
@@ -47,7 +47,7 @@ class GetChatRoomListAPI {
                    encoding: URLEncoding(destination: .queryString),
                    headers: headers)
         .validate()
-        .responseDecodable(of: GetChatRoomListModel.self) { response in
+        .responseDecodable(of: ChatRoomListModel.self) { response in
             switch response.result {
             case .success(let model):
                 if model.isSuccess! {

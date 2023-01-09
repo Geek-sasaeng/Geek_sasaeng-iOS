@@ -17,7 +17,7 @@ class ChattingListTableViewCell: UITableViewCell {
     
     static let identifier = "ChattingListCell"
     
-    /* 채팅방의 가장 최신 메세지 내용 */
+    /* 채팅방의 가장 최신 메세지 발송 시간 */
     var receivedTimeString = "" {
         didSet {
             receivedTimeLabel.text = receivedTimeString
@@ -115,6 +115,7 @@ class ChattingListTableViewCell: UITableViewCell {
             make.left.equalTo(titleLabel)
             make.width.equalTo(150) // 넓이 제한 필요 (최대 글자수 11개에 맞게)
         }
+        // TODO: - receivedTimeLabel 레이아웃 수정 필요해보임
         receivedTimeLabel.snp.makeConstraints { make in
             make.centerY.equalTo(recentMessageLabel)
             make.left.equalTo(recentMessageLabel.snp.right).offset(19)
