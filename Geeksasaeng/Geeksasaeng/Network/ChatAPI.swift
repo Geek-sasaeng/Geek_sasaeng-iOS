@@ -79,7 +79,7 @@ struct CompleteRemittanceModel: Decodable {
 
 class ChatAPI {
     /* 이미지 전송 */
-    public static func sendImage(_ parameter: ChatImageSendInput, imageData: UIImage, completion: @escaping (Bool) -> Void) {
+    public static func sendImage(_ parameter: ChatImageSendInput, imageData: [UIImage], completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chatimage"
         let header : HTTPHeaders = [
             "Content-Type" : "multipart/form-data",
@@ -102,8 +102,11 @@ class ChatAPI {
             for (key, value) in parameters {
                 multipartFormData.append("\(value)".data(using: .utf8)!, withName: key)
             }
-            if let image = imageData.pngData() {
-                multipartFormData.append(image, withName: "images", fileName: "\(image).png", mimeType: "image/png")
+            
+            imageData.forEach { image in
+                if let pngImage = image.pngData() {
+                    multipartFormData.append(pngImage, withName: "images", fileName: "\(pngImage).png", mimeType: "image/png")
+                }
             }
         }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header).validate().responseDecodable(of: ChatImageSendModel.self) { response in
             switch response.result {

@@ -854,9 +854,7 @@ class ChattingViewController: UIViewController {
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
-        /* 사진 선택 뷰의 크기 조정, rightBarButton title 변경 코드인데 잘 안 됨
-        guard let keyboardHeight = keyboardHeight else { return }
-        picker.view.frame = CGRect(x: 0, y: -(UIScreen.main.bounds.height - keyboardHeight), width: UIScreen.main.bounds.width, height: keyboardHeight)
+        /* rightBarButton title 변경 코드인데 잘 안 됨
         picker.navigationController?.navigationItem.rightBarButtonItem?.title = "전송"
         */
         picker.delegate = self
@@ -908,13 +906,16 @@ class ChattingViewController: UIViewController {
     /* 송금 완료 버튼 클릭 */
     @objc
     private func tapRemittanceButton() {
-        self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
-        self.remittanceView.removeFromSuperview()
-        // TODO: - 송금 완료 뷰 지우기
-        // TODO: - 송금 완료한 사람 저장
-        // TODO: - 송금 완료 시스템 메세지 전송
+        let input = CompleteRemittanceInput(roomId: roomId)
+        ChatAPI.completeRemittance(input) { isSuccess in
+            if isSuccess {
+                self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                self.remittanceView.removeFromSuperview()
+            } else {
+                print("송금 실패")
+            }
+        }
         
-//        self.remittanceView.removeFromSuperview()
     }
     
     /* 주문 완료 버튼 클릭 */
@@ -1345,33 +1346,76 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         
-        let itemProvider = results.first?.itemProvider
-        
-        if let itemProvider = itemProvider,
-           itemProvider.canLoadObject(ofClass: UIImage.self) {
-            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
-                DispatchQueue.main.async {
-                    guard let imageData = image as? UIImage else { return }
-                    print("이미지 추출 완료")
-                    let input = ChatImageSendInput(
-                        chatId: "none",
-                        chatRoomId: self.roomId,
-                        chatType: "publish",
-                        content: "content",
-                        email: "dmstn@gachon.ac.kr",
-                        isImageMessage: true,
-                        isSystemMessage: false,
-                        profileImgUrl: "더미"
-                    )
-                    
-                    ChatAPI.sendImage(input, imageData: imageData) { isSuccess in
-                        if isSuccess {
-                            print("이미지 전송 성공")
+        let sheet = UIAlertController(title: "사진 전송", message: "선택한 사진을 전송하시겠어요?", preferredStyle: .alert)
+        sheet.addAction(UIAlertAction(title: "전송", style: .default, handler: { _ in
+            let itemProviders = results.map { $0.itemProvider }
+            var images: [UIImage] = []
+            
+            for item in itemProviders {
+                if item.canLoadObject(ofClass: UIImage.self) {
+                    item.loadObject(ofClass: UIImage.self) { image, error in
+                        DispatchQueue.main.async {
+                            guard let imageData = image as? UIImage else { return }
+                            print("이미지 추출 완료")
+                            images.append(imageData)
                         }
                     }
-                    
                 }
             }
-        }
+            
+            let input = ChatImageSendInput(
+                chatId: "none",
+                chatRoomId: self.roomId,
+                chatType: "publish",
+                content: "content",
+                email: "dmstn@gachon.ac.kr",
+                isImageMessage: true,
+                isSystemMessage: false,
+                profileImgUrl: "더미"
+            )
+
+            ChatAPI.sendImage(input, imageData: images) { isSuccess in
+                if isSuccess {
+                    print("이미지 전송 성공")
+                } else {
+                    print("이미지 전송 실패")
+                }
+            }
+            
+            
+            /*
+            let itemProvider = results.first?.itemProvider
+
+            if let itemProvider = itemProvider,
+               itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                    DispatchQueue.main.async {
+                        guard let imageData = image as? UIImage else { return }
+                        print("이미지 추출 완료")
+                        let input = ChatImageSendInput(
+                            chatId: "none",
+                            chatRoomId: self.roomId,
+                            chatType: "publish",
+                            content: "content",
+                            email: "dmstn@gachon.ac.kr",
+                            isImageMessage: true,
+                            isSystemMessage: false,
+                            profileImgUrl: "더미"
+                        )
+
+                        ChatAPI.sendImage(input, imageData: imageData) { isSuccess in
+                            if isSuccess {
+                                print("이미지 전송 성공")
+                            }
+                        }
+
+                    }
+                }
+            }
+             */
+        }))
+        sheet.addAction(UIAlertAction(title: "취소", style: .cancel))
+        
+        present(sheet, animated: true)
     }
 }
