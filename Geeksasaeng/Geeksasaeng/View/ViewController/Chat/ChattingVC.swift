@@ -638,6 +638,10 @@ class ChattingViewController: UIViewController {
         [collectionView, bottomView].forEach {
             view.addSubview($0)
         }
+        
+        if self.roomInfo?.cheifId == LoginModel.memberId {
+            view.addSubview(remittanceView)
+        }
     }
     
     private func setLayouts() {
@@ -668,6 +672,13 @@ class ChattingViewController: UIViewController {
             make.left.equalTo(sendImageButton.snp.right).offset(13)
             make.width.equalTo(230)
             make.height.equalTo(40)
+        }
+        
+        if self.roomInfo?.cheifId == LoginModel.memberId {
+            remittanceView.snp.makeConstraints { make in
+                make.top.width.equalToSuperview()
+                make.height.equalTo(55)
+            }
         }
     }
     
@@ -1109,13 +1120,24 @@ class ChattingViewController: UIViewController {
         // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
         // TODO: - 방장 아니면 나갔다는 시스템 메세지만
         
-        // 채팅방 나가기 테스트
-        let input = ExitMemberInput(roomId: roomId)
-        ChatAPI.exitMember(input) { isSuccess in
-            if isSuccess {
-                print("파티원 나가기 성공")
-            } else {
-                print("파티원 나가기 실패")
+        // 방장이라면
+        if self.roomInfo?.cheifId == LoginModel.memberId {
+            let input = ExitChiefInput(roomId: self.roomId)
+            ChatAPI.exitChief(input) { isSuccess in
+                if isSuccess {
+                    print("방장 나가기 성공")
+                } else {
+                    print("방장 나가기 실패")
+                }
+            }
+        } else {
+            let input = ExitMemberInput(roomId: roomId)
+            ChatAPI.exitMember(input) { isSuccess in
+                if isSuccess {
+                    print("파티원 나가기 성공")
+                } else {
+                    print("파티원 나가기 실패")
+                }
             }
         }
         

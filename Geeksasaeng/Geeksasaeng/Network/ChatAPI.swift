@@ -188,11 +188,11 @@ class ChatAPI {
                     print("방장 퇴장 완료")
                     completion(true)
                 } else {
-                    print("DEBUG: ", result.message!)
+                    print("DEBUG .success: 방장 퇴장 실패, ", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG: ", error.localizedDescription)
+                print("DEBUG .failure: 방장 퇴장 실패, ", error.localizedDescription)
                 completion(false)
             }
         }
@@ -211,11 +211,11 @@ class ChatAPI {
                     print("파티원 퇴장 완료")
                     completion(true)
                 } else {
-                    print("DEBUG: ", result.message!)
+                    print("DEBUG .success: 파티원 퇴장 실패, ", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG: ", error.localizedDescription)
+                print("DEBUG .failure: 파티원 퇴장 실패 ", error.localizedDescription)
                 completion(false)
             }
         }
