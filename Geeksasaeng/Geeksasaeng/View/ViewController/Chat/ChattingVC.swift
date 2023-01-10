@@ -613,6 +613,7 @@ class ChattingViewController: UIViewController {
             if let res = result {
                 print("DEBUG: 채팅방 \(self.roomId!)의 상세 정보", res)
                 self.roomInfo = res
+                print("roomInfo: ", self.roomInfo)
                 self.enterTimeToDate = FormatCreater.sharedLongFormat.date(from: self.roomInfo?.enterTime ?? "2023-01-01 00:00:00")
                 print("DEBUG: 내 입장 시간", self.enterTimeToDate)
                 
@@ -639,7 +640,7 @@ class ChattingViewController: UIViewController {
             view.addSubview($0)
         }
         
-        if self.roomInfo?.cheifId == LoginModel.memberId {
+        if self.roomInfo?.chiefId == LoginModel.memberId {
             view.addSubview(remittanceView)
         }
     }
@@ -674,7 +675,7 @@ class ChattingViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-        if self.roomInfo?.cheifId == LoginModel.memberId {
+        if self.roomInfo?.chiefId == LoginModel.memberId {
             remittanceView.snp.makeConstraints { make in
                 make.top.width.equalToSuperview()
                 make.height.equalTo(55)
@@ -941,7 +942,7 @@ class ChattingViewController: UIViewController {
     /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
     @objc
     private func tapOptionButton() {
-        if self.roomInfo?.cheifId == LoginModel.memberId {
+        if self.roomInfo?.chiefId == LoginModel.memberId {
             /* 방장인 경우의 액션 시트 띄우기 */
             present(ownerAlertController, animated: true)
         } else {
@@ -1114,14 +1115,12 @@ class ChattingViewController: UIViewController {
     /* 채팅 나가기에서 '확인' 버튼 클릭시 실행 */
     @objc
     private func tapExitConfirmButton() {
-        // TODO: - 방장인지 구별하기
-        // TODO: - 방장인지 구별하기
         // TODO: - 방장이면 새 방장 선정
         // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
         // TODO: - 방장 아니면 나갔다는 시스템 메세지만
         
         // 방장이라면
-        if self.roomInfo?.cheifId == LoginModel.memberId {
+        if self.roomInfo?.chiefId == LoginModel.memberId {
             let input = ExitChiefInput(roomId: self.roomId)
             ChatAPI.exitChief(input) { isSuccess in
                 if isSuccess {
@@ -1282,7 +1281,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftTimeLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
 
-                    if self.roomInfo?.cheifId == msg.message?.memberId { // 방장이라면
+                    if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
                         // TODO: - 프로필에 테두리 둘러주기
                         cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
                         cell.rightImageView.layer.borderWidth = 1
@@ -1302,7 +1301,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.rightTimeLabel.isHidden = true
                     cell.rightUnreadCntLabel.isHidden = true
                     
-                    if self.roomInfo?.cheifId == msg.message?.memberId { // 방장이라면
+                    if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
                         // TODO: - 방장 프로필 테두리 둘러주기
                         cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
                         cell.rightImageView.layer.borderWidth = 1
