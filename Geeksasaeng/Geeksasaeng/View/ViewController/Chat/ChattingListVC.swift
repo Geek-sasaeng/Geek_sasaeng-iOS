@@ -267,12 +267,8 @@ class ChattingListViewController: UIViewController {
                     // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
     //                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
                     
-                    // TODO: - 채팅방 목록 맨 위로 셀 올리기
-                    
-                    DispatchQueue.main.async {
-                        // 채팅방 목록 리로드
-                        self.chattingTableView.reloadData()
-                    }
+                    // 채팅방 목록 맨 위로 셀 올리기
+                    self.moveToTopOfList(roomIndex: roomIndex)
                 } else {
                     print("[Rabbit] 목록에서 채팅 읽음 수신???", data)
                 }
@@ -508,6 +504,21 @@ class ChattingListViewController: UIViewController {
             } else {
                 cell.receivedTimeString = ""
             }
+        }
+    }
+    
+    // 해당 인덱스의 채팅방을 채팅방 목록의 맨 위로 옮긴다
+    private func moveToTopOfList(roomIndex: Int) {
+        let itemToMove = self.chattingRoomList[roomIndex]
+        self.chattingRoomList.remove(at: roomIndex)
+        self.chattingRoomList.insert(itemToMove, at: 0) // 배열의 첫번째로 넣기
+        let nowIndexPath = IndexPath(row: roomIndex, section: 0)
+        let destinationIndexPath = IndexPath(row: 0, section: 0)
+        
+        DispatchQueue.main.async {
+            // 해당 채팅방을 채팅방 목록 맨 위로 이동
+            self.chattingTableView.moveRow(at: nowIndexPath, to: destinationIndexPath)
+            self.chattingTableView.reloadRows(at: [destinationIndexPath], with: .automatic)
         }
     }
     
