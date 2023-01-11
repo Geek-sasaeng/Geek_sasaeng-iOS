@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-/* 채팅방 사진 전송 API req */
+/* 채팅방 사진 전송 */
 struct ChatImageSendInput: Encodable {
     var chatId: String?
     var chatRoomId: String?
@@ -19,8 +19,6 @@ struct ChatImageSendInput: Encodable {
     var isSystemMessage: Bool?
     var profileImgUrl: String?
 }
-
-/* 채팅방 사진 전송 API의 Response */
 struct ChatImageSendModel: Decodable {
     var code : Int?
     var isSuccess : Bool?
@@ -28,13 +26,10 @@ struct ChatImageSendModel: Decodable {
     var result : String?
 }
 
-
-/* 주문 완료 API req */
+/* 주문 완료 */
 struct OrderCompletedInput: Encodable {
     var roomId: String?
 }
-
-/* 주문 완료 API res */
 struct OrderCompletedModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
@@ -42,24 +37,21 @@ struct OrderCompletedModel: Decodable {
     var result: String?
 }
 
-/* 방장 퇴장 API req */
+/* 방장 퇴장 */
 struct ExitChiefInput: Encodable {
     var roomId: String?
 }
-
-/* 방장 퇴장 API res */
 struct ExitChiefModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
     var message: String?
     var result: ExitChiefModelResult?
 }
-
 struct ExitChiefModelResult: Decodable {
     var message: String?
 }
 
-/* 파티원 퇴장 API req */
+/* 파티원 퇴장 */
 struct ExitMemberInput: Encodable {
     var roomId: String?
 }
@@ -70,13 +62,23 @@ struct ExitMemberModel: Decodable {
     var message: String?
     var result: ExitMemberModelResult?
 }
-
 struct ExitMemberModelResult: Decodable {
     var message: String?
 }
 
+/* 송금 완료 */
+struct CompleteRemittanceInput: Encodable {
+    var roomId: String?
+}
+struct CompleteRemittanceModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
+}
+
+
 class ChatAPI {
-    
     // 채팅방 상세조회 API 연동
     public static func getChattingRoomInfo(_ parameter: ChattingRoomInput, completion: @escaping (ChattingRoomResult?) -> (Void)) {
         guard let roomId = parameter.chatRoomId else { return }
@@ -104,7 +106,8 @@ class ChatAPI {
         }
     }
     
-    public static func sendImage(_ parameter: ChatImageSendInput, imageData: UIImage, completion: @escaping (Bool) -> Void) {
+    /* 이미지 전송 */
+    public static func sendImage(_ parameter: ChatImageSendInput, imageData: [UIImage], completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chatimage"
         let header : HTTPHeaders = [
             "Content-Type" : "multipart/form-data",
@@ -127,8 +130,11 @@ class ChatAPI {
             for (key, value) in parameters {
                 multipartFormData.append("\(value)".data(using: .utf8)!, withName: key)
             }
-            if let image = imageData.pngData() {
-                multipartFormData.append(image, withName: "images", fileName: "\(image).png", mimeType: "image/png")
+            
+            imageData.forEach { image in
+                if let pngImage = image.pngData() {
+                    multipartFormData.append(pngImage, withName: "images", fileName: "\(pngImage).png", mimeType: "image/png")
+                }
             }
         }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header).validate().responseDecodable(of: ChatImageSendModel.self) { response in
             switch response.result {
@@ -169,6 +175,7 @@ class ChatAPI {
         }   
     }
     
+    /* 방장 나가기 */
     public static func exitChief(_ parameter: ExitChiefInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chief"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
@@ -181,16 +188,17 @@ class ChatAPI {
                     print("방장 퇴장 완료")
                     completion(true)
                 } else {
-                    print("DEBUG: ", result.message!)
+                    print("DEBUG .success: 방장 퇴장 실패, ", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG: ", error.localizedDescription)
+                print("DEBUG .failure: 방장 퇴장 실패, ", error.localizedDescription)
                 completion(false)
             }
         }
     }
     
+    /* 파티원 나가기 */
     public static func exitMember(_ parameter: ExitMemberInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members/self"
         AF.request(URL, method: .delete, parameters: parameter, encoder: JSONParameterEncoder.default,
@@ -198,12 +206,35 @@ class ChatAPI {
         .validate()
         .responseDecodable(of: ExitMemberModel.self) { response in
             switch response.result {
-            case . success(let result):
+            case .success(let result):
                 if result.isSuccess! {
                     print("파티원 퇴장 완료")
                     completion(true)
                 } else {
-                    print("DEBUG: ", result.message!)
+                    print("DEBUG .success: 파티원 퇴장 실패, ", result.message!)
+                    completion(false)
+                }
+            case .failure(let error):
+                print("DEBUG .failure: 파티원 퇴장 실패 ", error.localizedDescription)
+                completion(false)
+            }
+        }
+    }
+    
+    /* 송금 완료 */
+    public static func completeRemittance(_ parameter: CompleteRemittanceInput, completion: @escaping (Bool) -> Void) {
+        let URL = "https://geeksasaeng.shop/party-chat-room/members/remittance"
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
+        headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: CompleteRemittanceModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("송금 완료")
+                    completion(true)
+                } else {
+                    print("송금 완료 실패")
                     completion(false)
                 }
             case .failure(let error):

@@ -613,6 +613,7 @@ class ChattingViewController: UIViewController {
             if let res = result {
                 print("DEBUG: 채팅방 \(self.roomId!)의 상세 정보", res)
                 self.roomInfo = res
+                print("roomInfo: ", self.roomInfo)
                 self.enterTimeToDate = FormatCreater.sharedLongFormat.date(from: self.roomInfo?.enterTime ?? "2023-01-01 00:00:00")
                 print("DEBUG: 내 입장 시간", self.enterTimeToDate)
                 
@@ -637,6 +638,10 @@ class ChattingViewController: UIViewController {
         
         [collectionView, bottomView].forEach {
             view.addSubview($0)
+        }
+        
+        if self.roomInfo?.chiefId == LoginModel.memberId {
+            view.addSubview(remittanceView)
         }
     }
     
@@ -668,6 +673,13 @@ class ChattingViewController: UIViewController {
             make.left.equalTo(sendImageButton.snp.right).offset(13)
             make.width.equalTo(230)
             make.height.equalTo(40)
+        }
+        
+        if self.roomInfo?.chiefId == LoginModel.memberId {
+            remittanceView.snp.makeConstraints { make in
+                make.top.width.equalToSuperview()
+                make.height.equalTo(55)
+            }
         }
     }
     
@@ -913,9 +925,7 @@ class ChattingViewController: UIViewController {
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
-        /* 사진 선택 뷰의 크기 조정, rightBarButton title 변경 코드인데 잘 안 됨
-        guard let keyboardHeight = keyboardHeight else { return }
-        picker.view.frame = CGRect(x: 0, y: -(UIScreen.main.bounds.height - keyboardHeight), width: UIScreen.main.bounds.width, height: keyboardHeight)
+        /* rightBarButton title 변경 코드인데 잘 안 됨
         picker.navigationController?.navigationItem.rightBarButtonItem?.title = "전송"
         */
         picker.delegate = self
@@ -932,7 +942,7 @@ class ChattingViewController: UIViewController {
     /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
     @objc
     private func tapOptionButton() {
-        if self.roomInfo?.cheifId == LoginModel.memberId {
+        if self.roomInfo?.chiefId == LoginModel.memberId {
             /* 방장인 경우의 액션 시트 띄우기 */
             present(ownerAlertController, animated: true)
         } else {
@@ -962,13 +972,16 @@ class ChattingViewController: UIViewController {
     /* 송금 완료 버튼 클릭 */
     @objc
     private func tapRemittanceButton() {
-        self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
-        self.remittanceView.removeFromSuperview()
-        // TODO: - 송금 완료 뷰 지우기
-        // TODO: - 송금 완료한 사람 저장
-        // TODO: - 송금 완료 시스템 메세지 전송
+        let input = CompleteRemittanceInput(roomId: roomId)
+        ChatAPI.completeRemittance(input) { isSuccess in
+            if isSuccess {
+                self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                self.remittanceView.removeFromSuperview()
+            } else {
+                print("송금 실패")
+            }
+        }
         
-//        self.remittanceView.removeFromSuperview()
     }
     
     /* 주문 완료 버튼 클릭 */
@@ -1102,13 +1115,32 @@ class ChattingViewController: UIViewController {
     /* 채팅 나가기에서 '확인' 버튼 클릭시 실행 */
     @objc
     private func tapExitConfirmButton() {
-        // TODO: - 방장인지 구별하기
-        // TODO: - 방장인지 구별하기
         // TODO: - 방장이면 새 방장 선정
         // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
         // TODO: - 방장 아니면 나갔다는 시스템 메세지만
         
-//        self.navigationController?.popViewController(animated: true)
+        // 방장이라면
+        if self.roomInfo?.chiefId == LoginModel.memberId {
+            let input = ExitChiefInput(roomId: self.roomId)
+            ChatAPI.exitChief(input) { isSuccess in
+                if isSuccess {
+                    print("방장 나가기 성공")
+                } else {
+                    print("방장 나가기 실패")
+                }
+            }
+        } else {
+            let input = ExitMemberInput(roomId: roomId)
+            ChatAPI.exitMember(input) { isSuccess in
+                if isSuccess {
+                    print("파티원 나가기 성공")
+                } else {
+                    print("파티원 나가기 실패")
+                }
+            }
+        }
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
@@ -1248,9 +1280,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftMessageLabel.isHidden = true
                     cell.leftTimeLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
-                    if self.roomInfo?.cheifId == msg.message?.memberId { // 방장이라면
+
+                    if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
                         // TODO: - 프로필에 테두리 둘러주기
-                        print("방장 프로필")
+                        cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                        cell.rightImageView.layer.borderWidth = 1
                     }
                 } else { // 다른 사람이면
                     cell.leftImageView.isUserInteractionEnabled = true
@@ -1266,8 +1300,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.rightMessageLabel.isHidden = true
                     cell.rightTimeLabel.isHidden = true
                     cell.rightUnreadCntLabel.isHidden = true
-                    if self.roomInfo?.cheifId == msg.message?.memberId { // 방장이라면
+                    
+                    if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
                         // TODO: - 방장 프로필 테두리 둘러주기
+                        cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                        cell.rightImageView.layer.borderWidth = 1
                     }
                 }
                 return cell
@@ -1403,33 +1440,76 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         
-        let itemProvider = results.first?.itemProvider
-        
-        if let itemProvider = itemProvider,
-           itemProvider.canLoadObject(ofClass: UIImage.self) {
-            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
-                DispatchQueue.main.async {
-                    guard let imageData = image as? UIImage else { return }
-                    print("이미지 추출 완료")
-                    let input = ChatImageSendInput(
-                        chatId: "none",
-                        chatRoomId: self.roomId,
-                        chatType: "publish",
-                        content: "content",
-                        email: "dmstn@gachon.ac.kr",
-                        isImageMessage: true,
-                        isSystemMessage: false,
-                        profileImgUrl: "더미"
-                    )
-                    
-                    ChatAPI.sendImage(input, imageData: imageData) { isSuccess in
-                        if isSuccess {
-                            print("이미지 전송 성공")
+        let sheet = UIAlertController(title: "사진 전송", message: "선택한 사진을 전송하시겠어요?", preferredStyle: .alert)
+        sheet.addAction(UIAlertAction(title: "전송", style: .default, handler: { _ in
+            let itemProviders = results.map { $0.itemProvider }
+            var images: [UIImage] = []
+            
+            for item in itemProviders {
+                if item.canLoadObject(ofClass: UIImage.self) {
+                    item.loadObject(ofClass: UIImage.self) { image, error in
+                        DispatchQueue.main.async {
+                            guard let imageData = image as? UIImage else { return }
+                            print("이미지 추출 완료")
+                            images.append(imageData)
                         }
                     }
-                    
                 }
             }
-        }
+            
+            let input = ChatImageSendInput(
+                chatId: "none",
+                chatRoomId: self.roomId,
+                chatType: "publish",
+                content: "content",
+                email: "dmstn@gachon.ac.kr",
+                isImageMessage: true,
+                isSystemMessage: false,
+                profileImgUrl: "더미"
+            )
+
+            ChatAPI.sendImage(input, imageData: images) { isSuccess in
+                if isSuccess {
+                    print("이미지 전송 성공")
+                } else {
+                    print("이미지 전송 실패")
+                }
+            }
+            
+            
+            /*
+            let itemProvider = results.first?.itemProvider
+
+            if let itemProvider = itemProvider,
+               itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                    DispatchQueue.main.async {
+                        guard let imageData = image as? UIImage else { return }
+                        print("이미지 추출 완료")
+                        let input = ChatImageSendInput(
+                            chatId: "none",
+                            chatRoomId: self.roomId,
+                            chatType: "publish",
+                            content: "content",
+                            email: "dmstn@gachon.ac.kr",
+                            isImageMessage: true,
+                            isSystemMessage: false,
+                            profileImgUrl: "더미"
+                        )
+
+                        ChatAPI.sendImage(input, imageData: imageData) { isSuccess in
+                            if isSuccess {
+                                print("이미지 전송 성공")
+                            }
+                        }
+
+                    }
+                }
+            }
+             */
+        }))
+        sheet.addAction(UIAlertAction(title: "취소", style: .cancel))
+        
+        present(sheet, animated: true)
     }
 }

@@ -22,7 +22,7 @@ struct ChattingRoomModel: Decodable {
 struct ChattingRoomResult: Decodable {
     var accountNumber: String?   // 방장 계좌번호
     var bank: String?    // 은행
-    var cheifId: Int?    // 방장 memberId
+    var chiefId: Int?    // 방장 memberId
     var enterTime: String?   // 내가 이 채팅방에 언제 들어왔는지
     var isChief: Bool?   // 방장인지
     var isOrderFinish: Bool?     // 주문 완료된 채팅인지

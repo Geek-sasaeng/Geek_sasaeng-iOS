@@ -34,10 +34,22 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.isUserInteractionEnabled = true
     }
     
+    /* 유저 프로필 이미지 3개 components */
     lazy var userImageView = UIImageView().then {
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 83
     }
+    let userImageBlurView = UIView().then {
+        $0.backgroundColor = .init(hex: 0x5B5B5B, alpha: 0.66)
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 83
+    }
+    let userImageViewIcon = UIImageView().then {
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 72.5
+        $0.image = UIImage(named: "EditProfileImage")
+    }
+    
     
     /* title labels */
     let dormitoryLabel = UILabel()
@@ -290,6 +302,10 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         ].forEach {
             contentView.addSubview($0)
         }
+        
+        [userImageBlurView, userImageViewIcon].forEach {
+            userImageView.addSubview($0)
+        }
     }
     
     private func setLayouts() {
@@ -306,6 +322,14 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalToSuperview().inset(40)
             make.width.height.equalTo(166)
             make.centerX.equalToSuperview()
+        }
+        userImageBlurView.snp.makeConstraints { make in
+            make.center.equalTo(userImageView.snp.center)
+            make.width.height.equalToSuperview()
+        }
+        userImageViewIcon.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(145)
         }
         
         dormitoryLabel.snp.makeConstraints { make in
