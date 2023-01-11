@@ -38,12 +38,6 @@ class FormatCreater {
     private init() { }
 }
 
-/* Delegate Pattern을 구현하기 위한 프로토콜 */
-protocol UpdateChattingListDelegate {
-    // 채팅방 목록을 새로고침 해준다.
-   func updateChattingList()
-}
-
 /* 서버로부터 받은 ChatRoom 형식의 데이터를 가지고 채팅방 목록을 구성하기 위해
  recentMsg, time, unreadedMsgCnt 필드를 추가해서 만든 구조체 */
 struct ChattingRoom {
@@ -141,6 +135,10 @@ class ChattingListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("DEBUG: viewWillAppear", self.chattingRoomList)
+        if !(self.chattingRoomList.isEmpty) {
+            removeRoomListData()
+        }
         
         // 채팅방 목록 데이터 가져오기
         getChatRoomList()
@@ -261,11 +259,15 @@ class ChattingListViewController: UIViewController {
                     // 수신한 채팅 로컬에 저장하기
                     self.saveMessage(msgToSave: msgToSave)
                     
+                    // 수신된 채팅이 어떤 채팅방의 채팅이었는지 배열의 인덱스로 찾기
                     guard let roomIndex = self.chattingRoomList.indices.filter({ self.chattingRoomList[$0].roomId == data.chatRoomId }).first else { return }
+                    // 그 채팅방의 최신 메세지, 시간 업데이트
                     self.chattingRoomList[roomIndex].recentMsg = data.content
                     self.chattingRoomList[roomIndex].time = data.createdAt
                     // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
     //                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
+                    
+                    // TODO: - 채팅방 목록 맨 위로 셀 올리기
                     
                     DispatchQueue.main.async {
                         // 채팅방 목록 리로드
@@ -370,16 +372,6 @@ class ChattingListViewController: UIViewController {
         chattingTableView.dataSource = self
         chattingTableView.delegate = self
         chattingTableView.register(ChattingListTableViewCell.self, forCellReuseIdentifier: ChattingListTableViewCell.identifier)
-        
-        /* 새로고침 기능 */
-        // refresh 기능을 위해 tableView의 UIRefreshControl 객체를 초기화
-        chattingTableView.refreshControl = UIRefreshControl()
-        // refresh로 위에 생기는 부분 배경색 설정
-        chattingTableView.refreshControl?.backgroundColor = .white
-        chattingTableView.refreshControl?.tintColor = .mainColor
-//        chattingTableView.refreshControl?.subviews.first?.alpha = 0
-        // refresh 하면 실행될 함수 연결
-        chattingTableView.refreshControl?.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
     }
     
     /* 배열에 담긴 이름으로 Filter Views를 만들고 스택뷰로 묶는다 */
@@ -597,25 +589,6 @@ class ChattingListViewController: UIViewController {
             selectedLabel = label
         }
     }
-    
-    /* 새로고침 기능 */
-    @objc
-    private func pullToRefresh() {
-        // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
-        print("DEBUG: 적재된 데이터 \((chattingRoomList.count))개 삭제")
-        removeRoomListData()
-        
-        // 채팅방 목록 조회 API 호출
-        print("Seori 채팅방 다시 불러옴")
-        getChatRoomList()
-        
-        DispatchQueue.main.async {
-            // 채팅방 목록 테이블뷰 새로고침
-            self.chattingTableView.reloadData()
-            // 당기는 게 끝나면 refresh도 끝나도록
-            self.chattingTableView.refreshControl?.endRefreshing()
-        }
-    }
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
@@ -651,22 +624,8 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         chattingVC.roomName = chattingRoomList[indexPath.row].roomTitle
         // TODO: - 여기서도 MaxMatching 값 넘겨줘야 되지 않나
         
-        // delegate로 자기 자신(ChattingListVC)를 넘겨줌
-        chattingVC.delegate = self
-        
         // RabbitMQ Connection 끊기
         conn?.close()
         navigationController?.pushViewController(chattingVC, animated: true)
-    }
-}
-
-// MARK: - UpdateDeliveryDelegate
-
-extension ChattingListViewController: UpdateChattingListDelegate {
-    /* ChattingVC에서 채팅이 추가되면,
-     ChattingListVC의 채팅방 목록을 새로고침 시키는 함수 */
-    func updateChattingList() {
-        print("DEBUG: 채팅이 추가됐으니 채팅방 목록 리로드 할게요")
-        pullToRefresh()
     }
 }
