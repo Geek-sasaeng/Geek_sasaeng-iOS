@@ -590,7 +590,7 @@ class ChattingViewController: UIViewController {
                 } else if data.chatType! == "read" {  // 읽음 요청 응답 수신 시
                     print("[Rabbit] 채팅방에서 채팅 읽음 수신", data)
                     
-                    // 로컬에 isReaded 값을 true로, unreadedCnt도 수신한 값으로 업데이트
+                    // 로컬에 isRead 값을 true로, unreadedCnt도 수신한 값으로 업데이트
                     self.updateUnreadToRead(data: data)
                 }
             } catch {
@@ -782,19 +782,19 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    // 로컬에 저장된 isReaded 필드값을 true로 업데이트
+    // 로컬에 저장된 isRead 필드값을 true로 업데이트
     // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 nickName으로 구분 안 함
     private func updateUnreadToRead(data: MsgResponse) {
         DispatchQueue.main.async {
             print("DEBUG: updateUnreadToRead")
-            let predicate = NSPredicate(format: "chatRoomId = %@ AND isReaded = false AND isSystemMessage = false", self.roomId!)
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND isRead = false AND isSystemMessage = false", self.roomId!)
             let unreadedMsgs = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
             print("DEBUG: 안 읽은 메세지들", unreadedMsgs)
             
             // 하나씩 로컬 데이터 업데이트
             unreadedMsgs.forEach { unreadedMsg in
                 self.localRealm.update(unreadedMsg) { unreadedMsg in
-                    unreadedMsg.isReaded = true
+                    unreadedMsg.isRead = true
                     unreadedMsg.unreadMemberCnt = data.unreadMemberCnt
                     print("DEBUG: 읽음 상태 업데이트", data.content)
                 }
@@ -1386,7 +1386,7 @@ extension ChattingViewController: WebSocketDelegate {
             print("DEBUG: 웹소켓 연결 완료 - \(headers)")
             // 로드된 이전 메세지들 중에 안 읽은 메세지이고, 시스템 메세지가 아니고, 상대방이 보낸 메세지만 필터링
             let unreadedMsgs = self.msgContents.filter { msg in
-                msg.message?.isReaded == false
+                msg.message?.isRead == false
                 && msg.message?.nickName != LoginModel.nickname
                 && msg.message?.isSystemMessage == false
             }
