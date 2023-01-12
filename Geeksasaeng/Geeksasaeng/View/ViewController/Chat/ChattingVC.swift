@@ -443,9 +443,6 @@ class ChattingViewController: UIViewController {
     private var conn: RMQConnection? = nil  // rabbitmq 채널 변수
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
     
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
-    var delegate: UpdateChattingListDelegate?
-    
     enum MsgType {
         case message
         case sameSenderMessage
@@ -522,9 +519,6 @@ class ChattingViewController: UIViewController {
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        // 가장 최근 메세지가 변경됐을 확률이 높으니 채팅방 목록 리로드
-        self.delegate?.updateChattingList()
         
         // 사라질 때 다시 탭바 보이게 설정
         self.tabBarController?.tabBar.isHidden = false

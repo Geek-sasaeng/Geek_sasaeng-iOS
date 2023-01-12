@@ -77,13 +77,6 @@ class BankAccountViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
     }
     
-    /* pageLabel: 1/2 */
-    let pageLabel = UILabel().then {
-        $0.text = "1/2"
-        $0.font = .customFont(.neoMedium, size: 13)
-        $0.textColor = UIColor(hex: 0xD8D8D8)
-    }
-    
     // MARK: - Properties
     
     var dormitoryInfo: DormitoryNameResult?
@@ -132,8 +125,7 @@ class BankAccountViewController: UIViewController {
             bankTextField,
             accountNumberTextField,
             guideLabel,
-            confirmButton,
-            pageLabel
+            confirmButton
         ].forEach { view.addSubview($0) }
     }
     
@@ -164,11 +156,6 @@ class BankAccountViewController: UIViewController {
             make.bottom.equalToSuperview().inset(35)
             make.width.equalTo(262)
             make.height.equalTo(51)
-        }
-        
-        pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(confirmButton.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
         }
         
         guideLabel.snp.makeConstraints { make in
