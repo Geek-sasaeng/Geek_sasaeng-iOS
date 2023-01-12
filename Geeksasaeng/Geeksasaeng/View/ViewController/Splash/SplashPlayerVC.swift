@@ -17,12 +17,13 @@ class SplashPlayerViewController: UIViewController {
         super.viewDidLoad()
         
         // Lottie AnimationView 생성
-        let animationView = LottieAnimationView(name: "splash")
-
+        let animationView = LottieAnimationView(name: "splash").then {
+            $0.contentMode = .scaleAspectFill
+        }
+        
         // 메인 뷰에 삽입
         view.addSubview(animationView)
         animationView.frame = animationView.superview!.bounds
-        animationView.contentMode = .scaleAspectFit
 
         // 애니메이션 재생 (애니메이션 재생모드 미 설정시 1회)
         animationView.play { (finished) in
