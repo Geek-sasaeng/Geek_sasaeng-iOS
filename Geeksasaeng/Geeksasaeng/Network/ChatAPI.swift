@@ -77,6 +77,21 @@ struct CompleteRemittanceModel: Decodable {
     var result: String?
 }
 
+/* 강제 퇴장 */
+struct ForcedExitInput: Encodable {
+    var removedMemberId: String?
+    var roomId: String?
+}
+struct ForcedExitModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: ForcedExitModelResult?
+}
+struct ForcedExitModelResult: Decodable {
+    var message: String?
+}
+
 
 class ChatAPI {
     // 채팅방 상세조회 API 연동
@@ -215,7 +230,7 @@ class ChatAPI {
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG .failure: 파티원 퇴장 실패 ", error.localizedDescription)
+                print("DEBUG .failure: 파티원 퇴장 실패, ", error.localizedDescription)
                 completion(false)
             }
         }
@@ -239,6 +254,29 @@ class ChatAPI {
                 }
             case .failure(let error):
                 print("DEBUG: ", error.localizedDescription)
+                completion(false)
+            }
+        }
+    }
+    
+    /* 방장이 파티원을 강제퇴장 */
+    public static func forcedExit(_ parameter: ForcedExitInput, completion: @escaping (Bool) -> Void) {
+        let URL = "https://geeksasaeng.shop/party-chat-room/members"
+        AF.request(URL, method: .delete, parameters: parameter, encoder: JSONParameterEncoder.default,
+        headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: ForcedExitModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("강제 퇴장 완료")
+                    completion(true)
+                } else {
+                    print("DEBUG .success: 강제 퇴장 실패, ", result.message!)
+                    completion(false)
+                }
+            case .failure(let error):
+                print("DEBUG .failure: 강제 퇴장 실패, ", error.localizedDescription)
                 completion(false)
             }
         }
