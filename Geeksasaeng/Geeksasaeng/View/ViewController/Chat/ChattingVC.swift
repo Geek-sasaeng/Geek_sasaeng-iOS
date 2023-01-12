@@ -640,7 +640,7 @@ class ChattingViewController: UIViewController {
             view.addSubview($0)
         }
         
-        if self.roomInfo?.chiefId == LoginModel.memberId {
+        if self.roomInfo?.isChief == false {
             view.addSubview(remittanceView)
         }
     }
@@ -675,7 +675,7 @@ class ChattingViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-        if self.roomInfo?.chiefId == LoginModel.memberId {
+        if self.roomInfo?.isChief ?? false {
             remittanceView.snp.makeConstraints { make in
                 make.top.width.equalToSuperview()
                 make.height.equalTo(55)
@@ -942,7 +942,7 @@ class ChattingViewController: UIViewController {
     /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
     @objc
     private func tapOptionButton() {
-        if self.roomInfo?.chiefId == LoginModel.memberId {
+        if self.roomInfo?.isChief ?? false {
             /* 방장인 경우의 액션 시트 띄우기 */
             present(ownerAlertController, animated: true)
         } else {
@@ -1120,7 +1120,7 @@ class ChattingViewController: UIViewController {
         // TODO: - 방장 아니면 나갔다는 시스템 메세지만
         
         // 방장이라면
-        if self.roomInfo?.chiefId == LoginModel.memberId {
+        if self.roomInfo?.isChief ?? false {
             let input = ExitChiefInput(roomId: self.roomId)
             ChatAPI.exitChief(input) { isSuccess in
                 if isSuccess {
@@ -1177,6 +1177,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                
+                if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
+                    cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                    cell.rightImageView.layer.borderWidth = 1
+                }
+                
                 if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
                     cell.rightImageView.isHidden = true
                     cell.nicknameLabel.isHidden = true
@@ -1206,6 +1212,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
+                
                 if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
                     cell.rightMessageLabel.text = msg.message?.content
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
@@ -1227,10 +1234,15 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                
+                if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
+                    cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                    cell.rightImageView.layer.borderWidth = 1
+                }
+                
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
-                    // TODO: - 방장이라면 현재 프로필에 테두리만 둘러주도록 해야 함
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {
                         cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
@@ -1266,6 +1278,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+                
+                if self.roomInfo?.chiefId == msg.message?.memberId { // 방장이라면
+                    cell.rightImageView.layer.borderColor = UIColor.init(hex: 0x3266EB).cgColor
+                    cell.rightImageView.layer.borderWidth = 1
+                }
+                
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
