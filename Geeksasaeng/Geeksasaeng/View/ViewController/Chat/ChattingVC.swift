@@ -609,6 +609,10 @@ class ChattingViewController: UIViewController {
                 self.enterTimeToDate = FormatCreater.sharedLongFormat.date(from: self.roomInfo?.enterTime ?? "2023-01-01 00:00:00")
                 print("DEBUG: 내 입장 시간", self.enterTimeToDate)
                 
+                // 방장이 아니고, 아직 송금을 안 했다면 송금완료 뷰 띄우기
+                if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
+                    self.showRemittanceView()
+                }
                 // 성공 시에만 이전 메세지 불러오기 -> 순서대로 처리하기 위해
                 self.loadMessages()
                 
@@ -641,10 +645,6 @@ class ChattingViewController: UIViewController {
         [collectionView, bottomView].forEach {
             view.addSubview($0)
         }
-        
-        if self.roomInfo?.isChief == false {
-            view.addSubview(remittanceView)
-        }
     }
     
     private func setLayouts() {
@@ -676,13 +676,6 @@ class ChattingViewController: UIViewController {
             make.width.equalTo(230)
             make.height.equalTo(40)
         }
-        
-        if self.roomInfo?.isChief ?? false {
-            remittanceView.snp.makeConstraints { make in
-                make.top.width.equalToSuperview()
-                make.height.equalTo(55)
-            }
-        }
     }
     
     private func setCollectionView() {
@@ -696,6 +689,17 @@ class ChattingViewController: UIViewController {
         if let collectionViewLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
+    }
+    
+    // 송금완료 뷰 띄우기
+    private func showRemittanceView() {
+        self.view.addSubview(self.remittanceView)
+        self.remittanceView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.top.equalTo(self.view.safeAreaLayoutGuide)
+            make.height.equalTo(55)
+        }
+        self.view.layoutIfNeeded()
     }
     
     // 배경을 흐리게, 블러뷰로 설정
