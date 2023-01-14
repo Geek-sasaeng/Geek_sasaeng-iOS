@@ -1111,6 +1111,9 @@
 		A25825F62969A00100BC3FF7 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25825F52969A00100BC3FF7 /* DataBaseManager.swift */; };
 		A25825F72969A00100BC3FF7 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25825F52969A00100BC3FF7 /* DataBaseManager.swift */; };
 		A25825F82969A00100BC3FF7 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25825F52969A00100BC3FF7 /* DataBaseManager.swift */; };
+		A25F96BC2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */; };
+		A25F96BD2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */; };
+		A25F96BE2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */; };
 		A26780B028AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
 		A26780B228AD44FC0078350D /* OngoingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */; };
@@ -1626,6 +1629,7 @@
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
 		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		A25825F52969A00100BC3FF7 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
+		A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geeksasaeng.entitlements; sourceTree = "<group>"; };
 		A26780AF28AD44FC0078350D /* OngoingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OngoingTableViewCell.swift; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
@@ -2584,6 +2588,7 @@
 				A2FA89A9286ECD4200CB3B55 /* UIColor+Extension.swift */,
 				102B35CF2879BCD60042F691 /* UIView+Extension.swift */,
 				A2E78B0828AE8EDC001292E1 /* UIImage+Extension.swift */,
+				A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */,
 				10B3822128A2321F00571406 /* UILabel+Extension.swift */,
 				A2FA89AD286EDD7E00CB3B55 /* UIFont+Extension.swift */,
 				102B35D32879BCF90042F691 /* UITextField+Extension.swift */,
@@ -3823,6 +3828,7 @@
 				100FB99928745DDE008947DD /* NaverLoginModel.swift in Sources */,
 				10EEF83B295EDBE0009F878D /* ImageMessageCell.swift in Sources */,
 				A20FC0F1287F30C40095224C /* SearchVC.swift in Sources */,
+				A25F96BC2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */,
 				A248D891289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				10D4D6C32894F8B800B53AB0 /* EditUrlVC.swift in Sources */,
 				A2FA89A6286EC9E900CB3B55 /* RegisterVC.swift in Sources */,
@@ -3862,6 +3868,7 @@
 				A28F45F9294100D60097714E /* JoinChatAPI.swift in Sources */,
 				A2513F222878B9A30029C279 /* EmailAuthCheckModel.swift in Sources */,
 				A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */,
+				A25F96BD2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */,
 				A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */,
 				A2035EA6288341B00051498A /* AdModel.swift in Sources */,
 				A25825F72969A00100BC3FF7 /* DataBaseManager.swift in Sources */,
@@ -4063,6 +4070,7 @@
 				1031AAA428981619004B6568 /* PersonalInfoAgreementVC.swift in Sources */,
 				106D9753287D7ABA005CFB85 /* MatchingPersonVC.swift in Sources */,
 				A2AF5397289696810052F734 /* ReportAPI.swift in Sources */,
+				A25F96BE2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */,
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				10AC8B102916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
