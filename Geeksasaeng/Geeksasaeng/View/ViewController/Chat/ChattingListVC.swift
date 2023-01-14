@@ -187,7 +187,7 @@ class ChattingListViewController: UIViewController {
                                               roomTitle: $0.roomTitle,
                                               recentMsg: "",
                                               time: "",
-                                              unreadedMsgCnt: 0)
+                                            unreadedMsgCnt: self.getUnreadMsgCnt(roomId: $0.roomId ?? ""))
             // 데이터를 배열에 추가
             self.chattingRoomList.append(chattingRoom)
             
@@ -264,8 +264,10 @@ class ChattingListViewController: UIViewController {
                     // 그 채팅방의 최신 메세지, 시간 업데이트
                     self.chattingRoomList[roomIndex].recentMsg = data.content
                     self.chattingRoomList[roomIndex].time = data.createdAt
-                    // TODO: - unreadedMsgCnt 값 구해서 UI 연결하기
-    //                self.chattingRoomList[roomIndex].unreadedMsgCnt = ? 이걸 어케 함 채팅방마다?
+                    // 안 읽은 메세지 개수 업데이트
+                    DispatchQueue.main.sync {
+                        self.chattingRoomList[roomIndex].unreadedMsgCnt = self.getUnreadMsgCnt(roomId: data.chatRoomId ?? "")
+                    }
                     
                     // 채팅방 목록 맨 위로 셀 올리기
                     self.moveToTopOfList(roomIndex: roomIndex)
@@ -276,6 +278,12 @@ class ChattingListViewController: UIViewController {
                 print(error)
             }
         })
+    }
+    
+    // 안 읽은 메세지 개수 가져오기 -> isRead가 false인 msg의 개수를 구한다.
+    private func getUnreadMsgCnt(roomId: String) -> Int {
+        let unreadMsg = NSPredicate(format: "chatRoomId = %@ AND isSystemMessage = false AND memberId != %@ AND isRead = false", roomId, NSNumber(value: LoginModel.memberId!))
+        return localRealm.read(MsgToSave.self).filter(unreadMsg).count
     }
     
     // 채팅 로컬에 저장하기
@@ -302,7 +310,7 @@ class ChattingListViewController: UIViewController {
                     roomTitle: chattingRoom.roomTitle,
                     recentMsg: last.content,
                     time: FormatCreater.sharedLongFormat.string(from: last.createdAt!),
-                    unreadedMsgCnt: 0)
+                    unreadedMsgCnt: self.getUnreadMsgCnt(roomId: chattingRoom.roomId ?? ""))
             } else { // 없는 경우
                 print("DEBUG: \(chattingRoom.roomId)방의 마지막 채팅은 아직 없다!")
                 // 로컬에서 가장 최근 메세지 얻어서 ChattingRoom 구조로 만들어서 리턴
@@ -311,7 +319,7 @@ class ChattingListViewController: UIViewController {
                     roomTitle: chattingRoom.roomTitle,
                     recentMsg: nil,
                     time: nil,
-                    unreadedMsgCnt: 0)
+                    unreadedMsgCnt: self.getUnreadMsgCnt(roomId: chattingRoom.roomId ?? ""))
             }
         }
     }
@@ -614,15 +622,19 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
     /* 채팅방 목록 셀 내용 구성 */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingListTableViewCell.identifier, for: indexPath) as? ChattingListTableViewCell else { return UITableViewCell() }
-        let index = indexPath.row
+        let chattingRoom = chattingRoomList[indexPath.row]
         
         // 채팅방 타이틀 설정
-        cell.titleLabel.text = chattingRoomList[index].roomTitle ?? "배달파티 채팅방"
+        cell.titleLabel.text = chattingRoom.roomTitle ?? "배달파티 채팅방"
         // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
         self.setRecentMessageAndTime(cell: cell,
-                                     messageContents: chattingRoomList[index].recentMsg ?? "",
-                                     messageTime: chattingRoomList[index].time ?? "",
+                                     messageContents: chattingRoom.recentMsg ?? "",
+                                     messageTime: chattingRoom.time ?? "",
                                      row: indexPath.row)
+        // 안 읽은 메세지 개수 띄우기
+        if (chattingRoom.unreadedMsgCnt ?? 0 > 0) {
+            cell.unreadMessageCountLabel.text = "+\(chattingRoom.unreadedMsgCnt!)"
+        }
         
         return cell
     }

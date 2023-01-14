@@ -482,8 +482,6 @@ class ChattingViewController: UIViewController {
         setupWebSocket()
         // RabbitMq 수신 설정
         setupReceiver()
-        // 채팅방 정보 요청
-        requestRoomInfo()
         
         setAttributes()
         setCollectionView()
@@ -590,7 +588,7 @@ class ChattingViewController: UIViewController {
                 } else if data.chatType! == "read" {  // 읽음 요청 응답 수신 시
                     print("[Rabbit] 채팅방에서 채팅 읽음 수신", data)
                     
-                    // 로컬에 isReaded 값을 true로, unreadedCnt도 수신한 값으로 업데이트
+                    // 로컬에 isRead 값을 true로, unreadCnt도 수신한 값으로 업데이트
                     self.updateUnreadToRead(data: data)
                 }
             } catch {
@@ -601,7 +599,7 @@ class ChattingViewController: UIViewController {
     
     // 채팅방 상세조회 API 호출
     private func requestRoomInfo() {
-        print("DEBUG: requestRoomInfo")
+        print("DEBUG: [1] requestRoomInfo")
         ChatAPI.getChattingRoomInfo(ChattingRoomInput(chatRoomId: roomId)) { result in
             // 조회 성공 시
             if let res = result {
@@ -611,8 +609,22 @@ class ChattingViewController: UIViewController {
                 self.enterTimeToDate = FormatCreater.sharedLongFormat.date(from: self.roomInfo?.enterTime ?? "2023-01-01 00:00:00")
                 print("DEBUG: 내 입장 시간", self.enterTimeToDate)
                 
-                // 성공 시에만 이전 메세지 불러오기 -> 동기적으로 처리하기 위해
+                // 방장이 아니고, 아직 송금을 안 했다면 송금완료 뷰 띄우기
+                if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
+                    self.showRemittanceView()
+                }
+                // 성공 시에만 이전 메세지 불러오기 -> 순서대로 처리하기 위해
                 self.loadMessages()
+                
+                // 안 읽은 메세지 있나 확인
+                let unreadMsgs = self.getUnreadMsgs()
+                if !(unreadMsgs.isEmpty) {
+                    print("DEBUG: 안 읽은 메세지 있음!!")
+                    // 읽음 요청 전송
+                    self.sendReadRequest(unreadMsgs)
+                } else {
+                    print("DEBUG: 안 읽은 메세지 없음")
+                }
             } else { // 실패 시
                 self.showToast(viewController: self, message: "채팅방 정보 조회에 실패하였습니다.",
                           font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
@@ -632,10 +644,6 @@ class ChattingViewController: UIViewController {
         
         [collectionView, bottomView].forEach {
             view.addSubview($0)
-        }
-        
-        if self.roomInfo?.isChief == false {
-            view.addSubview(remittanceView)
         }
     }
     
@@ -668,13 +676,6 @@ class ChattingViewController: UIViewController {
             make.width.equalTo(230)
             make.height.equalTo(40)
         }
-        
-        if self.roomInfo?.isChief ?? false {
-            remittanceView.snp.makeConstraints { make in
-                make.top.width.equalToSuperview()
-                make.height.equalTo(55)
-            }
-        }
     }
     
     private func setCollectionView() {
@@ -688,6 +689,17 @@ class ChattingViewController: UIViewController {
         if let collectionViewLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
+    }
+    
+    // 송금완료 뷰 띄우기
+    private func showRemittanceView() {
+        self.view.addSubview(self.remittanceView)
+        self.remittanceView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.top.equalTo(self.view.safeAreaLayoutGuide)
+            make.height.equalTo(55)
+        }
+        self.view.layoutIfNeeded()
     }
     
     // 배경을 흐리게, 블러뷰로 설정
@@ -709,17 +721,13 @@ class ChattingViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
     }
     
-    // TODO: - 송금 관련 뷰 설정 -> 방장도 구별해야 함
-    
-    // TODO: - 사진 데이터도 저장해야 함
-    
     // 로컬에서 이전 채팅 불러오기
     private func loadMessages() {
         if self.enterTimeToDate == nil {
             self.enterTimeToDate = Date()
         }
         
-        print("DEBUG: loadMessages")
+        print("DEBUG: [2] loadMessages")
         // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
         let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", self.roomId!, self.enterTimeToDate! as CVarArg)
         self.msgRecords = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
@@ -728,6 +736,17 @@ class ChattingViewController: UIViewController {
         print("DEBUG: 불러온 채팅 갯수", msgRecords.count)
         for msgRecord in msgRecords {
             self.updateChattingView(newChat: msgRecord)
+        }
+    }
+    
+    // 안 읽은 메세지 가져오기
+    private func getUnreadMsgs() -> [MsgContents] {
+        print("DEBUG: [3] getUnreadMsgs")
+        // 로드된 이전 메세지들 중에 안 읽은 메세지이고, 시스템 메세지가 아니고, 상대방이 보낸 메세지만 필터링
+        return self.msgContents.filter { msg in
+            msg.message?.isRead == false
+            && msg.message?.isSystemMessage == false
+            && msg.message?.nickName != LoginModel.nickname
         }
     }
     
@@ -766,36 +785,36 @@ class ChattingViewController: UIViewController {
     }
     
     // 웹소켓을 통해 읽음 요청 보내기
-    private func sendReadRequest(_ unreadedMsgs: [MsgContents]) {
-        print("DEBUG: 읽음 요청")
-        print("TEST: unreadedMsgs", unreadedMsgs)
+    private func sendReadRequest(_ unreadMsgs: [MsgContents]) {
+        print("DEBUG: [4] sendReadRequest")
+        print("DEBUG: unreadMsgs", unreadMsgs)
         // 하나씩 읽음 처리 요청 보내기
-        for unreadedMsg in unreadedMsgs {
-            print("DEBUG: 읽음 요청", unreadedMsg)
+        for unreadMsg in unreadMsgs {
+            print("DEBUG: 읽음 요청", unreadMsg)
             self.sendMessage(input: MsgRequest(
-                content: unreadedMsg.message?.content,
-                chatRoomId: unreadedMsg.message?.chatRoomId,
-                isSystemMessage: unreadedMsg.message?.isSystemMessage,
+                content: unreadMsg.message?.content,
+                chatRoomId: unreadMsg.message?.chatRoomId,
+                isSystemMessage: unreadMsg.message?.isSystemMessage,
                 chatType: "read",
-                chatId: unreadedMsg.message?.chatId,
+                chatId: unreadMsg.message?.chatId,
                 jwt: "Bearer " + LoginModel.jwt!))
         }
     }
     
-    // 로컬에 저장된 isReaded 필드값을 true로 업데이트
+    // 로컬에 저장된 isRead 필드값을 true로 업데이트
     // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 nickName으로 구분 안 함
     private func updateUnreadToRead(data: MsgResponse) {
         DispatchQueue.main.async {
             print("DEBUG: updateUnreadToRead")
-            let predicate = NSPredicate(format: "chatRoomId = %@ AND isReaded = false AND isSystemMessage = false", self.roomId!)
-            let unreadedMsgs = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
-            print("DEBUG: 안 읽은 메세지들", unreadedMsgs)
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND isRead = false AND isSystemMessage = false", self.roomId!)
+            let unreadMsgsInDB = self.localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt")
+            print("DEBUG: 안 읽은 메세지들", unreadMsgsInDB)
             
             // 하나씩 로컬 데이터 업데이트
-            unreadedMsgs.forEach { unreadedMsg in
-                self.localRealm.update(unreadedMsg) { unreadedMsg in
-                    unreadedMsg.isReaded = true
-                    unreadedMsg.unreadMemberCnt = data.unreadMemberCnt
+            unreadMsgsInDB.forEach { unreadMsg in
+                self.localRealm.update(unreadMsg) { unreadMsg in
+                    unreadMsg.isRead = true
+                    unreadMsg.unreadMemberCnt = data.unreadMemberCnt
                     print("DEBUG: 읽음 상태 업데이트", data.content)
                 }
             }
@@ -805,9 +824,6 @@ class ChattingViewController: UIViewController {
             self.loadMessages()
         }
     }
-    
-    // TODO: - 유저 채팅방 나가기 기능
-    // TODO: - 방장 나가기 기능 -> 새 방장 선정
     
     // 연결된 웹소켓을 통해 메세지 전송
     private func sendMessage(input: MsgRequest) {
@@ -1109,10 +1125,6 @@ class ChattingViewController: UIViewController {
     /* 채팅 나가기에서 '확인' 버튼 클릭시 실행 */
     @objc
     private func tapExitConfirmButton() {
-        // TODO: - 방장이면 새 방장 선정
-        // TODO: - 방장 나감 & 새 방장 선정 시스템 메세지
-        // TODO: - 방장 아니면 나갔다는 시스템 메세지만
-        
         // 방장이라면
         if self.roomInfo?.isChief ?? false {
             let input = ExitChiefInput(roomId: self.roomId)
@@ -1401,20 +1413,9 @@ extension ChattingViewController: WebSocketDelegate {
         switch event {
         // 웹소켓 연결 완료됐을 때 실행
         case .connected(let headers):
-            print("DEBUG: 웹소켓 연결 완료 - \(headers)")
-            // 로드된 이전 메세지들 중에 안 읽은 메세지이고, 시스템 메세지가 아니고, 상대방이 보낸 메세지만 필터링
-            let unreadedMsgs = self.msgContents.filter { msg in
-                msg.message?.isReaded == false
-                && msg.message?.nickName != LoginModel.nickname
-                && msg.message?.isSystemMessage == false
-            }
-            if !(unreadedMsgs.isEmpty) {
-                print("DEBUG: 안 읽은 메세지 있음!!")
-                // 읽음 요청 전송
-                sendReadRequest(unreadedMsgs)
-            } else {
-                print("DEBUG: 안 읽은 메세지 없음")
-            }
+            print("DEBUG: [0] 웹소켓 연결 완료 - \(headers)")
+            // 채팅방 정보 요청
+            requestRoomInfo()
         case .disconnected(let reason, let code):
             print("DEBUG: 웹소켓 연결 끊어짐 - \(reason) with code: \(code)")
         case .text(let text):

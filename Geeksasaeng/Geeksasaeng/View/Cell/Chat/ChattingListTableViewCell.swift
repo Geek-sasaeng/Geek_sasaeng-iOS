@@ -59,8 +59,6 @@ class ChattingListTableViewCell: UITableViewCell {
     
     /* 안 읽은 메세지가 몇 갠지 알려주는 label */
     let unreadMessageCountLabel = UILabel().then {
-        // TODO: - 값 연결
-        $0.text = "+1"
         $0.textColor = .mainColor
         $0.font = .customFont(.neoBold, size: 11)
     }
@@ -85,6 +83,7 @@ class ChattingListTableViewCell: UITableViewCell {
         self.titleLabel.text = ""
         self.recentMessageLabel.text = ""
         self.receivedTimeLabel.text = ""
+        self.unreadMessageCountLabel.text = ""
     }
 
     // MARK: - Functions
