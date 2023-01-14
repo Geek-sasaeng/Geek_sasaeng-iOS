@@ -22,7 +22,7 @@ final class DataBaseManager: DataBase {
     private let database: Realm
 
     private init() {
-        let configuration = Realm.Configuration(schemaVersion: 11)
+        let configuration = Realm.Configuration(schemaVersion: 12)
         self.database = try! Realm(configuration: configuration)
     }
     
