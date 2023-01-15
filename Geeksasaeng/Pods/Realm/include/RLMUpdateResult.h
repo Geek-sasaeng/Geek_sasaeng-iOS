@@ -16,14 +16,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <Foundation/Foundation.h>
+#import <Realm/RLMConstants.h>
 
-NS_ASSUME_NONNULL_BEGIN
+RLM_HEADER_AUDIT_BEGIN(nullability, sendability)
 
 @class RLMObjectId;
 @protocol RLMBSON;
 
 /// The result of an `updateOne` or `updateMany` operation a `RLMMongoCollection`.
+RLM_SWIFT_SENDABLE RLM_FINAL // immutable final class
 @interface RLMUpdateResult : NSObject
 
 /// The number of documents that matched the filter.
@@ -41,4 +42,4 @@ __attribute__((deprecated("Use documentId instead, which support all BSON types"
 
 @end
 
-NS_ASSUME_NONNULL_END
+RLM_HEADER_AUDIT_END(nullability, sendability)

@@ -9,11 +9,14 @@ import UIKit
 import NaverThirdPartyLogin
 import Firebase
 import FirebaseMessaging
+import KakaoSDKCommon
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        KakaoSDK.initSDK(appKey: APIKEY().kakaoAppKey)
+        
         FirebaseApp.configure()
         
         /* 푸시 알림 전송을 위해 fcm 사용 */

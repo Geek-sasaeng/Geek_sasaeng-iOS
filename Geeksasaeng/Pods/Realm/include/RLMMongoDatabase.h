@@ -16,9 +16,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <Foundation/Foundation.h>
+#import <Realm/RLMConstants.h>
 
-NS_ASSUME_NONNULL_BEGIN
+RLM_HEADER_AUDIT_BEGIN(nullability, sendability)
 
 @class RLMMongoCollection;
 
@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// - SeeAlso:
 /// `RLMMongoClient`, `RLMMongoCollection`
+RLM_SWIFT_SENDABLE RLM_FINAL // immutable final class
 @interface RLMMongoDatabase : NSObject
 
 /// The name of this database
@@ -46,4 +47,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
+RLM_HEADER_AUDIT_END(nullability, sendability)

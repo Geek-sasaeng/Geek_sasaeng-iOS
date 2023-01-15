@@ -698,24 +698,24 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.10.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.11.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.10.0):
+  - GoogleUtilities/Environment (7.11.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.10.0):
+  - GoogleUtilities/Logger (7.11.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.10.0):
+  - GoogleUtilities/MethodSwizzler (7.11.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.10.0):
+  - GoogleUtilities/Network (7.11.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.10.0)"
-  - GoogleUtilities/Reachability (7.10.0):
+  - "GoogleUtilities/NSData+zlib (7.11.0)"
+  - GoogleUtilities/Reachability (7.11.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.10.0):
+  - GoogleUtilities/UserDefaults (7.11.0):
     - GoogleUtilities/Logger
   - "gRPC-C++ (1.44.0)":
     - "gRPC-C++/Implementation (= 1.44.0)"
@@ -769,7 +769,42 @@ PODS:
     - Libuv-gRPC (= 0.0.10)
   - gRPC-Core/Interface (1.44.0)
   - JKVValue (1.3.3)
-  - Kingfisher (7.4.1)
+  - KakaoSDK (2.13.1):
+    - KakaoSDKAuth (= 2.13.1)
+    - KakaoSDKCommon (= 2.13.1)
+    - KakaoSDKFriend (= 2.13.1)
+    - KakaoSDKNavi (= 2.13.1)
+    - KakaoSDKShare (= 2.13.1)
+    - KakaoSDKStory (= 2.13.1)
+    - KakaoSDKTalk (= 2.13.1)
+    - KakaoSDKTemplate (= 2.13.1)
+    - KakaoSDKUser (= 2.13.1)
+  - KakaoSDKAuth (2.13.1):
+    - KakaoSDKCommon (= 2.13.1)
+  - KakaoSDKCommon (2.13.1):
+    - KakaoSDKCommon/Common (= 2.13.1)
+    - KakaoSDKCommon/Network (= 2.13.1)
+  - KakaoSDKCommon/Common (2.13.1)
+  - KakaoSDKCommon/Network (2.13.1):
+    - Alamofire (~> 5.1)
+    - KakaoSDKCommon/Common (= 2.13.1)
+  - KakaoSDKFriend (2.13.1):
+    - KakaoSDKUser (= 2.13.1)
+  - KakaoSDKNavi (2.13.1):
+    - KakaoSDKCommon/Common (= 2.13.1)
+  - KakaoSDKShare (2.13.1):
+    - KakaoSDKCommon (= 2.13.1)
+    - KakaoSDKTemplate (= 2.13.1)
+  - KakaoSDKStory (2.13.1):
+    - KakaoSDKUser (= 2.13.1)
+  - KakaoSDKTalk (2.13.1):
+    - KakaoSDKTemplate (= 2.13.1)
+    - KakaoSDKUser (= 2.13.1)
+  - KakaoSDKTemplate (2.13.1):
+    - KakaoSDKCommon/Common (= 2.13.1)
+  - KakaoSDKUser (2.13.1):
+    - KakaoSDKAuth (= 2.13.1)
+  - Kingfisher (7.5.0)
   - leveldb-library (1.22.1)
   - Libuv-gRPC (0.0.10):
     - Libuv-gRPC/Implementation (= 0.0.10)
@@ -786,11 +821,11 @@ PODS:
   - naveridlogin-sdk-ios (4.1.5)
   - NMapsMap (3.10.0)
   - PromisesObjC (2.1.1)
-  - Realm (10.33.0):
-    - Realm/Headers (= 10.33.0)
-  - Realm/Headers (10.33.0)
-  - RealmSwift (10.33.0):
-    - Realm (= 10.33.0)
+  - Realm (10.34.0):
+    - Realm/Headers (= 10.34.0)
+  - Realm/Headers (10.34.0)
+  - RealmSwift (10.34.0):
+    - Realm (= 10.34.0)
   - RMQClient (0.12.0):
     - CocoaAsyncSocket (~> 7.6)
     - JKVValue (~> 1.3)
@@ -804,6 +839,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Messaging
   - FirebaseFirestoreSwift
+  - KakaoSDK
   - Kingfisher
   - lottie-ios
   - naveridlogin-sdk-ios
@@ -836,6 +872,16 @@ SPEC REPOS:
     - "gRPC-C++"
     - gRPC-Core
     - JKVValue
+    - KakaoSDK
+    - KakaoSDKAuth
+    - KakaoSDKCommon
+    - KakaoSDKFriend
+    - KakaoSDKNavi
+    - KakaoSDKShare
+    - KakaoSDKStory
+    - KakaoSDKTalk
+    - KakaoSDKTemplate
+    - KakaoSDKUser
     - Kingfisher
     - leveldb-library
     - Libuv-gRPC
@@ -868,11 +914,21 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: d82ad66b3f8de9dda19c77b9627cbcaad71e245e
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
-  GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
+  GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
   JKVValue: d7941071b1cf9ba35c194fd40bcf4c4d9b5462e9
-  Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
+  KakaoSDK: c898c01a07ea78081f618c676664ea15596ad573
+  KakaoSDKAuth: d9de0cb0c723441ced3616d481952bde34438dcb
+  KakaoSDKCommon: a16807e19984a0a208c3117c7ef117f101a9a128
+  KakaoSDKFriend: 3bfc8e3c620661365b237b1c839ae4873ec66116
+  KakaoSDKNavi: bc3c7b5fc8fe4a958fc0a392a5918b0a51bcc849
+  KakaoSDKShare: c5d7f1cf9dc38a0a084892f3cab3469c3a8a789d
+  KakaoSDKStory: f4f7e5159766ce1896e44b81f631a06450f4cff8
+  KakaoSDKTalk: 4e43ecb1484191783bf7439da536be8677a0619b
+  KakaoSDKTemplate: 9732b6123946efd1dbafacd0e807ac76c1b3d71c
+  KakaoSDKUser: 92d34cf6af7b123c22a7ee44424332123e356901
+  Kingfisher: b9c2a4a4af2990a768445c277359b27bde287d71
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   lottie-ios: 54d22edf55b839f0929cabbfe609c9aa548b1145
@@ -880,13 +936,13 @@ SPEC CHECKSUMS:
   naveridlogin-sdk-ios: 4351fe7162cd6b8b6dbb37bd7cc205304fa1d889
   NMapsMap: 17caab4af9a3fc5c25b79858de18bdeab1eaff87
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
-  Realm: d4f810e161fa2c2c589b9860b6eb09238deacd73
-  RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
+  Realm: 991e7c4d6d37f1d6470a48bb072782ef00b91b67
+  RealmSwift: 11e77934e4af6d011d2970645fe56e11fa0e3c2c
   RMQClient: 74776ee4d0f891f71667a2629f26a26de5ad3e90
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
 
-PODFILE CHECKSUM: c0a786a640fbac846f11c68e1eea51453178309d
+PODFILE CHECKSUM: 2d7bfd163a58fce9e57cf106dc4cab6f792c8d4d
 
 COCOAPODS: 1.11.3
