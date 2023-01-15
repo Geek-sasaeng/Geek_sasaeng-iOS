@@ -16,6 +16,7 @@ struct UserInfoModel: Decodable {
     var result: UserInfoModelResult?
 }
 struct UserInfoModelResult: Decodable {
+    var createdAt: String?
     var id: Int?
     var loginId: String?
     var nickname: String?

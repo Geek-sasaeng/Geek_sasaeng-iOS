@@ -903,6 +903,9 @@
 		106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */; };
 		106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */; };
 		106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */; };
+		106EBC542974083400F8343B /* ProfileCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106EBC532974083400F8343B /* ProfileCardViewController.swift */; };
+		106EBC552974083400F8343B /* ProfileCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106EBC532974083400F8343B /* ProfileCardViewController.swift */; };
+		106EBC562974083400F8343B /* ProfileCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106EBC532974083400F8343B /* ProfileCardViewController.swift */; };
 		107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
 		107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
 		107123FB287B06D800D58FD1 /* RepetitionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107123F8287B06D800D58FD1 /* RepetitionAPI.swift */; };
@@ -1553,6 +1556,7 @@
 		106D9750287D7ABA005CFB85 /* MatchingPersonVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchingPersonVC.swift; sourceTree = "<group>"; };
 		106D9754287D7C32005CFB85 /* CategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; };
 		106D9758287D8735005CFB85 /* ReceiptPlaceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPlaceVC.swift; sourceTree = "<group>"; };
+		106EBC532974083400F8343B /* ProfileCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCardViewController.swift; sourceTree = "<group>"; };
 		107123F8287B06D800D58FD1 /* RepetitionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepetitionAPI.swift; sourceTree = "<group>"; };
 		10787118286EBAC3008EDF78 /* SpoqaHanSansNeo-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Bold.otf"; sourceTree = "<group>"; };
 		10787119286EBAC3008EDF78 /* SpoqaHanSansNeo-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo-Medium.otf"; sourceTree = "<group>"; };
@@ -2309,6 +2313,7 @@
 				10EC390F28AD307700A72DC6 /* MyInfoVC.swift */,
 				10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */,
 				1036F0A9291A800F00306840 /* EditMyInfoVC.swift */,
+				106EBC532974083400F8343B /* ProfileCardViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -3805,6 +3810,7 @@
 				A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */,
 				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
 				A2513F152878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
+				106EBC542974083400F8343B /* ProfileCardViewController.swift in Sources */,
 				108B6330288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
@@ -3920,6 +3926,7 @@
 				A2C5B29A2919430400BDBAC6 /* SearchRecord.swift in Sources */,
 				A20FC0F2287F30C40095224C /* SearchVC.swift in Sources */,
 				A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				106EBC552974083400F8343B /* ProfileCardViewController.swift in Sources */,
 				A225E10B28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A26780B128AD44FC0078350D /* OngoingTableViewCell.swift in Sources */,
 				A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */,
@@ -4079,6 +4086,7 @@
 				A2FA89B0286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				10A53C752882FA6D00DDCE87 /* APIKEY.swift in Sources */,
 				107D30A3294E3E1200CFE75C /* ChatAPI.swift in Sources */,
+				106EBC562974083400F8343B /* ProfileCardViewController.swift in Sources */,
 				A2513F0F2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
 				10E8E71E288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */,
@@ -4252,9 +4260,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geeksasaeng/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Geeksasaeng;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 좀 쓸게용";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범 접근 권한을 허용 하시겠습니까?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -4295,9 +4305,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geeksasaeng/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Geeksasaeng;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치를 받으려는 권환 획득입니다";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 좀 쓸게용";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범 접근 권한을 허용 하시겠습니까?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
