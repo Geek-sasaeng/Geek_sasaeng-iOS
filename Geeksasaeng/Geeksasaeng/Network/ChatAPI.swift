@@ -151,7 +151,9 @@ class ChatAPI {
                     multipartFormData.append(pngImage, withName: "images", fileName: "\(pngImage).png", mimeType: "image/png")
                 }
             }
-        }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header).validate().responseDecodable(of: ChatImageSendModel.self) { response in
+        }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header)
+        .validate()
+        .responseDecodable(of: ChatImageSendModel.self) { response in
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {

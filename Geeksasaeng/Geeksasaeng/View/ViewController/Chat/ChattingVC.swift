@@ -1436,12 +1436,9 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
     /* 사진 선택이 완료되었을 때 */
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        
-        let sheet = UIAlertController(title: "사진 전송", message: "선택한 사진을 전송하시겠어요?", preferredStyle: .alert)
-        sheet.addAction(UIAlertAction(title: "전송", style: .default, handler: { _ in
+        if !(results.isEmpty) {
             let itemProviders = results.map { $0.itemProvider }
             var images: [UIImage] = []
-            
             for item in itemProviders {
                 if item.canLoadObject(ofClass: UIImage.self) {
                     item.loadObject(ofClass: UIImage.self) { image, error in
@@ -1454,59 +1451,29 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                 }
             }
             
-            let input = ChatImageSendInput(
-                chatId: "none",
-                chatRoomId: self.roomId,
-                chatType: "publish",
-                content: "content",
-                email: "dmstn@gachon.ac.kr",
-                isImageMessage: true,
-                isSystemMessage: false,
-                profileImgUrl: "더미"
-            )
-
-            ChatAPI.sendImage(input, imageData: images) { isSuccess in
-                if isSuccess {
-                    print("이미지 전송 성공")
-                } else {
-                    print("이미지 전송 실패")
-                }
-            }
-            
-            
-            /*
-            let itemProvider = results.first?.itemProvider
-
-            if let itemProvider = itemProvider,
-               itemProvider.canLoadObject(ofClass: UIImage.self) {
-                itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
-                    DispatchQueue.main.async {
-                        guard let imageData = image as? UIImage else { return }
-                        print("이미지 추출 완료")
-                        let input = ChatImageSendInput(
-                            chatId: "none",
-                            chatRoomId: self.roomId,
-                            chatType: "publish",
-                            content: "content",
-                            email: "dmstn@gachon.ac.kr",
-                            isImageMessage: true,
-                            isSystemMessage: false,
-                            profileImgUrl: "더미"
-                        )
-
-                        ChatAPI.sendImage(input, imageData: imageData) { isSuccess in
-                            if isSuccess {
-                                print("이미지 전송 성공")
-                            }
-                        }
-
+            let sheet = UIAlertController(title: "사진 전송", message: "선택한 사진을 전송하시겠어요?", preferredStyle: .alert)
+            sheet.addAction(UIAlertAction(title: "전송", style: .default, handler: { _ in
+                let input = ChatImageSendInput(
+                    chatId: "none",
+                    chatRoomId: self.roomId,
+                    chatType: "publish",
+                    content: "content",
+                    email: "dmstn@gachon.ac.kr",
+                    isImageMessage: true,
+                    isSystemMessage: false,
+                    profileImgUrl: "더미"
+                )
+                
+                ChatAPI.sendImage(input, imageData: images) { isSuccess in
+                    if isSuccess {
+                        print("이미지 전송 성공")
+                    } else {
+                        print("이미지 전송 실패")
                     }
                 }
-            }
-             */
-        }))
-        sheet.addAction(UIAlertAction(title: "취소", style: .cancel))
-        
-        present(sheet, animated: true)
+            }))
+            sheet.addAction(UIAlertAction(title: "취소", style: .cancel))
+            present(sheet, animated: true)
+        }
     }
 }
