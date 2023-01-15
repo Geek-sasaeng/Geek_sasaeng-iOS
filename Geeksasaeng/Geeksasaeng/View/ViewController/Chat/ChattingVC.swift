@@ -598,8 +598,8 @@ class ChattingViewController: UIViewController {
     }
     
     // 채팅방 상세조회 API 호출
-    private func requestRoomInfo() {
-        print("DEBUG: [1] requestRoomInfo")
+    private func getRoomInfo() {
+        print("DEBUG: [1] getRoomInfo")
         ChatAPI.getChattingRoomInfo(ChattingRoomInput(chatRoomId: roomId)) { result in
             // 조회 성공 시
             if let res = result {
@@ -613,6 +613,8 @@ class ChattingViewController: UIViewController {
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
                     self.showRemittanceView()
                 }
+                // TODO: - 매칭 마감 상태 tf 보고 버튼 비활성화
+                
                 // 성공 시에만 이전 메세지 불러오기 -> 순서대로 처리하기 위해
                 self.loadMessages()
                 
@@ -1085,13 +1087,21 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        // TODO: - 매칭 마감 시스템 메세지 업로드
-                // 매칭 마감 버튼 비활성화
-//                self.ownerAlertController.actions[1].isEnabled = false
-//                self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
-
+        // TODO: - 파티 id 서버에서 주면 값 연결하기. 현재는 더미
+        ChatAPI.closeMatching(CloseMatchingInput(partyId: 1221)) { isSuccess in
+            if isSuccess {
+                print("DEBUG: 매칭 마감 성공")
+            } else {
+                print("DEBUG: 매칭 마감 실패")
+            }
+        }
+        
+        // 매칭 마감 버튼 비활성화
+        self.ownerAlertController.actions[1].isEnabled = false
+        self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+        
         // 매칭 마감하기 뷰 없애기
-//        removeCloseMatchingView()
+        removeCloseMatchingView()
     }
     
     // 강제 퇴장시키기 버튼 누르면 실행되는 함수
@@ -1127,6 +1137,7 @@ class ChattingViewController: UIViewController {
     private func tapExitConfirmButton() {
         // 방장이라면
         if self.roomInfo?.isChief ?? false {
+            // 방장 나가기
             let input = ExitChiefInput(roomId: self.roomId)
             ChatAPI.exitChief(input) { isSuccess in
                 if isSuccess {
@@ -1136,6 +1147,7 @@ class ChattingViewController: UIViewController {
                 }
             }
         } else {
+            // 파티워 나가기
             let input = ExitMemberInput(roomId: roomId)
             ChatAPI.exitMember(input) { isSuccess in
                 if isSuccess {
@@ -1399,7 +1411,7 @@ extension ChattingViewController: WebSocketDelegate {
         case .connected(let headers):
             print("DEBUG: [0] 웹소켓 연결 완료 - \(headers)")
             // 채팅방 정보 요청
-            requestRoomInfo()
+            getRoomInfo()
         case .disconnected(let reason, let code):
             print("DEBUG: 웹소켓 연결 끊어짐 - \(reason) with code: \(code)")
         case .text(let text):

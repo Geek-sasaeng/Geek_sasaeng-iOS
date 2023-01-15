@@ -1040,9 +1040,6 @@
 		A20FC0F5287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
 		A20FC0F6287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
 		A20FC0F7287F61810095224C /* RecentSearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */; };
-		A218D7BD28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */; };
-		A218D7BE28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */; };
-		A218D7BF28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */; };
 		A21DB934289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
 		A21DB935289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
 		A21DB936289D896B00A523F1 /* ChattingListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21DB933289D896B00A523F1 /* ChattingListVC.swift */; };
@@ -1129,6 +1126,9 @@
 		A28F45F8294100D60097714E /* JoinChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F45F7294100D60097714E /* JoinChatAPI.swift */; };
 		A28F45F9294100D60097714E /* JoinChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F45F7294100D60097714E /* JoinChatAPI.swift */; };
 		A28F45FA294100D60097714E /* JoinChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F45F7294100D60097714E /* JoinChatAPI.swift */; };
+		A29B560229740ECB00945776 /* CloseMatchingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29B560129740ECB00945776 /* CloseMatchingModel.swift */; };
+		A29B560329740ECB00945776 /* CloseMatchingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29B560129740ECB00945776 /* CloseMatchingModel.swift */; };
+		A29B560429740ECB00945776 /* CloseMatchingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29B560129740ECB00945776 /* CloseMatchingModel.swift */; };
 		A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A2A6D0B028E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
@@ -1606,7 +1606,6 @@
 		A20FC0EC287F1D0B0095224C /* DeliveryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListModel.swift; sourceTree = "<group>"; };
 		A20FC0F0287F30C40095224C /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		A20FC0F4287F61810095224C /* RecentSearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCollectionViewCell.swift; sourceTree = "<group>"; };
-		A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseMatchingAPI.swift; sourceTree = "<group>"; };
 		A21DB933289D896B00A523F1 /* ChattingListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListVC.swift; sourceTree = "<group>"; };
 		A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingStorageVC.swift; sourceTree = "<group>"; };
 		A21E82B828E4F17E00D75084 /* ChattingStorageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingStorageTableViewCell.swift; sourceTree = "<group>"; };
@@ -1636,6 +1635,7 @@
 		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
 		A274DE7628E0F68800F5024E /* CreateMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMenuVC.swift; sourceTree = "<group>"; };
 		A28F45F7294100D60097714E /* JoinChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinChatAPI.swift; sourceTree = "<group>"; };
+		A29B560129740ECB00945776 /* CloseMatchingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseMatchingModel.swift; sourceTree = "<group>"; };
 		A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePopUpViewController.swift; sourceTree = "<group>"; };
 		A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingRoomModel.swift; sourceTree = "<group>"; };
 		A2AF5394289696810052F734 /* ReportAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAPI.swift; sourceTree = "<group>"; };
@@ -2218,7 +2218,6 @@
 				A246E57F28A3FA33009707B4 /* JoinPartyAPI.swift */,
 				A2AF5394289696810052F734 /* ReportAPI.swift */,
 				106093CF28A81981007FD463 /* ChatRoomExitAPI.swift */,
-				A218D7BC28ABB90F00E3D7A2 /* CloseMatchingAPI.swift */,
 				A24D386228D3C30B00FB8C0C /* DeliveryNotificationAPI.swift */,
 				1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */,
 				A2CB1F11293DE29E008FAC46 /* CreateChatRoomAPI.swift */,
@@ -2289,6 +2288,7 @@
 			children = (
 				A2EE2BC2294727B200335680 /* MessageData.swift */,
 				A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */,
+				A29B560129740ECB00945776 /* CloseMatchingModel.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3752,7 +3752,6 @@
 				102B35E02879BD980042F691 /* String+Extension.swift in Sources */,
 				A225E10A28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				1036F0AA291A800F00306840 /* EditMyInfoVC.swift in Sources */,
-				A218D7BD28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
 				A2FA89AE286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				1031AA9E28981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */,
@@ -3813,6 +3812,7 @@
 				108B6330288998CD008C4F65 /* DeliveryListDetailModel.swift in Sources */,
 				A2E641662879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */,
+				A29B560229740ECB00945776 /* CloseMatchingModel.swift in Sources */,
 				10D4D6C72894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				1036F0A6291A7E1500306840 /* Keys.swift in Sources */,
 				A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
@@ -3886,7 +3886,6 @@
 				103F5E48289D3C0E000E7B9A /* AutoLoginAPI.swift in Sources */,
 				10AC8B0F2916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				102B35D52879BCF90042F691 /* UITextField+Extension.swift in Sources */,
-				A218D7BE28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
 				10D4D6C82894F8C000B53AB0 /* EditReceiptPlaceVC.swift in Sources */,
 				A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */,
 				10E8E722288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
@@ -3909,6 +3908,7 @@
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
 				10D4D6C02894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
+				A29B560329740ECB00945776 /* CloseMatchingModel.swift in Sources */,
 				10FECB1B28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
 				A24D386428D3C30B00FB8C0C /* DeliveryNotificationAPI.swift in Sources */,
 				10E6956628885589000B7309 /* LocationAPI.swift in Sources */,
@@ -4027,7 +4027,6 @@
 				A21E82BB28E4F17E00D75084 /* ChattingStorageTableViewCell.swift in Sources */,
 				10D4D6B52894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
-				A218D7BF28ABB91000E3D7A2 /* CloseMatchingAPI.swift in Sources */,
 				10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				10FECB1C28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
@@ -4052,6 +4051,7 @@
 				10A4A35728E3734E00AF4235 /* ForcedExitVC.swift in Sources */,
 				A21E82B728E48FA400D75084 /* ChattingStorageVC.swift in Sources */,
 				A26DA3C628918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
+				A29B560429740ECB00945776 /* CloseMatchingModel.swift in Sources */,
 				A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
 				A28F45FA294100D60097714E /* JoinChatAPI.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,

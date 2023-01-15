@@ -225,14 +225,14 @@ class ChatAPI {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("파티원 퇴장 완료")
+                    print("DEBUG: 파티원 퇴장 완료")
                     completion(true)
                 } else {
-                    print("DEBUG .success: 파티원 퇴장 실패, ", result.message!)
+                    print("DEBUG: 파티원 퇴장 실패", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG .failure: 파티원 퇴장 실패, ", error.localizedDescription)
+                print("DEBUG: 파티원 퇴장 실패", error.localizedDescription)
                 completion(false)
             }
         }
@@ -279,6 +279,25 @@ class ChatAPI {
                 }
             case .failure(let error):
                 print("DEBUG .failure: 강제 퇴장 실패, ", error.localizedDescription)
+                completion(false)
+            }
+        }
+    }
+    
+    // 매칭 마감 API 호출 함수
+    public static func closeMatching(_ parameter: CloseMatchingInput, completion: @escaping (Bool) -> Void) {
+        guard let partyId = parameter.partyId else { return }
+        let url = "https://geeksasaeng.shop/delivery-party/\(partyId)/matching-status"
+        
+        AF.request(url, method: .patch, parameters: nil, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: CloseMatchingModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                print("DEBUG:", result)
+                completion(result.isSuccess!)
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
                 completion(false)
             }
         }
