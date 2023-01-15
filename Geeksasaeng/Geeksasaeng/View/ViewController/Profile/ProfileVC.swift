@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import Then
 import Kingfisher
+import KakaoSDKTalk
+import SafariServices
 
 class ProfileViewController: UIViewController {
 
@@ -17,6 +19,7 @@ class ProfileViewController: UIViewController {
     
     var ongoingPartyList: [UserInfoPartiesModel] = []
     var naverLoginVM = naverLoginViewModel()
+    var safariVC: SFSafariViewController?
     
     
     // MARK: - SubViews
@@ -74,6 +77,9 @@ class ProfileViewController: UIViewController {
         view.layer.cornerRadius = 10
         view.backgroundColor = .white
         view.setViewShadow(shadowOpacity: 1, shadowRadius: 7)
+        view.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapMyInfoView))
+        view.addGestureRecognizer(tapGesture)
         
         let heartImageView = UIImageView(image: UIImage(named: "MyInfoCardIcon"))
         let nicknameLabel = UILabel().then {
@@ -455,6 +461,7 @@ class ProfileViewController: UIViewController {
         /* 타겟 설정 */
         editMyInfoArrowButton.addTarget(self, action: #selector(tapEditMyInfoButton), for: .touchUpInside)
         logoutArrowButton.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
+        contactUsArrowButton.addTarget(self, action: #selector(tapContactUsArrowButton), for: .touchUpInside)
     }
     
     private func createBlurView() {
@@ -636,6 +643,13 @@ class ProfileViewController: UIViewController {
     }
     
     // MARK: - @objc Functions
+    @objc
+    private func tapMyInfoView() {
+        let profileCardVC = ProfileCardViewController()
+        profileCardVC.modalPresentationStyle = .overFullScreen
+        profileCardVC.modalTransitionStyle = .crossDissolve
+        self.present(profileCardVC, animated: true)
+    }
     
     @objc
     private func tapBellButton() {
@@ -651,6 +665,16 @@ class ProfileViewController: UIViewController {
     private func tapEditMyInfoButton() {
         let editMyInfoVC = EditMyInfoViewController()
         navigationController?.pushViewController(editMyInfoVC, animated: true)
+    }
+    
+    @objc
+    private func tapContactUsArrowButton() {
+        self.safariVC = SFSafariViewController(url: KakaoSDKTalk.TalkApi.shared.makeUrlForChannelChat(channelPublicId: "_Sxolhxj")!)
+        guard self.safariVC != nil else { return }
+        
+        self.safariVC?.modalTransitionStyle = .crossDissolve
+        self.safariVC?.modalPresentationStyle = .overCurrentContext
+        self.present(self.safariVC!, animated: true)
     }
     
     @objc

@@ -16,8 +16,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#import <Foundation/Foundation.h>
-
+#import <Realm/RLMConstants.h>
 #import <Realm/RLMCredentials.h>
 #import <Realm/RLMRealmConfiguration.h>
 #import <Realm/RLMSyncConfiguration.h>
@@ -49,7 +48,7 @@ typedef void(^RLMUserCustomDataBlock)(NSDictionary * _Nullable, NSError * _Nulla
 /// A block type for returning from function calls.
 typedef void(^RLMCallFunctionCompletionBlock)(id<RLMBSON> _Nullable, NSError * _Nullable);
 
-NS_ASSUME_NONNULL_BEGIN
+RLM_HEADER_AUDIT_BEGIN(nullability, sendability)
 
 /**
  A `RLMUser` instance represents a single Realm App user account.
@@ -61,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
  Note that user objects are only vended out via SDK APIs, and cannot be directly
  initialized. User objects can be accessed from any thread.
  */
+RLM_SWIFT_SENDABLE RLM_FINAL // internally thread-safe
 @interface RLMUser : NSObject
 
 /**
@@ -381,6 +381,7 @@ NS_ASSUME_NONNULL_BEGIN
  Note this is different from a user's unique identifier string.
  @seeAlso `RLMUser.identifier`
  */
+RLM_SWIFT_SENDABLE RLM_FINAL // immutable final class
 @interface RLMUserIdentity : NSObject
 
 /**
@@ -406,6 +407,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A profile for a given User.
  */
+RLM_SWIFT_SENDABLE RLM_FINAL // immutable final class
 @interface RLMUserProfile : NSObject
 
 /// The full name of the user.
@@ -431,4 +433,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
+RLM_HEADER_AUDIT_END(nullability, sendability)
