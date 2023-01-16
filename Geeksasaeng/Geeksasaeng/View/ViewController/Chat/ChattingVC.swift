@@ -937,9 +937,6 @@ class ChattingViewController: UIViewController {
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
-        /* rightBarButton title 변경 코드인데 잘 안 됨
-        picker.navigationController?.navigationItem.rightBarButtonItem?.title = "전송"
-        */
         picker.delegate = self
         
         self.present(picker, animated: true, completion: nil)
@@ -1469,11 +1466,10 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     chatId: "none",
                     chatRoomId: self.roomId,
                     chatType: "publish",
-                    content: "content",
-                    email: "dmstn@gachon.ac.kr",
+                    content: "",
                     isImageMessage: true,
                     isSystemMessage: false,
-                    profileImgUrl: "더미"
+                    profileImgUrl: ""
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in
