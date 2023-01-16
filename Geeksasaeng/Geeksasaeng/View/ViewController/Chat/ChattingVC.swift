@@ -469,6 +469,9 @@ class ChattingViewController: UIViewController {
     
     var keyboardHeight: CGFloat? // 키보드 높이
     
+    // 상대방 프로필 뷰 클릭하면 나오는 팝업뷰
+    var popUpView: ProfilePopUpViewController?
+    
     // Realm 싱글톤 객체 가져오기
     private let localRealm = DataBaseManager.shared
     
@@ -1169,11 +1172,10 @@ class ChattingViewController: UIViewController {
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
     @objc
     private func tapProfileImage() {
-        let popUpView = ProfilePopUpViewController()
-        popUpView.delegate = self
-        popUpView.modalPresentationStyle = .overFullScreen
-        popUpView.modalTransitionStyle = .crossDissolve
-        self.present(popUpView, animated: true)
+        popUpView!.delegate = self
+        popUpView!.modalPresentationStyle = .overFullScreen
+        popUpView!.modalTransitionStyle = .crossDissolve
+        self.present(popUpView!, animated: true)
     }
 }
 
@@ -1312,16 +1314,18 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftTimeLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
                 } else { // 다른 사람이면
-                    cell.leftImageView.isUserInteractionEnabled = true
-                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
-                    cell.nicknameLabel.textAlignment = .left
-                    if let profileImgUrl = msg.message?.profileImgUrl {
-                        cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
+                    if let profileImgStr = msg.message?.profileImgUrl {
+                        let url = URL(string: profileImgStr)
+                        cell.leftImageView.kf.setImage(with: url)
+                        self.popUpView = ProfilePopUpViewController(profileUrl: url!)
                     }
                     if self.roomInfo?.chiefId == msg.message?.memberId {
                         // 방장이라면 프로필 테두리
                         cell.leftImageView.drawBorderToChief()
                     }
+                    cell.leftImageView.isUserInteractionEnabled = true
+                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+                    cell.nicknameLabel.textAlignment = .left
                     cell.leftMessageLabel.text = msg.message?.content
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"

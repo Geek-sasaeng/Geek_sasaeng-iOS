@@ -5,6 +5,7 @@
 //  Created by 서은수 on 2022/09/29.
 //
 
+import Kingfisher
 import UIKit
 
 /* 상대 프로필 이미지 클릭시 뜨는 사용자 정보 뷰 */
@@ -13,6 +14,7 @@ class ProfilePopUpViewController: UIViewController {
     // MARK: - Properties
     
     var delegate: PushReportUserDelegate?
+    var profileUrl: URL?
     
     // MARK: - SubViews
     
@@ -29,8 +31,8 @@ class ProfilePopUpViewController: UIViewController {
         $0.layer.cornerRadius = 72 / 2
     }
     let profileImageView = UIImageView().then {
-        $0.image = UIImage(named: "ProfileImage")
         $0.layer.cornerRadius = 66 / 2
+        $0.clipsToBounds = true
     }
     let roleLabel = UILabel().then {
         $0.text = "파티원"
@@ -67,6 +69,18 @@ class ProfilePopUpViewController: UIViewController {
         
         addSubviews()
         setLayouts()
+        setAttributes()
+    }
+    
+    // MARK: - Initialization
+    
+    init(profileUrl: URL) {
+        super.init(nibName: nil, bundle: nil)
+        self.profileUrl = profileUrl
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Functions
@@ -135,6 +149,10 @@ class ProfilePopUpViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(25)
         }
+    }
+    
+    private func setAttributes() {
+        profileImageView.kf.setImage(with: profileUrl)
     }
     
     // MARK: - @objc Functions
