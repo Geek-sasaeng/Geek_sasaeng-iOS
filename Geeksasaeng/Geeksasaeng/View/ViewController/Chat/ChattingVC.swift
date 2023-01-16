@@ -1477,6 +1477,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                         print("이미지 전송 성공")
                     } else {
                         print("이미지 전송 실패")
+                        self.showToast(viewController: self, message: "이미지 전송에 실패했어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }
                 }
             }))
