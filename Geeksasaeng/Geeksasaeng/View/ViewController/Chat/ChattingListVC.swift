@@ -200,10 +200,6 @@ class ChattingListViewController: UIViewController {
         // 데이터 로딩 표시 제거
         DispatchQueue.main.async {
             self.chattingTableView.tableFooterView = nil
-        }
-        
-        // 테이블뷰 리로드
-        DispatchQueue.main.async {
             self.chattingTableView.reloadData()
         }
     }
@@ -548,7 +544,7 @@ class ChattingListViewController: UIViewController {
                 // 마지막 페이지가 아니라면, 다음 커서의 배달 목록을 불러온다
                 if !isFinalPage {
                     cursor += 1
-                    print("DEBUG: cursor", cursor)
+                    print("DEBUG: 채팅방 목록 cursor", cursor)
                     // 데이터 로딩 표시 띄우기
                     self.chattingTableView.tableFooterView = createSpinnerFooter()
                     // 다음 커서의 채팅방 목록 조회 API 호출
