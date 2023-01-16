@@ -1200,31 +1200,29 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                cell.nicknameLabel.isHidden = true
                 if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
-                    cell.rightImageView.isHidden = true
-                    cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
+                        print("TEST:", contentUrl)
                     }
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
-//                    cell.leftUnreadCntLabel.isHidden = true
+                    cell.leftUnreadCntLabel.isHidden = true
                 } else {
-                    cell.leftImageView.isHidden = true
-                    cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                         print("DEBUG: 사진 Url", contentUrl)
                     }
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
-//                    cell.rightUnreadCntLabel.isHidden = true
+                    cell.rightUnreadCntLabel.isHidden = true
                 }
                 return cell
             } else {
@@ -1265,11 +1263,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
-//                    cell.leftUnreadCntLabel.isHidden = true
+                    cell.leftUnreadCntLabel.isHidden = true
                 } else { // 다른 사람이면
                     cell.nicknameLabel.textAlignment = .left
                     if let profileImgUrl = msg.message?.profileImgUrl {
@@ -1283,14 +1281,14 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.leftImageView.isUserInteractionEnabled = true
-                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+//                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector()))
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
-//                    cell.rightUnreadCntLabel.isHidden = true
+                    cell.rightUnreadCntLabel.isHidden = true
                 }
                 return cell
             } else { // 이미지가 아닐 때
@@ -1341,30 +1339,24 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         let cellSize: CGSize
         let msg = msgContents[indexPath.row]
         guard let isImageMessage = msg.message?.isImageMessage else { return CGSize() }
-        
-        switch msg.msgType {
-        case .systemMessage:
-            let labelHeight = getSystemMessageLabelHeight(text: msg.message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
-        case .message:
-            if isImageMessage {
-                cellSize = CGSize(width: 155, height: 155)
-            } else {
+        if isImageMessage {
+            cellSize = CGSize(width: view.bounds.width, height: 155)
+        } else {
+            switch msg.msgType {
+            case .systemMessage:
+                let labelHeight = getSystemMessageLabelHeight(text: msg.message?.content ?? "")
+                cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
+            case .message:
                 // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
                 let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
                 cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
-            }
-        case .sameSenderMessage:
-            if isImageMessage {
-                cellSize = CGSize(width: 155, height: 155)
-            } else {
+            case .sameSenderMessage:
                 let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
                 cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
+            default:
+                cellSize = CGSize(width: view.bounds.width, height: 40)
             }
-        default:
-            cellSize = CGSize(width: view.bounds.width, height: 40)
         }
-        
         return cellSize
     }
     
