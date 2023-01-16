@@ -613,7 +613,11 @@ class ChattingViewController: UIViewController {
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
                     self.showRemittanceView()
                 }
-                // TODO: - 매칭 마감 상태 tf 보고 버튼 비활성화
+                
+                // 매칭 마감됐으면 매칭 마감 버튼 비활성화
+                if (self.roomInfo!.isMatchingFinish ?? false) {
+                    self.setInactiveButton(index: 1)
+                }
                 
                 // 성공 시에만 이전 메세지 불러오기 -> 순서대로 처리하기 위해
                 self.loadMessages()
@@ -902,6 +906,12 @@ class ChattingViewController: UIViewController {
         return label.frame.height
     }
     
+    // 해당 index의 버튼 비활성화 시키기
+    private func setInactiveButton(index: Int) {
+        self.ownerAlertController.actions[index].isEnabled = false
+        self.ownerAlertController.actions[index].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+    }
+    
     // MARK: - @objc Functions
     
     /* 키보드가 올라올 때 실행되는 함수 */
@@ -1084,8 +1094,7 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        // TODO: - 파티 id 서버에서 주면 값 연결하기. 현재는 더미
-        ChatAPI.closeMatching(CloseMatchingInput(partyId: 1221)) { isSuccess in
+        ChatAPI.closeMatching(CloseMatchingInput(partyId: self.roomInfo?.partyId)) { isSuccess in
             if isSuccess {
                 print("DEBUG: 매칭 마감 성공")
             } else {
@@ -1094,8 +1103,7 @@ class ChattingViewController: UIViewController {
         }
         
         // 매칭 마감 버튼 비활성화
-        self.ownerAlertController.actions[1].isEnabled = false
-        self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+        setInactiveButton(index: 1)
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
