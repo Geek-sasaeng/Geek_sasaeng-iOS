@@ -417,11 +417,10 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         setAttributes()
-        
-        addSubViews()
-        setLayouts()
         setCollectionView()
         getUserInfo()
+        addSubViews()
+        setLayouts()
     }
     
     // MARK: - Functions
@@ -432,18 +431,19 @@ class ProfileViewController: UIViewController {
                 if result.parties?.count == 0 { // 활동 내역이 없을 때
                     self.existMyActivityView.removeFromSuperview()
                     
-                    self.noneMyActivityView.addSubview(self.myActivityCollectionView)
-                    self.myActivityCollectionView.snp.makeConstraints { make in
-                        make.bottom.equalToSuperview().inset(22)
-                        make.left.right.equalToSuperview().inset(15)
-                    }
-                    
                     self.myActivityContainerView.addSubview(self.noneMyActivityView)
                     self.noneMyActivityView.snp.makeConstraints { make in
                         make.left.right.top.bottom.equalToSuperview()
                     }
                 } else {
                     self.noneMyActivityView.removeFromSuperview()
+                    
+                    self.existMyActivityView.addSubview(self.myActivityCollectionView)
+                    self.myActivityCollectionView.snp.makeConstraints { make in
+                        make.bottom.equalToSuperview().inset(22)
+                        make.top.equalToSuperview().inset(56)
+                        make.left.right.equalToSuperview().inset(15)
+                    }
                     
                     self.myActivityContainerView.addSubview(self.existMyActivityView)
                     self.existMyActivityView.snp.makeConstraints { make in
@@ -703,10 +703,12 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyActivityCollectionViewCell.identifier, for: indexPath) as? MyActivityCollectionViewCell else { return UICollectionViewCell() }
         
-        cell.backgroundColor = .red
-        
         cell.titleLabel.text = myActivities[indexPath.row].title
-        cell.createdAtLabel.text = myActivities[indexPath.row].createdAt
+        
+        if let str = myActivities[indexPath.row].createdAt {
+            let endIdx = str.index(str.startIndex, offsetBy: 10)
+            cell.createdAtLabel.text = str[...endIdx]
+        }
         
         return cell
     }
