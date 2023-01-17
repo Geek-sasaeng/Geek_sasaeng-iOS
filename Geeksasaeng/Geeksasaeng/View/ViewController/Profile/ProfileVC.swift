@@ -17,9 +17,13 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Properties
     
-    var ongoingPartyList: [UserInfoPartiesModel] = []
     var naverLoginVM = naverLoginViewModel()
     var safariVC: SFSafariViewController?
+    var myActivities: [UserInfoPartiesModel] = [] {
+        didSet {
+            myActivityCollectionView.reloadData()
+        }
+    }
     
     
     // MARK: - SubViews
@@ -56,27 +60,28 @@ class ProfileViewController: UIViewController {
         
         gradeLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(10)
+            make.left.equalToSuperview().inset(20)
         }
         separateImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(gradeLabel.snp.right).offset(10)
+            make.left.equalTo(gradeLabel.snp.right).offset(12)
         }
         remainLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(separateImageView.snp.right).offset(10)
+            make.left.equalTo(separateImageView.snp.right).offset(12)
         }
         arrowImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(remainLabel.snp.right).offset(10)
+            make.left.equalTo(remainLabel.snp.right).offset(6)
         }
     }
+    
     /* 내 정보 view */
     lazy var myInfoView = UIView().then { view in
         view.layer.masksToBounds = false
         view.layer.cornerRadius = 10
         view.backgroundColor = .white
-        view.setViewShadow(shadowOpacity: 1, shadowRadius: 7)
+        view.setViewShadow(shadowOpacity: 1, shadowRadius: 3)
         view.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapMyInfoView))
         view.addGestureRecognizer(tapGesture)
@@ -108,18 +113,18 @@ class ProfileViewController: UIViewController {
                 profileImageView.kf.setImage(with: url)
             }
         }
-        
+
         [ heartImageView, nicknameLabel, universityLabel, dormitoryLabel, profileImageView ].forEach {
             view.addSubview($0)
         }
         
         heartImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-            make.left.equalToSuperview().inset(10)
+            make.left.equalToSuperview().inset(20)
         }
         nicknameLabel.snp.makeConstraints { make in
             make.top.equalTo(heartImageView.snp.top)
-            make.left.equalTo(heartImageView.snp.right).offset(5)
+            make.left.equalToSuperview().inset(50)
         }
         universityLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
@@ -131,13 +136,16 @@ class ProfileViewController: UIViewController {
         }
         profileImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(10)
-            make.right.equalToSuperview().inset(20)
+            make.right.equalToSuperview().inset(36)
             make.width.height.equalTo(108)
         }
     }
     
-    /* 나의 활동 view */
-    lazy var myActivityView = UIView().then { view in
+    /* 나의 활동 container view */
+    lazy var myActivityContainerView = UIView()
+    
+    /* 나의 활동 view (활동 내역이 있을 때) */
+    let existMyActivityView = UIView().then { view in
         let showMyActivityLabel = UILabel().then {
             $0.text = "나의 활동 보기"
             $0.font = .customFont(.neoMedium, size: 15)
@@ -147,43 +155,45 @@ class ProfileViewController: UIViewController {
         [ showMyActivityLabel, arrowImageView].forEach {
             view.addSubview($0)
         }
-        
         showMyActivityLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(20)
-            make.left.equalToSuperview().inset(15)
+            make.top.equalToSuperview().inset(27)
+            make.left.equalToSuperview().inset(20)
         }
         arrowImageView.snp.makeConstraints { make in
             make.top.equalTo(showMyActivityLabel.snp.top)
-            make.right.equalToSuperview().inset(15)
+            make.right.equalToSuperview().inset(30)
+        }
+    }
+    let myActivityCollectionViewFlowLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        $0.minimumLineSpacing = 7
+        
+        let screenWidth = UIScreen.main.bounds.width
+        $0.itemSize = CGSize(width: (screenWidth-44)/3, height: 84)
+    }
+    lazy var myActivityCollectionView = UICollectionView(frame: .zero, collectionViewLayout: myActivityCollectionViewFlowLayout)
+    
+    /* 나의 활동 view (활동 내역이 없을 때) */
+    let noneMyActivityView = UIView().then { view in
+        let noneActivityLabel = UILabel().then {
+            $0.text = "진행한 활동이 없어요"
+            $0.font = .customFont(.neoMedium, size: 18)
+            $0.textColor = .init(hex: 0x636363)
+        }
+        let noneActivityImageView = UIImageView(image: UIImage(named: "NoneActivityIcon"))
+        
+        [ noneActivityLabel, noneActivityImageView ].forEach {
+            view.addSubview($0)
         }
         
-        UserInfoAPI.getUserInfo { isSuccess, result in
-            if isSuccess {
-                let stackView = UIStackView().then {
-                    $0.axis = .horizontal
-                    $0.distribution = .fillEqually
-                    $0.alignment = .center
-                    $0.spacing = 10
-                }
-                
-                result.parties?.forEach {
-                    stackView.addArrangedSubview(self.createStackViewElement(title: $0.title!, createdAt: String($0.createdAt!.prefix(10))))
-                }
-                if result.parties?.count == 1 {
-                    stackView.addArrangedSubview(self.createEmptyStackViewElement())
-                    stackView.addArrangedSubview(self.createEmptyStackViewElement())
-                } else if result.parties?.count == 2 {
-                    stackView.addArrangedSubview(self.createEmptyStackViewElement())
-                }
-                
-                view.addSubview(stackView)
-                stackView.snp.makeConstraints { make in
-                    make.top.equalTo(showMyActivityLabel.snp.bottom).offset(15)
-                    make.left.right.equalToSuperview().inset(10)
-                }
-            }
+        noneActivityLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().inset(40)
         }
-        
+        noneActivityImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(40)
+        }
     }
     
     /* 구분선 View */
@@ -408,24 +418,48 @@ class ProfileViewController: UIViewController {
 
         setAttributes()
         
-        setUserInfo()
         addSubViews()
         setLayouts()
+        setCollectionView()
+        getUserInfo()
     }
     
     // MARK: - Functions
     
-    private func setUserInfo() {
+    private func getUserInfo() {
         UserInfoAPI.getUserInfo { isSuccess, result in
             if isSuccess {
-                let url = URL(string: result.profileImgUrl!)
-//                self.profileImageView.kf.setImage(with: url)
-//                self.degreeLabel.text = result.dormitoryName
-//                self.univLabel.text = result.universityName
-//                self.nickNameLabel.text = result.nickname
-                self.ongoingPartyList = result.parties!
+                if result.parties?.count == 0 { // 활동 내역이 없을 때
+                    self.existMyActivityView.removeFromSuperview()
+                    
+                    self.noneMyActivityView.addSubview(self.myActivityCollectionView)
+                    self.myActivityCollectionView.snp.makeConstraints { make in
+                        make.bottom.equalToSuperview().inset(22)
+                        make.left.right.equalToSuperview().inset(15)
+                    }
+                    
+                    self.myActivityContainerView.addSubview(self.noneMyActivityView)
+                    self.noneMyActivityView.snp.makeConstraints { make in
+                        make.left.right.top.bottom.equalToSuperview()
+                    }
+                } else {
+                    self.noneMyActivityView.removeFromSuperview()
+                    
+                    self.myActivityContainerView.addSubview(self.existMyActivityView)
+                    self.existMyActivityView.snp.makeConstraints { make in
+                        make.left.right.top.bottom.equalToSuperview()
+                    }
+                    self.myActivities = result.parties!
+                }
             }
         }
+    }
+    
+    private func setCollectionView() {
+        myActivityCollectionView.backgroundColor = .white
+        myActivityCollectionView.dataSource = self
+        myActivityCollectionView.delegate = self
+        myActivityCollectionView.register(MyActivityCollectionViewCell.self, forCellWithReuseIdentifier: MyActivityCollectionViewCell.identifier)
     }
     
     private func setAttributes() {
@@ -436,11 +470,6 @@ class ProfileViewController: UIViewController {
         
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
-        self.navigationItem.setRightBarButton(
-            UIBarButtonItem(image: UIImage(named: "Bell"), style: .plain, target: self, action: #selector(tapBellButton)
-                           ), animated: true)
-        self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
-        self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
         
         /* 서비스 labels Attrs 설정 */
         [ editMyInfoLabel, contactUsLabel, termsOfUseLabel, logoutLabel ].forEach {
@@ -475,76 +504,13 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    private func createStackViewElement(title: String, createdAt: String) -> UIView {
-        let activityView = UIView().then { view in
-            view.backgroundColor = .white
-            view.layer.masksToBounds = false
-            view.layer.cornerRadius = 5
-            view.layer.borderColor = UIColor(hex: 0xFFFFFF).cgColor
-            view.layer.borderWidth = 1
-            view.setViewShadow(shadowOpacity: 1, shadowRadius: 4)
-            
-            let categoryLabel = UILabel().then {
-                $0.text = "배달파티"
-                $0.textColor = .mainColor
-                $0.font = .customFont(.neoRegular, size: 11)
-            }
-            let titleLabel = UILabel().then {
-                $0.text = title
-                $0.font = .customFont(.neoBold, size: 13)
-            }
-            let createdAtLabel = UILabel().then {
-                $0.text = createdAt
-                $0.font = .customFont(.neoMedium, size: 11)
-                $0.textColor = .init(hex: 0xA8A8A8)
-            }
-            let deliveryPartyImageView = UIImageView(image: UIImage(named: "DeliveryPartyIcon"))
-            
-            [ categoryLabel, titleLabel, createdAtLabel, deliveryPartyImageView].forEach {
-                view.addSubview($0)
-            }
-            
-            categoryLabel.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(5)
-                make.left.equalToSuperview().inset(5)
-            }
-            titleLabel.snp.makeConstraints { make in
-                make.top.equalTo(categoryLabel.snp.bottom).offset(5)
-                make.left.equalToSuperview().inset(5)
-            }
-            createdAtLabel.snp.makeConstraints { make in
-                make.top.equalTo(titleLabel.snp.bottom).offset(5)
-                make.left.equalToSuperview().inset(5)
-            }
-            deliveryPartyImageView.snp.makeConstraints { make in
-                make.bottom.right.equalToSuperview()
-            }
-        }
-        
-        activityView.snp.makeConstraints { make in
-            make.width.equalTo(106)
-            make.height.equalTo(84)
-        }
-        
-        return activityView
-    }
-    
-    private func createEmptyStackViewElement() -> UIView {
-        return UIView().then {
-            $0.snp.makeConstraints { make in
-                make.width.equalTo(106)
-                make.height.equalTo(84)
-            }
-        }
-    }
-    
     private func addSubViews() {
         myInfoView.addSubview(gradeView)
         backgroundView.addSubview(myInfoView)
         
         [
             backgroundView,
-            myActivityView,
+            myActivityContainerView,
             separateView,
             editMyInfoLabel, editMyInfoArrowButton, firstLineView,
             contactUsLabel, contactUsArrowButton, secondLineView,
@@ -572,14 +538,14 @@ class ProfileViewController: UIViewController {
             make.height.equalTo(166)
         }
         
-        myActivityView.snp.makeConstraints { make in
+        myActivityContainerView.snp.makeConstraints { make in
             make.top.equalTo(backgroundView.snp.bottom).offset(15)
             make.width.equalToSuperview()
             make.height.equalTo(160)
         }
         
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(myActivityView.snp.bottom)
+            make.top.equalTo(myActivityContainerView.snp.bottom)
             make.width.equalToSuperview()
             make.height.equalTo(8)
         }
@@ -652,19 +618,9 @@ class ProfileViewController: UIViewController {
     }
     
     @objc
-    private func tapBellButton() {
-        print("DEBUG: 종 버튼 클릭")
-    }
-    
-    @objc
-    private func tapPencilButton() {
-        print("DEBUG: 연필 버튼 클릭")
-    }
-    
-    @objc
     private func tapEditMyInfoButton() {
         let editMyInfoVC = EditMyInfoViewController()
-        navigationController?.pushViewController(editMyInfoVC, animated: true)
+        self.navigationController?.pushViewController(editMyInfoVC, animated: true)
     }
     
     @objc
@@ -734,8 +690,24 @@ class ProfileViewController: UIViewController {
             visualEffectView = nil
             logoutView.removeFromSuperview()
             withdrawalMembershipView.removeFromSuperview()
-            NotificationCenter.default.post(name: NSNotification.Name(""), object: "true")
+            NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
         }
     }
 }
 
+extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        self.myActivities.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyActivityCollectionViewCell.identifier, for: indexPath) as? MyActivityCollectionViewCell else { return UICollectionViewCell() }
+        
+        cell.backgroundColor = .red
+        
+        cell.titleLabel.text = myActivities[indexPath.row].title
+        cell.createdAtLabel.text = myActivities[indexPath.row].createdAt
+        
+        return cell
+    }
+}

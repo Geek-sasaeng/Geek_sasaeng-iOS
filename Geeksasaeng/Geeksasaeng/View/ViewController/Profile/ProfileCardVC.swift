@@ -43,19 +43,19 @@ class ProfileCardViewController: UIViewController {
         
         gradeLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(10)
+            make.left.equalToSuperview().inset(20)
         }
         separateImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(gradeLabel.snp.right).offset(10)
+            make.left.equalTo(gradeLabel.snp.right).offset(12)
         }
         remainLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(separateImageView.snp.right).offset(10)
+            make.left.equalTo(separateImageView.snp.right).offset(12)
         }
         arrowImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(remainLabel.snp.right).offset(10)
+            make.left.equalTo(remainLabel.snp.right).offset(6)
         }
     }
     
@@ -100,11 +100,11 @@ class ProfileCardViewController: UIViewController {
         
         heartImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-            make.left.equalToSuperview().inset(10)
+            make.left.equalToSuperview().inset(20)
         }
         nicknameLabel.snp.makeConstraints { make in
             make.top.equalTo(heartImageView.snp.top)
-            make.left.equalTo(heartImageView.snp.right).offset(5)
+            make.left.equalToSuperview().offset(50)
         }
         universityLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
@@ -116,7 +116,7 @@ class ProfileCardViewController: UIViewController {
         }
         profileImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(10)
-            make.right.equalToSuperview().inset(20)
+            make.right.equalToSuperview().inset(36)
             make.width.height.equalTo(108)
         }
     }

@@ -25,15 +25,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.isEnabled = false
     }
     
-    let scrollView = UIScrollView().then {
-        $0.backgroundColor = .white
-    }
-    
-    lazy var contentView = UIView().then {
-        $0.backgroundColor = .white
-        $0.isUserInteractionEnabled = true
-    }
-    
     /* 유저 프로필 이미지 3개 components */
     lazy var userImageView = UIImageView().then {
         $0.layer.masksToBounds = true
@@ -54,35 +45,32 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     /* title labels */
     let dormitoryLabel = UILabel()
     let nicknameLabel = UILabel()
-    let idLabel = UILabel()
-    let passwordLabel = UILabel()
-    let passwordCheckLabel = UILabel()
     
     /* Data TextField */
-    lazy var nicknameDataTextField = UITextField()
-    lazy var idDataTextField = UITextField()
-    lazy var passwordDataTextField = UITextField()
-    lazy var passwordCheckDataTextField = UITextField()
+    lazy var nicknameDataTextField = UITextField().then {
+        $0.textColor = .init(hex: 0xA8A8A8)
+        $0.font = .customFont(.neoMedium, size: 15)
+        $0.makeBottomLine()
+        $0.delegate = self
+    }
     
     /* TextField 아래 Notice Label*/
-    let nicknameValidationLabel = UILabel()
-    let idValidationLabel = UILabel()
-    let passwordChangeValidationLabel = UILabel()
-    let passwordCheckValidationLabel = UILabel()
+    let nicknameValidationLabel = UILabel().then {
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+        $0.text = "3-8자 영문 혹은 한글로 입력해주세요"
+    }
     
     /* 중복확인 버튼 (닉네임, 아이디) */
-    let nicknameCheckButton = UIButton()
-    let idCheckButton = UIButton()
-    
-    /* password TextField 표시 버튼 */
-    let showPasswordChangeTextFieldButton = UIButton()
-    let showPasswordCheckTextFieldButton = UIButton()
-    
-    /* Edit Button */
-    let editNicknameButton = UIButton()
-    let editIdButton = UIButton()
-    let editPasswordChangeButton = UIButton()
-    let editPasswordCheckButton = UIButton()
+    lazy var nicknameCheckButton = UIButton().then {
+        $0.setTitle("중복 확인", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.layer.cornerRadius = 5
+        $0.clipsToBounds = true
+        $0.setDeactivatedCheckButton()
+        $0.addTarget(self, action: #selector(tapCheckButton(sender: )), for: .touchUpInside)
+    }
     
     /* 수정 완료하기 View */
     lazy var editConfirmView = UIView().then {
@@ -177,16 +165,24 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    lazy var changePasswordButton = UIButton().then {
+        $0.setTitle("비밀번호 변경하기", for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
+        $0.setTitleColor(.black, for: .normal)
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = .init(hex: 0xEFEFEF)
+        $0.addTarget(self, action: #selector(tapChangePasswordButton), for: .touchUpInside)
+    }
+    
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
     /* 회원정보 (수정 시 변경) */
-    var checkPassword: String?
+    
     var dormitoryId: Int?
     var loginId: String?
     var nickname: String?
-    var password: String?
-    
     var dormitoryList: [Dormitory]?
     
     var selectedDormitory: UIButton?
@@ -196,7 +192,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        scrollView.delegate = self
         setNavigationBar()
         setAttributes()
         addSubViews()
@@ -210,7 +205,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setNavigationBar() {
-        navigationItem.title = "수정하기"
+        navigationItem.title = "나의 정보 수정"
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.init(hex: 0x2F2F2F)]
         
         navigationItem.hidesBackButton = true
@@ -221,86 +216,35 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setAttributes() {
+        /* 화면 터치 반응 설정 */
+        view.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapViewController))
+        view.addGestureRecognizer(gesture)
+        
         /* 프로필 이미지 뷰 설정 */
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapUserImageView))
         userImageView.addGestureRecognizer(tapGesture)
         userImageView.isUserInteractionEnabled = true
         
         /* 각 항목 타이틀 라벨 공통 설정 */
-        [dormitoryLabel, nicknameLabel, idLabel, passwordLabel, passwordCheckLabel].forEach {
+        [dormitoryLabel, nicknameLabel].forEach {
             $0.textColor = .init(hex: 0xA8A8A8)
             $0.font = .customFont(.neoMedium, size: 12)
-        }
-        
-        /* 중복 확인 버튼 공통 설정 */
-        [nicknameCheckButton, idCheckButton].forEach {
-            $0.setTitle("중복 확인", for: .normal)
-            $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
-            $0.layer.cornerRadius = 5
-            $0.clipsToBounds = true
-            $0.setDeactivatedButton()
-            $0.setTitleColor(.init(hex: 0xD8D8D8), for: .normal)
-            $0.backgroundColor = .white
-            $0.addTarget(self, action: #selector(tapCheckButton(sender: )), for: .touchUpInside)
-        }
-        
-        /* 비밀번호 표시 버튼 공통 설정 */
-        [showPasswordCheckTextFieldButton, showPasswordChangeTextFieldButton].forEach {
-            $0.setImage(UIImage(named: "BlockTextIcon"), for: .normal)
-            $0.addTarget(self, action: #selector(tapShowTextIcon(sender: )), for: .touchUpInside)
-        }
-        
-        /* 수정 버튼 공통 설정 */
-        [editNicknameButton, editIdButton, editPasswordChangeButton, editPasswordCheckButton].forEach {
-            $0.setTitle("Test", for: .normal)
-            $0.setImage(UIImage(named: "EditInfoButton"), for: .normal)
         }
         
         /* 각 항목 타이틀 설정 */
         dormitoryLabel.text = "기숙사"
         nicknameLabel.text = "닉네임"
-        idLabel.text = "아이디"
-        passwordLabel.text = "비밀번호 변경"
-        passwordCheckLabel.text = "비밀번호 확인"
-        
-        /* 비밀번호 입력 텍스트 필드 입력 값 가리기 */
-        [passwordDataTextField, passwordCheckDataTextField].forEach {
-            $0.isSecureTextEntry = true
-        }
-
-        /* 각 항목 데이터 텍스트 필드 공통 설정 */
-        [nicknameDataTextField, idDataTextField, passwordDataTextField, passwordCheckDataTextField].forEach {
-            $0.textColor = .init(hex: 0xA8A8A8)
-            $0.font = .customFont(.neoMedium, size: 15)
-            $0.makeBottomLine()
-            $0.delegate = self
-        }
-        
-        /* 텍스트 필드 아래 설명문 라벨 공통 설정 */
-        [nicknameValidationLabel, idValidationLabel, passwordChangeValidationLabel, passwordCheckValidationLabel].forEach {
-            $0.textColor = .mainColor
-            $0.font = .customFont(.neoMedium, size: 13)
-            $0.isHidden = true
-        }
-        nicknameValidationLabel.text = "3-8자 영문 혹은 한글로 입력해주세요"
-        idValidationLabel.text = "6-20자 영문+숫자로 입력해주세요"
-        passwordChangeValidationLabel.text = "6-20자 영문+숫자로 입력해주세요"
-        passwordCheckValidationLabel.text = "비밀번호를 다시 확인해주세요"
     }
     
     private func addSubViews() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        
         [
             userImageView,
             dormitoryLabel,
-            nicknameLabel, nicknameDataTextField, nicknameCheckButton, editNicknameButton, nicknameValidationLabel,
-            idLabel, idDataTextField, idCheckButton, editIdButton, idValidationLabel,
-            passwordLabel, passwordDataTextField, showPasswordChangeTextFieldButton, editPasswordChangeButton, passwordChangeValidationLabel,
-            passwordCheckLabel, passwordCheckDataTextField, showPasswordCheckTextFieldButton, editPasswordCheckButton, passwordCheckValidationLabel
+            nicknameLabel, nicknameDataTextField, nicknameCheckButton, nicknameValidationLabel,
+            changePasswordButton
         ].forEach {
-            contentView.addSubview($0)
+            view.addSubview($0)
         }
         
         [userImageBlurView, userImageViewIcon].forEach {
@@ -309,17 +253,8 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setLayouts() {
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            make.width.equalTo(UIScreen.main.bounds.width)
-        }
-        contentView.snp.makeConstraints { (make) in
-            make.edges.width.equalToSuperview()
-            make.bottom.equalTo(passwordCheckDataTextField.snp.bottom).offset(80)
-        }
-        
         userImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(40)
+            make.top.equalToSuperview().inset(120)
             make.width.height.equalTo(166)
             make.centerX.equalToSuperview()
         }
@@ -346,11 +281,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             make.left.equalToSuperview().inset(28)
             make.right.equalTo(nicknameCheckButton.snp.left).offset(-17)
         }
-        editNicknameButton.snp.makeConstraints { make in
-            make.width.height.equalTo(10)
-            make.right.equalTo(nicknameCheckButton.snp.left).offset(-28)
-            make.centerY.equalTo(nicknameDataTextField.snp.centerY)
-        }
         nicknameCheckButton.snp.makeConstraints { make in
             make.width.equalTo(81)
             make.height.equalTo(41)
@@ -362,77 +292,10 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             make.top.equalTo(nicknameDataTextField.snp.bottom).offset(18)
         }
         
-        idLabel.snp.makeConstraints { make in
-            make.top.equalTo(nicknameDataTextField.snp.bottom).offset(55)
-            make.left.equalToSuperview().inset(23)
-        }
-        idDataTextField.snp.makeConstraints { make in
-            make.top.equalTo(idLabel.snp.bottom).offset(23)
-            make.left.equalToSuperview().inset(28)
-            make.right.equalTo(idCheckButton.snp.left).offset(-17)
-        }
-        editIdButton.snp.makeConstraints { make in
-            make.width.height.equalTo(10)
-            make.right.equalTo(idCheckButton.snp.left).offset(-28)
-            make.centerY.equalTo(idDataTextField.snp.centerY)
-        }
-        idCheckButton.snp.makeConstraints { make in
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.centerY.equalTo(idDataTextField.snp.centerY)
-            make.right.equalToSuperview().inset(25)
-        }
-        idValidationLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(33)
-            make.top.equalTo(idDataTextField.snp.bottom).offset(18)
-        }
-        
-        passwordLabel.snp.makeConstraints { make in
-            make.top.equalTo(idDataTextField.snp.bottom).offset(55)
-            make.left.equalToSuperview().inset(23)
-        }
-        passwordDataTextField.snp.makeConstraints { make in
-            make.top.equalTo(passwordLabel.snp.bottom).offset(23)
+        changePasswordButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(150)
             make.left.right.equalToSuperview().inset(28)
-        }
-        editPasswordChangeButton.snp.makeConstraints { make in
-            make.width.height.equalTo(10)
-            make.right.equalToSuperview().inset(40)
-            make.centerY.equalTo(passwordDataTextField.snp.centerY)
-        }
-        showPasswordChangeTextFieldButton.snp.makeConstraints { make in
-            make.width.equalTo(17)
-            make.height.equalTo(12.25)
-            make.right.equalTo(editPasswordChangeButton.snp.left).offset(-18)
-            make.centerY.equalTo(passwordDataTextField.snp.centerY)
-        }
-        passwordChangeValidationLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(33)
-            make.top.equalTo(passwordDataTextField.snp.bottom).offset(18)
-        }
-        
-        passwordCheckLabel.snp.makeConstraints { make in
-            make.top.equalTo(passwordDataTextField.snp.bottom).offset(55)
-            make.left.equalToSuperview().inset(23)
-        }
-        passwordCheckDataTextField.snp.makeConstraints { make in
-            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(23)
-            make.left.right.equalToSuperview().inset(28)
-        }
-        editPasswordCheckButton.snp.makeConstraints { make in
-            make.width.height.equalTo(10)
-            make.right.equalToSuperview().inset(40)
-            make.centerY.equalTo(passwordCheckDataTextField.snp.centerY)
-        }
-        showPasswordCheckTextFieldButton.snp.makeConstraints { make in
-            make.width.equalTo(17)
-            make.height.equalTo(12.25)
-            make.right.equalTo(editPasswordCheckButton.snp.left).offset(-18)
-            make.centerY.equalTo(passwordCheckDataTextField.snp.centerY)
-        }
-        passwordCheckValidationLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(33)
-            make.top.equalTo(passwordCheckDataTextField.snp.bottom).offset(18)
+            make.height.equalTo(42)
         }
     }
     
@@ -455,7 +318,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 self.userImageView.kf.setImage(with: url)
                 
                 self.nicknameDataTextField.text = result.nickname
-                self.idDataTextField.text = result.loginId
                 
                 self.dormitoryId = result.dormitoryId
                 self.loginId = result.loginId
@@ -521,6 +383,19 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.rightBarButtonItem?.tintColor = .mainColor
     }
     
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(forName: Notification.Name("CorrectPassword"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+            }
+        }
+    }
+    
+    
+    // MARK: - objc Functions
+    
     @objc
     private func tapUserImageView() {
         var configuration = PHPickerConfiguration()
@@ -548,26 +423,15 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapEditConfirmButton() {
-        let input: EditUserInput?
-        if let _ = self.checkPassword { // 비밀번호를 변경했을 경우
-            input = EditUserInput(
-                checkPassword: self.checkPassword,
-                dormitoryId: self.dormitoryId,
-                loginId: self.loginId,
-                nickname: self.nickname,
-                password: self.password
-            )
-        } else { // 비밀번호를 변경하지 않았을 경우
-            input = EditUserInput(
-                checkPassword: "",
-                dormitoryId: self.dormitoryId,
-                loginId: self.loginId,
-                nickname: self.nickname,
-                password: ""
-            )
-        }
+        let input = EditUserInput (
+            checkPassword: "",
+            dormitoryId: self.dormitoryId,
+            loginId: self.loginId,
+            nickname: self.nickname,
+            password: ""
+        )
         
-        UserInfoAPI.editUser(input!, imageData: userImageView.image!) { isSuccess, result in
+        UserInfoAPI.editUser(input, imageData: userImageView.image!) { isSuccess, result in
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()
@@ -592,29 +456,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     private func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
-    
-    @objc
-    private func tapShowTextIcon(sender: UIButton) {
-        switch sender {
-        case showPasswordCheckTextFieldButton: // passwordCheck TextField에 있는 Button
-            if sender.imageView?.image == UIImage(named: "BlockTextIcon") { // secure 상태일 때
-                sender.setImage(UIImage(named: "ShowTextIcon"), for: .normal)
-                passwordCheckDataTextField.isSecureTextEntry = false // secure 해제
-            } else { // secure 상태가 아닐 때
-                sender.setImage(UIImage(named: "BlockTextIcon"), for: .normal)
-                passwordCheckDataTextField.isSecureTextEntry = true // secure 적용
-            }
-        default: // passwordChange TextField에 있는 Button
-            if sender.imageView?.image == UIImage(named: "BlockTextIcon") { // secure 상태일 때
-                sender.setImage(UIImage(named: "ShowTextIcon"), for: .normal)
-                passwordDataTextField.isSecureTextEntry = false // secure 해제
-            } else { // secure 상태가 아닐 때
-                sender.setImage(UIImage(named: "BlockTextIcon"), for: .normal)
-                passwordDataTextField.isSecureTextEntry = true // secure 적용
-            }
-        }
-    }
-    
+
     @objc
     private func tapCheckButton(sender: UIButton) {
         if sender == nicknameCheckButton { // 닉네임 중복 확인 버튼일 경우
@@ -632,27 +474,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                         self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     case .failure:
                         self.showToast(viewController: self, message: "중복되는 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                    }
-                }
-            } else { // validation 부적합한 경우 -> Alert
-                self.showToast(viewController: self, message: "입력 조건을 확인해주세요", font: .customFont(.neoBold, size: 15), color: .red)
-            }
-            
-        } else { // 아이디 중복 확인 버튼일 경우
-            guard let isValidId = idDataTextField.text?.isValidId() else { return }
-            if isValidId { // validation 적합한 경우 -> 아이디 중복 확인 API 호출
-                guard let newId = idDataTextField.text else { return }
-                let input = IdRepetitionInput(loginId: newId)
-                RepetitionAPI.checkIdRepetition(input) { isSuccess, message in
-                    switch isSuccess {
-                    case .success:
-                        self.loginId = newId
-                        self.showToast(viewController: self, message: "사용 가능한 아이디입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                        self.activeRightBarButton()
-                    case .onlyRequestSuccess:
-                        self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                    case .failure:
-                        self.showToast(viewController: self, message: "중복되는 아이디입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }
                 }
             } else { // validation 부적합한 경우 -> Alert
@@ -677,6 +498,33 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
+    
+    @objc
+    private func tapChangePasswordButton() {
+        createBlurView()
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            let childView = PasswordCheckViewController().then {
+                $0.dormitoryId = self.dormitoryId
+                $0.loginId = self.loginId
+                $0.nickname = self.nickname
+                $0.profileImg = self.userImageView.image
+            }
+            self.addChild(childView)
+            self.view.addSubview(childView.view)
+            childView.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    @objc
+    private func tapViewController() {
+        if visualEffectView != nil {
+            visualEffectView?.removeFromSuperview()
+            visualEffectView = nil
+            NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
+        }
+    }
 }
 
 extension EditMyInfoViewController: UITextFieldDelegate {
@@ -686,16 +534,8 @@ extension EditMyInfoViewController: UITextFieldDelegate {
         switch textField {
         case nicknameDataTextField:
             nicknameValidationLabel.isHidden = false
-            nicknameCheckButton.setActivatedButton()
+            nicknameCheckButton.setActivatedCheckButton()
             nicknameDataTextField.subviews.first?.backgroundColor = .mainColor
-        case idDataTextField:
-            idValidationLabel.isHidden = false
-            idCheckButton.setActivatedButton()
-            idDataTextField.subviews.first?.backgroundColor = .mainColor
-        case passwordDataTextField:
-            passwordChangeValidationLabel.isHidden = false
-        case passwordCheckDataTextField:
-            passwordCheckValidationLabel.isHidden = false
         default:
             return
         }
@@ -708,38 +548,7 @@ extension EditMyInfoViewController: UITextFieldDelegate {
         case nicknameDataTextField:
             nicknameValidationLabel.isHidden = true
             nicknameDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
-            nicknameCheckButton.setDeactivatedButton()
-            nicknameCheckButton.setTitleColor(.init(hex: 0xD8D8D8), for: .normal)
-            nicknameCheckButton.backgroundColor = .white
-        case idDataTextField:
-            idValidationLabel.isHidden = true
-            idDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
-            idCheckButton.setDeactivatedButton()
-            idCheckButton.setTitleColor(.init(hex: 0xD8D8D8), for: .normal)
-            idCheckButton.backgroundColor = .white
-        case passwordDataTextField:
-            if let isValidPassword = passwordDataTextField.text?.isValidPassword() {
-                if isValidPassword == false { // password validation에 적합하지 않다면
-                    passwordDataTextField.subviews.first?.backgroundColor = .red
-                    passwordChangeValidationLabel.textColor = .red
-                } else {
-                    password = passwordDataTextField.text
-                    passwordChangeValidationLabel.isHidden = true
-                    passwordDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
-                }
-            }
-        case passwordCheckDataTextField:
-            guard let passwordCheckText = passwordCheckDataTextField.text else { return }
-            if passwordCheckText == passwordDataTextField.text { // 비밀번호가 같다면
-                checkPassword = passwordCheckText
-                passwordCheckValidationLabel.isHidden = true
-                passwordCheckDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
-                activeRightBarButton()
-            } else {
-                passwordCheckDataTextField.subviews.first?.backgroundColor = .red
-                passwordCheckValidationLabel.textColor = .red
-                passwordCheckValidationLabel.text = "비밀번호가 다릅니다"
-            }
+            nicknameCheckButton.setDeactivatedCheckButton()
         default:
             return
         }
