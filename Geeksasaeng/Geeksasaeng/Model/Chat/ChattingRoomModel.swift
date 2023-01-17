@@ -20,6 +20,7 @@ struct ChattingRoomModel: Decodable {
 }
 
 struct ChattingRoomResult: Decodable {
+    var partyId: Int?   // 연결된 배달 파티 id
     var accountNumber: String?   // 방장 계좌번호
     var bank: String?    // 은행
     var chiefId: Int?    // 방장 memberId
@@ -27,5 +28,6 @@ struct ChattingRoomResult: Decodable {
     var isChief: Bool?   // 방장인지
     var isOrderFinish: Bool?     // 주문 완료된 채팅인지
     var isRemittanceFinish: Bool?    // 송금 완료된 채팅인지
+    var isMatchingFinish: Bool?    // 매칭 마감 완료된 채팅인지
 }
 

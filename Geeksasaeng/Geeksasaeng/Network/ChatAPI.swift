@@ -14,7 +14,6 @@ struct ChatImageSendInput: Encodable {
     var chatRoomId: String?
     var chatType: String?
     var content: String?
-    var email: String?
     var isImageMessage: Bool?
     var isSystemMessage: Bool?
     var profileImgUrl: String?
@@ -133,7 +132,6 @@ class ChatAPI {
             "chatRoomId": parameter.chatRoomId!,
             "chatType": parameter.chatType!,
             "content": parameter.content!,
-            "email": parameter.email!,
             "isImageMessage": parameter.isImageMessage!,
             "isSystemMessage": parameter.isSystemMessage!,
             "profileImgUrl": parameter.profileImgUrl!

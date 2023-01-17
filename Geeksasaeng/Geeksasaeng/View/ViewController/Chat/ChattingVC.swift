@@ -469,6 +469,9 @@ class ChattingViewController: UIViewController {
     
     var keyboardHeight: CGFloat? // 키보드 높이
     
+    // 상대방 프로필 뷰 클릭하면 나오는 팝업뷰
+    var popUpView: ProfilePopUpViewController?
+    
     // Realm 싱글톤 객체 가져오기
     private let localRealm = DataBaseManager.shared
     
@@ -613,7 +616,11 @@ class ChattingViewController: UIViewController {
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
                     self.showRemittanceView()
                 }
-                // TODO: - 매칭 마감 상태 tf 보고 버튼 비활성화
+                
+                // 매칭 마감됐으면 매칭 마감 버튼 비활성화
+                if (self.roomInfo!.isMatchingFinish ?? false) {
+                    self.setInactiveButton(index: 1)
+                }
                 
                 // 성공 시에만 이전 메세지 불러오기 -> 순서대로 처리하기 위해
                 self.loadMessages()
@@ -902,6 +909,12 @@ class ChattingViewController: UIViewController {
         return label.frame.height
     }
     
+    // 해당 index의 버튼 비활성화 시키기
+    private func setInactiveButton(index: Int) {
+        self.ownerAlertController.actions[index].isEnabled = false
+        self.ownerAlertController.actions[index].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+    }
+    
     // MARK: - @objc Functions
     
     /* 키보드가 올라올 때 실행되는 함수 */
@@ -937,9 +950,6 @@ class ChattingViewController: UIViewController {
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
-        /* rightBarButton title 변경 코드인데 잘 안 됨
-        picker.navigationController?.navigationItem.rightBarButtonItem?.title = "전송"
-        */
         picker.delegate = self
         
         self.present(picker, animated: true, completion: nil)
@@ -1087,8 +1097,7 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        // TODO: - 파티 id 서버에서 주면 값 연결하기. 현재는 더미
-        ChatAPI.closeMatching(CloseMatchingInput(partyId: 1221)) { isSuccess in
+        ChatAPI.closeMatching(CloseMatchingInput(partyId: self.roomInfo?.partyId)) { isSuccess in
             if isSuccess {
                 print("DEBUG: 매칭 마감 성공")
             } else {
@@ -1097,8 +1106,7 @@ class ChattingViewController: UIViewController {
         }
         
         // 매칭 마감 버튼 비활성화
-        self.ownerAlertController.actions[1].isEnabled = false
-        self.ownerAlertController.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+        setInactiveButton(index: 1)
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
@@ -1164,11 +1172,10 @@ class ChattingViewController: UIViewController {
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
     @objc
     private func tapProfileImage() {
-        let popUpView = ProfilePopUpViewController()
-        popUpView.delegate = self
-        popUpView.modalPresentationStyle = .overFullScreen
-        popUpView.modalTransitionStyle = .crossDissolve
-        self.present(popUpView, animated: true)
+        popUpView!.delegate = self
+        popUpView!.modalPresentationStyle = .overFullScreen
+        popUpView!.modalTransitionStyle = .crossDissolve
+        self.present(popUpView!, animated: true)
     }
 }
 
@@ -1195,31 +1202,29 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                cell.nicknameLabel.isHidden = true
                 if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
-                    cell.rightImageView.isHidden = true
-                    cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
+                        print("TEST:", contentUrl)
                     }
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
-//                    cell.leftUnreadCntLabel.isHidden = true
+                    cell.leftUnreadCntLabel.isHidden = true
                 } else {
-                    cell.leftImageView.isHidden = true
-                    cell.nicknameLabel.isHidden = true
                     if let contentUrl = msg.message?.content {
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                         print("DEBUG: 사진 Url", contentUrl)
                     }
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
-//                    cell.rightUnreadCntLabel.isHidden = true
+                    cell.rightUnreadCntLabel.isHidden = true
                 }
                 return cell
             } else {
@@ -1260,11 +1265,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
-//                    cell.leftUnreadCntLabel.isHidden = true
+                    cell.leftUnreadCntLabel.isHidden = true
                 } else { // 다른 사람이면
                     cell.nicknameLabel.textAlignment = .left
                     if let profileImgUrl = msg.message?.profileImgUrl {
@@ -1278,14 +1283,14 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.leftImageView.isUserInteractionEnabled = true
-                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+//                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector()))
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
-//                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
-//                    cell.rightUnreadCntLabel.isHidden = true
+                    cell.rightUnreadCntLabel.isHidden = true
                 }
                 return cell
             } else { // 이미지가 아닐 때
@@ -1309,16 +1314,18 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftTimeLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
                 } else { // 다른 사람이면
-                    cell.leftImageView.isUserInteractionEnabled = true
-                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
-                    cell.nicknameLabel.textAlignment = .left
-                    if let profileImgUrl = msg.message?.profileImgUrl {
-                        cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
+                    if let profileImgStr = msg.message?.profileImgUrl {
+                        let url = URL(string: profileImgStr)
+                        cell.leftImageView.kf.setImage(with: url)
+                        self.popUpView = ProfilePopUpViewController(profileUrl: url!)
                     }
                     if self.roomInfo?.chiefId == msg.message?.memberId {
                         // 방장이라면 프로필 테두리
                         cell.leftImageView.drawBorderToChief()
                     }
+                    cell.leftImageView.isUserInteractionEnabled = true
+                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+                    cell.nicknameLabel.textAlignment = .left
                     cell.leftMessageLabel.text = msg.message?.content
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1336,30 +1343,24 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         let cellSize: CGSize
         let msg = msgContents[indexPath.row]
         guard let isImageMessage = msg.message?.isImageMessage else { return CGSize() }
-        
-        switch msg.msgType {
-        case .systemMessage:
-            let labelHeight = getSystemMessageLabelHeight(text: msg.message?.content ?? "")
-            cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
-        case .message:
-            if isImageMessage {
-                cellSize = CGSize(width: 155, height: 155)
-            } else {
+        if isImageMessage {
+            cellSize = CGSize(width: view.bounds.width, height: 155)
+        } else {
+            switch msg.msgType {
+            case .systemMessage:
+                let labelHeight = getSystemMessageLabelHeight(text: msg.message?.content ?? "")
+                cellSize = CGSize(width: view.bounds.width, height: labelHeight) // padding top, bottom = 6
+            case .message:
                 // content의 크기에 맞는 라벨을 정의하고 해당 라벨의 높이가 40 초과 (두 줄 이상) or 40 (한 줄) 비교하여 높이 적용
                 let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
                 cellSize = CGSize(width: view.bounds.width, height: labelHeight + 16) // 상하 여백 20 + 닉네임 라벨
-            }
-        case .sameSenderMessage:
-            if isImageMessage {
-                cellSize = CGSize(width: 155, height: 155)
-            } else {
+            case .sameSenderMessage:
                 let labelHeight = getMessageLabelHeight(text: msg.message?.content ?? "")
                 cellSize = CGSize(width: view.bounds.width, height: labelHeight) // label 상하 여백 20
+            default:
+                cellSize = CGSize(width: view.bounds.width, height: 40)
             }
-        default:
-            cellSize = CGSize(width: view.bounds.width, height: 40)
         }
-        
         return cellSize
     }
     
@@ -1469,11 +1470,10 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     chatId: "none",
                     chatRoomId: self.roomId,
                     chatType: "publish",
-                    content: "content",
-                    email: "dmstn@gachon.ac.kr",
+                    content: "",
                     isImageMessage: true,
                     isSystemMessage: false,
-                    profileImgUrl: "더미"
+                    profileImgUrl: ""
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in
@@ -1481,6 +1481,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                         print("이미지 전송 성공")
                     } else {
                         print("이미지 전송 실패")
+                        self.showToast(viewController: self, message: "이미지 전송에 실패했어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }
                 }
             }))

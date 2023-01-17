@@ -20,9 +20,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var partyId: Int?
     var detailData = DeliveryListDetailModelResult()
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
-    var createdData: DeliveryListDetailModelResult?
     var chatRoomName: String?
-    var fromCreated: Bool?
+    var isFromCreated: Bool?    // 파티 생성 후 바로 상세보기로 온 건지 여부
     
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
@@ -249,7 +248,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.setTitleColor(.mainColor, for: .normal)
         confirmButton.setTitle("확인", for: .normal)
         confirmButton.titleLabel?.font = .customFont(.neoRegular, size: 18)
-        confirmButton.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
+        confirmButton.addTarget(self, action: #selector(tapDeleteConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(lineView.snp.bottom).offset(15)
@@ -375,7 +374,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         scrollView.delegate = self
         view.backgroundColor = .white
         
-        getDetailData(createdData)
+        getDetailData()
         addSubViews()
         setLayouts()
         setAttributes()
@@ -386,7 +385,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let result = notification.object as! String
             if result == "true" {
                 print("수정 완료 버튼이 눌렸당")
-                self.getDetailData(self.createdData)
+                self.getDetailData()
             }
         }
     }
@@ -399,12 +398,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Initialization
     
-    convenience init(partyId: Int, dormitoryInfo: DormitoryNameResult? = nil, createdData: DeliveryListDetailModelResult? = nil) {
+    convenience init(partyId: Int, dormitoryInfo: DormitoryNameResult? = nil, isFromCreated: Bool? = nil) {
         self.init()
         self.partyId = partyId
         self.dormitoryInfo = dormitoryInfo
-        self.createdData = createdData
-        self.fromCreated = (createdData != nil)
+        self.isFromCreated = isFromCreated
     }
     
     // MARK: - Functions
@@ -414,27 +412,19 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
      1. 파티 생성 후 바로 그 파티의 상세보기를 보여주는 경우
      2. 배달파티 목록에서 클릭한 파티의 상세보기로 오는 경우
      */
-    private func getDetailData(_ createdData: DeliveryListDetailModelResult?) {
+    private func getDetailData() {
         if let partyId = partyId {
-            // 생성된 직후에 바로 상세보기 화면을 보여주는 경우면 생성됐을 때 받은 response로 detailData를 설정
-            if let detailData = createdData {
-                self.detailData = detailData
-                // 생성된 파티가 배달파티 목록에 바로 반영되도록 배달파티 목록을 업데이트 한다.
-                delegate?.updateDeliveryList()
-                setDetailData()
-            } else {
-                DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
-                    if let result = result {
-                        // detailData에 데이터 넣기
-                        if let self = self {
-                            self.detailData = result
-                            self.setDetailData()
-                        }
-                    } else {
-                        print("DEBUG: 파티 상세 조회 실패")
+            DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
+                if let result = result {
+                    // detailData에 데이터 넣기
+                    if let self = self {
+                        self.detailData = result
+                        self.setDetailData()
                     }
-                })
-            }
+                } else {
+                    print("DEBUG: 파티 상세 조회 실패")
+                }
+            })
         }
     }
     
@@ -461,10 +451,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         CreateParty.latitude = detailData.latitude
         CreateParty.longitude = detailData.longitude
         CreateParty.hashTag = detailData.hashTag
-    
-        // 불러온 시점에 바로 MapView 좌표, 마커 좌표 바꾸기 -> setMapView에서는 설정한 좌표로 초기화가 안 됨
         
-        // MARK: - nil bounding error
         self.naverMapView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: detailData.latitude!, lng: detailData.longitude!)))
         self.naverMarker.position = NMGLatLng(lat: detailData.latitude!, lng: detailData.longitude!)
         self.naverMarker.captionAligns = [NMFAlignType.top]
@@ -864,8 +851,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func showToastFromCreated() {
-        guard let fromCreated = fromCreated else { return }
-        if fromCreated {
+        guard let isFromCreated = isFromCreated else { return }
+        if isFromCreated {
             self.showToast(viewController: self, message: "파티 생성이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
         }
     }
@@ -956,9 +943,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     /* 삭제하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
-    private func tapConfirmButton() {
+    private func tapDeleteConfirmButton() {
         guard let partyId = partyId else { return }
-
         // 파티 삭제
         DeletePartyViewModel.deleteParty(partyId: partyId) { success in
             if success {
