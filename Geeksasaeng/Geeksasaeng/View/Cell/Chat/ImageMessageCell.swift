@@ -19,12 +19,15 @@ class ImageMessageCell: UICollectionViewCell {
     let leftProfileImageView = UIImageView()
     let rightProfileImageView = UIImageView()
     let nicknameLabel = UILabel()
-    let rightTimeLabel = UILabel()
-    let leftTimeLabel = UILabel()
+    
     let leftImageMessageView = UIView()
     let rightImageMessageView = UIView()
-    let leftImageView = UIImageView()
+    var leftImageView = UIImageView()
     let rightImageView = UIImageView()
+    let rightTimeLabel = UILabel()
+    let leftTimeLabel = UILabel()
+    let leftUnreadCntLabel = UILabel()
+    let rightUnreadCntLabel = UILabel()
     
     // MARK: - Life Cycle
     
@@ -45,6 +48,9 @@ class ImageMessageCell: UICollectionViewCell {
         leftTimeLabel.text = ""
         rightTimeLabel.text = ""
         
+        leftUnreadCntLabel.text = ""
+        rightUnreadCntLabel.text = ""
+        
         leftImageMessageView.isHidden = false
         rightImageMessageView.isHidden = false
         
@@ -61,11 +67,13 @@ class ImageMessageCell: UICollectionViewCell {
     // MARK: - Functions
     
     private func addSubViews() {
-        [nicknameLabel,
-         leftImageMessageView, rightImageMessageView,
-         leftImageView, rightImageView,
-         rightTimeLabel, leftTimeLabel,
-         leftProfileImageView, rightProfileImageView].forEach {
+        [
+            nicknameLabel,
+            leftProfileImageView, rightProfileImageView,
+            leftImageMessageView, rightImageMessageView,
+            rightTimeLabel, leftTimeLabel,
+            leftUnreadCntLabel, rightUnreadCntLabel
+        ].forEach {
             addSubview($0)
         }
         
@@ -74,6 +82,24 @@ class ImageMessageCell: UICollectionViewCell {
     }
     
     private func setLayouts() {
+        leftProfileImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.height.equalTo(32)
+            make.left.equalToSuperview().inset(23)
+        }
+        
+        rightProfileImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.height.equalTo(32)
+            make.right.equalToSuperview().inset(23)
+        }
+        
+        nicknameLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.left.equalTo(leftProfileImageView.snp.right).offset(10)
+            make.right.equalTo(rightProfileImageView.snp.left).offset(-10)
+        }
+        
         leftImageMessageView.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
             make.left.equalTo(leftProfileImageView.snp.right).offset(10)
@@ -106,22 +132,14 @@ class ImageMessageCell: UICollectionViewCell {
             make.right.equalTo(rightImageMessageView.snp.left).offset(-3)
         }
         
-        leftProfileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.width.height.equalTo(32)
-            make.left.equalToSuperview().inset(23)
+        leftUnreadCntLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(leftTimeLabel.snp.centerY)
+            make.left.equalTo(leftTimeLabel.snp.right).offset(6)
         }
         
-        nicknameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.left.equalTo(leftProfileImageView.snp.right).offset(10)
-            make.right.equalTo(rightProfileImageView.snp.left).offset(-10)
-        }
-        
-        rightProfileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.width.height.equalTo(32)
-            make.right.equalToSuperview().inset(23)
+        rightUnreadCntLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(rightTimeLabel.snp.centerY)
+            make.right.equalTo(rightTimeLabel.snp.left).offset(-6)
         }
     }
     
@@ -141,7 +159,20 @@ class ImageMessageCell: UICollectionViewCell {
         }
         
         [leftImageView, rightImageView].forEach {
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = 5
+        }
+        
+        [leftUnreadCntLabel, rightUnreadCntLabel].forEach {
+            $0.setTextAndColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 12))
+        }
+        
+        if leftUnreadCntLabel.text == "0" {
+            leftUnreadCntLabel.text = ""
+        }
+        if rightUnreadCntLabel.text == "0" {
+            rightUnreadCntLabel.text = ""
         }
     }
 }

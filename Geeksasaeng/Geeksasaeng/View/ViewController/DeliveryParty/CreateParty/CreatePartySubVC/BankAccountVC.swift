@@ -238,28 +238,7 @@ class BankAccountViewController: UIViewController {
                 /* 생성된 파티의 상세 조회 화면으로 이동 */
                 guard let partyId = result.id,
                       let dormitoryInfo = dormitoryInfo else { return }
-                let createdData = DeliveryListDetailModelResult(
-                    chief: result.chief,
-                    chiefId: result.chiefId,
-                    chiefProfileImgUrl: result.chiefProfileImgUrl,
-                    content: result.content,
-                    currentMatching: result.currentMatching,
-                    foodCategory: result.foodCategory,
-                    hashTag: result.hashTag,
-                    id: result.id,
-                    latitude: result.latitude,
-                    longitude: result.longitude,
-                    matchingStatus: result.matchingStatus,
-                    maxMatching: result.maxMatching,
-                    orderTime: result.orderTime,
-                    title: result.title,
-                    updatedAt: result.updatedAt,
-                    storeUrl: result.storeUrl,
-                    authorStatus: result.authorStatus,
-                    dormitory: result.dormitoryId,
-                    uuid: result.uuid,
-                    belongStatus: result.belongStatus)
-                let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo, createdData: createdData)
+                let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo, isFromCreated: true)
                 
                 // delegate로 DeliveryVC를 넘겨줌
                 partyVC.delegate = delegate
