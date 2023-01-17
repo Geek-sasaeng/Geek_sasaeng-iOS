@@ -705,10 +705,19 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         
         cell.titleLabel.text = myActivities[indexPath.row].title
         
-        if let str = myActivities[indexPath.row].createdAt {
-            let endIdx = str.index(str.startIndex, offsetBy: 10)
-            cell.createdAtLabel.text = str[...endIdx]
-        }
+        /*
+         let endIdx = result.createdAt!.index(result.createdAt!.startIndex, offsetBy: 10)
+         signUpDateLabel.text = "가입일  |  " + result.createdAt![...endIdx]
+         */
+        
+        let endIdx = myActivities[indexPath.row].createdAt?.index(myActivities[indexPath.row].createdAt!.startIndex, offsetBy: 10)
+        cell.createdAtLabel.text = myActivities[indexPath.row].createdAt![...endIdx!]
+        
+//        if let str = myActivities[indexPath.row].createdAt {
+//            let endIdx = str.index(str.startIndex, offsetBy: 10)
+//            cell.createdAtLabel.text = str[...endIdx]
+//        }
+        cell.createdAtLabel.text = myActivities[indexPath.row].createdAt
         
         return cell
     }

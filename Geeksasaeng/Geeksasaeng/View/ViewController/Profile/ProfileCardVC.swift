@@ -156,7 +156,6 @@ class ProfileCardViewController: UIViewController {
                 idDataLabel.text = result.nickname
                 emailDataLabel.text = result.emailAddress
                 phoneNumberDataLabel.text = result.phoneNumber
-//                signUpDateLabel.text = "가입일 | " + result.createdAt!
                 let endIdx = result.createdAt!.index(result.createdAt!.startIndex, offsetBy: 10)
                 signUpDateLabel.text = "가입일  |  " + result.createdAt![...endIdx]
             }
