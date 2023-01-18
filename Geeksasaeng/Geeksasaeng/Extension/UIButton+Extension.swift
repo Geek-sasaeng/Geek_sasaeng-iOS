@@ -53,4 +53,22 @@ extension UIButton {
         self.backgroundColor = UIColor(hex: 0xEFEFEF)
         self.layer.shadowRadius = 0
     }
+    
+    func setActivatedCheckButton() {
+        self.isEnabled = true
+        self.setTitleColor(.mainColor, for: .normal)
+        self.layer.masksToBounds = true
+        self.layer.borderColor = UIColor.mainColor.cgColor
+        self.layer.borderWidth = 1
+        self.backgroundColor = .white
+    }
+    
+    func setDeactivatedCheckButton() {
+        self.isEnabled = false
+        self.setTitleColor(.init(hex: 0xD8D8D8), for: .normal)
+        self.backgroundColor = .white
+        self.layer.masksToBounds = true
+        self.layer.borderColor = UIColor(hex: 0xD4EEF9).cgColor
+        self.layer.borderWidth = 1
+    }
 }

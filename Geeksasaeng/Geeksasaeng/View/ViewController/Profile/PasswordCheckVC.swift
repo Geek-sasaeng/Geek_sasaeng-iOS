@@ -11,6 +11,13 @@ import SnapKit
 import Then
 
 class PasswordCheckViewController: UIViewController {
+    // MARK: - Properties
+    /* 이전 뷰에서 받아오는 properties */
+    var dormitoryId: Int?
+    var loginId: String?
+    var nickname: String?
+    var profileImg: UIImage?
+    
     
     // MARK: - SubViews
     
@@ -147,8 +154,14 @@ class PasswordCheckViewController: UIViewController {
         
         UserInfoAPI.passwordCheck(passwordInput) { isSuccess in
             if isSuccess { // 비밀번호 맞았을 때 -> 수정 화면으로 이동
-                let editMyInfoVC = EditMyInfoViewController()
-                self.navigationController?.pushViewController(editMyInfoVC, animated: true)
+                NotificationCenter.default.post(name: NSNotification.Name("CorrectPassword"), object: "true")
+                let changePasswordVC = ChangePasswordViewController().then {
+                    $0.dormitoryId = self.dormitoryId
+                    $0.loginId = self.loginId
+                    $0.nickname = self.nickname
+                    $0.profileImg = self.profileImg
+                }
+                self.navigationController?.pushViewController(changePasswordVC, animated: true)
                 self.tapBackButton()
             } else { // 비밀번호 틀렸을 때 -> TextField 하단에 notice
                 self.passwordCheckLabel.isHidden = false
