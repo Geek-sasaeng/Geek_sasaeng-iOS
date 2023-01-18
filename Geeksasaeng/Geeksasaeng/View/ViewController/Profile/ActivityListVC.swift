@@ -113,6 +113,14 @@ class ActivityListViewController: UIViewController {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 활동 보기"
         
+        // label 행간 설정
+        let attrString = NSMutableAttributedString(string: mainTitleLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        mainTitleLabel.attributedText = attrString
+        
+        // 테이블뷰 attrs
         activityTableView.backgroundColor = .white
         activityTableView.rowHeight = 81 + 6 + 6
         activityTableView.separatorStyle = .none
@@ -130,7 +138,6 @@ class ActivityListViewController: UIViewController {
     
     private func setLayouts() {
         /* Category Tap */
-        // TODO: - 행간 간격은 어떻게?
         mainTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(32)
             make.left.equalToSuperview().inset(18)
@@ -362,8 +369,5 @@ extension ActivityListViewController: UITableViewDataSource, UITableViewDelegate
         // TODO: - partyVC로 dormitoryInfo를 안 넘겨주면 파티 수정을 못 함
         let partyVC = PartyViewController(partyId: partyId)
         self.navigationController?.pushViewController(partyVC, animated: true)
-
-        // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
