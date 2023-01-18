@@ -212,11 +212,6 @@ class ChattingStorageViewController: UIViewController {
     // MARK: - @objc Functions
     
     @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @objc
     private func tapStorageEdit() {
         print("DEBUG: 채팅 보관함 수정 버튼 클릭")
     }

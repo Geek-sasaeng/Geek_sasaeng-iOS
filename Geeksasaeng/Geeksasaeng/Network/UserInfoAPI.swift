@@ -81,12 +81,6 @@ struct EditUserInput: Encodable {
     var nickname: String?
     var password: String?
 }
-//struct imageFile: Codable {
-//    private let image: Data
-//    private init(image: UIImage) {
-//        self.image = image.pngData()!
-//    }
-//}
 struct EditUserModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
