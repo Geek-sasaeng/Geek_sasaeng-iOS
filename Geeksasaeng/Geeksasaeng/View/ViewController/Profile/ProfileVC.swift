@@ -136,15 +136,20 @@ class ProfileViewController: UIViewController {
         }
     }
     
+    // 나의 활동 보기 옆의 화살표 버튼
+    lazy var myActivityArrowButton = UIButton().then {
+        $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
+        $0.addTarget(self, action: #selector(tapMyActivityArrowButton), for: .touchUpInside)
+    }
+    
     /* 나의 활동 view */
     lazy var myActivityView = UIView().then { view in
         let showMyActivityLabel = UILabel().then {
             $0.text = "나의 활동 보기"
             $0.font = .customFont(.neoMedium, size: 15)
         }
-        let arrowImageView = UIImageView(image: UIImage(named: "ServiceArrow"))
         
-        [ showMyActivityLabel, arrowImageView].forEach {
+        [ showMyActivityLabel, myActivityArrowButton].forEach {
             view.addSubview($0)
         }
         
@@ -152,7 +157,7 @@ class ProfileViewController: UIViewController {
             make.top.equalToSuperview().inset(20)
             make.left.equalToSuperview().inset(15)
         }
-        arrowImageView.snp.makeConstraints { make in
+        myActivityArrowButton.snp.makeConstraints { make in
             make.top.equalTo(showMyActivityLabel.snp.top)
             make.right.equalToSuperview().inset(15)
         }
@@ -643,12 +648,22 @@ class ProfileViewController: UIViewController {
     }
     
     // MARK: - @objc Functions
+    
     @objc
     private func tapMyInfoView() {
         let profileCardVC = ProfileCardViewController()
         profileCardVC.modalPresentationStyle = .overFullScreen
         profileCardVC.modalTransitionStyle = .crossDissolve
         self.present(profileCardVC, animated: true)
+    }
+    
+    // 나의 활동 목록 화면으로 이동
+    @objc
+    private func tapMyActivityArrowButton() {
+        let activityListVC = ActivityListViewController()
+        activityListVC.modalPresentationStyle = .overFullScreen
+        activityListVC.modalTransitionStyle = .crossDissolve
+        self.navigationController?.pushViewController(activityListVC, animated: true)
     }
     
     @objc
@@ -713,6 +728,7 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapLogoutConfirmButton() {
+        // TODO: - 로그아웃 api 연동
         UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
         naverLoginVM.resetToken() // delete naver login token
         

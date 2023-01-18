@@ -955,12 +955,6 @@ class ChattingViewController: UIViewController {
         self.present(picker, animated: true, completion: nil)
     }
     
-    /* 왼쪽 상단 백버튼 클릭시 실행되는 함수 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
     @objc
     private func tapOptionButton() {

@@ -589,11 +589,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @objc
     private func tapShowTextIcon(sender: UIButton) {
         switch sender {
         case showPasswordCheckTextFieldButton: // passwordCheck TextField에 있는 Button

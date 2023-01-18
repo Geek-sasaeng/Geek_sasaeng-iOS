@@ -88,8 +88,11 @@ extension UIViewController {
         view.addGestureRecognizer(rightSwipe)
     }
     
+    // MARK: - @objc Functions
+    
     /* 스와이프 감지했을 때, 이전 화면으로 돌아가는 동작 실행 */
-    @objc public func swipeAction(swipe: UISwipeGestureRecognizer) {
+    @objc
+    public func swipeAction(swipe: UISwipeGestureRecognizer) {
         let transition = CATransition()
         transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
@@ -97,5 +100,11 @@ extension UIViewController {
         transition.subtype = CATransitionSubtype.fromLeft
         self.view.window!.layer.add(transition, forKey: nil)
         self.dismiss(animated: false, completion: nil)
+    }
+    
+    // 이전 화면으로 돌아가기
+    @objc
+    public func back(sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
 }

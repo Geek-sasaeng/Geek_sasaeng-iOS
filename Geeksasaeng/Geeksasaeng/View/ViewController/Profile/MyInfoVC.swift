@@ -438,11 +438,6 @@ class MyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     /* 내 정보 수정 버튼 (연필) 눌렀을 때 실행되는 함수 */
     @objc
     private func tapEditButton() {

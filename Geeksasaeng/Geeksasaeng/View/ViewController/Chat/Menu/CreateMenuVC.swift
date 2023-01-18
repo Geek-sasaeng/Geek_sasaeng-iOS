@@ -104,12 +104,6 @@ class CreateMenuViewController: UIViewController {
     
     // MARK: - @objc Functions
     
-    /* 이전 화면으로 돌아가기 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     @objc
     private func tapCompleteButton() {
         print("완료 버튼 클릭")
