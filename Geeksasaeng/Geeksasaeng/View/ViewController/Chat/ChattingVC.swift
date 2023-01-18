@@ -757,7 +757,7 @@ class ChattingViewController: UIViewController {
         return self.msgContents.filter { msg in
             msg.message?.isRead == false
             && msg.message?.isSystemMessage == false
-            && msg.message?.nickName != LoginModel.nickname
+            && msg.message?.memberId != LoginModel.memberId
         }
     }
     
@@ -813,7 +813,7 @@ class ChattingViewController: UIViewController {
     }
     
     // 로컬에 저장된 isRead 필드값을 true로 업데이트
-    // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 nickName으로 구분 안 함
+    // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 memberId로 구분 안 함
     private func updateUnreadToRead(data: MsgResponse) {
         DispatchQueue.main.async {
             print("DEBUG: updateUnreadToRead")
@@ -1199,7 +1199,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
                 cell.nicknameLabel.isHidden = true
-                if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
+                if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     if let contentUrl = msg.message?.content {
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                         print("TEST:", contentUrl)
@@ -1225,7 +1225,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
-                if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
+                if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     cell.rightMessageLabel.text = msg.message?.content
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1247,7 +1247,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
                 cell.nicknameLabel.text = msg.message?.nickName
-                if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
+                if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {
@@ -1292,7 +1292,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             } else { // 이미지가 아닐 때
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
                 cell.nicknameLabel.text = msg.message?.nickName
-                if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
+                if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {
