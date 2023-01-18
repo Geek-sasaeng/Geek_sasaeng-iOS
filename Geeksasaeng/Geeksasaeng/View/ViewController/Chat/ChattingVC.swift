@@ -614,7 +614,9 @@ class ChattingViewController: UIViewController {
                 
                 // 방장이 아니고, 아직 송금을 안 했다면 송금완료 뷰 띄우기
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
-                    self.showRemittanceView()
+                    self.showTopView(view: self.remittanceView)
+                } else if (self.roomInfo!.isChief! && !(self.roomInfo!.isOrderFinish!)) {  // 방장이고 주문 완료 안 했다면 주문완료 뷰 띄우기
+                    self.showTopView(view: self.orderCompletedView)
                 }
                 
                 // 매칭 마감됐으면 매칭 마감 버튼 비활성화
@@ -700,10 +702,10 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    // 송금완료 뷰 띄우기
-    private func showRemittanceView() {
-        self.view.addSubview(self.remittanceView)
-        self.remittanceView.snp.makeConstraints { make in
+    // 상단에 송금완료 뷰(파티원일 때) 또는 주문완료 뷰(방장일 때) 띄우기
+    private func showTopView(view: UIView) {
+        self.view.addSubview(view)
+        view.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.height.equalTo(55)
