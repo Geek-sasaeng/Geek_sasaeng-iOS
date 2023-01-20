@@ -434,6 +434,17 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    /* 채팅 이미지 관련 서브뷰 */
+    let imageMessageExpansionNicknameLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = .white
+    }
+    let imageMessageExpansionDateLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 12)
+        $0.textColor = .white
+    }
+    let imageMessageExpansionImageView = UIImageView()
+    
     // 블러 뷰
     var visualEffectView: UIVisualEffectView?
     
@@ -480,6 +491,8 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        /* 더미 데이터 */
+        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -916,7 +929,7 @@ class ChattingViewController: UIViewController {
         self.ownerAlertController.actions[index].isEnabled = false
         self.ownerAlertController.actions[index].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
     }
-    
+
     // MARK: - @objc Functions
     
     /* 키보드가 올라올 때 실행되는 함수 */
@@ -1173,6 +1186,52 @@ class ChattingViewController: UIViewController {
         popUpView!.modalTransitionStyle = .crossDissolve
         self.present(popUpView!, animated: true)
     }
+    
+    @objc
+    private func tapImageMessageCell(_ sender: UITapGestureRecognizerWithParam) {
+        /* create blur view */
+        if visualEffectView == nil {
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            visualEffectView.isUserInteractionEnabled = true
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+        }
+        
+        /* blur view에 add하면 에러 */
+        
+//        /* set attributes */
+//        let msg = self.msgContents[sender.index!]
+//        imageMessageExpansionNicknameLabel.text = msg.message?.nickName
+//
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        let dateString = dateFormatter.string(from: (msg.message?.createdAt)!)
+//        imageMessageExpansionDateLabel.text = dateString
+//
+//        let imageUrl = URL(string: (msg.message?.content)!)
+//        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+//
+//        /* add subViews */
+//        [ imageMessageExpansionNicknameLabel, imageMessageExpansionDateLabel, imageMessageExpansionImageView ].forEach {
+//            self.visualEffectView?.addSubview($0)
+//        }
+//
+//        imageMessageExpansionNicknameLabel.snp.makeConstraints { make in
+//            make.top.equalToSuperview().inset(78)
+//            make.centerX.equalToSuperview()
+//        }
+//        imageMessageExpansionDateLabel.snp.makeConstraints { make in
+//            make.top.equalTo(imageMessageExpansionNicknameLabel.snp.bottom).offset(13)
+//            make.centerX.equalToSuperview()
+//        }
+//        imageMessageExpansionImageView.snp.makeConstraints { make in
+//            make.center.equalToSuperview()
+//            make.width.height.equalTo(331)
+//        }
+        
+    }
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
@@ -1198,6 +1257,13 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                
+                /* imageCell에 tap gesture 추가 (이미지 확대 기능 위해) */
+                cell.isUserInteractionEnabled = true
+                let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
+                tapGesture.index = indexPath.row
+                cell.addGestureRecognizer(tapGesture)
+                
                 cell.nicknameLabel.isHidden = true
                 if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     if let contentUrl = msg.message?.content {
@@ -1246,6 +1312,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                
+                cell.isUserInteractionEnabled = true
+                let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
+                tapGesture.index = indexPath.row
+                cell.addGestureRecognizer(tapGesture)
+                
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right

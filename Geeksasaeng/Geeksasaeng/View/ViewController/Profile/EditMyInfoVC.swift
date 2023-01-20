@@ -387,6 +387,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.addObserver(forName: Notification.Name("CorrectPassword"), object: nil, queue: nil) { notification in
             let result = notification.object as! String
             if result == "true" {
+                print("======비밀번호 맞음, 블러 뷰 내리겠음")
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectView = nil
             }

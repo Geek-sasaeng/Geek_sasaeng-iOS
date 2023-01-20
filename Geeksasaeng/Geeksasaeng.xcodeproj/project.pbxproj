@@ -42,6 +42,18 @@
 		1036F0AA291A800F00306840 /* EditMyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A9291A800F00306840 /* EditMyInfoVC.swift */; };
 		1036F0AB291A800F00306840 /* EditMyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A9291A800F00306840 /* EditMyInfoVC.swift */; };
 		1036F0AC291A800F00306840 /* EditMyInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036F0A9291A800F00306840 /* EditMyInfoVC.swift */; };
+		103AD390297AB09200295D9C /* UITapGestureRecognizer + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD38F297AB09200295D9C /* UITapGestureRecognizer + Extension.swift */; };
+		103AD391297AB09200295D9C /* UITapGestureRecognizer + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD38F297AB09200295D9C /* UITapGestureRecognizer + Extension.swift */; };
+		103AD392297AB09200295D9C /* UITapGestureRecognizer + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD38F297AB09200295D9C /* UITapGestureRecognizer + Extension.swift */; };
+		103AD394297AB81100295D9C /* CustomerServiceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD393297AB81100295D9C /* CustomerServiceVC.swift */; };
+		103AD395297AB81100295D9C /* CustomerServiceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD393297AB81100295D9C /* CustomerServiceVC.swift */; };
+		103AD396297AB81100295D9C /* CustomerServiceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD393297AB81100295D9C /* CustomerServiceVC.swift */; };
+		103AD399297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD398297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift */; };
+		103AD39A297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD398297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift */; };
+		103AD39B297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD398297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift */; };
+		103AD39D297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD39C297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift */; };
+		103AD39E297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD39C297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift */; };
+		103AD39F297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103AD39C297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift */; };
 		103F1454286ACA84004B637B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1453286ACA84004B637B /* AppDelegate.swift */; };
 		103F1456286ACA84004B637B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103F1455286ACA84004B637B /* SceneDelegate.swift */; };
 		103F145D286ACA86004B637B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 103F145C286ACA86004B637B /* Assets.xcassets */; };
@@ -1255,6 +1267,10 @@
 		1036EC3B29758614005AF45C /* ChangePasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordVC.swift; sourceTree = "<group>"; };
 		1036F0A5291A7E1500306840 /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		1036F0A9291A800F00306840 /* EditMyInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMyInfoVC.swift; sourceTree = "<group>"; };
+		103AD38F297AB09200295D9C /* UITapGestureRecognizer + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITapGestureRecognizer + Extension.swift"; sourceTree = "<group>"; };
+		103AD393297AB81100295D9C /* CustomerServiceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerServiceVC.swift; sourceTree = "<group>"; };
+		103AD398297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfUseAgreementOfProfileVC.swift; sourceTree = "<group>"; };
+		103AD39C297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoAgreementOfProfileVC.swift; sourceTree = "<group>"; };
 		103F1450286ACA84004B637B /* Geeksasaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geeksasaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		103F1453286ACA84004B637B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103F1455286ACA84004B637B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1764,6 +1780,17 @@
 				1031AAA128981619004B6568 /* PersonalInfoAgreementVC.swift */,
 			);
 			path = Agreement;
+			sourceTree = "<group>";
+		};
+		103AD397297AC0B500295D9C /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */,
+				106EBC532974083400F8343B /* ProfileCardVC.swift */,
+				103AD398297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift */,
+				103AD39C297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift */,
+			);
+			path = SubViews;
 			sourceTree = "<group>";
 		};
 		103F1447286ACA84004B637B = {
@@ -2321,13 +2348,12 @@
 		A225E10D28ADEBF700029686 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				103AD397297AC0B500295D9C /* SubViews */,
 				A25766D228AA9F9700ED8DAB /* ProfileVC.swift */,
-				10AC8B0D2916927500A09952 /* PasswordCheckVC.swift */,
 				1036F0A9291A800F00306840 /* EditMyInfoVC.swift */,
-				106EBC532974083400F8343B /* ProfileCardViewController.swift */,
 				A271CBF12976C6DC0045DEE0 /* ActivityListVC.swift */,
-				106EBC532974083400F8343B /* ProfileCardVC.swift */,
 				1036EC3B29758614005AF45C /* ChangePasswordVC.swift */,
+				103AD393297AB81100295D9C /* CustomerServiceVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -2611,6 +2637,7 @@
 				102B35D32879BCF90042F691 /* UITextField+Extension.swift */,
 				102B35D72879BD050042F691 /* UIButton+Extension.swift */,
 				102B35DB2879BD670042F691 /* UIViewController+Extension.swift */,
+				103AD38F297AB09200295D9C /* UITapGestureRecognizer + Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3815,7 +3842,9 @@
 				A2B420AA286F58C100278F92 /* DeliveryVC.swift in Sources */,
 				A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */,
 				A2AF539D2896C0680052F734 /* SearchViewModel.swift in Sources */,
+				103AD394297AB81100295D9C /* CustomerServiceVC.swift in Sources */,
 				A203B2922954DB20001DFE14 /* ChattingVC.swift in Sources */,
+				103AD399297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */,
 				A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				108B6334288998F9008C4F65 /* CreatePartyModel.swift in Sources */,
@@ -3823,6 +3852,7 @@
 				10B3822228A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				1041ADDE28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				103F1454286ACA84004B637B /* AppDelegate.swift in Sources */,
+				103AD390297AB09200295D9C /* UITapGestureRecognizer + Extension.swift in Sources */,
 				A248D88D289FB8E5000E2422 /* MessageCell.swift in Sources */,
 				1036EC3829756D08005AF45C /* MyActivityCollectionViewCell.swift in Sources */,
 				10AC5CA92889269000C8086A /* EditPartyVC.swift in Sources */,
@@ -3856,6 +3886,7 @@
 				A2513F19287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				A248D895289FB919000E2422 /* ChattingListTableViewCell.swift in Sources */,
 				1036EC3C29758614005AF45C /* ChangePasswordVC.swift in Sources */,
+				103AD39D297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */,
 				A2A7141B296B478A006410E2 /* ChattingRoomModel.swift in Sources */,
 				106D9759287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				102B35D02879BCD60042F691 /* UIView+Extension.swift in Sources */,
@@ -3879,6 +3910,7 @@
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				A2EE2BC4294727B200335680 /* MessageData.swift in Sources */,
 				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
+				103AD395297AB81100295D9C /* CustomerServiceVC.swift in Sources */,
 				A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				A2513F1A287868070029C279 /* EmailAuthViewModel.swift in Sources */,
 				10AC5CAA2889269000C8086A /* EditPartyVC.swift in Sources */,
@@ -3917,6 +3949,7 @@
 				A246E58128A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
 				A203B2932954DB20001DFE14 /* ChattingVC.swift in Sources */,
 				A2085AD8287054E900D6CF79 /* LoginViewModel.swift in Sources */,
+				103AD39A297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */,
 				A26DA3C528918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				1036EC3D29758614005AF45C /* ChangePasswordVC.swift in Sources */,
 				A21DB935289D896B00A523F1 /* ChattingListVC.swift in Sources */,
@@ -3974,6 +4007,7 @@
 				A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */,
 				108D5973289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
 				A2CB1F17293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */,
+				103AD39E297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */,
 				A2D2047A28885A65002350C8 /* ReportVC.swift in Sources */,
 				A20B53F7288D7F27006C695E /* TimeCollectionViewCell.swift in Sources */,
 				10EEF83C295EDBE0009F878D /* ImageMessageCell.swift in Sources */,
@@ -3993,6 +4027,7 @@
 				10E8E71D288D739100AF4581 /* DeletePartyModel.swift in Sources */,
 				A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A2513F0E2878261F0029C279 /* PhoneAuthViewModel.swift in Sources */,
+				103AD391297AB09200295D9C /* UITapGestureRecognizer + Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4020,6 +4055,7 @@
 				A2AC91DC2874D3B600C7CF64 /* NaverLoginViewModel.swift in Sources */,
 				106D975B287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				A2035EA328833ED60051498A /* AdViewModel.swift in Sources */,
+				103AD39B297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */,
 				A225E10C28ADE06A00029686 /* CommunityVC.swift in Sources */,
 				A248D893289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				A2E78B0B28AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
@@ -4038,6 +4074,7 @@
 				1036EC3A29756D08005AF45C /* MyActivityCollectionViewCell.swift in Sources */,
 				108B633A28899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				108D5974289AE7B700F2C258 /* DormitoryAPI.swift in Sources */,
+				103AD396297AB81100295D9C /* CustomerServiceVC.swift in Sources */,
 				A2CB1F18293DF44D008FAC46 /* GetChatRoomListAPI.swift in Sources */,
 				A20FC0EF287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
 				106D9757287D7C32005CFB85 /* CategoryVC.swift in Sources */,
@@ -4049,6 +4086,7 @@
 				A21E82BB28E4F17E00D75084 /* ChattingStorageTableViewCell.swift in Sources */,
 				10D4D6B52894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
+				103AD392297AB09200295D9C /* UITapGestureRecognizer + Extension.swift in Sources */,
 				10E8E723288D740100AF4581 /* DeletePartyViewModel.swift in Sources */,
 				10FECB1C28A4ECD2007B66C8 /* sameSenderMessageCell.swift in Sources */,
 				A2085AD4287048A800D6CF79 /* RegisterAPI.swift in Sources */,
@@ -4077,6 +4115,7 @@
 				A29B560429740ECB00945776 /* CloseMatchingModel.swift in Sources */,
 				A246E58228A3FA33009707B4 /* JoinPartyAPI.swift in Sources */,
 				A28F45FA294100D60097714E /* JoinChatAPI.swift in Sources */,
+				103AD39F297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
 				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
