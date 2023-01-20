@@ -1096,13 +1096,13 @@ class ChattingViewController: UIViewController {
         ChatAPI.closeMatching(CloseMatchingInput(partyId: self.roomInfo?.partyId)) { isSuccess in
             if isSuccess {
                 print("DEBUG: 매칭 마감 성공")
+                
+                // 매칭 마감 버튼 비활성화
+                self.setInactiveButton(index: 1)
             } else {
                 print("DEBUG: 매칭 마감 실패")
             }
         }
-        
-        // 매칭 마감 버튼 비활성화
-        setInactiveButton(index: 1)
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
