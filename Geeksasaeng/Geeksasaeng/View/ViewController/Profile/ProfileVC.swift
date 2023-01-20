@@ -153,14 +153,14 @@ class ProfileViewController: UIViewController {
     }
     
     /* 나의 활동 view (활동 내역이 있을 때) */
-    let existMyActivityView = UIView().then { view in
+    lazy var existMyActivityView = UIView().then { view in
         view.isUserInteractionEnabled = true
         let showMyActivityLabel = UILabel().then {
             $0.text = "나의 활동 보기"
             $0.font = .customFont(.neoMedium, size: 15)
         }
         
-        [ showMyActivityLabel, myActivityArrowButton].forEach {
+        [ showMyActivityLabel, self.myActivityArrowButton].forEach {
             view.addSubview($0)
         }
         showMyActivityLabel.snp.makeConstraints { make in

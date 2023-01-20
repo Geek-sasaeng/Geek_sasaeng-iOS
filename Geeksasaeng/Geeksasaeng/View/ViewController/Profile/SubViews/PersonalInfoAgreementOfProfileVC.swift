@@ -40,7 +40,7 @@ class PersonalInfoAgreementOfProfileViewController: UIViewController {
     private func setAttributes() {
         navigationItem.title = "서비스 이용약관 동의"
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(self.back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
@@ -75,9 +75,4 @@ class PersonalInfoAgreementOfProfileViewController: UIViewController {
     
     
     // MARK: - Functions
-    
-    @objc
-    private func back() {
-        navigationController?.popViewController(animated: true)
-    }
 }
