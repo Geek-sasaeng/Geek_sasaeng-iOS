@@ -357,7 +357,7 @@ extension ActivityListViewController: UITableViewDataSource, UITableViewDelegate
         cell.foodCategoryLabel.text = nowData.foodCategory
         
         // 뒤에 시간 자르기
-        let endIdx = nowData.updatedAt!.index(nowData.updatedAt!.startIndex, offsetBy: 10)
+        let endIdx = nowData.updatedAt!.index(nowData.updatedAt!.startIndex, offsetBy: 9)
         // -를 .으로 바꾸기
         cell.dateLabel.text = String(nowData.updatedAt![...endIdx]).replacingOccurrences(of: "-", with: ".")
         
