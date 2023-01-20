@@ -24,6 +24,7 @@ class ProfileViewController: UIViewController {
             myActivityCollectionView.reloadData()
         }
     }
+    var createdAt: [String] = []
     
     
     // MARK: - SubViews
@@ -147,10 +148,13 @@ class ProfileViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapMyActivityArrowButton), for: .touchUpInside)
     }
     /* 나의 활동 container view */
-    lazy var myActivityContainerView = UIView()
+    lazy var myActivityContainerView = UIView().then {
+        $0.isUserInteractionEnabled = true
+    }
     
     /* 나의 활동 view (활동 내역이 있을 때) */
     lazy var existMyActivityView = UIView().then { view in
+        view.isUserInteractionEnabled = true
         let showMyActivityLabel = UILabel().then {
             $0.text = "나의 활동 보기"
             $0.font = .customFont(.neoMedium, size: 15)
@@ -206,12 +210,10 @@ class ProfileViewController: UIViewController {
     }
     let firstLineView = UIView()
     let secondLineView = UIView()
-    let thirdLineView = UIView()
     
     /* 나의 정보 수정, 문의하기, 이용 약관 보기, 로그아웃 */
     let editMyInfoLabel = UILabel().then { $0.text = "나의 정보 수정" }
-    let contactUsLabel = UILabel().then { $0.text = "문의하기" }
-    let termsOfUseLabel = UILabel().then { $0.text = "이용 약관 보기" }
+    let customerServiceLabel = UILabel().then { $0.text = "고객센터" }
     let logoutLabel = UILabel().then { $0.text = "로그아웃"}
     
     lazy var withdrawalMembershipButton = UIButton().then {
@@ -224,8 +226,7 @@ class ProfileViewController: UIViewController {
     
     // 나의 정보 수정, 문의하기, 이용 약관 보기, 로그아웃 옆의 화살표 버튼
     let editMyInfoArrowButton = UIButton()
-    let contactUsArrowButton = UIButton()
-    let termsOfUseArrowButton = UIButton()
+    let customerServiceButton = UIButton()
     let logoutArrowButton = UIButton()
     
     lazy var logoutView = UIView().then {
@@ -483,25 +484,25 @@ class ProfileViewController: UIViewController {
         self.navigationItem.title = "나의 정보"
         
         /* 서비스 labels Attrs 설정 */
-        [ editMyInfoLabel, contactUsLabel, termsOfUseLabel, logoutLabel ].forEach {
+        [ editMyInfoLabel, customerServiceLabel, logoutLabel ].forEach {
             $0.font = .customFont(.neoMedium, size: 15)
             $0.textColor = .init(hex: 0x2F2F2F)
         }
         
         /* 구분선 설정 */
-        [firstLineView, secondLineView, thirdLineView].forEach {
+        [firstLineView, secondLineView].forEach {
             $0.backgroundColor = .init(hex: 0xF8F8F8)
         }
         
         /* 화살표 버튼들 */
-        [ editMyInfoArrowButton, contactUsArrowButton, termsOfUseArrowButton, logoutArrowButton ].forEach {
+        [ editMyInfoArrowButton, customerServiceButton, logoutArrowButton ].forEach {
             $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
         }
         
         /* 타겟 설정 */
         editMyInfoArrowButton.addTarget(self, action: #selector(tapEditMyInfoButton), for: .touchUpInside)
         logoutArrowButton.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
-        contactUsArrowButton.addTarget(self, action: #selector(tapContactUsArrowButton), for: .touchUpInside)
+        customerServiceButton.addTarget(self, action: #selector(tapcustomerServiceButton), for: .touchUpInside)
     }
     
     private func createBlurView() {
@@ -524,8 +525,7 @@ class ProfileViewController: UIViewController {
             myActivityContainerView,
             separateView,
             editMyInfoLabel, editMyInfoArrowButton, firstLineView,
-            contactUsLabel, contactUsArrowButton, secondLineView,
-            termsOfUseLabel, termsOfUseArrowButton, thirdLineView,
+            customerServiceLabel, customerServiceButton, secondLineView,
             logoutLabel, logoutArrowButton,
             withdrawalMembershipButton
         ].forEach { view.addSubview($0) }
@@ -571,28 +571,18 @@ class ProfileViewController: UIViewController {
             make.height.equalTo(1)
         }
 
-        contactUsLabel.snp.makeConstraints { make in
+        customerServiceLabel.snp.makeConstraints { make in
             make.top.equalTo(firstLineView.snp.bottom).offset(19)
             make.left.equalToSuperview().inset(24)
         }
         secondLineView.snp.makeConstraints { make in
-            make.top.equalTo(contactUsLabel.snp.bottom).offset(19)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1)
-        }
-        
-        termsOfUseLabel.snp.makeConstraints { make in
-            make.top.equalTo(secondLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
-        }
-        thirdLineView.snp.makeConstraints { make in
-            make.top.equalTo(termsOfUseLabel.snp.bottom).offset(19)
+            make.top.equalTo(customerServiceLabel.snp.bottom).offset(19)
             make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1)
         }
         
         logoutLabel.snp.makeConstraints { make in
-            make.top.equalTo(thirdLineView.snp.bottom).offset(19)
+            make.top.equalTo(secondLineView.snp.bottom).offset(19)
             make.left.equalToSuperview().inset(24)
         }
 
@@ -600,12 +590,8 @@ class ProfileViewController: UIViewController {
             make.centerY.equalTo(editMyInfoLabel)
             make.right.equalToSuperview().inset(31)
         }
-        contactUsArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(contactUsLabel)
-            make.right.equalToSuperview().inset(31)
-        }
-        termsOfUseArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(termsOfUseLabel)
+        customerServiceButton.snp.makeConstraints { make in
+            make.centerY.equalTo(customerServiceLabel)
             make.right.equalToSuperview().inset(31)
         }
         logoutArrowButton.snp.makeConstraints { make in
@@ -671,13 +657,9 @@ class ProfileViewController: UIViewController {
     }
     
     @objc
-    private func tapContactUsArrowButton() {
-        self.safariVC = SFSafariViewController(url: KakaoSDKTalk.TalkApi.shared.makeUrlForChannelChat(channelPublicId: "_Sxolhxj")!)
-        guard self.safariVC != nil else { return }
-        
-        self.safariVC?.modalTransitionStyle = .crossDissolve
-        self.safariVC?.modalPresentationStyle = .overCurrentContext
-        self.present(self.safariVC!, animated: true)
+    private func tapcustomerServiceButton() {
+        let customerServiceVC = CustomerServiceViewController()
+        self.navigationController?.pushViewController(customerServiceVC, animated: true)
     }
     
     @objc
@@ -752,21 +734,25 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyActivityCollectionViewCell.identifier, for: indexPath) as? MyActivityCollectionViewCell else { return UICollectionViewCell() }
         
         cell.titleLabel.text = myActivities[indexPath.row].title
-        
-        /*
-         let endIdx = result.createdAt!.index(result.createdAt!.startIndex, offsetBy: 10)
-         signUpDateLabel.text = "가입일  |  " + result.createdAt![...endIdx]
-         */
-        
         let endIdx = myActivities[indexPath.row].updatedAt?.index(myActivities[indexPath.row].updatedAt!.startIndex, offsetBy: 10)
         cell.updatedAtLabel.text = String(myActivities[indexPath.row].updatedAt![...endIdx!])
-        
-//        if let str = myActivities[indexPath.row].createdAt {
-//            let endIdx = str.index(str.startIndex, offsetBy: 10)
-//            cell.createdAtLabel.text = str[...endIdx]
-//        }
         cell.updatedAtLabel.text = myActivities[indexPath.row].updatedAt
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("selected works: ", indexPath.row)
+        
+        guard let selectedPartyId = myActivities[indexPath.row].id else { return }
+        
+        // TODO: - dormitoryInfo 어디서 받아오지 ,,? (DeleveryVC에서도)
+        let dormitoryInfo = DormitoryNameResult(id: 1, name: "제 1기숙사")
+        
+        let partyVC = PartyViewController(partyId: selectedPartyId, dormitoryInfo: dormitoryInfo)
+        
+        self.navigationController?.pushViewController(partyVC, animated: true)
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }

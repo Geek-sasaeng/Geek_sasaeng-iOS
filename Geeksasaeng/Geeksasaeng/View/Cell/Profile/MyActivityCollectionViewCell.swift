@@ -37,8 +37,10 @@ class MyActivityCollectionViewCell: UICollectionViewCell {
         
         contentView.backgroundColor = .white
         
-        contentView.layer.masksToBounds = true
+        contentView.clipsToBounds = true
+        contentView.layer.masksToBounds = false
         contentView.layer.cornerRadius = 5
+        contentView.setViewShadow(shadowOpacity: 1, shadowRadius: 1)
         
         addSubViews()
         setLayouts()
