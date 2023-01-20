@@ -710,7 +710,6 @@ class ChattingViewController: UIViewController {
             make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.height.equalTo(55)
         }
-        self.view.layoutIfNeeded()
     }
     
     // 배경을 흐리게, 블러뷰로 설정
@@ -1010,7 +1009,6 @@ class ChattingViewController: UIViewController {
         
         ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
             if isSuccess {
-                self.showToast(viewController: self, message: "주문완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                 self.orderCompletedView.removeFromSuperview()
             }
         }
@@ -1050,18 +1048,20 @@ class ChattingViewController: UIViewController {
         // 알림뷰 제거
         removeNotificationSendView()
         
-        // 서버에 요청
-        let input = DeliveryNotificationInput(uuid: roomId)
-        DeliveryNotificationAPI.requestPushNotification(input) { [self] isSuccess in
+        // 서버에 푸시 알림 요청
+        let input = CompleteDeliveryInput(roomId: roomId)
+        ChatAPI.completeDelivery(input) { isSuccess, model in
             // 토스트 메세지 띄우기
             if isSuccess {
-                print("DEBUG: 성공!!!")
                 self.showToast(viewController: self, message: "배달완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
             } else {
-                print("DEBUG: 실패!!!")
-                self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                if model?.code == 2409 || model?.code == 2410 {
+                    // 매칭 마감이 아직 안 된 상태에서 배달 완료하려는 경우
+                    self.showToast(viewController: self, message: "매칭 마감을 먼저 해주세요!", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                } else {
+                    self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                }
             }
-            
         }
     }
     
