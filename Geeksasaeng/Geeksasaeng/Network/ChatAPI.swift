@@ -300,6 +300,32 @@ class ChatAPI {
             }
         }
     }
+    
+    // 배달 완료 API 호출 함수 -> 서버에 푸시 알림 전송 요청
+    public static func completeDelivery(_ input: CompleteDeliveryInput, completion: @escaping (Bool, CompleteDeliveryModel?) -> ()) {
+        let url = "https://geeksasaeng.shop/party-chat-room/delivery-complete"
+        
+        AF.request(url,
+                   method: .patch,
+                   parameters: input,
+                   encoder: JSONParameterEncoder.default,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+            .validate()
+            .responseDecodable(of: CompleteDeliveryModel.self) { response in
+                switch response.result {
+                case .success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 배달 완료 성공", result.message)
+                    } else {
+                        print("DEBUG: 배달 완료 실패", response, result)
+                    }
+                    completion(result.isSuccess!, result)
+                case .failure(let error):
+                    print("DEBUG: 배달 완료 실패", error.localizedDescription)
+                    completion(false, nil)
+                }
+            }
+    }
 }
 
 
