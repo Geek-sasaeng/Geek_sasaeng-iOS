@@ -92,12 +92,6 @@ class ReportUserViewController: UIViewController {
     
     // MARK: - @objc Functions
     
-     /* 이전 화면으로 돌아가기 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     /* 기타 사유 선택 카테고리가 아닌 화살표를 눌렀을 때 실행되는 함수 */
     @objc
     private func tapReportArrowButton(_ sender: UIButton) {

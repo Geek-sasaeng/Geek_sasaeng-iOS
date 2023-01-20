@@ -328,11 +328,6 @@ class ChangePasswordViewController: UIViewController {
     }
     
     @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    @objc
     private func tapXButton() {
         visualEffectView?.removeFromSuperview()
         visualEffectView = nil

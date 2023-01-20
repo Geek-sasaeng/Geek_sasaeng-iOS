@@ -454,11 +454,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-
-    @objc
     private func tapCheckButton(sender: UIButton) {
         if sender == nicknameCheckButton { // 닉네임 중복 확인 버튼일 경우
             guard let isValidNickname = nicknameDataTextField.text?.isValidNickname() else { return }

@@ -627,7 +627,9 @@ class ChattingViewController: UIViewController {
                 
                 // 방장이 아니고, 아직 송금을 안 했다면 송금완료 뷰 띄우기
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
-                    self.showRemittanceView()
+                    self.showTopView(view: self.remittanceView)
+                } else if (self.roomInfo!.isChief! && !(self.roomInfo!.isOrderFinish!)) {  // 방장이고 주문 완료 안 했다면 주문완료 뷰 띄우기
+                    self.showTopView(view: self.orderCompletedView)
                 }
                 
                 // 매칭 마감됐으면 매칭 마감 버튼 비활성화
@@ -713,10 +715,10 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    // 송금완료 뷰 띄우기
-    private func showRemittanceView() {
-        self.view.addSubview(self.remittanceView)
-        self.remittanceView.snp.makeConstraints { make in
+    // 상단에 송금완료 뷰(파티원일 때) 또는 주문완료 뷰(방장일 때) 띄우기
+    private func showTopView(view: UIView) {
+        self.view.addSubview(view)
+        view.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.height.equalTo(55)
@@ -768,7 +770,7 @@ class ChattingViewController: UIViewController {
         return self.msgContents.filter { msg in
             msg.message?.isRead == false
             && msg.message?.isSystemMessage == false
-            && msg.message?.nickName != LoginModel.nickname
+            && msg.message?.memberId != LoginModel.memberId
         }
     }
     
@@ -824,7 +826,7 @@ class ChattingViewController: UIViewController {
     }
     
     // 로컬에 저장된 isRead 필드값을 true로 업데이트
-    // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 nickName으로 구분 안 함
+    // -> 내 채팅에 대한 상대방의 읽음 요청일 수도 있다. 그래서 memberId로 구분 안 함
     private func updateUnreadToRead(data: MsgResponse) {
         DispatchQueue.main.async {
             print("DEBUG: updateUnreadToRead")
@@ -966,12 +968,6 @@ class ChattingViewController: UIViewController {
         picker.delegate = self
         
         self.present(picker, animated: true, completion: nil)
-    }
-    
-    /* 왼쪽 상단 백버튼 클릭시 실행되는 함수 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
     }
     
     /* 오른쪽 위의 톱니바퀴 버튼 클릭시 실행되는 함수 */
@@ -1269,7 +1265,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.isHidden = true
-                if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
+                if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     if let contentUrl = msg.message?.content {
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                         print("TEST:", contentUrl)
@@ -1295,7 +1291,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
-                if msg.message?.nickName == LoginModel.nickname { // 보낸 사람이 자신
+                if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     cell.rightMessageLabel.text = msg.message?.content
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1323,7 +1319,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.text = msg.message?.nickName
-                if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
+                if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {
@@ -1368,7 +1364,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             } else { // 이미지가 아닐 때
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
                 cell.nicknameLabel.text = msg.message?.nickName
-                if msg.message?.nickName == LoginModel.nickname { // 그 사람이 자신이면
+                if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {

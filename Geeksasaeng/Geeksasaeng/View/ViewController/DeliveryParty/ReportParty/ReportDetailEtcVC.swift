@@ -416,12 +416,6 @@ class ReportDetailEtcViewController: UIViewController {
         view.endEditing(true)
     }
     
-     /* 이전 화면으로 돌아가기 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     /* 이 사용자 차단하기 체크 박스 누르면 체크 모양 뜨도록 */
     @objc
     private func tapCheckBoxButton(_ sender: UIButton) {

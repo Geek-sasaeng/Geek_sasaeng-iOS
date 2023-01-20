@@ -887,12 +887,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    /* 이전 화면으로 돌아가기 */
-    @objc
-    private func back(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     /* 액션시트에서 수정하기 버튼 클릭시 실행되는 함수 */
     @objc
     private func tapEditButton() {
