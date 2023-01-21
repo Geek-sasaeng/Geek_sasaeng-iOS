@@ -72,7 +72,4 @@ class PersonalInfoAgreementOfProfileViewController: UIViewController {
             make.height.equalTo(UIScreen.main.bounds.width * 12.7)
         }
     }
-    
-    
-    // MARK: - Functions
 }

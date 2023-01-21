@@ -23,7 +23,7 @@ class MyActivityCollectionViewCell: UICollectionViewCell {
     let titleLabel = UILabel().then {
         $0.font = .customFont(.neoBold, size: 13)
     }
-    let createdAtLabel = UILabel().then {
+    let updatedAtLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 11)
         $0.textColor = .init(hex: 0xA8A8A8)
     }
@@ -52,7 +52,7 @@ class MyActivityCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Functions
     private func addSubViews() {
-        [ categoryLabel, titleLabel, createdAtLabel, deliveryPartyImageView ].forEach {
+        [ categoryLabel, titleLabel, updatedAtLabel, deliveryPartyImageView ].forEach {
             contentView.addSubview($0)
         }
     }
@@ -68,7 +68,7 @@ class MyActivityCollectionViewCell: UICollectionViewCell {
             make.left.equalTo(categoryLabel.snp.left)
         }
         
-        createdAtLabel.snp.makeConstraints { make in
+        updatedAtLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
             make.left.equalTo(titleLabel.snp.left)
         }

@@ -723,7 +723,6 @@ class ChattingViewController: UIViewController {
             make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.height.equalTo(55)
         }
-        self.view.layoutIfNeeded()
     }
     
     // 배경을 흐리게, 블러뷰로 설정
@@ -1023,7 +1022,6 @@ class ChattingViewController: UIViewController {
         
         ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
             if isSuccess {
-                self.showToast(viewController: self, message: "주문완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                 self.orderCompletedView.removeFromSuperview()
             }
         }
@@ -1063,18 +1061,20 @@ class ChattingViewController: UIViewController {
         // 알림뷰 제거
         removeNotificationSendView()
         
-        // 서버에 요청
-        let input = DeliveryNotificationInput(uuid: roomId)
-        DeliveryNotificationAPI.requestPushNotification(input) { [self] isSuccess in
+        // 서버에 푸시 알림 요청
+        let input = CompleteDeliveryInput(roomId: roomId)
+        ChatAPI.completeDelivery(input) { isSuccess, model in
             // 토스트 메세지 띄우기
             if isSuccess {
-                print("DEBUG: 성공!!!")
                 self.showToast(viewController: self, message: "배달완료 알림 전송이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
             } else {
-                print("DEBUG: 실패!!!")
-                self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                if model?.code == 2409 || model?.code == 2410 {
+                    // 매칭 마감이 아직 안 된 상태에서 배달 완료하려는 경우
+                    self.showToast(viewController: self, message: "매칭 마감을 먼저 해주세요!", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                } else {
+                    self.showToast(viewController: self, message: "배달완료 알림 전송에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                }
             }
-            
         }
     }
     
@@ -1109,13 +1109,13 @@ class ChattingViewController: UIViewController {
         ChatAPI.closeMatching(CloseMatchingInput(partyId: self.roomInfo?.partyId)) { isSuccess in
             if isSuccess {
                 print("DEBUG: 매칭 마감 성공")
+                
+                // 매칭 마감 버튼 비활성화
+                self.setInactiveButton(index: 1)
             } else {
                 print("DEBUG: 매칭 마감 실패")
             }
         }
-        
-        // 매칭 마감 버튼 비활성화
-        setInactiveButton(index: 1)
         
         // 매칭 마감하기 뷰 없애기
         removeCloseMatchingView()
@@ -1158,19 +1158,35 @@ class ChattingViewController: UIViewController {
             let input = ExitChiefInput(roomId: self.roomId)
             ChatAPI.exitChief(input) { isSuccess in
                 if isSuccess {
-                    print("방장 나가기 성공")
+                    print("방장 채팅방 나가기 성공")
+                    let input = ExitPartyChiefInput(nickName: LoginModel.nickname, uuid: self.roomId)
+                    PartyAPI.exitPartyChief(input) { isSuccess in
+                        if isSuccess {
+                            print("방장 파티 나가기 성공")
+                        } else {
+                            print("방장 파티 나가기 실패")
+                        }
+                    }
                 } else {
-                    print("방장 나가기 실패")
+                    print("방장 채팅방 나가기 실패")
                 }
             }
         } else {
-            // 파티워 나가기
+            // 파티원 나가기
             let input = ExitMemberInput(roomId: roomId)
             ChatAPI.exitMember(input) { isSuccess in
                 if isSuccess {
-                    print("파티원 나가기 성공")
+                    print("파티원 채팅방 나가기 성공")
+                    let input = ExitPartyMemberInput(uuid: self.roomId)
+                    PartyAPI.exitPartyMember(input) { isSuccess in
+                        if isSuccess {
+                            print("파티원 파티 나가기 성공")
+                        } else {
+                            print("파티원 파티 나가기 실패")
+                        }
+                    }
                 } else {
-                    print("파티원 나가기 실패")
+                    print("파티원 채팅방 나가기 실패")
                 }
             }
         }

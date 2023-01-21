@@ -8,6 +8,66 @@
 import Foundation
 import Alamofire
 
+/* 배달파티 채팅방 생성 API의 Request body */
+struct CreateChatRoomInput : Encodable {
+    var accountNumber: String?
+    var bank: String?
+    var category: String?
+    var maxMatching: Int?
+    var title: String?
+    var deliveryPartyId: Int?
+}
+
+/* 배달파티 채팅방 생성 API의 Response */
+struct CreateChatRoomModel : Decodable {
+    var code : Int?
+    var isSuccess : Bool?
+    var message : String?
+    var result : CreateChatRoomModelResult?
+}
+
+struct CreateChatRoomModelResult: Decodable {
+    var partyChatRoomId: String?
+    var title: String?
+}
+
+/* 채팅방 입장 API의 Request body */
+struct JoinChatInput: Encodable {
+    var partyChatRoomId: String?
+}
+
+/* 채팅방 입장 API의 Response */
+struct JoinChatModel: Decodable {
+    var code : Int?
+    var isSuccess : Bool?
+    var message : String?
+    var result : JoinChatModelResult?
+}
+struct JoinChatModelResult: Decodable {
+    var enterTime: String?
+    var partyChatRoomId: String?
+    var partyChatRoomMemberId: String?
+    var remittance: Bool?
+}
+
+/* 채팅방 목록 조회 API의 Response */
+struct ChatRoomListModel : Decodable {
+    var code : Int?
+    var isSuccess : Bool?
+    var message : String?
+    var result : ChatRoomListModelResult?
+}
+
+struct ChatRoomListModelResult: Decodable {
+    var finalPage: Bool?
+    var parties: [ChatRoom]?
+}
+
+struct ChatRoom: Decodable {
+    var roomId: String?
+    var roomTitle: String?
+}
+
 /* 채팅방 사진 전송 */
 struct ChatImageSendInput: Encodable {
     var chatId: String?
@@ -93,6 +153,63 @@ struct ForcedExitModelResult: Decodable {
 
 
 class ChatAPI {
+    
+    /* 생성된 배달파티의 채팅방 생성 요청 */
+    public static func requestCreateChatRoom(_ input : CreateChatRoomInput,
+                                             completion: @escaping (Bool, CreateChatRoomModelResult?) -> Void) {
+        let url = "https://geeksasaeng.shop/party-chat-room"
+        
+        AF.request(url, method: .post,
+                   parameters: input,
+                   encoder: JSONParameterEncoder.default,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: CreateChatRoomModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 채팅방 생성 성공", result)
+                    completion(result.isSuccess!, result.result)
+                } else {
+                    print("DEBUG:", result.result!)
+                    completion(result.isSuccess!, nil)
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+                completion(false, nil)
+            }
+        }
+    }
+    
+    /* 파티장이 아닌 유저가 신청하기 눌렀을 때 유저를 채팅방의 멤버로 추가할 때 사용 */
+    public static func requestJoinChat(_ parameter : JoinChatInput,
+                                        completion: @escaping (Bool, JoinChatModelResult?) -> Void)
+    {
+        let url = "https://geeksasaeng.shop/party-chat-room/member"
+        
+        AF.request(url,
+                   method: .post,
+                   parameters: parameter,
+                   encoder: JSONParameterEncoder.default,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: JoinChatModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 채팅방 입장 성공", result)
+                    completion(result.isSuccess!, result.result)
+                } else {
+                    print("DEBUG: 채팅방 입장 실패", result.message!)
+                    completion(result.isSuccess!, nil)
+                }
+            case .failure(let error):
+                print("DEBUG: 채팅방 입장 실패", error.localizedDescription)
+                completion(false, nil)
+            }
+        }
+    }
+    
     // 채팅방 상세조회 API 연동
     public static func getChattingRoomInfo(_ parameter: ChattingRoomInput, completion: @escaping (ChattingRoomResult?) -> (Void)) {
         guard let roomId = parameter.chatRoomId else { return }
@@ -236,6 +353,41 @@ class ChatAPI {
         }
     }
     
+    /* 채팅방 탭에 왔을 때 채팅방 목록 조회 요청 */
+    public static func requestGetChatRoomList(cursor: Int,
+                                             completion: @escaping (ChatRoomListModel?, String?) -> Void)
+    {
+        let url = "https://geeksasaeng.shop/party-chat-room"
+        let headers: HTTPHeaders = ["Authorization": "Bearer " + (LoginModel.jwt ?? "")]
+        
+        // Query String을 통해 요청
+        let parameters: Parameters = [
+            "cursor": cursor
+        ]
+        
+        AF.request(url,
+                   method: .get,
+                   parameters: parameters,
+                   encoding: URLEncoding(destination: .queryString),
+                   headers: headers)
+        .validate()
+        .responseDecodable(of: ChatRoomListModel.self) { response in
+            switch response.result {
+            case .success(let model):
+                if model.isSuccess! {
+                    print("DEBUG: 채팅방 목록 조회 성공", model.result)
+                    completion(model, nil)
+                } else {
+                    print("DEBUG: 채팅방 목록 조회 실패", model.message)
+                    completion(nil, model.message)
+                }
+            case .failure(let error):
+                print("DEBUG: 채팅방 목록 조회 실패", error.localizedDescription)
+                completion(nil, "채팅방 목록을 불러오지 못했습니다.")
+            }
+        }
+    }
+    
     /* 송금 완료 */
     public static func completeRemittance(_ parameter: CompleteRemittanceInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members/remittance"
@@ -299,6 +451,32 @@ class ChatAPI {
                 completion(false)
             }
         }
+    }
+    
+    // 배달 완료 API 호출 함수 -> 서버에 푸시 알림 전송 요청
+    public static func completeDelivery(_ input: CompleteDeliveryInput, completion: @escaping (Bool, CompleteDeliveryModel?) -> ()) {
+        let url = "https://geeksasaeng.shop/party-chat-room/delivery-complete"
+        
+        AF.request(url,
+                   method: .patch,
+                   parameters: input,
+                   encoder: JSONParameterEncoder.default,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+            .validate()
+            .responseDecodable(of: CompleteDeliveryModel.self) { response in
+                switch response.result {
+                case .success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 배달 완료 성공", result.message)
+                    } else {
+                        print("DEBUG: 배달 완료 실패", response, result)
+                    }
+                    completion(result.isSuccess!, result)
+                case .failure(let error):
+                    print("DEBUG: 배달 완료 실패", error.localizedDescription)
+                    completion(false, nil)
+                }
+            }
     }
 }
 

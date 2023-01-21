@@ -71,7 +71,5 @@ class TermsOfUseAgreementOfProfileViewController: UIViewController {
             make.height.equalTo(UIScreen.main.bounds.width * 29)
         }
     }
-    
-    
-    // MARK: - Functions
+
 }

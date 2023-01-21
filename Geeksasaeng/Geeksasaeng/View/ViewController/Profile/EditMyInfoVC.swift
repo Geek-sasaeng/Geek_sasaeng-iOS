@@ -192,6 +192,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setNotificationCenter()
         setNavigationBar()
         setAttributes()
         addSubViews()
@@ -305,6 +306,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
             visualEffectView.layer.opacity = 0.6
             visualEffectView.frame = view.frame
             visualEffectView.isUserInteractionEnabled = false
+            self.userImageView.isUserInteractionEnabled = false
             view.addSubview(visualEffectView)
             self.visualEffectView = visualEffectView
         }
@@ -390,6 +392,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 print("======비밀번호 맞음, 블러 뷰 내리겠음")
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectView = nil
+                self.userImageView.isUserInteractionEnabled = true
             }
         }
     }
@@ -516,8 +519,10 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapViewController() {
         if visualEffectView != nil {
+            editConfirmView.removeFromSuperview()
             visualEffectView?.removeFromSuperview()
             visualEffectView = nil
+            userImageView.isUserInteractionEnabled = true
             NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
         }
     }
