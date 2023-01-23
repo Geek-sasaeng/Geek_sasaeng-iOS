@@ -503,6 +503,10 @@ class ProfileViewController: UIViewController {
         editMyInfoArrowButton.addTarget(self, action: #selector(tapEditMyInfoButton), for: .touchUpInside)
         logoutArrowButton.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
         customerServiceButton.addTarget(self, action: #selector(tapcustomerServiceButton), for: .touchUpInside)
+        
+        gradeView.isUserInteractionEnabled = true
+        let gestureToGradeView = UITapGestureRecognizer(target: self, action: #selector(showUserStageView))
+        gradeView.addGestureRecognizer(gestureToGradeView)
     }
     
     private func createBlurView() {
@@ -722,6 +726,12 @@ class ProfileViewController: UIViewController {
             withdrawalMembershipView.removeFromSuperview()
             NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
         }
+    }
+    
+    @objc
+    private func showUserStageView() {
+        let userStageVC = UserStageViewController()
+        self.navigationController?.pushViewController(userStageVC, animated: true)
     }
 }
 
