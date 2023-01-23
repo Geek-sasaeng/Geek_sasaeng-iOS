@@ -24,6 +24,7 @@ struct ChatRoomListModelResult: Decodable {
 struct ChatRoom: Decodable {
     var roomId: String?
     var roomTitle: String?
+    var enterTime: String?
 }
 
 /* 채팅방 목록 조회 API 연동 */

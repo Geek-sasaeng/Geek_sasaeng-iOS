@@ -46,9 +46,9 @@ struct ChattingRoom {
     var recentMsg: String?
     var time: String?
     var unreadedMsgCnt: Int?
+    var enterTime: String?
 }
 
-// TODO: - 방장이 파티 만들고 나서 채팅방 가기 버튼 클릭 시 무반응
 // TODO: - 로컬에 저장하는 DB 구조 수정 필요 -> 한 핸드폰(로컬)로 여러 개의 계정에 로그인하는 경우 대비 안함
 /* 채팅방 목록을 볼 수 있는 메인 채팅탭 */
 class ChattingListViewController: UIViewController {
@@ -61,8 +61,6 @@ class ChattingListViewController: UIViewController {
     
     // Realm 싱글톤 객체 가져오기
     private let localRealm = DataBaseManager.shared
-    // TODO: - 서버한테 받으면 그 값과 연결하기 지금은 더미데이터
-    var enterTimeToDate: Date = FormatCreater.sharedLongFormat.date(from: "2023-01-02 00:00:00")! // 채팅방 입장 시간
     
     // 현재 선택되어 있는 필터의 label
     private var selectedLabel: UILabel? = nil {
@@ -187,14 +185,15 @@ class ChattingListViewController: UIViewController {
                                               roomTitle: $0.roomTitle,
                                               recentMsg: "",
                                               time: "",
-                                            unreadedMsgCnt: self.getUnreadMsgCnt(roomId: $0.roomId ?? ""))
+                                            unreadedMsgCnt: self.getUnreadMsgCnt(roomId: $0.roomId ?? ""),
+                                            enterTime: $0.enterTime)
             // 데이터를 배열에 추가
             self.chattingRoomList.append(chattingRoom)
             
             // 로컬에 저장된 각 채팅방의 최신 메세지 불러오기
             loadRecentMessage()
             print("DEBUG: 받아온 채팅방 목록 데이터", $0)
-            print("DEBUG: 채팅방 목록 데이터 현황", chattingRoomList)
+            print("DEBUG: 채팅방 목록 데이터 현황", self.chattingRoomList)
         }
         
         // 데이터 로딩 표시 제거
@@ -295,8 +294,9 @@ class ChattingListViewController: UIViewController {
         
         // chattingRoomList 배열 내용 재구성 -> 여기서 recentMsg, time 필드가 채워진다.
         self.chattingRoomList = self.chattingRoomList.map { chattingRoom in
+            let enterTimeToDate = FormatCreater.sharedLongFormat.date(from: chattingRoom.enterTime ?? "2023-01-01 00:00:00")! // 채팅방 입장 시간
             // 로컬에서 해당 채팅방의, 입장시간 이후의 채팅 데이터 가져오기
-            let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", chattingRoom.roomId!, self.enterTimeToDate as CVarArg)
+            let predicate = NSPredicate(format: "chatRoomId = %@ AND createdAt >= %@", chattingRoom.roomId!, enterTimeToDate as! NSDate)
             // 마지막 메세지가 있는 경우
             if let last = localRealm.read(MsgToSave.self).filter(predicate).sorted(byKeyPath: "createdAt").last {
                 print("DEBUG: \(last.chatRoomId)방의 마지막 채팅은", last)
@@ -306,7 +306,8 @@ class ChattingListViewController: UIViewController {
                     roomTitle: chattingRoom.roomTitle,
                     recentMsg: last.content,
                     time: FormatCreater.sharedLongFormat.string(from: last.createdAt!),
-                    unreadedMsgCnt: self.getUnreadMsgCnt(roomId: chattingRoom.roomId ?? ""))
+                    unreadedMsgCnt: self.getUnreadMsgCnt(roomId: chattingRoom.roomId ?? ""),
+                    enterTime: chattingRoom.enterTime)
             } else { // 없는 경우
                 print("DEBUG: \(chattingRoom.roomId)방의 마지막 채팅은 아직 없다!")
                 // 로컬에서 가장 최근 메세지 얻어서 ChattingRoom 구조로 만들어서 리턴
@@ -315,7 +316,8 @@ class ChattingListViewController: UIViewController {
                     roomTitle: chattingRoom.roomTitle,
                     recentMsg: nil,
                     time: nil,
-                    unreadedMsgCnt: self.getUnreadMsgCnt(roomId: chattingRoom.roomId ?? ""))
+                    unreadedMsgCnt: self.getUnreadMsgCnt(roomId: chattingRoom.roomId ?? ""),
+                    enterTime: chattingRoom.enterTime)
             }
         }
     }
