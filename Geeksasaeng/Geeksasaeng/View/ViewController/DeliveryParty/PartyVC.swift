@@ -51,14 +51,21 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.layer.cornerRadius = 13
     }
     
-    let nickNameLabel = UILabel().then {
-        $0.textColor = .init(hex: 0x2F2F2F)
-        $0.font = .customFont(.neoMedium, size: 13)
+    let stageLabel = UILabel().then {
+        // TODO: - 서버가 주면 값 연결
+        $0.text = "신입생" // 더미
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoBold, size: 13)
     }
     
-    let postingTime = UILabel().then {
+    let nickNameLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoBold, size: 13)
+    }
+    
+    let postingTimeLabel = UILabel().then {
         $0.font = .customFont(.neoRegular, size: 11)
-        $0.textColor = .init(hex: 0xD8D8D8)
+        $0.textColor = .init(hex: 0xA8A8A8)
     }
     
     let hashTagLabel = UILabel().then {
@@ -497,7 +504,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
         orderReserveLabel.text = "\(dateStr)      \(timeStr)"
         titleLabel.text = detailData.title
-        postingTime.text = detailData.updatedAt
+        
+        postingTimeLabel.text = detailData.updatedAt?.formatToMMddHHmm()
         
         /* 현재 위치를 한글 데이터로 받아오기 */
         let locationNow = CLLocation(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)
@@ -523,7 +531,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         self.containerView.addSubview(matchingStatusView)
         
         [
-            profileImageView, nickNameLabel, postingTime, hashTagLabel,
+            profileImageView, stageLabel, nickNameLabel, postingTimeLabel,
+            hashTagLabel,
             titleLabel, contentLabel,
             separateView,
             orderLabel, matchingLabel, categoryLabel, storeLinkLabel, pickupLocationLabel,
@@ -565,13 +574,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.height.equalTo(26)
         }
         
-        nickNameLabel.snp.makeConstraints { make in
+        stageLabel.snp.makeConstraints { make in
             make.left.equalTo(profileImageView.snp.right).offset(8)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         
-        postingTime.snp.makeConstraints { make in
-            make.left.equalTo(nickNameLabel.snp.right).offset(15)
+        nickNameLabel.snp.makeConstraints { make in
+            make.left.equalTo(stageLabel.snp.right).offset(5)
+            make.centerY.equalTo(stageLabel.snp.centerY)
+        }
+        
+        postingTimeLabel.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(23)
             make.centerY.equalTo(nickNameLabel.snp.centerY)
         }
         

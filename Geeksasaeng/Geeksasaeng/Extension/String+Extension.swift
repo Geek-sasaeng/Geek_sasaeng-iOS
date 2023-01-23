@@ -48,6 +48,19 @@ extension String {
         }
     }
     
+    // yyyy-MM-dd HH:mm:ss 형식의 str을 MM/dd HH:mm 형식으로 포맷팅
+    func formatToMMddHHmm() -> String {
+        let str = self.replacingOccurrences(of: " ", with: "")
+        let startIdx = str.index(str.startIndex, offsetBy: 5)
+        let middleIdx = str.index(startIdx, offsetBy: 5)
+        let endIdx = str.index(middleIdx, offsetBy: 5)
+        
+        let dateStr = str[startIdx..<middleIdx].replacingOccurrences(of: "-", with: "/") // MM/dd
+        let timeStr = str[middleIdx..<endIdx] // HH:mm
+        
+        return dateStr + "  " + timeStr
+    }
+    
     /* count 뒤로는 자르고 ...을 붙여서 byTruncatingTail 처럼 보이게 만들어 주는 함수 */
     private func truncated(after count: Int) -> String {
         let truncateAfter = index(startIndex, offsetBy: count)
