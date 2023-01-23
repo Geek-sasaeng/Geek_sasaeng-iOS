@@ -26,35 +26,42 @@ class ProfilePopUpViewController: UIViewController {
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.layer.cornerRadius = 10
     }
-    let profileImageContainerView = UIView().then {
-        $0.backgroundColor = .white
-        $0.layer.cornerRadius = 72 / 2
-    }
     let profileImageView = UIImageView().then {
-        $0.layer.cornerRadius = 66 / 2
+        $0.layer.cornerRadius = 72 / 2
         $0.clipsToBounds = true
     }
-    let roleLabel = UILabel().then {
-        $0.text = "파티원"
-        $0.font = .customFont(.neoMedium, size: 11)
-        $0.textColor = .init(hex: 0x636363)
+    
+    let stageImageView = UIImageView().then {
+        $0.image = UIImage(named: "UserStage")
+    }
+    let infoLabel = UILabel().then {
+        // TODO: - 값 연결
+        $0.text = "신입생  ㅣ  파티원"
+        $0.font = .customFont(.neoBold, size: 13)
+        $0.textColor = .mainColor
     }
     let nickNameLabel = UILabel().then {
         $0.text = "같이먹자냠냠"
         $0.font = .customFont(.neoBold, size: 18)
         $0.textColor = .init(hex: 0x2F2F2F)
     }
-    let lineView = UIView().then {
-        $0.backgroundColor = .init(hex: 0xEFEFEF)
+    
+    lazy var borderView = UIView().then {
+        $0.layer.cornerRadius = 7
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(hex: 0xEFEFEF).cgColor
+        $0.isUserInteractionEnabled = true
+        let viewTapGesture = UITapGestureRecognizer(target: self,
+                                                    action: #selector(tapUserReportView))
+        $0.addGestureRecognizer(viewTapGesture)
     }
     let reportImageView = UIImageView().then {
         $0.image = UIImage(named: "UserReport")
     }
-    lazy var reportLabel = UIButton().then {
-        $0.setTitle("신고하기", for: .normal)
-        $0.setTitleColor(.init(hex: 0x2F2F2F), for: .normal)
-        $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
-        $0.addTarget(self, action: #selector(tapUserReportButton), for: .touchUpInside)
+    let reportLabel = UILabel().then {
+        $0.text = "신고하기"
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoMedium, size: 15)
     }
     lazy var reportStackView = UIStackView(arrangedSubviews: [reportImageView, reportLabel]).then {
         $0.axis = .horizontal
@@ -99,15 +106,15 @@ class ProfilePopUpViewController: UIViewController {
         [
             blurView!,
             containerView,
-            profileImageContainerView,
             profileImageView
         ].forEach { view.addSubview($0) }
         [
-            roleLabel,
+            stageImageView,
+            infoLabel,
             nickNameLabel,
-            lineView,
-            reportStackView
+            borderView
         ].forEach { containerView.addSubview($0) }
+        borderView.addSubview(reportStackView)
     }
 
     private func setLayouts() {
@@ -116,38 +123,41 @@ class ProfilePopUpViewController: UIViewController {
         }
         containerView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(212)
+            make.height.equalTo(196 + 22)
             make.bottom.equalToSuperview()
         }
-        profileImageContainerView.snp.makeConstraints { make in
+        profileImageView.snp.makeConstraints { make in
             make.centerY.equalTo(containerView.snp.top)
             make.centerX.equalToSuperview()
             make.width.height.equalTo(72)
         }
-        profileImageView.snp.makeConstraints { make in
-            make.centerX.centerY.equalTo(profileImageContainerView)
-            make.width.height.equalTo(66)
+        
+        stageImageView.snp.makeConstraints { make in
+            make.centerY.equalTo(infoLabel)
+            make.right.equalTo(infoLabel.snp.left).offset(-4)
+            make.width.equalTo(9)
+            make.height.equalTo(13)
         }
-        roleLabel.snp.makeConstraints { make in
+        infoLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(profileImageView.snp.bottom).offset(20)
+            make.top.equalTo(profileImageView.snp.bottom).offset(15)
         }
         nickNameLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(roleLabel)
-            make.top.equalTo(roleLabel.snp.bottom).offset(10)
+            make.centerX.equalTo(infoLabel)
+            make.top.equalTo(infoLabel.snp.bottom).offset(18)
         }
-        lineView.snp.makeConstraints { make in
+        
+        borderView.snp.makeConstraints { make in
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(38)
             make.left.right.equalToSuperview().inset(19)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(25)
-            make.height.equalTo(1.7)
+            make.bottom.equalToSuperview().inset(22)
         }
         reportImageView.snp.makeConstraints { make in
-            make.width.equalTo(15)
-            make.height.equalTo(17)
+            make.width.equalTo(20)
+            make.height.equalTo(22)
         }
         reportStackView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(25)
+            make.centerX.centerY.equalToSuperview()
         }
     }
     
@@ -158,7 +168,7 @@ class ProfilePopUpViewController: UIViewController {
     // MARK: - @objc Functions
     
     @objc
-    private func tapUserReportButton() {
+    private func tapUserReportView() {
         // present로 띄운 이 화면을 dismiss시키고
         dismiss(animated: true)
         // navigation을 쓴 chattingVC를 통해 ReportUserVC를 push한다!

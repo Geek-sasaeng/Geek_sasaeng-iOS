@@ -1181,6 +1181,7 @@ class ChattingViewController: UIViewController {
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
     @objc
     private func tapProfileImage() {
+        // TODO: - popUpView로 닉네임이랑 등급 전달
         popUpView!.delegate = self
         popUpView!.modalPresentationStyle = .overFullScreen
         popUpView!.modalTransitionStyle = .crossDissolve
