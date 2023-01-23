@@ -77,6 +77,24 @@ class ProfileViewController: UIViewController {
         }
     }
     
+    /* 내 정보 View Components */
+    let heartImageView = UIImageView(image: UIImage(named: "MyInfoCardIcon"))
+    let nicknameLabel = UILabel().then {
+        $0.font = .customFont(.neoBold, size: 20)
+    }
+    let universityLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = .init(hex: 0x636363)
+    }
+    let dormitoryLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = .init(hex: 0x636363)
+    }
+    let profileImageView = UIImageView().then {
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 54
+    }
+    
     /* 내 정보 view */
     lazy var myInfoView = UIView().then { view in
         view.layer.masksToBounds = false
@@ -86,60 +104,6 @@ class ProfileViewController: UIViewController {
         view.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapMyInfoView))
         view.addGestureRecognizer(tapGesture)
-        
-        let heartImageView = UIImageView(image: UIImage(named: "MyInfoCardIcon"))
-        let nicknameLabel = UILabel().then {
-            $0.font = .customFont(.neoBold, size: 20)
-        }
-        let universityLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 13)
-            $0.textColor = .init(hex: 0x636363)
-        }
-        let dormitoryLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 13)
-            $0.textColor = .init(hex: 0x636363)
-        }
-        let profileImageView = UIImageView().then {
-            $0.layer.masksToBounds = true
-            $0.layer.cornerRadius = 54
-        }
-        
-        UserInfoAPI.getUserInfo { isSuccess, result in
-            if isSuccess {
-                nicknameLabel.text = result.nickname
-                universityLabel.text = result.universityName
-                dormitoryLabel.text = result.dormitoryName
-                
-                let url = URL(string: result.profileImgUrl!)
-                profileImageView.kf.setImage(with: url)
-            }
-        }
-
-        [ heartImageView, nicknameLabel, universityLabel, dormitoryLabel, profileImageView ].forEach {
-            view.addSubview($0)
-        }
-        
-        heartImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            make.left.equalToSuperview().inset(20)
-        }
-        nicknameLabel.snp.makeConstraints { make in
-            make.top.equalTo(heartImageView.snp.top)
-            make.left.equalToSuperview().inset(50)
-        }
-        universityLabel.snp.makeConstraints { make in
-            make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
-            make.left.equalTo(nicknameLabel.snp.left)
-        }
-        dormitoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(universityLabel.snp.bottom).offset(10)
-            make.left.equalTo(universityLabel.snp.left)
-        }
-        profileImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(10)
-            make.right.equalToSuperview().inset(36)
-            make.width.height.equalTo(108)
-        }
     }
     
     // 나의 활동 보기 옆의 화살표 버튼
@@ -431,10 +395,24 @@ class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // 나의 활동 3개 띄우기
+        self.getUserInfo()
         self.getUserActivities()
     }
     
     // MARK: - Functions
+    
+    private func getUserInfo() {
+        UserInfoAPI.getUserInfo { isSuccess, result in
+            if isSuccess {
+                self.nicknameLabel.text = result.nickname
+                self.universityLabel.text = result.universityName
+                self.dormitoryLabel.text = result.dormitoryName
+                
+                let url = URL(string: result.profileImgUrl!)
+                self.profileImageView.kf.setImage(with: url)
+            }
+        }
+    }
     
     // 나의 활동 3개 데이터 보여주기
     private func getUserActivities() {
@@ -517,6 +495,9 @@ class ProfileViewController: UIViewController {
     }
     
     private func addSubViews() {
+        [ heartImageView, nicknameLabel, universityLabel, dormitoryLabel, profileImageView ].forEach {
+            myInfoView.addSubview($0)
+        }
         myInfoView.addSubview(gradeView)
         backgroundView.addSubview(myInfoView)
         
@@ -543,6 +524,29 @@ class ProfileViewController: UIViewController {
             make.width.equalToSuperview()
             make.height.equalTo(36)
         }
+        
+        heartImageView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
+        }
+        nicknameLabel.snp.makeConstraints { make in
+            make.top.equalTo(heartImageView.snp.top)
+            make.left.equalToSuperview().inset(50)
+        }
+        universityLabel.snp.makeConstraints { make in
+            make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
+            make.left.equalTo(nicknameLabel.snp.left)
+        }
+        dormitoryLabel.snp.makeConstraints { make in
+            make.top.equalTo(universityLabel.snp.bottom).offset(10)
+            make.left.equalTo(universityLabel.snp.left)
+        }
+        profileImageView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(10)
+            make.right.equalToSuperview().inset(36)
+            make.width.height.equalTo(108)
+        }
+        
         myInfoView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(100)
             make.left.right.equalToSuperview().inset(23)
@@ -702,6 +706,12 @@ class ProfileViewController: UIViewController {
         // TODO: - 로그아웃 api 연동
         UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
         naverLoginVM.resetToken() // delete naver login token
+        
+        LoginAPI.logout { isSuccess in
+            if isSuccess {
+                print("로그아웃 완료")
+            }
+        }
         
         let rootVC = LoginViewController()
         UIApplication.shared.windows.first?.rootViewController = rootVC

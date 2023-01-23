@@ -314,6 +314,21 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     private func setUserInfo() {
         /* textfield로 변경 */
+//        UserInfoAPI.getUserInfo { isSuccess, result in
+//            if isSuccess {
+//                let url = URL(string: result.profileImgUrl)
+//                self.userImageView.kf.setImage(with: url)
+//
+//                self.nicknameDataTextField.text = result.nickname
+//
+//                self.dormitoryId = result.dormitoryId
+//                self.loginId = result.loginId
+//                self.nickname = result.nickname
+//
+//                self.dormitoryList = result.
+//            }
+//        }
+        
         UserInfoAPI.getEditUserInfo { isSuccess, result in
             if isSuccess {
                 let url = URL(string: result.imgUrl!)

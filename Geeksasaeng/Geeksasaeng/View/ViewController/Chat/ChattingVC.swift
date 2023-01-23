@@ -1033,6 +1033,7 @@ class ChattingViewController: UIViewController {
         view.endEditing(true)
         
         if visualEffectView != nil { // nil이 아니라면, 즉 옵션뷰가 노출되어 있다면
+            visualEffectView?.removeFromSuperview()
             view.subviews.forEach {
                 if $0 == exitView || $0 == closeMatchingView || $0 == notificationSendView {
                     removeViewWithBlurView($0)
@@ -1210,42 +1211,40 @@ class ChattingViewController: UIViewController {
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
             visualEffectView.frame = view.frame
-            visualEffectView.isUserInteractionEnabled = true
+            visualEffectView.isUserInteractionEnabled = false
             view.addSubview(visualEffectView)
             self.visualEffectView = visualEffectView
         }
         
-        /* blur view에 add하면 에러 */
-        
-//        /* set attributes */
-//        let msg = self.msgContents[sender.index!]
-//        imageMessageExpansionNicknameLabel.text = msg.message?.nickName
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let dateString = dateFormatter.string(from: (msg.message?.createdAt)!)
-//        imageMessageExpansionDateLabel.text = dateString
-//
-//        let imageUrl = URL(string: (msg.message?.content)!)
-//        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
-//
-//        /* add subViews */
-//        [ imageMessageExpansionNicknameLabel, imageMessageExpansionDateLabel, imageMessageExpansionImageView ].forEach {
-//            self.visualEffectView?.addSubview($0)
-//        }
-//
-//        imageMessageExpansionNicknameLabel.snp.makeConstraints { make in
-//            make.top.equalToSuperview().inset(78)
-//            make.centerX.equalToSuperview()
-//        }
-//        imageMessageExpansionDateLabel.snp.makeConstraints { make in
-//            make.top.equalTo(imageMessageExpansionNicknameLabel.snp.bottom).offset(13)
-//            make.centerX.equalToSuperview()
-//        }
-//        imageMessageExpansionImageView.snp.makeConstraints { make in
-//            make.center.equalToSuperview()
-//            make.width.height.equalTo(331)
-//        }
+        /* set attributes */
+        let msg = self.msgContents[sender.index!]
+        imageMessageExpansionNicknameLabel.text = msg.message?.nickName
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = dateFormatter.string(from: (msg.message?.createdAt)!)
+        imageMessageExpansionDateLabel.text = dateString
+
+        let imageUrl = URL(string: (msg.message?.content)!)
+        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+
+        /* add subViews */
+        [ imageMessageExpansionNicknameLabel, imageMessageExpansionDateLabel, imageMessageExpansionImageView ].forEach {
+            self.visualEffectView?.contentView.addSubview($0)
+        }
+
+        imageMessageExpansionNicknameLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(78)
+            make.centerX.equalToSuperview()
+        }
+        imageMessageExpansionDateLabel.snp.makeConstraints { make in
+            make.top.equalTo(imageMessageExpansionNicknameLabel.snp.bottom).offset(13)
+            make.centerX.equalToSuperview()
+        }
+        imageMessageExpansionImageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(331)
+        }
         
     }
 }
