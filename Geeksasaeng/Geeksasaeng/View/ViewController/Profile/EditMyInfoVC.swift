@@ -181,7 +181,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     /* 회원정보 (수정 시 변경) */
     
     var dormitoryId: Int?
-    var loginId: String?
     var nickname: String?
     var dormitoryList: [Dormitory]?
     
@@ -314,21 +313,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     private func setUserInfo() {
         /* textfield로 변경 */
-//        UserInfoAPI.getUserInfo { isSuccess, result in
-//            if isSuccess {
-//                let url = URL(string: result.profileImgUrl)
-//                self.userImageView.kf.setImage(with: url)
-//
-//                self.nicknameDataTextField.text = result.nickname
-//
-//                self.dormitoryId = result.dormitoryId
-//                self.loginId = result.loginId
-//                self.nickname = result.nickname
-//
-//                self.dormitoryList = result.
-//            }
-//        }
-        
         UserInfoAPI.getEditUserInfo { isSuccess, result in
             if isSuccess {
                 let url = URL(string: result.imgUrl!)
@@ -337,7 +321,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 self.nicknameDataTextField.text = result.nickname
                 
                 self.dormitoryId = result.dormitoryId
-                self.loginId = result.loginId
                 self.nickname = result.nickname
                 
                 self.dormitoryList = result.dormitoryList
@@ -443,11 +426,8 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     @objc
     private func tapEditConfirmButton() {
         let input = EditUserInput (
-            checkPassword: "",
             dormitoryId: self.dormitoryId,
-            loginId: self.loginId,
-            nickname: self.nickname,
-            password: ""
+            nickname: self.nickname
         )
         
         UserInfoAPI.editUser(input, imageData: userImageView.image!) { isSuccess, result in
@@ -519,7 +499,6 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = PasswordCheckViewController().then {
                 $0.dormitoryId = self.dormitoryId
-                $0.loginId = self.loginId
                 $0.nickname = self.nickname
                 $0.profileImg = self.userImageView.image
             }
