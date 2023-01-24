@@ -22,7 +22,7 @@ class TermsOfUseAgreementOfProfileViewController: UIViewController {
     }
     
     var contentImageView = UIImageView().then {
-        $0.image = UIImage(named: "PersonalInfoAgreement")
+        $0.image = UIImage(named: "TermsOfUseAgreement")
     }
     
     // MARK: - Life Cycles

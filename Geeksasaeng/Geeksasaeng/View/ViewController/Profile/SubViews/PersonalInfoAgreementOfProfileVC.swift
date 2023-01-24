@@ -23,7 +23,7 @@ class PersonalInfoAgreementOfProfileViewController: UIViewController {
     }
     
     var contentImageView = UIImageView().then {
-        $0.image = UIImage(named: "TermsOfUseAgreement")
+        $0.image = UIImage(named: "PersonalInfoAgreement")
     }
 
     
