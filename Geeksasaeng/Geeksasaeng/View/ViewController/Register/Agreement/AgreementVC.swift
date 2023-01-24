@@ -196,17 +196,17 @@ class AgreementViewController: UIViewController {
         }
         
         progressIcon.snp.makeConstraints { make in
-            make.width.equalTo(35)
-            make.height.equalTo(22)
-            make.top.equalTo(progressBar.snp.top).offset(-10)
-            make.left.equalTo(progressBar.snp.right).inset(15)
+            make.width.equalTo(25)
+            make.height.equalTo(16)
+            make.top.equalTo(progressBar.snp.top).offset(-4)
+            make.right.equalTo(remainIcon.snp.right).offset(-6)
         }
         
         remainIcon.snp.makeConstraints { make in
-            make.width.equalTo(22)
-            make.height.equalTo(36)
-            make.top.equalTo(progressBar.snp.top).offset(-8)
-            make.right.equalTo(remainBar.snp.right).offset(3)
+            make.width.equalTo(18)
+            make.height.equalTo(31)
+            make.top.equalTo(progressIcon.snp.top).offset(-2.19)
+            make.right.equalTo(remainBar.snp.right)
         }
         
         welcomeLabel.snp.makeConstraints { make in
@@ -225,9 +225,8 @@ class AgreementViewController: UIViewController {
         }
         
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(wholeAgreementButton.snp.bottom).offset(28)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(324)
+            make.top.equalTo(wholeAgreementButton.snp.bottom).offset(30)
+            make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1)
         }
         

@@ -85,7 +85,7 @@ class PersonalInfoAgreementViewController: UIViewController {
     
     var contentImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "TermsOfUseAgreement")
+        imageView.image = UIImage(named: "PersonalInfoAgreement")
         return imageView
     }()
     
@@ -104,7 +104,7 @@ class PersonalInfoAgreementViewController: UIViewController {
     }
     
     private func setAttributes() {
-        navigationItem.title = "약관 동의"
+        navigationItem.title = "개인정보 수집 및 이용동의"
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
