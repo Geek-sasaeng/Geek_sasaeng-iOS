@@ -65,7 +65,6 @@ struct EditUserInfoModelResult: Decodable {
     var dormitoryList: [Dormitory]?
     var dormitoryName: String?
     var imgUrl: String?
-    var loginId: String?
     var nickname: String?
 }
 struct Dormitory: Decodable {
@@ -75,11 +74,8 @@ struct Dormitory: Decodable {
 
 /* 회원정보 수정 POST를 위한 모델 */
 struct EditUserInput: Encodable {
-    var checkPassword: String?
     var dormitoryId: Int?
-    var loginId: String?
     var nickname: String?
-    var password: String?
 }
 struct EditUserModel: Decodable {
     var code: Int?
@@ -93,6 +89,47 @@ struct EditUserModelResult: Decodable {
     var loginId: String?
     var nickname: String?
     var profileImgUrl: String?
+}
+
+/* 비밀번호 수정 */
+struct EditPasswordInput: Encodable {
+    var checkNewPassword: String?
+    var newPassword: String?
+}
+struct EditPasswordModel: Decodable {
+    let code: Int?
+    let isSuccess: Bool?
+    let message: String?
+    let result: String?
+}
+
+/* 나의 활동 목록 모델 */
+struct MyActivityModel: Codable {
+    let code: Int?
+    let isSuccess: Bool?
+    let message: String?
+    let result: MyActivityModelResult?
+}
+struct MyActivityModelResult: Codable {
+    let endedDeliveryPartiesVoList: [EndedDeliveryPartyList]?
+    let finalPage: Bool?
+}
+struct EndedDeliveryPartyList: Codable {
+    let foodCategory: String?
+    let id, maxMatching: Int?
+    let title, updatedAt: String?
+}
+
+/* 회원 탈퇴 */
+struct MemberDeleteInput: Encodable {
+    var checkPassword: String?
+    var password: String?
+}
+struct MemberDeleteModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
 }
 
 class UserInfoAPI {
@@ -164,11 +201,8 @@ class UserInfoAPI {
             "Authorization": "Bearer " + (LoginModel.jwt ?? "")
         ]
         let parameters: [String: Any] = [
-            "checkPassword": parameter.checkPassword!,
             "dormitoryId": parameter.dormitoryId!,
-            "loginId": parameter.loginId!,
-            "nickname": parameter.nickname!,
-            "password": parameter.password!
+            "nickname": parameter.nickname!
         ]
         
         AF.upload(multipartFormData: { multipartFormData in
@@ -195,4 +229,81 @@ class UserInfoAPI {
             }
         }
     }
+    
+    public static func editPassword(_ parameter: EditPasswordInput, completion: @escaping (Bool) -> Void) {
+        let URL = "https://geeksasaeng.shop/members/password"
+        let headers: HTTPHeaders = ["Authorization": "Bearer " + (LoginModel.jwt ?? "")]
+        
+        AF.request(URL, method: .patch, parameters: parameter, headers: headers)
+            .validate()
+            .responseDecodable(of: EditPasswordModel.self) { response in
+                switch response.result {
+                case .success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 비밀번호 변경 성공")
+                        completion(true)
+                    } else {
+                        print("DEBUG: 비밀번호 변경 실패", result.message!)
+                        completion(false)
+                    }
+                case .failure(let error):
+                    print("DEBUG: 비밀번호 변경 실패", error.localizedDescription)
+                    completion(false)
+                }
+            }
+        
+    }
+    
+    // 나의 활동 목록 불러오기
+    public static func getMyActivityList(cursor: Int, completion: @escaping (Bool, MyActivityModelResult?) -> Void) {
+        let url = "https://geeksasaeng.shop/delivery-parties/end"
+        let headers: HTTPHeaders = ["Authorization": "Bearer " + (LoginModel.jwt ?? "")]
+        
+        // Query String을 통해 요청
+        let parameters: Parameters = [
+            "cursor": cursor
+        ]
+        
+        AF.request(url,
+                   method: .get,
+                   parameters: parameters,
+                   headers: headers)
+        .validate()
+        .responseDecodable(of: MyActivityModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 나의 활동 목록 불러오기 성공")
+                } else {
+                    print("DEBUG: 나의 활동 목록 불러오기 실패", result.message!)
+                }
+                completion(result.isSuccess!, result.result)
+            case .failure(let error):
+                print("DEBUG: 나의 활동 목록 불러오기 실패", error.localizedDescription)
+            }
+        }
+    }
+    
+    public static func deleteMember(_ parameter: MemberDeleteInput, memberId: Int, completion: @escaping (Bool) -> Void) {
+        let url = "https://geeksasaeng.shop/members/account-delete/\(memberId)"
+        
+        AF.request(url, method: .patch, parameters: parameter, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+            .validate()
+            .responseDecodable(of: MemberDeleteModel.self) { response in
+                switch response.result {
+                case .success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 회원 탈퇴 성공")
+                        completion(true)
+                    } else {
+                        print("DEBUG: 회원 탈퇴 실패")
+                        completion(false)
+                    }
+                case .failure(let error):
+                    print("회원 탈퇴 실패", error.localizedDescription)
+                    completion(false)
+                }
+            }
+    }
+    
 }

@@ -219,7 +219,7 @@ class BankAccountViewController: UIViewController {
                 
                 // 파티 생성 성공 시, 파티 채팅방도 생성한다!
                 // 채팅방 생성 API 요청
-                CreateChatRoomAPI.requestCreateChatRoom(
+                ChatAPI.requestCreateChatRoom(
                     CreateChatRoomInput(accountNumber:accountNumber,
                                         bank: bank,
                                         category: category,
