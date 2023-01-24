@@ -1,5 +1,5 @@
 //
-//  PartyViewController.swift
+//  TabBarController.swift
 //  Geeksasaeng
 //
 //  Created by 서은수 on 2022/07/01.
