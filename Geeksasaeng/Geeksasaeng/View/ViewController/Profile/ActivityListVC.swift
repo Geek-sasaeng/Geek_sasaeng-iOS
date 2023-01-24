@@ -229,7 +229,7 @@ class ActivityListViewController: UIViewController {
         self.activityTableView.tableFooterView = createSpinnerFooter()
         
         /* 필터에 따른 배달목록 불러오기 API 요청 */
-        MyActivityAPI.getMyActivityList(cursor: cursor) { [weak self] isSuccess, result in
+        UserInfoAPI.getMyActivityList(cursor: cursor) { [weak self] isSuccess, result in
             if isSuccess {
                 guard let result = result,
                       let data = result.endedDeliveryPartiesVoList,

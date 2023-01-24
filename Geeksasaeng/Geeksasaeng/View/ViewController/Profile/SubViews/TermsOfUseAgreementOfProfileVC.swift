@@ -39,7 +39,7 @@ class TermsOfUseAgreementOfProfileViewController: UIViewController {
     private func setNavigationBar() {
         navigationItem.title = "개인정보 수집 및 이용동의"
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(self.back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
@@ -71,4 +71,5 @@ class TermsOfUseAgreementOfProfileViewController: UIViewController {
             make.height.equalTo(UIScreen.main.bounds.width * 29)
         }
     }
+
 }

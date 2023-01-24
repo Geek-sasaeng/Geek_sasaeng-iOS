@@ -194,7 +194,7 @@ class LoginViewController: UIViewController {
     
     private func attemptAutoLogin() {
         if let jwt = UserDefaults.standard.string(forKey: "jwt") {
-            AutoLoginAPI.attemptAutoLogin(jwt: jwt) { result in
+            LoginAPI.attemptAutoLogin(jwt: jwt) { result in
                 // static에 필요한 데이터 저장
                 LoginModel.jwt = jwt
                 LoginModel.memberId = result.memberId

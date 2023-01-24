@@ -293,25 +293,39 @@ class ChangePasswordViewController: UIViewController {
     
     @objc
     private func tapEditConfirmButton() {
-        let input = EditUserInput(
-            checkPassword: self.checkPassword,
-            dormitoryId: self.dormitoryId,
-            loginId: self.loginId,
-            nickname: self.nickname,
-            password: self.password
+        let input = EditPasswordInput(
+            checkNewPassword: self.checkPassword,
+            newPassword: self.password
         )
         
-        UserInfoAPI.editUser(input, imageData: profileImg!) { isSuccess, result in
+        UserInfoAPI.editPassword(input) { isSuccess in
             if isSuccess {
-                print("회원정보 수정 완료")
                 self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
             } else {
                 self.showToast(viewController: self, message: "회원정보 수정 실패", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
-                print("회원정보 수정 실패")
                 self.editConfirmView.removeFromSuperview()
             }
         }
+//        let input = EditUserInput(
+//            checkPassword: self.checkPassword,
+//            dormitoryId: self.dormitoryId,
+//            loginId: self.loginId,
+//            nickname: self.nickname,
+//            password: self.password
+//        )
+        
+//        UserInfoAPI.editUser(input, imageData: profileImg!) { isSuccess, result in
+//            if isSuccess {
+//                print("회원정보 수정 완료")
+//                self.editConfirmView.removeFromSuperview()
+//                self.navigationController?.popViewController(animated: true)
+//            } else {
+//                self.showToast(viewController: self, message: "회원정보 수정 실패", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+//                print("회원정보 수정 실패")
+//                self.editConfirmView.removeFromSuperview()
+//            }
+//        }
     }
     
     @objc

@@ -1000,14 +1000,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
         // 배달 파티 신청하기 API 호출
         guard let partyId = self.partyId else { return }
-        JoinPartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) { [self] isSuccess in
+        PartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) { [self] isSuccess in
             print("DEBUG: 배달파티 신청 API 호출")
             
             // 배달파티 신청 성공
             if isSuccess {
                 // 만들어진 배달파티의 채팅방의 멤버로 추가하기
                 let input = JoinChatInput(partyChatRoomId: self.detailData.partyChatRoomId)
-                JoinChatAPI.requestJoinChat(input) { [self] isSuccess, result in
+                ChatAPI.requestJoinChat(input) { [self] isSuccess, result in
                     if isSuccess {
                         print("DEBUG: 채팅방 초대까지 성공", result?.enterTime)
                         showCompleteRegisterView()

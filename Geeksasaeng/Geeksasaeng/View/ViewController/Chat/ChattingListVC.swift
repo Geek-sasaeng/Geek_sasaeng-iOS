@@ -162,7 +162,7 @@ class ChattingListViewController: UIViewController {
         print("DEBUG: 이 유저의 닉네임", nickName)
         
         // 채팅방 목록 조회 API 연동
-        GetChatRoomListAPI.requestGetChatRoomList(cursor: cursor) { model, msg in
+        ChatAPI.requestGetChatRoomList(cursor: cursor) { model, msg in
             // model이 nil이 아닐 때 -> 조회에 성공해서 결과값을 잘 받아온 것
             if let model = model {
                 guard let isFinalPage = model.result?.finalPage else { return }
