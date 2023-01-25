@@ -120,7 +120,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(162)
+            make.height.equalTo(152)
         }
         
         let contentLabel = UILabel().then {
@@ -150,10 +150,10 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(25)
+            make.top.equalToSuperview().inset(20)
         }
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.top.equalTo(contentLabel.snp.bottom).offset(15)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)

@@ -240,7 +240,7 @@ class ProfileViewController: UIViewController {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(162)
+            make.height.equalTo(186)
         }
         
         let contentLabel = UILabel().then {
@@ -270,7 +270,7 @@ class ProfileViewController: UIViewController {
         }
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(25)
+            make.top.equalToSuperview().inset(20)
         }
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
@@ -332,7 +332,7 @@ class ProfileViewController: UIViewController {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(162)
+            make.height.equalTo(186)
         }
         
         let contentLabel = UILabel().then {
@@ -362,7 +362,7 @@ class ProfileViewController: UIViewController {
         }
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(25)
+            make.top.equalToSuperview().inset(20)
         }
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
@@ -481,6 +481,10 @@ class ProfileViewController: UIViewController {
         editMyInfoArrowButton.addTarget(self, action: #selector(tapEditMyInfoButton), for: .touchUpInside)
         logoutArrowButton.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
         customerServiceButton.addTarget(self, action: #selector(tapcustomerServiceButton), for: .touchUpInside)
+        
+        gradeView.isUserInteractionEnabled = true
+        let gestureToGradeView = UITapGestureRecognizer(target: self, action: #selector(showUserStageView))
+        gradeView.addGestureRecognizer(gestureToGradeView)
     }
     
     private func createBlurView() {
@@ -739,6 +743,12 @@ class ProfileViewController: UIViewController {
             withdrawalMembershipView.removeFromSuperview()
             NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
         }
+    }
+    
+    @objc
+    private func showUserStageView() {
+        let userStageVC = UserStageViewController()
+        self.navigationController?.pushViewController(userStageVC, animated: true)
     }
 }
 

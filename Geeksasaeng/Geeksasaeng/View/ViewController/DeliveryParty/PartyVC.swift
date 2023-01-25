@@ -51,14 +51,21 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.layer.cornerRadius = 13
     }
     
-    let nickNameLabel = UILabel().then {
-        $0.textColor = .init(hex: 0x2F2F2F)
-        $0.font = .customFont(.neoMedium, size: 13)
+    let stageLabel = UILabel().then {
+        // TODO: - 서버가 주면 값 연결
+        $0.text = "신입생" // 더미
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoBold, size: 13)
     }
     
-    let postingTime = UILabel().then {
+    let nickNameLabel = UILabel().then {
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.font = .customFont(.neoBold, size: 13)
+    }
+    
+    let postingTimeLabel = UILabel().then {
         $0.font = .customFont(.neoRegular, size: 11)
-        $0.textColor = .init(hex: 0xD8D8D8)
+        $0.textColor = .init(hex: 0xA8A8A8)
     }
     
     let hashTagLabel = UILabel().then {
@@ -165,7 +172,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.layer.cornerRadius = 5
         $0.snp.makeConstraints { make in
             make.width.equalTo(256)
-            make.height.equalTo(298)
+            make.height.equalTo(202)
         }
         
         /* top View: 삭제하기 */
@@ -196,6 +203,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
             make.right.equalToSuperview().offset(-15)
         }
         
@@ -205,7 +214,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(206)
+            make.height.equalTo(152)
             make.top.equalTo(topSubView.snp.bottom)
         }
         
@@ -229,19 +238,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
-            make.width.equalTo(193)
-            make.height.equalTo(144)
+            make.width.equalTo(176)
+            make.height.equalTo(48)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(15)
+            make.top.equalToSuperview().inset(20)
         }
         
         /* set lineView */
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(15)
-            make.width.equalTo(230)
-            make.height.equalTo(1)
-            make.centerX.equalToSuperview()
+            make.left.right.equalToSuperview().inset(18)
+            make.height.equalTo(1.7)
         }
         
         /* set confirmButton */
@@ -251,7 +259,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.addTarget(self, action: #selector(tapDeleteConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(15)
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
         }
     }
     
@@ -262,10 +271,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
             make.width.equalTo(256)
-            make.height.equalTo(222)
+            make.height.equalTo(178)
         }
         
-        /* top View: 삭제하기 */
+        /* top View: 파티 신청하기 */
         let topSubView = UIView()
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         $0.addSubview(topSubView)
@@ -303,7 +312,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(162)
+            make.height.equalTo(128)
         }
         
         let contentLabel = UILabel()
@@ -327,13 +336,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(25)
+            make.top.equalToSuperview().inset(20)
         }
         
         /* set lineView */
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.top.equalTo(contentLabel.snp.bottom).offset(16)
             make.left.right.equalToSuperview().inset(18)
             make.height.equalTo(1.7)
         }
@@ -497,7 +506,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         let timeStr = str[timeRange].replacingOccurrences(of: ":", with: "시 ") + "분"
         orderReserveLabel.text = "\(dateStr)      \(timeStr)"
         titleLabel.text = detailData.title
-        postingTime.text = detailData.updatedAt
+        
+        postingTimeLabel.text = detailData.updatedAt?.formatToMMddHHmm()
         
         /* 현재 위치를 한글 데이터로 받아오기 */
         let locationNow = CLLocation(latitude: detailData.latitude ?? 37.456518177069526, longitude: detailData.longitude ?? 126.70531256589555)
@@ -523,7 +533,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         self.containerView.addSubview(matchingStatusView)
         
         [
-            profileImageView, nickNameLabel, postingTime, hashTagLabel,
+            profileImageView, stageLabel, nickNameLabel, postingTimeLabel,
+            hashTagLabel,
             titleLabel, contentLabel,
             separateView,
             orderLabel, matchingLabel, categoryLabel, storeLinkLabel, pickupLocationLabel,
@@ -565,13 +576,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.width.height.equalTo(26)
         }
         
-        nickNameLabel.snp.makeConstraints { make in
+        stageLabel.snp.makeConstraints { make in
             make.left.equalTo(profileImageView.snp.right).offset(8)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         
-        postingTime.snp.makeConstraints { make in
-            make.left.equalTo(nickNameLabel.snp.right).offset(15)
+        nickNameLabel.snp.makeConstraints { make in
+            make.left.equalTo(stageLabel.snp.right).offset(5)
+            make.centerY.equalTo(stageLabel.snp.centerY)
+        }
+        
+        postingTimeLabel.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(23)
             make.centerY.equalTo(nickNameLabel.snp.centerY)
         }
         

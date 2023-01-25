@@ -1,5 +1,5 @@
 //
-//  AutoLoginAPI.swift
+//  LoginAPI.swift
 //  Geeksasaeng
 //
 //  Created by 조동진 on 2022/08/05.

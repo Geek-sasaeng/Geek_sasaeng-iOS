@@ -84,7 +84,7 @@ class ReportDetailViewController: UIViewController {
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
             make.width.equalTo(256)
-            make.height.equalTo(226)
+            make.height.equalTo(203)
         }
         
         /* top View */
@@ -128,7 +128,7 @@ class ReportDetailViewController: UIViewController {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(176)
+            make.height.equalTo(153)
         }
         
         let contentLabel = UILabel().then {
@@ -160,7 +160,7 @@ class ReportDetailViewController: UIViewController {
         }
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
+            make.top.equalToSuperview().inset(21)
         }
         /* set lineView */
         lineView.snp.makeConstraints { make in

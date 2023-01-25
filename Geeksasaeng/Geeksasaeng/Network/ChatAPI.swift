@@ -66,6 +66,7 @@ struct ChatRoomListModelResult: Decodable {
 struct ChatRoom: Decodable {
     var roomId: String?
     var roomTitle: String?
+    var enterTime: String?
 }
 
 /* 채팅방 사진 전송 */

@@ -99,7 +99,7 @@ class ChattingViewController: UIViewController {
         
         /* set titleLabel */
         let titleLabel = UILabel().then {
-            $0.text = "나가기"
+            $0.text = "채팅 나가기"
             $0.textColor = UIColor(hex: 0xA8A8A8)
             $0.font = .customFont(.neoMedium, size: 14)
         }
@@ -129,7 +129,7 @@ class ChattingViewController: UIViewController {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(162)
+            make.height.equalTo(186)
         }
         
         let contentLabel = UILabel().then {
@@ -158,8 +158,8 @@ class ChattingViewController: UIViewController {
             bottomSubView.addSubview($0)
         }
         contentLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(25)
+            make.top.equalToSuperview().inset(20)
+            make.left.right.equalToSuperview().inset(40)
         }
         lineView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(25)
@@ -1198,6 +1198,7 @@ class ChattingViewController: UIViewController {
     /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
     @objc
     private func tapProfileImage() {
+        // TODO: - popUpView로 닉네임이랑 등급 전달
         popUpView!.delegate = self
         popUpView!.modalPresentationStyle = .overFullScreen
         popUpView!.modalTransitionStyle = .crossDissolve
