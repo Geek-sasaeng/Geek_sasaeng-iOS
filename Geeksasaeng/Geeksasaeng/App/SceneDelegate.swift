@@ -18,7 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         self.window?.overrideUserInterfaceStyle = .light
         let rootViewController = SplashPlayerViewController()
-//        let rootViewController = WebSocketChattingVC()
         self.window?.rootViewController = rootViewController
         self.window?.makeKeyAndVisible()
     }
