@@ -479,8 +479,6 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        /* 더미 데이터 */
-        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
