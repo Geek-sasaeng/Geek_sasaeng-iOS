@@ -24,7 +24,7 @@ class ProfileViewController: UIViewController {
             myActivityCollectionView.reloadData()
         }
     }
-    var createdAt: [String] = []
+    var updatedAt: [String] = []
     
     
     // MARK: - SubViews
@@ -141,7 +141,9 @@ class ProfileViewController: UIViewController {
         $0.minimumLineSpacing = 7
         
         let screenWidth = UIScreen.main.bounds.width
-        $0.itemSize = CGSize(width: (screenWidth-44)/3, height: 84)
+        $0.itemSize = CGSize(width: (screenWidth-54)/3, height: 80)
+        
+        $0.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     }
     lazy var myActivityCollectionView = UICollectionView(frame: .zero, collectionViewLayout: myActivityCollectionViewFlowLayout)
     
@@ -438,6 +440,12 @@ class ProfileViewController: UIViewController {
                         parties = Array(parties[...endIdx])
                     }
                     self.myActivities = parties
+                    
+                    parties.forEach {
+                        let str = $0.updatedAt
+                        let endIdx = str?.index(str!.startIndex, offsetBy: 10)
+                        self.updatedAt.append(String(str![...endIdx!]))
+                    }
                 }
             } else {
                 self.showToast(viewController: self, message: "나의 활동을 불러오지 못했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
@@ -761,9 +769,7 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyActivityCollectionViewCell.identifier, for: indexPath) as? MyActivityCollectionViewCell else { return UICollectionViewCell() }
         
         cell.titleLabel.text = myActivities[indexPath.row].title
-        let endIdx = myActivities[indexPath.row].updatedAt?.index(myActivities[indexPath.row].updatedAt!.startIndex, offsetBy: 10)
-        cell.updatedAtLabel.text = String(myActivities[indexPath.row].updatedAt![...endIdx!])
-        cell.updatedAtLabel.text = myActivities[indexPath.row].updatedAt
+        cell.updatedAtLabel.text = updatedAt[indexPath.row]
         
         return cell
     }
