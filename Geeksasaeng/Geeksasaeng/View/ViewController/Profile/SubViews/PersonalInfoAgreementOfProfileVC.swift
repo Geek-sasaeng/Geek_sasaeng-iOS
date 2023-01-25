@@ -43,6 +43,12 @@ class PersonalInfoAgreementOfProfileViewController: UIViewController {
         self.navigationController?.tabBarController?.tabBar.isHidden = true
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+    
     
     private func setAttributes() {
         navigationItem.title = "서비스 이용약관 동의"
