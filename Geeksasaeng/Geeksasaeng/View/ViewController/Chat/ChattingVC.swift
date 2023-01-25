@@ -777,6 +777,13 @@ class ChattingViewController: UIViewController {
     private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
             self.localRealm.write(msgToSave)
+            
+            // 상대방이 보낸 채팅인데, 내가 지금 채팅방 화면을 보고 있는 경우
+            if msgToSave.memberId != LoginModel.memberId {
+                guard let last = self.msgContents.last else { return }
+                // 바로 읽음 처리 요청 => 실시간 읽음 처리
+                self.sendReadRequest([last])
+            }
         }
     }
     
