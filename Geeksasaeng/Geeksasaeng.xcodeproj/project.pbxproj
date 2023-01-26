@@ -71,6 +71,9 @@
 		1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */; };
 		1040FB9D2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
 		1040FB9E2875CC640060A3E4 /* AgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1040FB972875C06D0060A3E4 /* AgreementVC.swift */; };
+		10411FDC29811D4500758816 /* ImageCellVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10411FDB29811D4500758816 /* ImageCellVC.swift */; };
+		10411FDD29811D4500758816 /* ImageCellVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10411FDB29811D4500758816 /* ImageCellVC.swift */; };
+		10411FDE29811D4500758816 /* ImageCellVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10411FDB29811D4500758816 /* ImageCellVC.swift */; };
 		1041ADDE28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
 		1041ADDF28AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
 		1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */; };
@@ -1277,6 +1280,7 @@
 		103F5E46289D3C0E000E7B9A /* LoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAPI.swift; sourceTree = "<group>"; };
 		1040FB972875C06D0060A3E4 /* AgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementVC.swift; sourceTree = "<group>"; };
 		1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthVC.swift; sourceTree = "<group>"; };
+		10411FDB29811D4500758816 /* ImageCellVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCellVC.swift; sourceTree = "<group>"; };
 		1041ADDD28AE6BC9003DCB26 /* UserInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoAPI.swift; sourceTree = "<group>"; };
 		10543D60287EFECE003B8799 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		10543D62287EFED5003B8799 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -1843,6 +1847,15 @@
 			path = GeeksasaengUITests;
 			sourceTree = "<group>";
 		};
+		10411FDA29811D1A00758816 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				10411FDB29811D4500758816 /* ImageCellVC.swift */,
+				A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
 		10543E64287F0054003B8799 /* IOS_DaumMap_SDK_1.4.0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2360,11 +2373,11 @@
 		A24F0B29289D88AF007A9C5C /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				10411FDA29811D1A00758816 /* SubViews */,
 				A21DB933289D896B00A523F1 /* ChattingListVC.swift */,
 				A203B2912954DB20001DFE14 /* ChattingVC.swift */,
 				A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */,
 				10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */,
-				A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */,
 				A248720028EA2DCF002F84A8 /* ReportUserVC.swift */,
 				106D78A828F7B8D500CA6F4A /* ChattingStorageChatVC.swift */,
 				A274DE7528E0F5DC00F5024E /* Menu */,
@@ -3824,6 +3837,7 @@
 				A2AF539D2896C0680052F734 /* SearchViewModel.swift in Sources */,
 				103AD394297AB81100295D9C /* CustomerServiceVC.swift in Sources */,
 				A203B2922954DB20001DFE14 /* ChattingVC.swift in Sources */,
+				10411FDC29811D4500758816 /* ImageCellVC.swift in Sources */,
 				103AD399297AC0EA00295D9C /* TermsOfUseAgreementOfProfileVC.swift in Sources */,
 				A2B045D62889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				A20FC0ED287F1D0B0095224C /* DeliveryListModel.swift in Sources */,
@@ -3937,6 +3951,7 @@
 				103F146B286ACA86004B637B /* GeeksasaengTests.swift in Sources */,
 				105E60AA287C32710030C927 /* CreatePartyVC.swift in Sources */,
 				A2E6EADF2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
+				10411FDD29811D4500758816 /* ImageCellVC.swift in Sources */,
 				102B35D12879BCD60042F691 /* UIView+Extension.swift in Sources */,
 				107123FA287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
 				A2FA89AF286EDD7E00CB3B55 /* UIFont+Extension.swift in Sources */,
@@ -4083,6 +4098,7 @@
 				10D4D6BD2894F8A700B53AB0 /* EditMatchingPersonVC.swift in Sources */,
 				10EEF83D295EDBE0009F878D /* ImageMessageCell.swift in Sources */,
 				102B35E22879BD980042F691 /* String+Extension.swift in Sources */,
+				10411FDE29811D4500758816 /* ImageCellVC.swift in Sources */,
 				1041ADE028AE6BC9003DCB26 /* UserInfoAPI.swift in Sources */,
 				A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */,
 				10A4A35728E3734E00AF4235 /* ForcedExitVC.swift in Sources */,

@@ -434,20 +434,6 @@ class ChattingViewController: UIViewController {
         }
     }
     
-    /* 채팅 이미지 관련 서브뷰 */
-    let imageMessageExpansionNicknameLabel = UILabel().then {
-        $0.font = .customFont(.neoMedium, size: 14)
-        $0.textColor = .white
-    }
-    let imageMessageExpansionDateLabel = UILabel().then {
-        $0.font = .customFont(.neoMedium, size: 12)
-        $0.textColor = .white
-    }
-    let imageMessageExpansionImageView = UIImageView()
-    
-    // 블러 뷰
-    var visualEffectView: UIVisualEffectView?
-    
     // MARK: - Properties
     
     private var socket: WebSocket? = nil
@@ -486,13 +472,13 @@ class ChattingViewController: UIViewController {
     // Realm 싱글톤 객체 가져오기
     private let localRealm = DataBaseManager.shared
     
+    var visualEffectView: UIVisualEffectView?
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        /* 더미 데이터 */
-        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -1214,46 +1200,22 @@ class ChattingViewController: UIViewController {
     
     @objc
     private func tapImageMessageCell(_ sender: UITapGestureRecognizerWithParam) {
-        /* create blur view */
-        if visualEffectView == nil {
-            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-            visualEffectView.layer.opacity = 0.6
-            visualEffectView.frame = view.frame
-            visualEffectView.isUserInteractionEnabled = false
-            view.addSubview(visualEffectView)
-            self.visualEffectView = visualEffectView
-        }
+        let imageCellVC = ImageCellViewController()
         
-        /* set attributes */
         let msg = self.msgContents[sender.index!]
-        imageMessageExpansionNicknameLabel.text = msg.message?.nickName
+        imageCellVC.nickname = msg.message?.nickName
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dateString = dateFormatter.string(from: (msg.message?.createdAt)!)
-        imageMessageExpansionDateLabel.text = dateString
+        imageCellVC.date = dateString
 
         let imageUrl = URL(string: (msg.message?.content)!)
-        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
-
-        /* add subViews */
-        [ imageMessageExpansionNicknameLabel, imageMessageExpansionDateLabel, imageMessageExpansionImageView ].forEach {
-            self.visualEffectView?.contentView.addSubview($0)
-        }
-
-        imageMessageExpansionNicknameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(78)
-            make.centerX.equalToSuperview()
-        }
-        imageMessageExpansionDateLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageMessageExpansionNicknameLabel.snp.bottom).offset(13)
-            make.centerX.equalToSuperview()
-        }
-        imageMessageExpansionImageView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.height.equalTo(331)
-        }
+        imageCellVC.imageUrl = imageUrl
         
+        imageCellVC.modalPresentationStyle = .overFullScreen
+        imageCellVC.modalTransitionStyle = .crossDissolve
+        self.present(imageCellVC, animated: true)
     }
 }
 

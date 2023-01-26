@@ -46,15 +46,23 @@ class CustomerServiceViewController: UIViewController {
             $0.font = .customFont(.neoBold, size: 16)
             $0.textColor = .white
         }
+        
+        let enquireLabel = UILabel().then {
+            $0.text = "카카오톡 문의하기"
+            $0.font = .customFont(.neoMedium, size: 13)
+            $0.textColor = .white
+        }
+        
         lazy var goToKakaoButton = UIButton().then {
-            $0.setTitle("카카오톡 문의하기", for: .normal)
-            $0.setTitleColor(.white, for: .normal)
-//            $0.titleLabel.font = .customFont(.neoMedium, size: 13)
-//            $0.setImage(UIImage(named: <#T##String#>))
+            $0.setImage(UIImage(named: "KakaoArrowIcon"), for: .normal)
             $0.addTarget(self, action: #selector(self.tapGoToKakaoButton), for: .touchUpInside)
         }
         
-        [ titleLabel, goToKakaoButton ].forEach {
+        let backgroundImage = UIImageView().then {
+            $0.image = UIImage(named: "KakaoBackground")
+        }
+        
+        [ titleLabel, enquireLabel, goToKakaoButton, backgroundImage ].forEach {
             view.addSubview($0)
         }
         
@@ -62,9 +70,17 @@ class CustomerServiceViewController: UIViewController {
             make.top.equalToSuperview().inset(21)
             make.left.equalToSuperview().inset(18)
         }
+        enquireLabel.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(15)
+            make.right.equalToSuperview().inset(39)
+        }
         goToKakaoButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(16)
+            make.centerY.equalTo(enquireLabel.snp.centerY)
             make.right.equalToSuperview().inset(15)
+        }
+        backgroundImage.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.top).offset(-5)
+            make.right.equalToSuperview()
         }
     }
     
