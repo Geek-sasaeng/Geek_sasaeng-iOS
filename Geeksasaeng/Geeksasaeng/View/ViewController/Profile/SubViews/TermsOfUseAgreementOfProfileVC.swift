@@ -36,6 +36,18 @@ class TermsOfUseAgreementOfProfileViewController: UIViewController {
         addRightSwipe()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+    
     private func setNavigationBar() {
         navigationItem.title = "개인정보 수집 및 이용동의"
         navigationItem.hidesBackButton = true
