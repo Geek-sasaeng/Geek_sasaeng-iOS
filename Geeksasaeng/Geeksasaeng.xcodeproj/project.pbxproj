@@ -1152,9 +1152,9 @@
 		A29B560429740ECB00945776 /* CloseMatchingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29B560129740ECB00945776 /* CloseMatchingModel.swift */; };
 		A29F6F8A288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
 		A29F6F8B288546E100350744 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
-		A2A6D0B028E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
-		A2A6D0B128E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
-		A2A6D0B228E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */; };
+		A2A6D0B028E504F1008F6C7B /* ProfilePopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpVC.swift */; };
+		A2A6D0B128E504F1008F6C7B /* ProfilePopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpVC.swift */; };
+		A2A6D0B228E504F1008F6C7B /* ProfilePopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6D0AF28E504F1008F6C7B /* ProfilePopUpVC.swift */; };
 		A2A7141B296B478A006410E2 /* ChattingRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */; };
 		A2A7141C296B478A006410E2 /* ChattingRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */; };
 		A2A7141D296B478A006410E2 /* ChattingRoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */; };
@@ -1658,7 +1658,7 @@
 		A288072D297AD38200FC655C /* CompleteDeliveryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteDeliveryModel.swift; sourceTree = "<group>"; };
 		A2911FE1297E607E00747E7C /* UserStageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStageVC.swift; sourceTree = "<group>"; };
 		A29B560129740ECB00945776 /* CloseMatchingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseMatchingModel.swift; sourceTree = "<group>"; };
-		A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePopUpViewController.swift; sourceTree = "<group>"; };
+		A2A6D0AF28E504F1008F6C7B /* ProfilePopUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePopUpVC.swift; sourceTree = "<group>"; };
 		A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingRoomModel.swift; sourceTree = "<group>"; };
 		A2AF5394289696810052F734 /* ReportAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportAPI.swift; sourceTree = "<group>"; };
 		A2AF539C2896C0680052F734 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
@@ -1851,7 +1851,7 @@
 			isa = PBXGroup;
 			children = (
 				10411FDB29811D4500758816 /* ImageCellVC.swift */,
-				A2A6D0AF28E504F1008F6C7B /* ProfilePopUpViewController.swift */,
+				A2A6D0AF28E504F1008F6C7B /* ProfilePopUpVC.swift */,
 			);
 			path = SubViews;
 			sourceTree = "<group>";
@@ -3861,7 +3861,7 @@
 				1036F0A6291A7E1500306840 /* Keys.swift in Sources */,
 				A26DA3C428918D0F002DB07D /* DormitoryListViewModel.swift in Sources */,
 				107123F9287B06D800D58FD1 /* RepetitionAPI.swift in Sources */,
-				A2A6D0B028E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */,
+				A2A6D0B028E504F1008F6C7B /* ProfilePopUpVC.swift in Sources */,
 				A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */,
 				A2035EA128833ED60051498A /* AdViewModel.swift in Sources */,
 				A2E6EADE2893D95F0011D3BD /* DormitoryNameModel.swift in Sources */,
@@ -3988,7 +3988,7 @@
 				10B3822328A2321F00571406 /* UILabel+Extension.swift in Sources */,
 				A2513F162878612B0029C279 /* PhoneAuthCheckViewModel.swift in Sources */,
 				A2A7141C296B478A006410E2 /* ChattingRoomModel.swift in Sources */,
-				A2A6D0B128E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */,
+				A2A6D0B128E504F1008F6C7B /* ProfilePopUpVC.swift in Sources */,
 				108B633928899A4C008C4F65 /* DeliveryListDetailViewModel.swift in Sources */,
 				A248D892289FB8F1000E2422 /* systemMessageCell.swift in Sources */,
 				A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
@@ -4148,7 +4148,7 @@
 				A20FC0F3287F30C40095224C /* SearchVC.swift in Sources */,
 				A2880730297AD38200FC655C /* CompleteDeliveryModel.swift in Sources */,
 				A2FA89AC286ECD4200CB3B55 /* UIColor+Extension.swift in Sources */,
-				A2A6D0B228E504F1008F6C7B /* ProfilePopUpViewController.swift in Sources */,
+				A2A6D0B228E504F1008F6C7B /* ProfilePopUpVC.swift in Sources */,
 				10E6956728885589000B7309 /* LocationAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

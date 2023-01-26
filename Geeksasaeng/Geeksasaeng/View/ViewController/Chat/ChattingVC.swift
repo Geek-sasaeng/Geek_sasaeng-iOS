@@ -20,6 +20,10 @@ protocol PushReportUserDelegate {
     func pushReportUserVC()
 }
 
+protocol PresentPopUpViewDelegate {
+    func presentPopUpView(profileImage: UIImage, nickNameStr: String)
+}
+
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
@@ -465,9 +469,6 @@ class ChattingViewController: UIViewController {
     var enterTimeToDate: Date?  // 채팅방 입장 시간 - Date 타입
     
     var keyboardHeight: CGFloat? // 키보드 높이
-    
-    // 상대방 프로필 뷰 클릭하면 나오는 팝업뷰
-    var popUpView: ProfilePopUpViewController?
     
     // Realm 싱글톤 객체 가져오기
     private let localRealm = DataBaseManager.shared
@@ -1188,16 +1189,6 @@ class ChattingViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
-    @objc
-    private func tapProfileImage() {
-        // TODO: - popUpView로 닉네임이랑 등급 전달
-        popUpView!.delegate = self
-        popUpView!.modalPresentationStyle = .overFullScreen
-        popUpView!.modalTransitionStyle = .crossDissolve
-        self.present(popUpView!, animated: true)
-    }
-    
     @objc
     private func tapImageMessageCell(_ sender: UITapGestureRecognizerWithParam) {
         let imageCellVC = ImageCellViewController()
@@ -1335,8 +1326,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     if let contentUrl = msg.message?.content {
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
-                    cell.leftImageView.isUserInteractionEnabled = true
-//                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector()))
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
@@ -1348,6 +1337,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else { // 이미지가 아닐 때
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+                cell.delegate = self
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
@@ -1370,14 +1360,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     if let profileImgStr = msg.message?.profileImgUrl {
                         let url = URL(string: profileImgStr)
                         cell.leftImageView.kf.setImage(with: url)
-                        self.popUpView = ProfilePopUpViewController(profileUrl: url!)
                     }
                     if self.roomInfo?.chiefId == msg.message?.memberId {
                         // 방장이라면 프로필 테두리
                         cell.leftImageView.drawBorderToChief()
                     }
-                    cell.leftImageView.isUserInteractionEnabled = true
-                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftMessageLabel.text = msg.message?.content
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
@@ -1453,6 +1440,17 @@ extension ChattingViewController: PushReportUserDelegate {
     public func pushReportUserVC() {
         let reportUserVC = ReportUserViewController()
         self.navigationController?.pushViewController(reportUserVC, animated: true)
+    }
+}
+
+extension ChattingViewController: PresentPopUpViewDelegate {
+    /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
+    public func presentPopUpView(profileImage: UIImage, nickNameStr: String) {
+        let popUpView = ProfilePopUpViewController(profileImage: profileImage, nickNameStr: nickNameStr)
+        popUpView.delegate = self
+        popUpView.modalPresentationStyle = .overFullScreen
+        popUpView.modalTransitionStyle = .crossDissolve
+        self.present(popUpView, animated: true)
     }
 }
 

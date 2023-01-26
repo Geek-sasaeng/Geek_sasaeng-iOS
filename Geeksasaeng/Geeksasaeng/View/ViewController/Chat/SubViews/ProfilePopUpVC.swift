@@ -1,5 +1,5 @@
 //
-//  ProfilePopUpViewController.swift
+//  ProfilePopUpVC.swift
 //  Geeksasaeng
 //
 //  Created by 서은수 on 2022/09/29.
@@ -14,7 +14,8 @@ class ProfilePopUpViewController: UIViewController {
     // MARK: - Properties
     
     var delegate: PushReportUserDelegate?
-    var profileUrl: URL?
+    var profileImage: UIImage?
+    var nickNameStr: String?
     
     // MARK: - SubViews
     
@@ -41,7 +42,6 @@ class ProfilePopUpViewController: UIViewController {
         $0.textColor = .mainColor
     }
     let nickNameLabel = UILabel().then {
-        $0.text = "같이먹자냠냠"
         $0.font = .customFont(.neoBold, size: 18)
         $0.textColor = .init(hex: 0x2F2F2F)
     }
@@ -81,9 +81,10 @@ class ProfilePopUpViewController: UIViewController {
     
     // MARK: - Initialization
     
-    init(profileUrl: URL) {
+    init(profileImage: UIImage, nickNameStr: String) {
         super.init(nibName: nil, bundle: nil)
-        self.profileUrl = profileUrl
+        self.profileImage = profileImage
+        self.nickNameStr = nickNameStr
     }
     
     required init?(coder: NSCoder) {
@@ -162,7 +163,8 @@ class ProfilePopUpViewController: UIViewController {
     }
     
     private func setAttributes() {
-        profileImageView.kf.setImage(with: profileUrl)
+        profileImageView.image = profileImage
+        nickNameLabel.text = nickNameStr
     }
     
     // MARK: - @objc Functions

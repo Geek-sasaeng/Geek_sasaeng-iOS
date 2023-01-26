@@ -7,12 +7,21 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class MessageCell: UICollectionViewCell {
     
+    // MARK: - Properties
+    
+    // 여기서 ChattingVC의 함수를 호출하기 위한 delegate
+    var delegate: PresentPopUpViewDelegate?
+    
     // MARK: - SubViews
     
-    let leftImageView = UIImageView()
+    lazy var leftImageView = UIImageView().then {
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+    }
     let rightImageView = UIImageView()
     let nicknameLabel = UILabel()
     
@@ -71,11 +80,16 @@ class MessageCell: UICollectionViewCell {
             leftTimeLabel, rightTimeLabel,
             leftUnreadCntLabel, rightUnreadCntLabel
         ].forEach {
-            addSubview($0)
+            self.contentView.addSubview($0)
         }
     }
     
     private func setLayouts() {
+        contentView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(0)
+            make.left.right.bottom.equalToSuperview()
+        }
+        
         leftMessageLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(2)
             make.left.equalTo(leftImageView.snp.right).offset(10)
@@ -164,5 +178,14 @@ class MessageCell: UICollectionViewCell {
         if rightUnreadCntLabel.text == "0" {
             rightUnreadCntLabel.text = ""
         }
+    }
+    
+    // MARK: - @objc Functions
+    
+    /* 상대 유저 프로필 클릭시 실행 -> ChattingVC에서 팝업뷰를 띄워준다 */
+    @objc
+    private func tapProfileImage() {
+        delegate?.presentPopUpView(profileImage: self.leftImageView.image!,
+                                   nickNameStr: self.nicknameLabel.text!)
     }
 }
