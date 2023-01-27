@@ -139,7 +139,7 @@ struct CompleteRemittanceModel: Decodable {
 
 /* 강제 퇴장 */
 struct ForcedExitInput: Encodable {
-    var removedMemberId: String?
+    var removedMemberIdList: [String]?
     var roomId: String?
 }
 struct ForcedExitModel: Decodable {
@@ -286,6 +286,7 @@ class ChatAPI {
         }
     }
     
+    /* 방장의 주문완료 */
     public static func orderCompleted(_ parameter: OrderCompletedInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/order"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
@@ -318,14 +319,14 @@ class ChatAPI {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("방장 퇴장 완료")
+                    print("DEBUG: 방장 채팅방 나가기 완료")
                     completion(true)
                 } else {
-                    print("DEBUG .success: 방장 퇴장 실패, ", result.message!)
+                    print("DEBUG: .success: 방장 채팅방 나가기 실패, ", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG .failure: 방장 퇴장 실패, ", error.localizedDescription)
+                print("DEBUG: .failure: 방장 채팅방 나가기 실패, ", error.localizedDescription)
                 completion(false)
             }
         }
@@ -341,14 +342,14 @@ class ChatAPI {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 파티원 퇴장 완료")
+                    print("DEBUG: 파티원 채팅방 나가기 완료")
                     completion(true)
                 } else {
-                    print("DEBUG: 파티원 퇴장 실패", result.message!)
+                    print("DEBUG: 파티원 채팅방 나가기 실패", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG: 파티원 퇴장 실패", error.localizedDescription)
+                print("DEBUG: 파티원 채팅방 나가기 실패", error.localizedDescription)
                 completion(false)
             }
         }
@@ -422,14 +423,14 @@ class ChatAPI {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("강제 퇴장 완료")
+                    print("DEBUG: 강제 퇴장 완료")
                     completion(true)
                 } else {
-                    print("DEBUG .success: 강제 퇴장 실패, ", result.message!)
+                    print("DEBUG: .success 강제 퇴장 실패, ", result.message!)
                     completion(false)
                 }
             case .failure(let error):
-                print("DEBUG .failure: 강제 퇴장 실패, ", error.localizedDescription)
+                print("DEBUG: .failure 강제 퇴장 실패, ", error.localizedDescription)
                 completion(false)
             }
         }

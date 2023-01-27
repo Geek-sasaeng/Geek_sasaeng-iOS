@@ -28,7 +28,7 @@ struct JoinPartyModelResult: Decodable {
 /* 배달파티 방장 삭제 및 교체 */
 struct ExitPartyChiefInput: Encodable {
     var nickName: String?
-    var uuid: String?
+    var partyId: Int?
 }
 struct ExitPartyChiefModel: Decodable {
     var code: Int?
@@ -42,7 +42,7 @@ struct ExitPartyChiefModelResult: Decodable {
 
 /* 배달파티 멤버 삭제 및 교체 */
 struct ExitPartyMemberInput: Encodable {
-    var uuid: String?
+    var partyId: Int?
 }
 struct ExitPartyMemberModel: Decodable {
     var code: Int?
@@ -51,7 +51,7 @@ struct ExitPartyMemberModel: Decodable {
     var result: String?
 }
 
-/* 배달파티 신청하기 API 연동 */
+/* 배달파티 관련 API 연동 */
 class PartyAPI {
     
     /* 파티장이 아닌 유저가 신청하기 눌렀을 때 유저를 partyMember로 추가할 때 사용 */
@@ -89,10 +89,10 @@ class PartyAPI {
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
-                        print("DEBUG: 방장 파티 나가기 성공")
+                        print("DEBUG: 방장 파티 나가기 성공", result.result)
                         completion(true)
                     } else {
-                        print("DEBUG: 방장 파티 나가기 실패")
+                        print("DEBUG: 방장 파티 나가기 실패", result.result)
                         completion(false)
                     }
                 case .failure(let error):
@@ -111,10 +111,10 @@ class PartyAPI {
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
-                        print("DEBUG: 파티원 파티 나가기 성공")
+                        print("DEBUG: 파티원 파티 나가기 성공", result.result)
                         completion(true)
                     } else {
-                        print("DEBUG: 파티원 파티 나가기 실패")
+                        print("DEBUG: 파티원 파티 나가기 실패", result.result)
                         completion(false)
                     }
                 case .failure(let error):

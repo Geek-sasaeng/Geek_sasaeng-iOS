@@ -20,6 +20,10 @@ protocol PushReportUserDelegate {
     func pushReportUserVC()
 }
 
+protocol PresentPopUpViewDelegate {
+    func presentPopUpView(profileImage: UIImage, nickNameStr: String)
+}
+
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
@@ -466,9 +470,6 @@ class ChattingViewController: UIViewController {
     
     var keyboardHeight: CGFloat? // 키보드 높이
     
-    // 상대방 프로필 뷰 클릭하면 나오는 팝업뷰
-    var popUpView: ProfilePopUpViewController?
-    
     // Realm 싱글톤 객체 가져오기
     private let localRealm = DataBaseManager.shared
     
@@ -763,6 +764,13 @@ class ChattingViewController: UIViewController {
     private func saveMessage(msgToSave: MsgToSave) {
         DispatchQueue.main.async {
             self.localRealm.write(msgToSave)
+            
+            // 상대방이 보낸 채팅인데, 내가 지금 채팅방 화면을 보고 있는 경우
+            if msgToSave.memberId != LoginModel.memberId {
+                guard let last = self.msgContents.last else { return }
+                // 바로 읽음 처리 요청 => 실시간 읽음 처리
+                self.sendReadRequest([last])
+            }
         }
     }
     
@@ -1141,12 +1149,13 @@ class ChattingViewController: UIViewController {
     private func tapExitConfirmButton() {
         // 방장이라면
         if self.roomInfo?.isChief ?? false {
-            // 방장 나가기
+            // 1. 방장 채팅방 나가기
             let input = ExitChiefInput(roomId: self.roomId)
             ChatAPI.exitChief(input) { isSuccess in
                 if isSuccess {
                     print("방장 채팅방 나가기 성공")
-                    let input = ExitPartyChiefInput(nickName: LoginModel.nickname, uuid: self.roomId)
+                    // 2. 방장 배달 파티 나가기
+                    let input = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyChief(input) { isSuccess in
                         if isSuccess {
                             print("방장 파티 나가기 성공")
@@ -1159,12 +1168,13 @@ class ChattingViewController: UIViewController {
                 }
             }
         } else {
-            // 파티원 나가기
+            // 1. 파티원 채팅방 나가기
             let input = ExitMemberInput(roomId: roomId)
             ChatAPI.exitMember(input) { isSuccess in
                 if isSuccess {
                     print("파티원 채팅방 나가기 성공")
-                    let input = ExitPartyMemberInput(uuid: self.roomId)
+                    // 2. 파티원 배달파티 나가기
+                    let input = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyMember(input) { isSuccess in
                         if isSuccess {
                             print("파티원 파티 나가기 성공")
@@ -1179,16 +1189,6 @@ class ChattingViewController: UIViewController {
         }
         
         self.navigationController?.popViewController(animated: true)
-    }
-    
-    /* 채팅방에 있는 상대 유저 프로필 클릭시 실행되는 함수 */
-    @objc
-    private func tapProfileImage() {
-        // TODO: - popUpView로 닉네임이랑 등급 전달
-        popUpView!.delegate = self
-        popUpView!.modalPresentationStyle = .overFullScreen
-        popUpView!.modalTransitionStyle = .crossDissolve
-        self.present(popUpView!, animated: true)
     }
     
     @objc
@@ -1250,6 +1250,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     }
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightProfileImageView.isHidden = true
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
@@ -1261,6 +1262,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     }
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftProfileImageView.isHidden = true
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
@@ -1301,17 +1303,19 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {
-                        cell.rightImageView.kf.setImage(with: URL(string: profileImgUrl))
+                        cell.rightProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
+                        print("[TEST]", msg.message, profileImgUrl)
                     }
                     if self.roomInfo?.chiefId == msg.message?.memberId {
                         // 방장이라면 프로필 테두리
-                        cell.rightImageView.drawBorderToChief()
+                        cell.rightProfileImageView.drawBorderToChief()
                     }
                     if let contentUrl = msg.message?.content {
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.leftProfileImageView.isHidden = true
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
@@ -1319,20 +1323,19 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 } else { // 다른 사람이면
                     cell.nicknameLabel.textAlignment = .left
                     if let profileImgUrl = msg.message?.profileImgUrl {
-                        cell.leftImageView.kf.setImage(with: URL(string: profileImgUrl))
+                        cell.leftProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
                     }
                     if self.roomInfo?.chiefId == msg.message?.memberId {
                         // 방장이라면 프로필 테두리
-                        cell.leftImageView.drawBorderToChief()
+                        cell.leftProfileImageView.drawBorderToChief()
                     }
                     if let contentUrl = msg.message?.content {
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
-                    cell.leftImageView.isUserInteractionEnabled = true
-//                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector()))
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
+                    cell.rightProfileImageView.isHidden = true
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
@@ -1341,6 +1344,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 return cell
             } else { // 이미지가 아닐 때
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
+                cell.delegate = self
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
@@ -1363,14 +1367,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     if let profileImgStr = msg.message?.profileImgUrl {
                         let url = URL(string: profileImgStr)
                         cell.leftImageView.kf.setImage(with: url)
-                        self.popUpView = ProfilePopUpViewController(profileUrl: url!)
                     }
                     if self.roomInfo?.chiefId == msg.message?.memberId {
                         // 방장이라면 프로필 테두리
                         cell.leftImageView.drawBorderToChief()
                     }
-                    cell.leftImageView.isUserInteractionEnabled = true
-                    cell.leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftMessageLabel.text = msg.message?.content
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
@@ -1449,6 +1450,17 @@ extension ChattingViewController: PushReportUserDelegate {
     }
 }
 
+extension ChattingViewController: PresentPopUpViewDelegate {
+    /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
+    public func presentPopUpView(profileImage: UIImage, nickNameStr: String) {
+        let popUpView = ProfilePopUpViewController(profileImage: profileImage, nickNameStr: nickNameStr)
+        popUpView.delegate = self
+        popUpView.modalPresentationStyle = .overFullScreen
+        popUpView.modalTransitionStyle = .crossDissolve
+        self.present(popUpView, animated: true)
+    }
+}
+
 // MARK: - WebSocketDelegate
 
 extension ChattingViewController: WebSocketDelegate {
@@ -1519,7 +1531,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     content: "",
                     isImageMessage: true,
                     isSystemMessage: false,
-                    profileImgUrl: ""
+                    profileImgUrl: LoginModel.userImgUrl
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in
