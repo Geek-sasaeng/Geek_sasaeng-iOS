@@ -61,7 +61,8 @@ class ImageCellViewController: UIViewController {
         imageMessageExpansionDateLabel.text = str.substring(start: 0, end: 10)
         imageMessageExpansionTimeLabel.text = str.substring(start: 11, end: 19)
         
-        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+//        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+        imageMessageExpansionImageView.image = UIImage(systemName: "pencil")
     }
     
     private func addSubViews() {
