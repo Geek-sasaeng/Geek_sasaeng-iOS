@@ -57,11 +57,9 @@ class ImageCellViewController: UIViewController {
         
         imageMessageExpansionNicknameLabel.text = nickname
         
-        let str = date
-        let dateEndIdx = str?.index(str!.startIndex, offsetBy: 10)
-//        let timeStartIdx = str?.index(str!.startIndex, offsetBy: 11)
-        imageMessageExpansionDateLabel.text = str![...dateEndIdx!] + "\n" + str![dateEndIdx!...]
-        imageMessageExpansionTimeLabel.text = "오후 9:00" // 더미
+        guard let str = date else { return }
+        imageMessageExpansionDateLabel.text = str.substring(start: 0, end: 10)
+        imageMessageExpansionTimeLabel.text = str.substring(start: 11, end: 19)
         
         imageMessageExpansionImageView.kf.setImage(with: imageUrl)
     }
