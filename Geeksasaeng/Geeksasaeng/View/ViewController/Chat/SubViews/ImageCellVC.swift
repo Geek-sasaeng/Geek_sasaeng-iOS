@@ -36,6 +36,7 @@ class ImageCellViewController: UIViewController {
     let imageMessageExpansionImageView = UIImageView().then {
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 10
+        $0.backgroundColor = .white
     }
     
     // MARK: - Life Cycles
@@ -51,6 +52,9 @@ class ImageCellViewController: UIViewController {
     // MARK: - Functions
     
     private func setAttributes() {
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(doPinch(_:)))
+        self.view.addGestureRecognizer(pinch)
+        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapVisualEffectView))
         blurView?.isUserInteractionEnabled = true
         blurView?.addGestureRecognizer(gesture)
@@ -99,5 +103,11 @@ class ImageCellViewController: UIViewController {
     
     @objc private func tapVisualEffectView() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func doPinch(_ pinch: UIPinchGestureRecognizer) {
+        imageMessageExpansionImageView.transform = imageMessageExpansionImageView.transform.scaledBy(x: pinch.scale, y: pinch.scale)
+        pinch.scale = 1
     }
 }

@@ -1336,7 +1336,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     }
                     if let contentUrl = msg.message?.content {
 //                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
-                        cell.leftImageView.image = UIImage(systemName: "")
+                        cell.leftImageView.image = UIImage(systemName: "pencil")
                     }
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
