@@ -83,16 +83,16 @@ class PartyAPI {
     public static func exitPartyChief(_ parameter: ExitPartyChiefInput, completion: @escaping (Bool) -> Void) {
         let url = "https://geeksasaeng.shop/delivery-party/chief"
         
-        AF.request(url, method: .patch, parameters: parameter, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        AF.request(url, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
             .validate()
             .responseDecodable(of: ExitPartyChiefModel.self) { response in
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
-                        print("DEBUG: 방장 파티 나가기 성공", result.result)
+                        print("DEBUG: 방장 파티 나가기 성공", result)
                         completion(true)
                     } else {
-                        print("DEBUG: 방장 파티 나가기 실패", result.result)
+                        print("DEBUG: 방장 파티 나가기 실패", result)
                         completion(false)
                     }
                 case .failure(let error):
@@ -105,16 +105,16 @@ class PartyAPI {
     public static func exitPartyMember(_ parameter: ExitPartyMemberInput, completion: @escaping (Bool) -> Void) {
         let url = "https://geeksasaeng.shop/delivery-party/member"
         
-        AF.request(url, method: .patch, parameters: parameter, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        AF.request(url, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
             .validate()
             .responseDecodable(of: ExitPartyMemberModel.self) { response in
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
-                        print("DEBUG: 파티원 파티 나가기 성공", result.result)
+                        print("DEBUG: 파티원 파티 나가기 성공", result)
                         completion(true)
                     } else {
-                        print("DEBUG: 파티원 파티 나가기 실패", result.result)
+                        print("DEBUG: 파티원 파티 나가기 실패", result)
                         completion(false)
                     }
                 case .failure(let error):
