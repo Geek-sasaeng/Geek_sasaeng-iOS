@@ -414,9 +414,9 @@ class ChatAPI {
     }
     
     /* 방장이 파티원을 강제퇴장 */
-    public static func forcedExit(_ parameter: ForcedExitInput, completion: @escaping (Bool) -> Void) {
+    public static func forcedExit(_ parameter: ForcedExitInput, completion: @escaping (ForcedExitModel?) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members"
-        AF.request(URL, method: .delete, parameters: parameter, encoder: JSONParameterEncoder.default,
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: ForcedExitModel.self) { response in
@@ -424,14 +424,14 @@ class ChatAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 강제 퇴장 완료")
-                    completion(true)
+                    completion(result)
                 } else {
                     print("DEBUG: .success 강제 퇴장 실패, ", result.message!)
-                    completion(false)
+                    completion(result)
                 }
             case .failure(let error):
                 print("DEBUG: .failure 강제 퇴장 실패, ", error.localizedDescription)
-                completion(false)
+                completion(nil)
             }
         }
     }

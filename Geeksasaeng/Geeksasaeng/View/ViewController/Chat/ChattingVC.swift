@@ -1119,7 +1119,8 @@ class ChattingViewController: UIViewController {
     // 강제 퇴장시키기 버튼 누르면 실행되는 함수
     @objc
     private func tapForcedExitButton() {
-        let forcedExitVC = ForcedExitViewController()
+        guard let roomId = roomId else { return }
+        let forcedExitVC = ForcedExitViewController(roomId: roomId)
         navigationController?.pushViewController(forcedExitVC, animated: true)
     }
     
