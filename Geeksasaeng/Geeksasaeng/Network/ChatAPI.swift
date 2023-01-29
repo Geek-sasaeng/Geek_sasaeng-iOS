@@ -335,7 +335,7 @@ class ChatAPI {
     /* 파티원 나가기 */
     public static func exitMember(_ parameter: ExitMemberInput, completion: @escaping (Bool) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members/self"
-        AF.request(URL, method: .delete, parameters: parameter, encoder: JSONParameterEncoder.default,
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: ExitMemberModel.self) { response in
