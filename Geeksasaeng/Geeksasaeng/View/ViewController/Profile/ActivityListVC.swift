@@ -366,8 +366,8 @@ extension ActivityListViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let partyId = activityList[indexPath.row].id else { return }
-        // TODO: - partyVC로 dormitoryInfo를 안 넘겨주면 파티 수정을 못 함
-        let partyVC = PartyViewController(partyId: partyId)
+        // 나의 활동 보기에서 파티 보기로 넘어갈 때에는 종료된 파티를 보는 것이니까 isEnded를 true로 준다.
+        let partyVC = PartyViewController(partyId: partyId, isEnded: true)
         self.navigationController?.pushViewController(partyVC, animated: true)
     }
 }
