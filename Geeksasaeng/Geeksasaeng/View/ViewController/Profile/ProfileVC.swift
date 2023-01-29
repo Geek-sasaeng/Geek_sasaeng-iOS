@@ -367,7 +367,7 @@ class ProfileViewController: UIViewController {
             make.top.equalToSuperview().inset(20)
         }
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.top.equalTo(contentLabel.snp.bottom).offset(23)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)
