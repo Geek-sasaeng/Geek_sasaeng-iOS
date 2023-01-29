@@ -657,6 +657,7 @@ extension EditMyInfoViewController: PHPickerViewControllerDelegate {
                 DispatchQueue.main.async {
                     self.userImageView.image = image as? UIImage
                     
+                    // TODO: - visualEffectView를 remove하고 nil로 하면 imageView가 다시 탭 안 되는 이슈가 있음
                     self.visualEffectView?.removeFromSuperview()
                     self.visualEffectView = nil
                     self.changeProfileImageView.removeFromSuperview()
