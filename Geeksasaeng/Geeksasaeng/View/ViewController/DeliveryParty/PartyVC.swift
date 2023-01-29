@@ -255,7 +255,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         /* set confirmButton */
         confirmButton.setTitleColor(.mainColor, for: .normal)
         confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoRegular, size: 18)
+        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
         confirmButton.addTarget(self, action: #selector(tapDeleteConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
