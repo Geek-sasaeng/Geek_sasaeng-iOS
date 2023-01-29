@@ -77,7 +77,6 @@ struct ChatImageSendInput: Encodable {
     var content: String?
     var isImageMessage: Bool?
     var isSystemMessage: Bool?
-    var profileImgUrl: String?
 }
 struct ChatImageSendModel: Decodable {
     var code : Int?
@@ -251,8 +250,7 @@ class ChatAPI {
             "chatType": parameter.chatType!,
             "content": parameter.content!,
             "isImageMessage": parameter.isImageMessage!,
-            "isSystemMessage": parameter.isSystemMessage!,
-            "profileImgUrl": parameter.profileImgUrl!
+            "isSystemMessage": parameter.isSystemMessage!
         ]
         
         print("==========", parameters)
