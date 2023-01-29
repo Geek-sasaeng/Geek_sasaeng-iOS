@@ -1293,6 +1293,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                cell.delegate = self
                 
                 cell.isUserInteractionEnabled = true
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
@@ -1446,7 +1447,9 @@ extension ChattingViewController: UITextViewDelegate {
 
 extension ChattingViewController: PushReportUserDelegate {
     public func pushReportUserVC() {
-        let reportUserVC = ReportUserViewController()
+        // TODO: - memberId 값 넘기기
+        guard let partyId = self.roomInfo?.partyId else { return }
+        let reportUserVC = ReportUserViewController(partyId: partyId, memberId: 1)
         self.navigationController?.pushViewController(reportUserVC, animated: true)
     }
 }
@@ -1532,7 +1535,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     content: "",
                     isImageMessage: true,
                     isSystemMessage: false,
-                    profileImgUrl: LoginModel.userImgUrl
+                    profileImgUrl: ""
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in

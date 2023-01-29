@@ -13,10 +13,16 @@ class ImageMessageCell: UICollectionViewCell {
     // MARK: - Properties
     
     static let identifier = "ImageMessageCell"
+
+    // 여기서 ChattingVC의 함수를 호출하기 위한 delegate
+    var delegate: PresentPopUpViewDelegate?
     
     // MARK: - SubViews
     
-    let leftProfileImageView = UIImageView()
+    lazy var leftProfileImageView = UIImageView().then {
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
+    }
     let rightProfileImageView = UIImageView()
     let nicknameLabel = UILabel()
     
@@ -174,5 +180,15 @@ class ImageMessageCell: UICollectionViewCell {
         if rightUnreadCntLabel.text == "0" {
             rightUnreadCntLabel.text = ""
         }
+    }
+    
+    // MARK: - @objc Functions
+    
+    /* 상대 유저 프로필 클릭시 실행 -> ChattingVC에서 팝업뷰를 띄워준다 */
+    @objc
+    private func tapProfileImage() {
+        // MARK: - 사진 채팅의 프로필 이미지가 안 와서 더미 넣어둠
+        delegate?.presentPopUpView(profileImage: (self.leftProfileImageView.image ?? UIImage(named: "GachonLogo"))!,
+                                   nickNameStr: self.nicknameLabel.text!)
     }
 }

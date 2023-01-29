@@ -44,6 +44,18 @@ class ReportUserViewController: UIViewController {
         setLayouts()
     }
     
+    // MARK: - Initialization
+    
+    init(partyId: Int, memberId: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.partyId = partyId
+        self.memberId = memberId
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Functions
     
     private func setAttributes() {
@@ -143,6 +155,5 @@ extension ReportUserViewController: UITableViewDelegate, UITableViewDataSource {
             cell.arrowButton.addTarget(self, action: #selector(tapReportArrowButton), for: .touchUpInside)
         }
         return cell
-        
     }
 }
