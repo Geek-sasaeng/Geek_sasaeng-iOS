@@ -15,7 +15,6 @@ class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    // TODO: - 추후에 서버에서 가져온 값으로 변경해야 함
     var recentSearchDataArray: Results<SearchRecord>?
     var timeDataArray = ["아침", "점심", "저녁", "야식"]
     
@@ -1068,8 +1067,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let partyId = deliveryCellDataArray[indexPath.row].id else { return }
-        let viewController = PartyViewController(partyId: partyId)
-        self.navigationController?.pushViewController(viewController, animated: true)
+        let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo)
+        self.navigationController?.pushViewController(partyVC, animated: true)
         
         // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서
         tableView.deselectRow(at: indexPath, animated: true)
