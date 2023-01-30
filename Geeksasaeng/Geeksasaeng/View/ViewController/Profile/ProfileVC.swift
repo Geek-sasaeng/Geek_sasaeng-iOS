@@ -582,7 +582,7 @@ class ProfileViewController: UIViewController {
             make.left.equalToSuperview().inset(24)
         }
         firstLineView.snp.makeConstraints { make in
-            make.top.equalTo(editMyInfoLabel.snp.bottom).offset(12)
+            make.top.equalTo(editMyInfoLabel.snp.bottom).offset(19)
             make.left.right.equalToSuperview().inset(19)
             make.height.equalTo(1)
         }

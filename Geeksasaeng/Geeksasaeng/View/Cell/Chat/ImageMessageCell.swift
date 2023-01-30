@@ -159,6 +159,10 @@ class ImageMessageCell: UICollectionViewCell {
             $0.layer.cornerRadius = 5
         }
         
+        [ leftImageView, rightImageView, leftImageMessageView, rightImageMessageView ].forEach {
+            $0.isUserInteractionEnabled = true
+        }
+        
         [leftProfileImageView, rightProfileImageView].forEach {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 16

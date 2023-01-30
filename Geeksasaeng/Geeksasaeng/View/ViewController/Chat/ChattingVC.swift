@@ -480,6 +480,7 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -1243,6 +1244,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
                 cell.addGestureRecognizer(tapGesture)
+//                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
+//                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.isHidden = true
                 if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
@@ -1300,6 +1303,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
                 cell.addGestureRecognizer(tapGesture)
+//                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
+//                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
@@ -1333,7 +1338,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftProfileImageView.drawBorderToChief()
                     }
                     if let contentUrl = msg.message?.content {
-                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
+//                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
+                        cell.leftImageView.image = UIImage(systemName: "pencil")
                     }
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
