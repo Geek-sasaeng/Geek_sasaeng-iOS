@@ -9,8 +9,11 @@ import UIKit
 import SnapKit
 import Then
 
+// TODO: - 블러뷰 배경 터치 하면 alertview 없애기
 class ForcedExitViewController: UIViewController {
+    
     // MARK: - SubViews
+    
     let containerView = UIView().then {
         $0.backgroundColor = .white
     }
@@ -36,7 +39,7 @@ class ForcedExitViewController: UIViewController {
         $0.setTitle("퇴장시킬 파티원을 선택해 주세요", for: .normal)
         $0.setImage(UIImage(named: "Arrow"), for: .normal)
         $0.semanticContentAttribute = .forceRightToLeft
-        $0.imageEdgeInsets = .init(top: 0, left: 11, bottom: 0, right: 0)
+        $0.imageEdgeInsets = .init(top: 0, left: 15, bottom: 0, right: 0)
         $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
     }
     
@@ -45,11 +48,13 @@ class ForcedExitViewController: UIViewController {
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
+    
+    var roomId: String?
     var users = ["apple", "neo", "seori", "zero", "runa", "runa", "runa", "runa", "runa", "runa", "runa", "runa", "runa"]
     var selectedUsers: [String]? = []
     
-    
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -66,10 +71,26 @@ class ForcedExitViewController: UIViewController {
         self.navigationItem.title = "강제 퇴장시키기"
     }
     
+    // MARK: - Initialization
+    
+    init(roomId: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.roomId = roomId
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Functions
+    
     private func setAttributes() {
         self.view.backgroundColor = .white
+        
+        // 커스텀한 새 백버튼으로 구성
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        
         countNumLabel.text = "0/\(users.count) 명"
     }
     
@@ -102,7 +123,7 @@ class ForcedExitViewController: UIViewController {
         userTableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview().inset(55)
+            make.bottom.equalToSuperview().inset(55 + 59)
         }
         
         noticeLabel.snp.makeConstraints { make in
@@ -111,19 +132,19 @@ class ForcedExitViewController: UIViewController {
         }
 
         bottomView.snp.makeConstraints { make in
-            make.height.equalTo(55)
+            make.height.equalTo(60)
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         
         countNumLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(29)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().inset(17)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(22)
-            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(26)
+            make.top.equalToSuperview().inset(17)
         }
     }
     
@@ -250,7 +271,7 @@ class ForcedExitViewController: UIViewController {
                 $0.setTitleColor(.mainColor, for: .normal)
                 $0.setTitle("확인", for: .normal)
                 $0.titleLabel?.font = .customFont(.neoBold, size: 18)
-                // MARK: - addTarget 기능 구현
+                $0.addTarget(self, action: #selector(self.tapExitConfirmButton), for: .touchUpInside)
             }
             
             [stackView, contentLabel, lineView, confirmButton].forEach {
@@ -279,6 +300,8 @@ class ForcedExitViewController: UIViewController {
         forcedExitConfirmView = view
     }
     
+    // MARK: - @objc Functions
+    
     @objc
     private func removeForcedExitConfirmView() {
         forcedExitConfirmView?.removeFromSuperview()
@@ -298,6 +321,32 @@ class ForcedExitViewController: UIViewController {
         view.addSubview(forcedExitConfirmView)
         forcedExitConfirmView.snp.makeConstraints { make in
             make.center.equalToSuperview()
+        }
+    }
+    
+    // 확인 버튼 눌렀을 때 실행 -> 강제퇴장 API 호출
+    @objc
+    private func tapExitConfirmButton() {
+        let input = ForcedExitInput(removedMemberIdList: selectedUsers, roomId: self.roomId!)
+        ChatAPI.forcedExit(input) { model in
+            if let model = model {
+                if model.code == 1000 {
+                    self.showToast(viewController: self,
+                              message: "강제 퇴장이 완료되었습니다",
+                              font: .customFont(.neoBold, size: 15),
+                              color: .mainColor)
+                } else if model.code == 2026 {
+                    self.showToast(viewController: self,
+                              message: "송금을 완료한 멤버는 방에서 퇴장시킬 수 없습니다",
+                              font: .customFont(.neoBold, size: 15),
+                              color: .mainColor)
+                }
+            } else {
+                self.showToast(viewController: self,
+                                message: "강제퇴장에 실패했습니다",
+                                font: .customFont(.neoBold, size: 15),
+                                color: .mainColor)
+            }
         }
     }
 }
@@ -321,14 +370,14 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
         if selectedCell.cellIsSelected == false {
             selectedCell.cellIsSelected = true
             selectedUsers?.append(users[indexPath.row])
-            selectedCell.checkBox.image = UIImage(systemName: "checkmark.square.fill")
+            selectedCell.checkBox.image = UIImage(named: "CheckedSquare")
             selectedCell.userProfileImage.image = UIImage(named: "ProfileImage")
             selectedCell.userName.font = .customFont(.neoBold, size: 14)
             countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
         } else {
             selectedCell.cellIsSelected = false
             selectedUsers = selectedUsers?.filter { $0 != users[indexPath.row] }
-            selectedCell.checkBox.image = UIImage(systemName: "checkmark.square")
+            selectedCell.checkBox.image = UIImage(named: "UncheckedSquare")
             selectedCell.userProfileImage.image = UIImage(named: "ForcedExit_unSelectedProfile")
             selectedCell.userName.font = .customFont(.neoMedium, size: 14)
             countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
@@ -346,5 +395,3 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
-
-// 1. ChattingVC에서 넘어올 때 송금하기 상단 뷰가 위로 밀리는 현상

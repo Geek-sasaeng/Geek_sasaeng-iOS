@@ -7,7 +7,6 @@
 
 import UIKit
 
-/* 상대 프로필 이미지 클릭시 뜨는 사용자 정보 뷰 */
 class ProfileCardViewController: UIViewController {
     
     // MARK: - Properties
@@ -64,7 +63,7 @@ class ProfileCardViewController: UIViewController {
         view.layer.masksToBounds = false
         view.layer.cornerRadius = 10
         view.backgroundColor = .white
-        view.setViewShadow(shadowOpacity: 1, shadowRadius: 7)
+        view.setViewShadow(shadowColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.17).cgColor, shadowOpacity: 1, shadowRadius: 7)
         
         let heartImageView = UIImageView(image: UIImage(named: "MyInfoCardIcon"))
         let nicknameLabel = UILabel().then {

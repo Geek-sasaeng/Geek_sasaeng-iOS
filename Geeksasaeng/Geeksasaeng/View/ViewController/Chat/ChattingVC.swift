@@ -1000,7 +1000,7 @@ class ChattingViewController: UIViewController {
         let input = CompleteRemittanceInput(roomId: roomId)
         ChatAPI.completeRemittance(input) { isSuccess in
             if isSuccess {
-                self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184, height: 59)
                 self.remittanceView.removeFromSuperview()
             } else {
                 print("송금 실패")
@@ -1019,6 +1019,7 @@ class ChattingViewController: UIViewController {
             if isSuccess {
                 self.orderCompletedView.removeFromSuperview()
             }
+            // TODO: - 실패 시 토스트 필요
         }
     }
     
@@ -1120,7 +1121,8 @@ class ChattingViewController: UIViewController {
     // 강제 퇴장시키기 버튼 누르면 실행되는 함수
     @objc
     private func tapForcedExitButton() {
-        let forcedExitVC = ForcedExitViewController()
+        guard let roomId = roomId else { return }
+        let forcedExitVC = ForcedExitViewController(roomId: roomId)
         navigationController?.pushViewController(forcedExitVC, animated: true)
     }
     
@@ -1151,40 +1153,40 @@ class ChattingViewController: UIViewController {
         // 방장이라면
         if self.roomInfo?.isChief ?? false {
             // 1. 방장 채팅방 나가기
-            let input = ExitChiefInput(roomId: self.roomId)
-            ChatAPI.exitChief(input) { isSuccess in
+            let chatInput = ExitChiefInput(roomId: self.roomId)
+            ChatAPI.exitChief(chatInput) { isSuccess in
                 if isSuccess {
-                    print("방장 채팅방 나가기 성공")
+                    print("방장 채팅방 나가기 성공", chatInput)
                     // 2. 방장 배달 파티 나가기
-                    let input = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
-                    PartyAPI.exitPartyChief(input) { isSuccess in
+                    let partyInput = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
+                    PartyAPI.exitPartyChief(partyInput) { isSuccess in
                         if isSuccess {
-                            print("방장 파티 나가기 성공")
+                            print("방장 파티 나가기 성공", partyInput)
                         } else {
-                            print("방장 파티 나가기 실패")
+                            print("방장 파티 나가기 실패", partyInput)
                         }
                     }
                 } else {
-                    print("방장 채팅방 나가기 실패")
+                    print("방장 채팅방 나가기 실패", chatInput)
                 }
             }
         } else {
             // 1. 파티원 채팅방 나가기
-            let input = ExitMemberInput(roomId: roomId)
-            ChatAPI.exitMember(input) { isSuccess in
+            let chatInput = ExitMemberInput(roomId: roomId)
+            ChatAPI.exitMember(chatInput) { isSuccess in
                 if isSuccess {
-                    print("파티원 채팅방 나가기 성공")
+                    print("파티원 채팅방 나가기 성공", chatInput)
                     // 2. 파티원 배달파티 나가기
-                    let input = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
-                    PartyAPI.exitPartyMember(input) { isSuccess in
+                    let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
+                    PartyAPI.exitPartyMember(partyInput) { isSuccess in
                         if isSuccess {
-                            print("파티원 파티 나가기 성공")
+                            print("파티원 파티 나가기 성공", partyInput)
                         } else {
-                            print("파티원 파티 나가기 실패")
+                            print("파티원 파티 나가기 실패", partyInput)
                         }
                     }
                 } else {
-                    print("파티원 채팅방 나가기 실패")
+                    print("파티원 채팅방 나가기 실패", chatInput)
                 }
             }
         }
@@ -1295,6 +1297,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
             // 채팅이 이미지일 때
             if isImageMessage {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
+                cell.delegate = self
                 
                 cell.isUserInteractionEnabled = true
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
@@ -1451,7 +1454,9 @@ extension ChattingViewController: UITextViewDelegate {
 
 extension ChattingViewController: PushReportUserDelegate {
     public func pushReportUserVC() {
-        let reportUserVC = ReportUserViewController()
+        // TODO: - memberId 값 넘기기
+        guard let partyId = self.roomInfo?.partyId else { return }
+        let reportUserVC = ReportUserViewController(partyId: partyId, memberId: 1)
         self.navigationController?.pushViewController(reportUserVC, animated: true)
     }
 }
@@ -1536,8 +1541,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     chatType: "publish",
                     content: "",
                     isImageMessage: true,
-                    isSystemMessage: false,
-                    profileImgUrl: LoginModel.userImgUrl
+                    isSystemMessage: false
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in

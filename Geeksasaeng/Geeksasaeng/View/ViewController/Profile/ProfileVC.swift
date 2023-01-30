@@ -100,7 +100,7 @@ class ProfileViewController: UIViewController {
         view.layer.masksToBounds = false
         view.layer.cornerRadius = 10
         view.backgroundColor = .white
-        view.setViewShadow(shadowOpacity: 1, shadowRadius: 3)
+        view.setViewShadow(shadowColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.17).cgColor, shadowOpacity: 1, shadowRadius: 7)
         view.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapMyInfoView))
         view.addGestureRecognizer(tapGesture)
@@ -367,7 +367,7 @@ class ProfileViewController: UIViewController {
             make.top.equalToSuperview().inset(20)
         }
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.top.equalTo(contentLabel.snp.bottom).offset(23)
             make.left.equalTo(18)
             make.right.equalTo(-18)
             make.height.equalTo(1.7)

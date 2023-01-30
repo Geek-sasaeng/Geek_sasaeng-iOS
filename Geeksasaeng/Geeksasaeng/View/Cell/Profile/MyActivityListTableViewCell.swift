@@ -60,7 +60,8 @@ class MyActivityListTableViewCell: UITableViewCell {
     // MARK: - Functions
     
     private func setAttributes() {
-        contentView.backgroundColor = .init(hex: 0xFCFDFE)
+        contentView.backgroundColor = .white
+        self.backgroundColor = .white
         self.selectionStyle = .none
         
         // 셀 간격 설정

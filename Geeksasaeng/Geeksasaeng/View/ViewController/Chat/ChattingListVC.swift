@@ -246,7 +246,7 @@ class ChattingListViewController: UIViewController {
                                               isSystemMessage: data.isSystemMessage!,
                                               memberId: data.memberId!,
                                               nickName: data.nickName!,
-                                              profileImgUrl: data.profileImgUrl!,
+                                              profileImgUrl: data.profileImgUrl ?? "",
                                               createdAt: createdAtDate ?? Date(),
                                               unreadMemberCnt: data.unreadMemberCnt!,
                                               isImageMessage: data.isImageMessage!)

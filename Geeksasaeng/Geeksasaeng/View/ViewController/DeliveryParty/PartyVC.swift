@@ -22,6 +22,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     var dormitoryInfo: DormitoryNameResult? // dormitory id, name
     var chatRoomName: String?
     var isFromCreated: Bool?    // 파티 생성 후 바로 상세보기로 온 건지 여부
+    var isEnded: Bool?      // 종료된 파티인 건지 여부 -> 나의 활동 목록에서 여기로 넘어왔을 경우에 해당
     
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
@@ -255,7 +256,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         /* set confirmButton */
         confirmButton.setTitleColor(.mainColor, for: .normal)
         confirmButton.setTitle("확인", for: .normal)
-        confirmButton.titleLabel?.font = .customFont(.neoRegular, size: 18)
+        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
         confirmButton.addTarget(self, action: #selector(tapDeleteConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -397,6 +398,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                 self.getDetailData()
             }
         }
+        
+        // 종료된 파티이면
+        if isEnded! {
+            // 파란바 없애기
+            matchingStatusView.removeFromSuperview()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -407,11 +414,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Initialization
     
-    convenience init(partyId: Int, dormitoryInfo: DormitoryNameResult? = nil, isFromCreated: Bool? = nil) {
+    convenience init(partyId: Int, dormitoryInfo: DormitoryNameResult? = nil, isFromCreated: Bool? = nil, isEnded: Bool? = false) {
         self.init()
         self.partyId = partyId
         self.dormitoryInfo = dormitoryInfo
         self.isFromCreated = isFromCreated
+        self.isEnded = isEnded
     }
     
     // MARK: - Functions
@@ -710,11 +718,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
         
-        // rightBarButton을 옵션 버튼으로 설정
-        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(named: "EllipsisOption"), style: .plain, target: self, action: #selector(tapEllipsisOption)), animated: true)
-        navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
-        // rightBarButtonItem의 default 위치에다가 inset을 줘서 위치를 맞춤
-        navigationItem.rightBarButtonItem?.imageInsets = .init(top: -3, left: 0, bottom: 0, right: 20)
+        // 종료된 파티가 아닐 때에만 rightBarButton을 옵션 버튼으로 설정
+        if !isEnded! {
+            navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(named: "EllipsisOption"), style: .plain, target: self, action: #selector(tapEllipsisOption)), animated: true)
+            navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
+            // rightBarButtonItem의 default 위치에다가 inset을 줘서 위치를 맞춤
+            navigationItem.rightBarButtonItem?.imageInsets = .init(top: -3, left: 0, bottom: 0, right: 20)
+        }
     }
     
     /* 글쓴이일 경우 액션 시트 띄우기 */
