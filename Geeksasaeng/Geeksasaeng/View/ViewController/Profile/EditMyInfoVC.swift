@@ -175,6 +175,80 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         $0.addTarget(self, action: #selector(tapChangePasswordButton), for: .touchUpInside)
     }
     
+    /* 프로필 사진 변경하기 뷰 */
+    lazy var changeProfileImageView = UIView().then { view in
+        view.backgroundColor = .white
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 7
+        
+        /* top View */
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        view.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "프로필 사진 변경하기"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        view.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(128)
+        }
+        
+        let selectFromAlbumButton = UIButton().then {
+            $0.setTitleColor(.black, for: .normal)
+            $0.setTitle("앨범에서 선택", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
+            $0.addTarget(self, action: #selector(self.tapSelectFromAlbum), for: .touchUpInside)
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var defaultProfileImageButton = UIButton().then {
+            $0.setTitleColor(.black, for: .normal)
+            $0.setTitle("기본 프로필로 변경", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoMedium, size: 15)
+            $0.addTarget(self, action: #selector(self.tapDefaultUserImage), for: .touchUpInside)
+        }
+        
+        [selectFromAlbumButton, lineView, defaultProfileImageButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        selectFromAlbumButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(28)
+            make.centerX.equalToSuperview()
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(selectFromAlbumButton.snp.bottom).offset(17)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        defaultProfileImageButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(17)
+        }
+    }
+    
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
@@ -400,6 +474,17 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapUserImageView() {
+        createBlurView()
+        view.addSubview(changeProfileImageView)
+        changeProfileImageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(304)
+            make.height.equalTo(198)
+        }
+    }
+    
+    @objc
+    private func tapSelectFromAlbum() {
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
         configuration.filter = .images
@@ -408,6 +493,15 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         picker.delegate = self
         
         self.present(picker, animated: true, completion: nil)
+    }
+    
+    @objc
+    private func tapDefaultUserImage() {
+        userImageView.image = UIImage(named: "Character")
+        
+        visualEffectView?.removeFromSuperview()
+        visualEffectView = nil
+        changeProfileImageView.removeFromSuperview()
     }
     
     @objc
@@ -514,6 +608,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     private func tapViewController() {
         if visualEffectView != nil {
             editConfirmView.removeFromSuperview()
+            changeProfileImageView.removeFromSuperview()
             visualEffectView?.removeFromSuperview()
             visualEffectView = nil
             userImageView.isUserInteractionEnabled = true
@@ -561,6 +656,11 @@ extension EditMyInfoViewController: PHPickerViewControllerDelegate {
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     self.userImageView.image = image as? UIImage
+                    
+                    // TODO: - visualEffectView를 remove하고 nil로 하면 imageView가 다시 탭 안 되는 이슈가 있음
+                    self.visualEffectView?.removeFromSuperview()
+                    self.visualEffectView = nil
+                    self.changeProfileImageView.removeFromSuperview()
                 }
             }
         }

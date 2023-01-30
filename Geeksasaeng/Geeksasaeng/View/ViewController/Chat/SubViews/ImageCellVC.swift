@@ -36,6 +36,7 @@ class ImageCellViewController: UIViewController {
     let imageMessageExpansionImageView = UIImageView().then {
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 10
+        $0.backgroundColor = .white
     }
     
     // MARK: - Life Cycles
@@ -51,19 +52,21 @@ class ImageCellViewController: UIViewController {
     // MARK: - Functions
     
     private func setAttributes() {
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(doPinch(_:)))
+        self.view.addGestureRecognizer(pinch)
+        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapVisualEffectView))
         blurView?.isUserInteractionEnabled = true
         blurView?.addGestureRecognizer(gesture)
         
         imageMessageExpansionNicknameLabel.text = nickname
         
-        let str = date
-        let dateEndIdx = str?.index(str!.startIndex, offsetBy: 10)
-//        let timeStartIdx = str?.index(str!.startIndex, offsetBy: 11)
-        imageMessageExpansionDateLabel.text = str![...dateEndIdx!] + "\n" + str![dateEndIdx!...]
-        imageMessageExpansionTimeLabel.text = "오후 9:00" // 더미
+        guard let str = date else { return }
+        imageMessageExpansionDateLabel.text = str.substring(start: 0, end: 10)
+        imageMessageExpansionTimeLabel.text = str.substring(start: 11, end: 19)
         
-        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+//        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+        imageMessageExpansionImageView.image = UIImage(systemName: "pencil")
     }
     
     private func addSubViews() {
@@ -100,5 +103,11 @@ class ImageCellViewController: UIViewController {
     
     @objc private func tapVisualEffectView() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func doPinch(_ pinch: UIPinchGestureRecognizer) {
+        imageMessageExpansionImageView.transform = imageMessageExpansionImageView.transform.scaledBy(x: pinch.scale, y: pinch.scale)
+        pinch.scale = 1
     }
 }

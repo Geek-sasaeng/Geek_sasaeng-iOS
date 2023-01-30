@@ -97,10 +97,10 @@ struct EditPasswordInput: Encodable {
     var newPassword: String?
 }
 struct EditPasswordModel: Decodable {
-    let code: Int?
-    let isSuccess: Bool?
-    let message: String?
-    let result: String?
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
 }
 
 /* 나의 활동 목록 모델 */
@@ -234,7 +234,7 @@ class UserInfoAPI {
         let URL = "https://geeksasaeng.shop/members/password"
         let headers: HTTPHeaders = ["Authorization": "Bearer " + (LoginModel.jwt ?? "")]
         
-        AF.request(URL, method: .patch, parameters: parameter, headers: headers)
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default, headers: headers)
             .validate()
             .responseDecodable(of: EditPasswordModel.self) { response in
                 switch response.result {
@@ -253,6 +253,7 @@ class UserInfoAPI {
             }
         
     }
+    
     
     // 나의 활동 목록 불러오기
     public static func getMyActivityList(cursor: Int, completion: @escaping (Bool, MyActivityModelResult?) -> Void) {

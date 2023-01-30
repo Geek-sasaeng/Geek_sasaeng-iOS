@@ -67,4 +67,10 @@ extension String {
         guard endIndex > truncateAfter else { return self }
         return String(self[startIndex..<truncateAfter]) + "…"
     }
+    
+    func substring(start: Int, end: Int) -> String{
+        let start = self.index(self.startIndex, offsetBy: start)
+        let end = self.index(self.startIndex, offsetBy: end)
+        return String(self[start..<end])
+    }
 }
