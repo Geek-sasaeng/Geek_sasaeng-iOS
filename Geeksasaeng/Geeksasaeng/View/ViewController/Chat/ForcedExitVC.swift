@@ -39,7 +39,7 @@ class ForcedExitViewController: UIViewController {
         $0.setTitle("퇴장시킬 파티원을 선택해 주세요", for: .normal)
         $0.setImage(UIImage(named: "Arrow"), for: .normal)
         $0.semanticContentAttribute = .forceRightToLeft
-        $0.imageEdgeInsets = .init(top: 0, left: 11, bottom: 0, right: 0)
+        $0.imageEdgeInsets = .init(top: 0, left: 15, bottom: 0, right: 0)
         $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
     }
     
@@ -86,6 +86,11 @@ class ForcedExitViewController: UIViewController {
     
     private func setAttributes() {
         self.view.backgroundColor = .white
+        
+        // 커스텀한 새 백버튼으로 구성
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        
         countNumLabel.text = "0/\(users.count) 명"
     }
     
@@ -118,7 +123,7 @@ class ForcedExitViewController: UIViewController {
         userTableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview().inset(55)
+            make.bottom.equalToSuperview().inset(55 + 59)
         }
         
         noticeLabel.snp.makeConstraints { make in
@@ -127,19 +132,19 @@ class ForcedExitViewController: UIViewController {
         }
 
         bottomView.snp.makeConstraints { make in
-            make.height.equalTo(55)
+            make.height.equalTo(60)
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         
         countNumLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(29)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().inset(17)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(22)
-            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(26)
+            make.top.equalToSuperview().inset(17)
         }
     }
     
@@ -365,14 +370,14 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
         if selectedCell.cellIsSelected == false {
             selectedCell.cellIsSelected = true
             selectedUsers?.append(users[indexPath.row])
-            selectedCell.checkBox.image = UIImage(systemName: "checkmark.square.fill")
+            selectedCell.checkBox.image = UIImage(named: "CheckedSquare")
             selectedCell.userProfileImage.image = UIImage(named: "ProfileImage")
             selectedCell.userName.font = .customFont(.neoBold, size: 14)
             countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
         } else {
             selectedCell.cellIsSelected = false
             selectedUsers = selectedUsers?.filter { $0 != users[indexPath.row] }
-            selectedCell.checkBox.image = UIImage(systemName: "checkmark.square")
+            selectedCell.checkBox.image = UIImage(named: "UncheckedSquare")
             selectedCell.userProfileImage.image = UIImage(named: "ForcedExit_unSelectedProfile")
             selectedCell.userName.font = .customFont(.neoMedium, size: 14)
             countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
@@ -390,5 +395,3 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
-
-// 1. ChattingVC에서 넘어올 때 송금하기 상단 뷰가 위로 밀리는 현상

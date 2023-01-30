@@ -11,9 +11,11 @@ import SnapKit
 import Then
 
 class ForcedExitTableViewCell: UITableViewCell {
+    
     // MARK: - SubViews
+    
     let checkBox = UIImageView().then {
-        $0.image = UIImage(systemName: "checkmark.square")
+        $0.image = UIImage(named: "UncheckedSquare")
     }
     
     let userProfileImage = UIImageView().then {
@@ -25,10 +27,12 @@ class ForcedExitTableViewCell: UITableViewCell {
     }
     
     // MARK: - Properties
+    
     static let identifier = "ForcedExitTableViewCell"
     var cellIsSelected = false
     
     // MARK: - Life Cycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -39,6 +43,7 @@ class ForcedExitTableViewCell: UITableViewCell {
     }
     
     // MARK: - Functions
+    
     private func addSubViews() {
         [checkBox, userProfileImage, userName].forEach {
             self.contentView.addSubview($0)
