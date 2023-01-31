@@ -51,6 +51,21 @@ struct ExitPartyMemberModel: Decodable {
     var result: String?
 }
 
+/* 배달파티 강제 퇴장 */
+struct ForcedExitPartyInput: Encodable {
+    var membersId: [Int]?
+    var partyId: Int?
+}
+struct ForcedExitPartyModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: ForcedExitPartyModelResult?
+}
+struct ForcedExitPartyModelResult: Decodable {
+    var message: String?
+}
+
 /* 배달파티 관련 API 연동 */
 class PartyAPI {
     
@@ -122,5 +137,28 @@ class PartyAPI {
                     completion(false)
                 }
             }
+    }
+    
+    /* 방장이 파티원을 배달파티에서 강제퇴장 */
+    public static func forcedExitParty(_ parameter: ForcedExitPartyInput, completion: @escaping (ForcedExitPartyModel?) -> Void) {
+        let URL = "https://geeksasaeng.shop//delivery-party-members"
+        AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: ForcedExitPartyModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 배달파티 강제 퇴장 완료")
+                    completion(result)
+                } else {
+                    print("DEBUG: .success 배달파티 강제 퇴장 실패, ", result.message!)
+                    completion(result)
+                }
+            case .failure(let error):
+                print("DEBUG: .failure 배달파티 강제 퇴장 실패, ", error.localizedDescription)
+                completion(nil)
+            }
+        }
     }
 }

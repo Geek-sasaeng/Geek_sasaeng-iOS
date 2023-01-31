@@ -24,6 +24,7 @@ protocol PresentPopUpViewDelegate {
     func presentPopUpView(profileImage: UIImage, nickNameStr: String)
 }
 
+// TODO: - 채팅에서 나갔습니다 토스트 메세지 추가
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
@@ -480,7 +481,6 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -579,7 +579,7 @@ class ChattingViewController: UIViewController {
                                               isSystemMessage: data.isSystemMessage!,
                                               memberId: data.memberId!,
                                               nickName: data.nickName!,
-                                              profileImgUrl: data.profileImgUrl!,
+                                              profileImgUrl: data.profileImgUrl ?? "",
                                               createdAt: createdAtDate ?? Date(),
                                               unreadMemberCnt: data.unreadMemberCnt!,
                                               isImageMessage: data.isImageMessage!)
@@ -1000,7 +1000,7 @@ class ChattingViewController: UIViewController {
         let input = CompleteRemittanceInput(roomId: roomId)
         ChatAPI.completeRemittance(input) { isSuccess in
             if isSuccess {
-                self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184, height: 59)
+                self.showToast(viewController: self, message: "송금이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184, height: 59)
                 self.remittanceView.removeFromSuperview()
             } else {
                 print("송금 실패")
@@ -1121,8 +1121,9 @@ class ChattingViewController: UIViewController {
     // 강제 퇴장시키기 버튼 누르면 실행되는 함수
     @objc
     private func tapForcedExitButton() {
-        guard let roomId = roomId else { return }
-        let forcedExitVC = ForcedExitViewController(roomId: roomId)
+        guard let roomId = roomId,
+              let partyId = self.roomInfo?.partyId else { return }
+        let forcedExitVC = ForcedExitViewController(partyId: partyId, roomId: roomId)
         navigationController?.pushViewController(forcedExitVC, animated: true)
     }
     
@@ -1338,8 +1339,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftProfileImageView.drawBorderToChief()
                     }
                     if let contentUrl = msg.message?.content {
-//                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
-                        cell.leftImageView.image = UIImage(systemName: "pencil")
+                        cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
                     cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)

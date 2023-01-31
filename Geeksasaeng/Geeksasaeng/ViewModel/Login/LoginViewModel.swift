@@ -20,13 +20,14 @@ class LoginViewModel {
             case .success(let result):
                 if result.isSuccess! {
                     guard let passedResult = result.result else { return }
-                    print("DEBUG: 성공")
+                    print("DEBUG: 일반 로그인 성공", result.result)
                     completion(.success, passedResult, nil)
                 } else {
+                    print("DEBUG: 일반 로그인 실패", result.result)
                     completion(.onlyRequestSuccess, nil, result.message!)
                 }
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
+                print("DEBUG: 일반 로그인 실패", error.localizedDescription)
                 completion(.failure, nil, "로그인 요청에 실패하였습니다")
             }
         }
@@ -44,23 +45,23 @@ class LoginViewModel {
                 if result.isSuccess! {
                     LoginModel.jwt = result.result?.jwt
                     LoginModel.nickname = result.result?.nickName
-                    LoginModel.userImgUrl = result.result?.userImageUrl
+                    LoginModel.profileImgUrl = result.result?.profileImgUrl
                     LoginModel.memberId = result.result?.memberId
                     
                     if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
-                        print("DEBUG: 성공")
+                        print("DEBUG: 네이버 로그인 성공", result.result)
                         print("DEBUG: \(result.code!)")
                         viewController.showDormitoryView(nickname: result.result?.nickName ?? "홍길동")
                     } else { // 로그인 성공 -> 홈 화면으로 이동
                         viewController.dormitoryInfo = DormitoryNameResult(id: result.result?.dormitoryId, name: result.result?.dormitoryName)
-                        viewController.userImageUrl = result.result?.userImageUrl
+                        viewController.userImageUrl = result.result?.profileImgUrl
                         viewController.showHomeView()
                     }
                     
                 } else {
                     // 네이버 로그인 실패
                     print(result.code!)
-                    print("DEBUG:", result.message!)
+                    print("DEBUG: 네이버 로그인 실패", result.result)
                     
                     if result.code == 2807 { // 아예 첫 로그인 -> 회원가입 화면으로 이동
                         viewController.accessToken = parameter.accessToken
@@ -68,7 +69,7 @@ class LoginViewModel {
                     }
                 }
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
+                print("DEBUG: 네이버 로그인 실패", error.localizedDescription)
             }
         }
     }

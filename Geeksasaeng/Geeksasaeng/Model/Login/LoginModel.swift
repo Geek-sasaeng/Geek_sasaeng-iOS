@@ -10,8 +10,10 @@ import Foundation
 class LoginModel {
     static var jwt: String?
     static var nickname: String?
-    static var userImgUrl: String?
+    static var profileImgUrl: String?
     static var memberId: Int?
+    static var dormitoryId: Int?
+    static var dormitoryName: String?
 }
 
 // 로그인을 했을 때 보낼 Request body의 형태.
@@ -41,5 +43,6 @@ struct LoginModelResult : Decodable {
     var nickName: String?
     var dormitoryId: Int?
     var dormitoryName: String?
-    var userImageUrl: String?
+    var profileImgUrl: String?
+    var fcmToken: String?
 }

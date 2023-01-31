@@ -28,7 +28,6 @@ struct AutoLoginModelResult: Decodable {
     var universityName: String?
     var dormitoryId: Int?
     var dormitoryName: String?
-    var userImageUrl: String?
 }
 
 /* 로그아웃 */
@@ -48,7 +47,7 @@ class LoginAPI {
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
-                        print("DEBUG: 자동 로그인 성공")
+                        print("DEBUG: 자동 로그인 성공", result.result)
                         completion(result.result ?? AutoLoginModelResult())
                     } else {
                         print("DEBUG: 자동 로그인 실패", result.message!)

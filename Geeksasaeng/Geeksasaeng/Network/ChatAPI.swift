@@ -136,9 +136,27 @@ struct CompleteRemittanceModel: Decodable {
     var result: String?
 }
 
-/* 강제 퇴장 */
+/* 강제퇴장을 위한 참여자들 정보 불러오기 */
+struct InfoForForcedExitInput: Encodable {
+    var partyId: Int?
+    var roomId: String?
+}
+struct InfoForForcedExitModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: [InfoForForcedExitModelResult]?
+}
+struct InfoForForcedExitModelResult: Decodable {
+    var memberId: Int?
+    var chatMemberId: String?
+    var userName: String?
+    var userProfileImgUrl: String?
+}
+
+/* 채팅방 강제 퇴장 */
 struct ForcedExitInput: Encodable {
-    var removedMemberIdList: [String]?
+    var removedChatMemberIdList: [String]?
     var roomId: String?
 }
 struct ForcedExitModel: Decodable {
@@ -150,7 +168,6 @@ struct ForcedExitModel: Decodable {
 struct ForcedExitModelResult: Decodable {
     var message: String?
 }
-
 
 class ChatAPI {
     
@@ -411,8 +428,8 @@ class ChatAPI {
         }
     }
     
-    /* 방장이 파티원을 강제퇴장 */
-    public static func forcedExit(_ parameter: ForcedExitInput, completion: @escaping (ForcedExitModel?) -> Void) {
+    /* 방장이 파티원을 채팅방에서 강제퇴장 */
+    public static func forcedExitChat(_ parameter: ForcedExitInput, completion: @escaping (ForcedExitModel?) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
@@ -462,22 +479,49 @@ class ChatAPI {
                    parameters: input,
                    encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
-            .validate()
-            .responseDecodable(of: CompleteDeliveryModel.self) { response in
-                switch response.result {
-                case .success(let result):
-                    if result.isSuccess! {
-                        print("DEBUG: 배달 완료 성공", result.message)
-                    } else {
-                        print("DEBUG: 배달 완료 실패", response, result)
-                    }
-                    completion(result.isSuccess!, result)
-                case .failure(let error):
-                    print("DEBUG: 배달 완료 실패", error.localizedDescription)
-                    completion(false, nil)
+        .validate()
+        .responseDecodable(of: CompleteDeliveryModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 배달 완료 성공", result.message)
+                } else {
+                    print("DEBUG: 배달 완료 실패", response, result)
                 }
+                completion(result.isSuccess!, result)
+            case .failure(let error):
+                print("DEBUG: 배달 완료 실패", error.localizedDescription)
+                completion(false, nil)
             }
+        }
     }
+    
+    // 강제퇴장을 위한 채팅 참여자들 정보 가져오기
+    public static func getInfoForForcedExit(input: InfoForForcedExitInput,
+                                            completion: @escaping (Bool, [InfoForForcedExitModelResult]?) -> ()) {
+        guard let partyId = input.partyId, let roomId = input.roomId else { return }
+        let url = "https://geeksasaeng.shop/party-chat-room/\(partyId)/\(roomId)/members"
+        
+        AF.request(url,
+                   method: .get,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: InfoForForcedExitModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 채팅 참여자들 정보 가져오기 성공", result.message)
+                } else {
+                    print("DEBUG: 채팅 참여자들 정보 가져오기 실패", response, result)
+                }
+                completion(result.isSuccess!, result.result)
+            case .failure(let error):
+                print("DEBUG: 채팅 참여자들 정보 가져오기 실패", error.localizedDescription)
+                completion(false, nil)
+            }
+        }
+    }
+    
 }
 
 
