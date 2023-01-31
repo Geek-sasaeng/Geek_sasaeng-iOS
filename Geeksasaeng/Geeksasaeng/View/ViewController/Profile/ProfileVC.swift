@@ -399,6 +399,9 @@ class ProfileViewController: UIViewController {
         // 나의 활동 3개 띄우기
         self.getUserInfo()
         self.getUserActivities()
+        
+        // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(completeChangingPw), name: NSNotification.Name("CompleteChangingPw"), object: nil)
     }
     
     // MARK: - Functions
@@ -646,7 +649,6 @@ class ProfileViewController: UIViewController {
             make.left.right.top.bottom.equalToSuperview()
         }
     }
-
     
     // MARK: - @objc Functions
     
@@ -715,19 +717,21 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapLogoutConfirmButton() {
-        // TODO: - 로그아웃 api 연동
         UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
         naverLoginVM.resetToken() // delete naver login token
         
         LoginAPI.logout { isSuccess in
             if isSuccess {
-                print("로그아웃 완료")
+                print("DEBUG: 로그아웃 완료")
+                
+                let rootVC = LoginViewController()
+                UIApplication.shared.windows.first?.rootViewController = rootVC
+                self.view.window?.rootViewController?.dismiss(animated: true)
+                
+                // 로그인 VC에 토스트 메세지 띄우기
+                NotificationCenter.default.post(name: NSNotification.Name("CompleteLogout"), object: nil)
             }
         }
-        
-        let rootVC = LoginViewController()
-        UIApplication.shared.windows.first?.rootViewController = rootVC
-        self.view.window?.rootViewController?.dismiss(animated: true)
     }
     
     @objc
@@ -735,7 +739,14 @@ class ProfileViewController: UIViewController {
         let input = MemberDeleteInput(checkPassword: "apple123!", password: "apple123!")
         UserInfoAPI.deleteMember(input, memberId: LoginModel.memberId!) { isSuccess in
             if isSuccess {
-                print("회원 탈퇴 완료")
+                print("DEBUG: 회원 탈퇴 완료")
+                
+                let rootVC = LoginViewController()
+                UIApplication.shared.windows.first?.rootViewController = rootVC
+                self.view.window?.rootViewController?.dismiss(animated: true)
+                
+                // 로그인 VC에 토스트 메세지 띄우기
+                NotificationCenter.default.post(name: NSNotification.Name("CompleteWithdrawal"), object: nil)
             } else {
                 print("회원 탈퇴 실패")
             }
@@ -758,6 +769,12 @@ class ProfileViewController: UIViewController {
         let userStageVC = UserStageViewController()
         self.navigationController?.pushViewController(userStageVC, animated: true)
     }
+    
+    // 비밀번호 변경을 완료했을 때 토스트 메세지 띄우기
+    @objc
+    private func completeChangingPw(_ notification: Notification) {
+        self.showToast(viewController: self, message: "비밀번호를 변경하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 169, height: 19)
+    }
 }
 
 extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -776,14 +793,9 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("selected works: ", indexPath.row)
-        
         guard let selectedPartyId = myActivities[indexPath.row].id else { return }
         
-        // TODO: - dormitoryInfo 어디서 받아오지 ,,? (DeleveryVC에서도)
-        let dormitoryInfo = DormitoryNameResult(id: 1, name: "제 1기숙사")
-        
-        let partyVC = PartyViewController(partyId: selectedPartyId, dormitoryInfo: dormitoryInfo)
-        
+        let partyVC = PartyViewController(partyId: selectedPartyId, isEnded: true)
         self.navigationController?.pushViewController(partyVC, animated: true)
         
         collectionView.deselectItem(at: indexPath, animated: true)
