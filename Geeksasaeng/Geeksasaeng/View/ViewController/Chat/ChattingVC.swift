@@ -1000,7 +1000,7 @@ class ChattingViewController: UIViewController {
         let input = CompleteRemittanceInput(roomId: roomId)
         ChatAPI.completeRemittance(input) { isSuccess in
             if isSuccess {
-                self.showToast(viewController: self, message: "송금이 완료되었어요.", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184, height: 59)
+                self.showToast(viewController: self, message: "송금이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184, height: 59)
                 self.remittanceView.removeFromSuperview()
             } else {
                 print("송금 실패")
