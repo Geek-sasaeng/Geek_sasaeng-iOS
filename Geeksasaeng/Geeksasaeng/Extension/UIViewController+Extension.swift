@@ -8,9 +8,9 @@
 import UIKit
 
 extension UIViewController {
-    public func showToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor, width: Int = 209, height: Int = 40) {
+    public func showToast(viewController: UIViewController, message: String, font: UIFont, color: UIColor, width: Int = 209, height: Int = 59) {
         let toastLabel = UILabel().then {
-            $0.backgroundColor = color.withAlphaComponent(0.6)
+            $0.backgroundColor = color.withAlphaComponent(0.5)
             $0.text = message
             $0.textColor = UIColor.white
             $0.textAlignment = .center;

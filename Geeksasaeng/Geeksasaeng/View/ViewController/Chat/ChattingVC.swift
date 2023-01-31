@@ -1162,13 +1162,16 @@ class ChattingViewController: UIViewController {
                     let partyInput = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyChief(partyInput) { isSuccess in
                         if isSuccess {
-                            print("방장 파티 나가기 성공", partyInput)
+                            self.navigationController?.popViewController(animated: true)
+                            // 채팅 목록 VC에 토스트 메세지 띄우기
+                            NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
                             print("방장 파티 나가기 실패", partyInput)
                         }
                     }
                 } else {
                     print("방장 채팅방 나가기 실패", chatInput)
+                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                 }
             }
         } else {
@@ -1181,18 +1184,19 @@ class ChattingViewController: UIViewController {
                     let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyMember(partyInput) { isSuccess in
                         if isSuccess {
-                            print("파티원 파티 나가기 성공", partyInput)
+                            self.navigationController?.popViewController(animated: true)
+                            // 채팅 목록 VC에 토스트 메세지 띄우기
+                            NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
                             print("파티원 파티 나가기 실패", partyInput)
                         }
                     }
                 } else {
                     print("파티원 채팅방 나가기 실패", chatInput)
+                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                 }
             }
         }
-        
-        self.navigationController?.popViewController(animated: true)
     }
     
     @objc
