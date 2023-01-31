@@ -49,17 +49,17 @@ class ForcedExitViewController: UIViewController {
     
     // MARK: - Properties
     
+    var partyId: Int?
     var roomId: String?
-    var users = ["apple", "neo", "seori", "zero", "runa", "runa", "runa", "runa", "runa", "runa", "runa", "runa", "runa"]
-    var selectedUsers: [String]? = []
+    var memberInfoList: [InfoForForcedExitModelResult]?
+    var selectedMemberInfoList: [InfoForForcedExitModelResult] = []
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        userTableView.backgroundColor = .white
-        
+        getUsersInfo()
         setAttributes()
         setTableView()
         addSubViews()
@@ -73,8 +73,9 @@ class ForcedExitViewController: UIViewController {
     
     // MARK: - Initialization
     
-    init(roomId: String) {
+    init(partyId: Int, roomId: String) {
         super.init(nibName: nil, bundle: nil)
+        self.partyId = partyId
         self.roomId = roomId
     }
     
@@ -84,14 +85,35 @@ class ForcedExitViewController: UIViewController {
     
     // MARK: - Functions
     
+    // 강제퇴장 뷰를 위한 채팅 참여자들 정보 불러오기
+    private func getUsersInfo() {
+        let input = InfoForForcedExitInput(partyId: self.partyId, roomId: self.roomId)
+        ChatAPI.getInfoForForcedExit(input: input) { isSuccess, resultArray in
+            if isSuccess {
+                if let resultArray = resultArray {
+                    self.memberInfoList = resultArray
+                    self.userTableView.reloadData()
+                }
+            } else {
+                self.showToast(viewController: self, message: "참여자들을 불러오는 데 실패했어요",
+                          font: .customFont(.neoBold, size: 13), color: .mainColor)
+            }
+        }
+    }
+    
     private func setAttributes() {
         self.view.backgroundColor = .white
+        userTableView.backgroundColor = .white
         
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
         
-        countNumLabel.text = "0/\(users.count) 명"
+        if let count = memberInfoList?.count {
+            countNumLabel.text = "0/\(count) 명"
+        } else {
+            countNumLabel.text = "0/\(0) 명"
+        }
     }
     
     private func setTableView() {
@@ -160,22 +182,27 @@ class ForcedExitViewController: UIViewController {
     }
     
     /* 강제퇴장되는 유저의 라벨(스택뷰) 생성 */
-    private func createStackView(users: [String]) -> UIStackView {
+    private func createStackView(selectedMembers: [InfoForForcedExitModelResult]) -> UIStackView {
         var views: [UIStackView] = []
-        users.forEach {
-            let imageView = UIImageView(image: UIImage(named: "ProfileImage"))
-            imageView.snp.makeConstraints { make in
+        selectedMembers.forEach {
+            let profileImgUrl = URL(string: $0.userProfileImgUrl ?? "")
+            let profileImageView = UIImageView().then {
+                $0.kf.setImage(with: profileImgUrl)
+                $0.layer.masksToBounds = true
+                $0.layer.cornerRadius = 10
+            }
+            profileImageView.snp.makeConstraints { make in
                 make.width.equalTo(19)
                 make.height.equalTo(20)
             }
             
-            let label = UILabel()
-            label.text = $0
-            label.font = .customFont(.neoBold, size: 13)
+            let nickNameLabel = UILabel()
+            nickNameLabel.text = $0.userName
+            nickNameLabel.font = .customFont(.neoBold, size: 13)
             
-            let subStackView = UIStackView(arrangedSubviews: [imageView, label])
+            let subStackView = UIStackView(arrangedSubviews: [profileImageView, nickNameLabel])
             subStackView.snp.makeConstraints { make in
-                make.width.equalTo(28 + label.getWidth(text: label.text ?? ""))
+                make.width.equalTo(28 + nickNameLabel.getWidth(text: nickNameLabel.text ?? ""))
             }
             subStackView.axis = .horizontal
             subStackView.spacing = 9
@@ -231,7 +258,8 @@ class ForcedExitViewController: UIViewController {
             /* set cancelButton */
             lazy var cancelButton = UIButton().then {
                 $0.setImage(UIImage(named: "Xmark"), for: .normal)
-                $0.addTarget(self, action: #selector(self.removeForcedExitConfirmView), for: .touchUpInside)
+                // MARK: - 확인 버튼 addTarget 안 먹어서 일단 X버튼에 강퇴 연결해놓음
+                $0.addTarget(self, action: #selector(self.tapExitConfirmButton), for: .touchUpInside)
             }
             topSubView.addSubview(cancelButton)
             cancelButton.snp.makeConstraints { make in
@@ -313,8 +341,7 @@ class ForcedExitViewController: UIViewController {
     private func tapNextButton() {
         createBlurView()
         
-        guard let selectedUsers = selectedUsers else { return }
-        let stackView = createStackView(users: selectedUsers)
+        let stackView = createStackView(selectedMembers: selectedMemberInfoList)
         setForcedExitAlertView(stackView: stackView)
         
         guard let forcedExitConfirmView = forcedExitConfirmView else { return }
@@ -327,8 +354,12 @@ class ForcedExitViewController: UIViewController {
     // 확인 버튼 눌렀을 때 실행 -> 강제퇴장 API 호출
     @objc
     private func tapExitConfirmButton() {
-        let input = ForcedExitInput(removedMemberIdList: selectedUsers, roomId: self.roomId!)
+        let selectedMemberIdList = selectedMemberInfoList.map { infoList in
+            infoList.chatMemberId ?? ""
+        }
+        let input = ForcedExitInput(removedChatMemberIdList: selectedMemberIdList, roomId: self.roomId!)
         ChatAPI.forcedExit(input) { model in
+            print(input)
             if let model = model {
                 if model.code == 1000 {
                     self.showToast(viewController: self,
@@ -353,13 +384,16 @@ class ForcedExitViewController: UIViewController {
 
 extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return memberInfoList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ForcedExitTableViewCell.identifier, for: indexPath) as? ForcedExitTableViewCell else { return UITableViewCell() }
+        let row = memberInfoList?[indexPath.row]
         
-        cell.userName.text = users[indexPath.row]
+        let profileImgUrl = URL(string: row?.userProfileImgUrl ?? "")
+        cell.userProfileImage.kf.setImage(with: profileImgUrl)
+        cell.userName.text = row?.userName
         
         return cell
     }
@@ -367,24 +401,27 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let selectedCell = tableView.cellForRow(at: indexPath) as? ForcedExitTableViewCell else { return }
         
+        selectedCell.cellIsSelected = !selectedCell.cellIsSelected
+        
+        // 선택 시
         if selectedCell.cellIsSelected == false {
-            selectedCell.cellIsSelected = true
-            selectedUsers?.append(users[indexPath.row])
             selectedCell.checkBox.image = UIImage(named: "CheckedSquare")
-            selectedCell.userProfileImage.image = UIImage(named: "ProfileImage")
             selectedCell.userName.font = .customFont(.neoBold, size: 14)
-            countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
-        } else {
-            selectedCell.cellIsSelected = false
-            selectedUsers = selectedUsers?.filter { $0 != users[indexPath.row] }
+            guard let memberInfo = memberInfoList?[indexPath.row] else { return }
+            selectedMemberInfoList.append(memberInfo)
+            countNumLabel.text = "\(selectedMemberInfoList.count)/\(memberInfoList?.count ?? 0) 명"
+        } else { // 선택 해제 시
             selectedCell.checkBox.image = UIImage(named: "UncheckedSquare")
-            selectedCell.userProfileImage.image = UIImage(named: "ForcedExit_unSelectedProfile")
             selectedCell.userName.font = .customFont(.neoMedium, size: 14)
-            countNumLabel.text = "\(selectedUsers?.count ?? 0)/\(users.count) 명"
+            guard let memberInfo = memberInfoList?[indexPath.row] else { return }
+            selectedMemberInfoList = selectedMemberInfoList.filter {
+                $0.memberId != memberInfo.memberId
+            }
+            countNumLabel.text = "\(selectedMemberInfoList.count)/\(memberInfoList?.count ?? 0) 명"
         }
         
-        /* selectedUsers의 수가 0이면 other color + "선택해 주세요" / 1이상이면 mainColor + "다음" */
-        if selectedUsers?.count == 0 {
+        /* selectedMemberInfoList의 수가 0이면 other color + "선택해 주세요" / 1 이상이면 mainColor + "다음" */
+        if selectedMemberInfoList.count == 0 {
             bottomView.backgroundColor = .init(hex: 0x94D5F1)
             nextButton.isEnabled = false
             nextButton.setTitle("퇴장시킬 파티원을 선택해 주세요", for: .normal)

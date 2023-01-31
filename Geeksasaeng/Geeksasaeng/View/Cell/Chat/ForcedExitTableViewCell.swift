@@ -20,6 +20,8 @@ class ForcedExitTableViewCell: UITableViewCell {
     
     let userProfileImage = UIImageView().then {
         $0.image = UIImage(named: "ForcedExit_unSelectedProfile")
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 20
     }
     
     let userName = UILabel().then {
