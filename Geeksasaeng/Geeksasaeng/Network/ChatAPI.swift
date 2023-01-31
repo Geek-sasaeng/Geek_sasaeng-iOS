@@ -136,21 +136,6 @@ struct CompleteRemittanceModel: Decodable {
     var result: String?
 }
 
-/* 강제 퇴장 */
-struct ForcedExitInput: Encodable {
-    var removedChatMemberIdList: [String]?
-    var roomId: String?
-}
-struct ForcedExitModel: Decodable {
-    var code: Int?
-    var isSuccess: Bool?
-    var message: String?
-    var result: ForcedExitModelResult?
-}
-struct ForcedExitModelResult: Decodable {
-    var message: String?
-}
-
 /* 강제퇴장을 위한 참여자들 정보 불러오기 */
 struct InfoForForcedExitInput: Encodable {
     var partyId: Int?
@@ -169,6 +154,20 @@ struct InfoForForcedExitModelResult: Decodable {
     var userProfileImgUrl: String?
 }
 
+/* 채팅방 강제 퇴장 */
+struct ForcedExitInput: Encodable {
+    var removedChatMemberIdList: [String]?
+    var roomId: String?
+}
+struct ForcedExitModel: Decodable {
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: ForcedExitModelResult?
+}
+struct ForcedExitModelResult: Decodable {
+    var message: String?
+}
 
 class ChatAPI {
     
@@ -429,8 +428,8 @@ class ChatAPI {
         }
     }
     
-    /* 방장이 파티원을 강제퇴장 */
-    public static func forcedExit(_ parameter: ForcedExitInput, completion: @escaping (ForcedExitModel?) -> Void) {
+    /* 방장이 파티원을 채팅방에서 강제퇴장 */
+    public static func forcedExitChat(_ parameter: ForcedExitInput, completion: @escaping (ForcedExitModel?) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/members"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
         headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])

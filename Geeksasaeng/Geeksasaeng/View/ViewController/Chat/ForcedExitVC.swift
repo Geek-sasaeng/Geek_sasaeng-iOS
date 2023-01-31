@@ -351,32 +351,44 @@ class ForcedExitViewController: UIViewController {
         }
     }
     
-    // 확인 버튼 눌렀을 때 실행 -> 강제퇴장 API 호출
+    // 확인 버튼 눌렀을 때 실행 -> 채팅방 강제퇴장 API 호출
     @objc
     private func tapExitConfirmButton() {
-        let selectedMemberIdList = selectedMemberInfoList.map { infoList in
+        let selectedChatMemberIdList = selectedMemberInfoList.map { infoList in
             infoList.chatMemberId ?? ""
         }
-        let input = ForcedExitInput(removedChatMemberIdList: selectedMemberIdList, roomId: self.roomId!)
-        ChatAPI.forcedExit(input) { model in
+        let selectedMemberIdList = selectedMemberInfoList.map { infoList in
+            infoList.memberId ?? 0
+        }
+        let input = ForcedExitInput(removedChatMemberIdList: selectedChatMemberIdList, roomId: self.roomId!)
+        ChatAPI.forcedExitChat(input) { model in
             print(input)
             if let model = model {
                 if model.code == 1000 {
-                    self.showToast(viewController: self,
-                              message: "강제 퇴장이 완료되었습니다",
-                              font: .customFont(.neoBold, size: 15),
-                              color: .mainColor)
+                    let partyInput = ForcedExitPartyInput(membersId: selectedMemberIdList, partyId: self.partyId)
+                    // 배달파티 강제퇴장 API 호출
+                    PartyAPI.forcedExitParty(partyInput) { model in
+                        if let model = model {
+                            // 채팅, 파티 모두 강제퇴장 완료
+                            if model.code == 1000 {
+                                self.showToast(viewController: self,
+                                               message: "강제 퇴장이 완료되었습니다",
+                                               font: .customFont(.neoBold, size: 15),
+                                               color: .mainColor)
+                            }
+                        }
+                    }
                 } else if model.code == 2026 {
                     self.showToast(viewController: self,
-                              message: "송금을 완료한 멤버는 방에서 퇴장시킬 수 없습니다",
-                              font: .customFont(.neoBold, size: 15),
-                              color: .mainColor)
+                                   message: "송금을 완료한 멤버는 방에서 퇴장시킬 수 없습니다",
+                                   font: .customFont(.neoBold, size: 15),
+                                   color: .mainColor)
                 }
             } else {
                 self.showToast(viewController: self,
-                                message: "강제퇴장에 실패했습니다",
-                                font: .customFont(.neoBold, size: 15),
-                                color: .mainColor)
+                               message: "강제퇴장에 실패했습니다",
+                               font: .customFont(.neoBold, size: 15),
+                               color: .mainColor)
             }
         }
     }
