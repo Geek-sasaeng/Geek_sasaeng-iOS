@@ -95,8 +95,8 @@ class ForcedExitViewController: UIViewController {
                     self.userTableView.reloadData()
                 }
             } else {
-                self.showToast(viewController: self, message: "참여자들을 불러오는 데 실패했어요",
-                          font: .customFont(.neoBold, size: 13), color: .mainColor)
+                self.showToast(viewController: self, message: "파티원들을 불러오는 데 실패했어요",
+                          font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
             }
         }
     }
@@ -360,6 +360,7 @@ class ForcedExitViewController: UIViewController {
         let selectedMemberIdList = selectedMemberInfoList.map { infoList in
             infoList.memberId ?? 0
         }
+        
         let input = ForcedExitInput(removedChatMemberIdList: selectedChatMemberIdList, roomId: self.roomId!)
         ChatAPI.forcedExitChat(input) { model in
             print(input)
@@ -370,11 +371,17 @@ class ForcedExitViewController: UIViewController {
                     PartyAPI.forcedExitParty(partyInput) { model in
                         if let model = model {
                             // 채팅, 파티 모두 강제퇴장 완료
+                            // TODO: - 화면 전환
                             if model.code == 1000 {
+                                self.removeForcedExitConfirmView()
+                                self.navigationController?.popViewController(animated: true)
+                                // 채팅 VC에 토스트 메세지 띄우기
+                                NotificationCenter.default.post(name: NSNotification.Name("CompleteForcedExit"), object: nil)
+                            } else {
                                 self.showToast(viewController: self,
-                                               message: "강제 퇴장이 완료되었습니다",
+                                               message: "강제 퇴장에 실패했습니다",
                                                font: .customFont(.neoBold, size: 15),
-                                               color: .mainColor)
+                                               color: .mainColor, width: 229)
                             }
                         }
                     }
@@ -382,13 +389,13 @@ class ForcedExitViewController: UIViewController {
                     self.showToast(viewController: self,
                                    message: "송금을 완료한 멤버는 방에서 퇴장시킬 수 없습니다",
                                    font: .customFont(.neoBold, size: 15),
-                                   color: .mainColor)
+                                   color: .mainColor, width: 270)
                 }
             } else {
                 self.showToast(viewController: self,
-                               message: "강제퇴장에 실패했습니다",
+                               message: "강제 퇴장에 실패했습니다",
                                font: .customFont(.neoBold, size: 15),
-                               color: .mainColor)
+                               color: .mainColor, width: 229)
             }
         }
     }

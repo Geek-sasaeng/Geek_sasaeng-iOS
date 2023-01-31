@@ -494,6 +494,9 @@ class ChattingViewController: UIViewController {
         
         // db 경로 출력
         localRealm.getLocationOfDefaultRealm()
+        
+        // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(completeForcedExit), name: NSNotification.Name("CompleteForcedExit"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -1217,6 +1220,15 @@ class ChattingViewController: UIViewController {
         imageCellVC.modalPresentationStyle = .overFullScreen
         imageCellVC.modalTransitionStyle = .crossDissolve
         self.present(imageCellVC, animated: true)
+    }
+    
+    // 강제퇴장 완료 토스트 메세지 띄우기
+    @objc
+    private func completeForcedExit() {
+        self.showToast(viewController: self,
+                       message: "강제 퇴장이 완료되었습니다",
+                       font: .customFont(.neoBold, size: 15),
+                       color: .mainColor, width: 229)
     }
 }
 
