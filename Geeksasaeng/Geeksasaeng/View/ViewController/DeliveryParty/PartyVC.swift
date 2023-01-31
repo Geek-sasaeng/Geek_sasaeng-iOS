@@ -739,6 +739,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             UIAlertAction(title: "닫기", style: .cancel)
         ].forEach{ actionSheet.addAction($0) }
         
+        // 글쓴이인데 속해있지 않다 == 나간 방장 -> 수정, 삭제 권한 비활성화
+        if self.detailData.belongStatus == "N" {
+            actionSheet.actions[0].isEnabled = false
+            actionSheet.actions[0].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+            actionSheet.actions[1].isEnabled = false
+            actionSheet.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
+        }
+        
         // alert 나타내기
         present(actionSheet, animated: true)
     }
