@@ -11,10 +11,6 @@ import SnapKit
 import Then
 
 class UserStageViewController: UIViewController {
-
-    // MARK: - Properties
-    
-    
     
     // MARK: - SubViews
     
@@ -282,10 +278,8 @@ class UserStageViewController: UIViewController {
         let mainVC = TabBarController()
         let navController = mainVC.viewControllers![0] as! UINavigationController
         let deliveryVC = navController.topViewController as! DeliveryViewController
+        deliveryVC.dormitoryInfo = DormitoryNameResult(id: LoginModel.dormitoryId, name: LoginModel.dormitoryName)
         
-        // TODO: - 기숙사 정보 서버한테 받아서 연결
-        let dormitoryInfo = DormitoryNameResult(id: 1, name: "1기숙사")    // 더미
-        deliveryVC.dormitoryInfo = dormitoryInfo
         UIApplication.shared.windows.first?.rootViewController = mainVC
         self.view.window?.rootViewController?.dismiss(animated: true)
     }

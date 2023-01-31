@@ -199,10 +199,12 @@ class LoginViewController: UIViewController {
                 LoginModel.jwt = jwt
                 LoginModel.memberId = result.memberId
                 LoginModel.nickname = result.nickname
-                LoginModel.userImgUrl = result.userImageUrl
+                LoginModel.profileImgUrl = result.profileImgUrl
+                LoginModel.dormitoryId = result.dormitoryId
+                LoginModel.dormitoryName = result.dormitoryName
                 
                 self.dormitoryInfo = DormitoryNameResult(id: result.dormitoryId, name: result.dormitoryName)
-                self.userImageUrl = result.userImageUrl
+                self.userImageUrl = result.profileImgUrl
                 
                 // 로그인 완료 후 경우에 따른 화면 전환
                 if result.loginStatus == "NEVER" {
@@ -272,13 +274,15 @@ class LoginViewController: UIViewController {
                     // static property에 jwt, nickname, userImgUrl 저장
                     LoginModel.jwt = result?.jwt
                     LoginModel.nickname = result?.nickName
-                    LoginModel.userImgUrl = result?.userImageUrl
+                    LoginModel.profileImgUrl = result?.profileImgUrl
                     LoginModel.memberId = result?.memberId
+                    LoginModel.dormitoryId = result?.dormitoryId
+                    LoginModel.dormitoryName = result?.dormitoryName
                     
                     // dormitoryId, Name 저장
                     self.dormitoryInfo = DormitoryNameResult(id: result?.dormitoryId, name: result?.dormitoryName)
                     // userImageUrl 저장
-                    self.userImageUrl = result?.userImageUrl
+                    self.userImageUrl = result?.profileImgUrl
                     
                     // 로그인 완료 후 경우에 따른 화면 전환
                     if result?.loginStatus == "NEVER" {
