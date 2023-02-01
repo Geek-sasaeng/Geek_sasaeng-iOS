@@ -1174,9 +1174,6 @@
 		A2B045D72889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
 		A2B045D82889B6CA00B97636 /* ReportDetailEtcVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */; };
 		A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42087286F0F1100278F92 /* EmailAuthVC.swift */; };
-		A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
-		A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
-		A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42089286F151100278F92 /* AuthNumVC.swift */; };
 		A2B42099286F249800278F92 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B42098286F249800278F92 /* TabBarController.swift */; };
 		A2B420A5286F370F00278F92 /* PartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A4286F370F00278F92 /* PartyVC.swift */; };
 		A2B420A6286F370F00278F92 /* PartyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B420A4286F370F00278F92 /* PartyVC.swift */; };
@@ -1665,7 +1662,6 @@
 		A2B045D12889923200B97636 /* ReportDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailVC.swift; sourceTree = "<group>"; };
 		A2B045D52889B6CA00B97636 /* ReportDetailEtcVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportDetailEtcVC.swift; sourceTree = "<group>"; };
 		A2B42087286F0F1100278F92 /* EmailAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthVC.swift; sourceTree = "<group>"; };
-		A2B42089286F151100278F92 /* AuthNumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNumVC.swift; sourceTree = "<group>"; };
 		A2B42098286F249800278F92 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A2B420A4286F370F00278F92 /* PartyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartyVC.swift; sourceTree = "<group>"; };
 		A2B420A9286F58C100278F92 /* DeliveryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVC.swift; sourceTree = "<group>"; };
@@ -2578,7 +2574,6 @@
 				A2FA89A5286EC9E900CB3B55 /* RegisterVC.swift */,
 				10C8D26728770D310044552A /* NaverRegisterVC.swift */,
 				A2B42087286F0F1100278F92 /* EmailAuthVC.swift */,
-				A2B42089286F151100278F92 /* AuthNumVC.swift */,
 				1040FB992875CC600060A3E4 /* PhoneAuthVC.swift */,
 				1031AA9C289815DD004B6568 /* Agreement */,
 			);
@@ -3799,7 +3794,6 @@
 				10D4D6B32894F88B00B53AB0 /* EditOrderForecastTimeVC.swift in Sources */,
 				10E8E717288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				A2EE2BC3294727B200335680 /* MessageData.swift in Sources */,
-				A2B4208A286F151100278F92 /* AuthNumVC.swift in Sources */,
 				A2D2047928885A65002350C8 /* ReportVC.swift in Sources */,
 				10D4D6BF2894F8B000B53AB0 /* EditCategoryVC.swift in Sources */,
 				10AC8B0E2916927500A09952 /* PasswordCheckVC.swift in Sources */,
@@ -4012,7 +4006,6 @@
 				10787140286F7A99008EDF78 /* PartyTableViewCell.swift in Sources */,
 				A2513ECB28781D1B0029C279 /* PhoneAuthModel.swift in Sources */,
 				A2035EA228833ED60051498A /* AdViewModel.swift in Sources */,
-				A2B4208B286F151100278F92 /* AuthNumVC.swift in Sources */,
 				10E8E718288C401200AF4581 /* EditPartyViewModel.swift in Sources */,
 				1036F0AB291A800F00306840 /* EditMyInfoVC.swift in Sources */,
 				A21E82B628E48FA400D75084 /* ChattingStorageVC.swift in Sources */,
@@ -4109,7 +4102,6 @@
 				103AD39F297AC0F700295D9C /* PersonalInfoAgreementOfProfileVC.swift in Sources */,
 				A2E641682879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				1040FB9C2875CC600060A3E4 /* PhoneAuthVC.swift in Sources */,
-				A2B4208C286F151100278F92 /* AuthNumVC.swift in Sources */,
 				1036EC3E29758614005AF45C /* ChangePasswordVC.swift in Sources */,
 				1031AAA028981604004B6568 /* TermsOfUseAgreementVC.swift in Sources */,
 				106D974F287D7691005CFB85 /* OrderForecastTimeVC.swift in Sources */,
