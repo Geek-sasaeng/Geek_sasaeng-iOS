@@ -564,22 +564,6 @@ class EmailAuthViewController: UIViewController {
     
     @objc
     private func tapNextButton() {
-//        if let idData = self.idData,
-//           let pwData = self.pwData,
-//           let pwCheckData = self.pwCheckData,
-//           let nickNameData = self.nickNameData,
-//           let univ = selectYourUnivLabel.text,
-//           let email = emailTextField.text,
-//           let emailAddress = emailAddressTextField.text,
-//           let uuid = uuid {
-//            // TODO: university name에 맞게 @뒤에 다른 값을 붙여줘야 함 - 일단은 가천대만
-//            let authNumVC = AuthNumViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: univ, email: email + emailAddress, uuid: uuid)
-//
-//            authNumVC.modalTransitionStyle = .crossDissolve
-//            authNumVC.modalPresentationStyle = .fullScreen
-//
-//            present(authNumVC, animated: true)
-//        }
         if let idData = self.idData,
            let pwData = self.pwData,
            let pwCheckData = self.pwCheckData,
