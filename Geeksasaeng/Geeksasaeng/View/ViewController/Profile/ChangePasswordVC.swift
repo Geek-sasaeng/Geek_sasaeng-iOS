@@ -185,8 +185,8 @@ class ChangePasswordViewController: UIViewController {
             $0.isHidden = true
         }
         
-        passwordChangeValidationLabel.text = "6-20자 영문+숫자로 입력해주세요"
-        passwordCheckValidationLabel.text = "비밀번호를 다시 확인해주세요"
+        passwordChangeValidationLabel.text = "문자, 숫자 및 특수문자 포함 8자 이상으로 입력해주세요"
+        passwordCheckValidationLabel.text = "비밀번호가 다릅니다. 다시 확인해주세요"
     }
     
     private func setNavigationBar() {
@@ -369,6 +369,22 @@ extension ChangePasswordViewController: UITextFieldDelegate {
             }
         default:
             return
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        switch textField {
+        case passwordCheckDataTextField:
+            guard let str = textField.text else { return true }
+            if (str + string) == self.passwordDataTextField.text ?? "" {
+                self.activeRightBarButton()
+                self.passwordCheckValidationLabel.isHidden = true
+                passwordCheckDataTextField.subviews.first?.backgroundColor = .init(hex: 0xEFEFEF)
+            }
+            
+            return true
+        default:
+            return true
         }
     }
 }
