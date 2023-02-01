@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 import Then
 
-// TODO: - 블러뷰 배경 터치 하면 alertview 없애기
 class ForcedExitViewController: UIViewController {
     
     // MARK: - SubViews
@@ -175,9 +174,17 @@ class ForcedExitViewController: UIViewController {
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
             visualEffectView.frame = view.frame
-            visualEffectView.isUserInteractionEnabled = false
             view.addSubview(visualEffectView)
             self.visualEffectView = visualEffectView
+        }
+    }
+    
+    // 배경의 블러뷰를 터치하면 띄워진 뷰와 블러뷰가 같이 사라지도록 설정
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if let touch = touches.first, touch.view == self.visualEffectView {
+            removeForcedExitConfirmView()
         }
     }
     
