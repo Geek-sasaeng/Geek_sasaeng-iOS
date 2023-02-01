@@ -481,6 +481,8 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        /* 더미 데이터 */
+        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -1241,12 +1243,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
                 
                 /* imageCell에 tap gesture 추가 (이미지 확대 기능 위해) */
-                cell.isUserInteractionEnabled = true
+                cell.isUserInteractionEnabled = false
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
-                cell.addGestureRecognizer(tapGesture)
-//                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
-//                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
+//                cell.addGestureRecognizer(tapGesture)
+                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
+                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.isHidden = true
                 if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
@@ -1300,12 +1302,12 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
                 cell.delegate = self
                 
-                cell.isUserInteractionEnabled = true
+                cell.isUserInteractionEnabled = false
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
-                cell.addGestureRecognizer(tapGesture)
-//                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
-//                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
+//                cell.addGestureRecognizer(tapGesture)
+                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
+                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.text = msg.message?.nickName
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면

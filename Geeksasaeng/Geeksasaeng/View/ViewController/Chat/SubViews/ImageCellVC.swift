@@ -16,6 +16,10 @@ class ImageCellViewController: UIViewController {
     var date: String?
     var imageUrl: URL?
     
+    var recognizerScale: CGFloat = 1.0
+    var maxScale: CGFloat = 1.5
+    var minScale: CGFloat = 1.0
+    
     // MARK: - SubViews
     
     let imageMessageExpansionNicknameLabel = UILabel().then {
@@ -107,7 +111,19 @@ class ImageCellViewController: UIViewController {
     
     @objc
     private func doPinch(_ pinch: UIPinchGestureRecognizer) {
-        imageMessageExpansionImageView.transform = imageMessageExpansionImageView.transform.scaledBy(x: pinch.scale, y: pinch.scale)
-        pinch.scale = 1
+//        imageMessageExpansionImageView.transform = imageMessageExpansionImageView.transform.scaledBy(x: pinch.scale, y: pinch.scale)
+//        pinch.scale = 1
+        
+        if pinch.state == .began || pinch.state == .changed {
+            if (recognizerScale < maxScale && pinch.scale > 1.0) { // 확대
+                imageMessageExpansionImageView.transform = (imageMessageExpansionImageView.transform).scaledBy(x: pinch.scale, y: pinch.scale)
+                recognizerScale *= pinch.scale
+                pinch.scale = 1.0
+            } else if (recognizerScale > minScale && pinch.scale < 1.0) { // 축소
+                imageMessageExpansionImageView.transform = (imageMessageExpansionImageView.transform).scaledBy(x: pinch.scale, y: pinch.scale)
+                recognizerScale *= pinch.scale
+                pinch.scale = 1.0
+            }
+        }
     }
 }
