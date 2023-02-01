@@ -533,7 +533,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
                 self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
             } else {
-                self.showToast(viewController: self, message: "회원정보 수정 실패", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                self.showToast(viewController: self, message: "회원정보 수정에 실패하였습니다", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8), width: 250)
                 print("회원정보 수정 실패")
                 self.editConfirmView.removeFromSuperview()
             }

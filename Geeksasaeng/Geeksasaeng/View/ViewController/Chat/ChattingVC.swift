@@ -496,6 +496,9 @@ class ChattingViewController: UIViewController {
         
         // db 경로 출력
         localRealm.getLocationOfDefaultRealm()
+        
+        // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(completeForcedExit), name: NSNotification.Name("CompleteForcedExit"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -1164,13 +1167,16 @@ class ChattingViewController: UIViewController {
                     let partyInput = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyChief(partyInput) { isSuccess in
                         if isSuccess {
-                            print("방장 파티 나가기 성공", partyInput)
+                            self.navigationController?.popViewController(animated: true)
+                            // 채팅 목록 VC에 토스트 메세지 띄우기
+                            NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
                             print("방장 파티 나가기 실패", partyInput)
                         }
                     }
                 } else {
                     print("방장 채팅방 나가기 실패", chatInput)
+                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                 }
             }
         } else {
@@ -1183,18 +1189,19 @@ class ChattingViewController: UIViewController {
                     let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyMember(partyInput) { isSuccess in
                         if isSuccess {
-                            print("파티원 파티 나가기 성공", partyInput)
+                            self.navigationController?.popViewController(animated: true)
+                            // 채팅 목록 VC에 토스트 메세지 띄우기
+                            NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
                             print("파티원 파티 나가기 실패", partyInput)
                         }
                     }
                 } else {
                     print("파티원 채팅방 나가기 실패", chatInput)
+                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                 }
             }
         }
-        
-        self.navigationController?.popViewController(animated: true)
     }
     
     @objc
@@ -1215,6 +1222,15 @@ class ChattingViewController: UIViewController {
         imageCellVC.modalPresentationStyle = .overFullScreen
         imageCellVC.modalTransitionStyle = .crossDissolve
         self.present(imageCellVC, animated: true)
+    }
+    
+    // 강제퇴장 완료 토스트 메세지 띄우기
+    @objc
+    private func completeForcedExit() {
+        self.showToast(viewController: self,
+                       message: "강제 퇴장이 완료되었습니다",
+                       font: .customFont(.neoBold, size: 15),
+                       color: .mainColor, width: 229)
     }
 }
 

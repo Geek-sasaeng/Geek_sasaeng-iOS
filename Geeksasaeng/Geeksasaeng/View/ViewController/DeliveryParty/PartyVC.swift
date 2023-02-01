@@ -887,7 +887,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func showToastFromCreated() {
         guard let isFromCreated = isFromCreated else { return }
         if isFromCreated {
-            self.showToast(viewController: self, message: "파티 생성이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
+            self.showToast(viewController: self, message: "파티 생성이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
         }
     }
     
@@ -1034,12 +1034,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     } else {
                         print("DEBUG: 채팅방 초대 실패", result?.enterTime)
                         // TODO: - 파티에는 추가가 됐는데 채팅방에 추가가 안 됐을 경우 어떻게 처리하면 되는지 확정 안 남
-                        showToast(viewController: self, message: "배달파티 채팅방 초대에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
+                        showToast(viewController: self, message: "배달파티 채팅방 초대에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .init(hex: 0x474747, alpha: 0.6), width: 250)
                     }
                 }
             } else {
                 // 배달파티 신청 실패 시 실패 메세지 띄우기
-                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0x474747, alpha: 0.6))
+                showToast(viewController: self, message: "배달파티 신청에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .init(hex: 0x474747, alpha: 0.6), width: 250)
             }
         }
     }
@@ -1083,7 +1083,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
 extension PartyViewController: EdittedDelegate {
     public func checkEditted(isEditted: Bool) {
         if isEditted {
-            self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
+            self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 226)
             
             // DeliveryVC에서 배달 목록 새로고침 (수정된 거 반영되게 하려고)
             delegate?.updateDeliveryList()

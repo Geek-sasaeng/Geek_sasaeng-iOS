@@ -86,7 +86,7 @@ class naverLoginViewModel {
                 }
                 else { // 실패
                     print("ERROR!")
-                    viewController.showToast(viewController: viewController, message: "로그인 실패! 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8))
+                    viewController.showToast(viewController: viewController, message: "로그인 실패! 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 229, height: 40)
                 }
             }
         }

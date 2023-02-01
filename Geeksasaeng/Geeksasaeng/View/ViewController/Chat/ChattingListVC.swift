@@ -144,6 +144,9 @@ class ChattingListViewController: UIViewController {
         setupReceiver()
         // 로컬로부터 채팅방의 가장 최근 메세지 불러오기
         loadRecentMessage()
+        
+        // 다른 VC에서 여기에 토스트 메세지를 띄우기 위해 옵저버 추가
+        NotificationCenter.default.addObserver(self, selector: #selector(completeExit), name: NSNotification.Name("CompleteExit"), object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -605,6 +608,12 @@ class ChattingListViewController: UIViewController {
             label.textColor = .mainColor
             selectedLabel = label
         }
+    }
+    
+    // 나가기 완료 토스트 메세지 띄우기
+    @objc
+    private func completeExit() {
+        self.showToast(viewController: self, message: "채팅에서 나갔습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184)
     }
 }
 

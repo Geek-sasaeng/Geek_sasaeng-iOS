@@ -710,7 +710,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.isEdittiedDelegate?.checkEditted(isEditted: true)
                     self.navigationController?.popViewController(animated: true) // 수정된 정보로 나타내야 함, Alert 띄우기
                 } else {
-                    self.showToast(viewController: self, message: "파티 수정을 실패하였습니다", font: .customFont(.neoBold, size: 13), color: .mainColor)
+                    self.showToast(viewController: self, message: "파티 수정을 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                 }
             }
         }

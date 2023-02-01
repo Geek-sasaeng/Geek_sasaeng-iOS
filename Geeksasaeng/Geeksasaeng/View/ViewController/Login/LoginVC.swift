@@ -97,6 +97,7 @@ class LoginViewController: UIViewController {
         setLayouts()
         setKeyboardDown()
         setAttributes()
+        setNotificationCenter()
     }
     
     // MARK: - Functions
@@ -243,115 +244,10 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc private func tapSignUpButton() {
-        // registerVC로 화면 전환.
-        let registerVC = RegisterViewController()
-        
-        registerVC.modalTransitionStyle = .crossDissolve
-        registerVC.modalPresentationStyle = .fullScreen
-        
-        present(registerVC, animated: true)
-    }
-    
-    @objc private func tapLoginButton() {
-        // 로그인 시도
-        if let id = self.idTextField.text,
-           let pw = self.passwordTextField.text {
-
-            // fcm 등록토큰 값 불러오기
-            let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
-            print("DEBUG: fcmToken in LoginVC", fcmToken)
-            let input = LoginInput(loginId: id, password: pw, fcmToken: fcmToken)
-            
-            LoginViewModel.login(input) { isSuccess, result, message  in
-                switch isSuccess {
-                case .success:
-                    // 자동로그인 체크 시 UserDefaults에 jwt 저장
-                    if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
-                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
-                    }
-                    
-                    // static property에 jwt, nickname, userImgUrl 저장
-                    LoginModel.jwt = result?.jwt
-                    LoginModel.nickname = result?.nickName
-                    LoginModel.profileImgUrl = result?.profileImgUrl
-                    LoginModel.memberId = result?.memberId
-                    LoginModel.dormitoryId = result?.dormitoryId
-                    LoginModel.dormitoryName = result?.dormitoryName
-                    
-                    // dormitoryId, Name 저장
-                    self.dormitoryInfo = DormitoryNameResult(id: result?.dormitoryId, name: result?.dormitoryName)
-                    // userImageUrl 저장
-                    self.userImageUrl = result?.profileImgUrl
-                    
-                    // 로그인 완료 후 경우에 따른 화면 전환
-                    if result?.loginStatus == "NEVER" {
-                        self.showNextView(isFirstLogin: true, nickName: result?.nickName ?? "홍길동")
-                    } else {
-                        self.showNextView(isFirstLogin: false)
-                    }
-                case .onlyRequestSuccess:
-                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
-                case .failure:
-                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)   
-                }
-            }
-        }
-    }
-    
-    @objc private func tapNaverLoginButton() {
-        // 토큰 존재하면 재발급 받아서 로그인 시도
-        if naverLoginVM.isValidAccessTokenExpireTimeNow() {
-            naverLoginVM.requestAccessTokenWithRefreshToken()
-        }
-        naverLoginVM.requestLogin()
-    }
-    
-    @objc private func tapAppleLoginButton() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
-    }
-    
-    @objc private func tapAutomaticLoginButton() {
-        if automaticLoginButton.currentImage == UIImage(named: "CheckBox") {
-            automaticLoginButton.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
-        } else {
-            automaticLoginButton.setImage(UIImage(named: "CheckBox"), for: .normal)
-        }
-    }
-    
-    @objc private func didChangeTextField(_ sender: UITextField) {
-        let text = sender.text ?? ""
-        
-        switch sender {
-        case idTextField:
-            if text.count >= 1 && passwordTextField.text?.count ?? 0 >= 1 {
-                loginButton.isEnabled = true
-                loginButton.tintColor = .white
-                loginButton.backgroundColor = .mainColor
-            } else {
-                loginButton.isEnabled = false
-                loginButton.tintColor = UIColor(hex: 0xA8A8A8)
-                loginButton.backgroundColor = UIColor(hex: 0xEFEFEF)
-            }
-        default: // passwordTextField
-            if text.count >= 1 && idTextField.text?.count ?? 0 >= 1 {
-                loginButton.isEnabled = true
-                loginButton.tintColor = .white
-                loginButton.backgroundColor = .mainColor
-            } else {
-                loginButton.isEnabled = false
-                loginButton.tintColor = UIColor(hex: 0xA8A8A8)
-                loginButton.backgroundColor = UIColor(hex: 0xEFEFEF)
-            }
-        }
-        
+    private func setNotificationCenter() {
+        // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(completeLogout), name: NSNotification.Name("CompleteLogout"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(completeWithdrawal), name: NSNotification.Name("CompleteWithdrawal"), object: nil)
     }
     
     /* 로그인 완료 후 화면 전환 */
@@ -399,6 +295,137 @@ class LoginViewController: UIViewController {
         dormitoryVC.modalTransitionStyle = .crossDissolve
         dormitoryVC.modalPresentationStyle = .fullScreen
         present(dormitoryVC, animated: true)
+    }
+    
+    // MARK: - @objc Functions
+    
+    @objc
+    private func tapSignUpButton() {
+        // registerVC로 화면 전환.
+        let registerVC = RegisterViewController()
+        
+        registerVC.modalTransitionStyle = .crossDissolve
+        registerVC.modalPresentationStyle = .fullScreen
+        
+        present(registerVC, animated: true)
+    }
+    
+    @objc
+    private func tapLoginButton() {
+        // 로그인 시도
+        if let id = self.idTextField.text,
+           let pw = self.passwordTextField.text {
+
+            // fcm 등록토큰 값 불러오기
+            let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
+            print("DEBUG: fcmToken in LoginVC", fcmToken)
+            let input = LoginInput(loginId: id, password: pw, fcmToken: fcmToken)
+            
+            LoginViewModel.login(input) { isSuccess, result, message  in
+                switch isSuccess {
+                case .success:
+                    // 자동로그인 체크 시 UserDefaults에 jwt 저장
+                    if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
+                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
+                    }
+                    
+                    // static property에 jwt, nickname, userImgUrl 저장
+                    LoginModel.jwt = result?.jwt
+                    LoginModel.nickname = result?.nickName
+                    LoginModel.profileImgUrl = result?.profileImgUrl
+                    LoginModel.memberId = result?.memberId
+                    LoginModel.dormitoryId = result?.dormitoryId
+                    LoginModel.dormitoryName = result?.dormitoryName
+                    
+                    // dormitoryId, Name 저장
+                    self.dormitoryInfo = DormitoryNameResult(id: result?.dormitoryId, name: result?.dormitoryName)
+                    // userImageUrl 저장
+                    self.userImageUrl = result?.profileImgUrl
+                    
+                    // 로그인 완료 후 경우에 따른 화면 전환
+                    if result?.loginStatus == "NEVER" {
+                        self.showNextView(isFirstLogin: true, nickName: result?.nickName ?? "홍길동")
+                    } else {
+                        self.showNextView(isFirstLogin: false)
+                    }
+                case .onlyRequestSuccess:
+                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
+                case .failure:
+                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)   
+                }
+            }
+        }
+    }
+    
+    @objc
+    private func tapNaverLoginButton() {
+        // 토큰 존재하면 재발급 받아서 로그인 시도
+        if naverLoginVM.isValidAccessTokenExpireTimeNow() {
+            naverLoginVM.requestAccessTokenWithRefreshToken()
+        }
+        naverLoginVM.requestLogin()
+    }
+    
+    @objc
+    private func tapAppleLoginButton() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+    
+    @objc
+    private func tapAutomaticLoginButton() {
+        if automaticLoginButton.currentImage == UIImage(named: "CheckBox") {
+            automaticLoginButton.setImage(UIImage(systemName: "checkmark.rectangle"), for: .normal)
+        } else {
+            automaticLoginButton.setImage(UIImage(named: "CheckBox"), for: .normal)
+        }
+    }
+    
+    @objc
+    private func didChangeTextField(_ sender: UITextField) {
+        let text = sender.text ?? ""
+        
+        switch sender {
+        case idTextField:
+            if text.count >= 1 && passwordTextField.text?.count ?? 0 >= 1 {
+                loginButton.isEnabled = true
+                loginButton.tintColor = .white
+                loginButton.backgroundColor = .mainColor
+            } else {
+                loginButton.isEnabled = false
+                loginButton.tintColor = UIColor(hex: 0xA8A8A8)
+                loginButton.backgroundColor = UIColor(hex: 0xEFEFEF)
+            }
+        default: // passwordTextField
+            if text.count >= 1 && idTextField.text?.count ?? 0 >= 1 {
+                loginButton.isEnabled = true
+                loginButton.tintColor = .white
+                loginButton.backgroundColor = .mainColor
+            } else {
+                loginButton.isEnabled = false
+                loginButton.tintColor = UIColor(hex: 0xA8A8A8)
+                loginButton.backgroundColor = UIColor(hex: 0xEFEFEF)
+            }
+        }
+        
+    }
+    
+    // 로그아웃을 완료했을 때 토스트 메세지 띄우기
+    @objc
+    private func completeLogout(_ notification: Notification) {
+        self.showToast(viewController: self, message: "로그아웃 되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184, height: 59)
+    }
+    
+    // 회원탈퇴를 완료했을 때 토스트 메세지 띄우기
+    @objc
+    private func completeWithdrawal(_ notification: Notification) {
+        self.showToast(viewController: self, message: "탈퇴가 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 198, height: 59)
     }
 }
 
@@ -471,7 +498,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
     // Apple ID 연동 실패 시
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print("Apple ID 연동 실패")
-        self.showToast(viewController: self, message: "로그인 실패! 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8))
+        self.showToast(viewController: self, message: "로그인 실패! 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 229, height: 40)
     }
 }
 
