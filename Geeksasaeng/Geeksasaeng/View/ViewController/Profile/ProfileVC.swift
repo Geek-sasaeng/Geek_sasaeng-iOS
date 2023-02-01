@@ -773,7 +773,7 @@ class ProfileViewController: UIViewController {
     // 비밀번호 변경을 완료했을 때 토스트 메세지 띄우기
     @objc
     private func completeChangingPw(_ notification: Notification) {
-        self.showToast(viewController: self, message: "비밀번호를 변경하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 169, height: 19)
+        self.showToast(viewController: self, message: "비밀번호를 변경하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 225)
     }
 }
 
