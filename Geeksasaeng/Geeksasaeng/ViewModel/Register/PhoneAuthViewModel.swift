@@ -11,7 +11,7 @@ import Alamofire
 // 핸드폰 번호 인증 API 연동
 class PhoneAuthViewModel {
     
-    public static func requestSendPhoneAuth(_ parameter : PhoneAuthInput, completion: @escaping (ResponseCase, String) -> Void) {
+    public static func requestSendPhoneAuth(_ parameter : PhoneAuthInput, completion: @escaping (PhoneAuthModel?) -> Void) {
         AF.request("https://geeksasaeng.shop/sms", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -19,16 +19,14 @@ class PhoneAuthViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 성공")
-                    // 성공했을 때에 성공했다는 토스트 메세지 출력
-                    completion(.success, "인증번호가 전송되었습니다")
+                    print("DEBUG: sms 전송 성공")
                 } else {
-                    print("DEBUG: 실패", result.message!)
-                    completion(.onlyRequestSuccess, result.message!)
+                    print("DEBUG: sms 전송 실패", result.message!)
                 }
+                completion(result)
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
-                completion(.failure, "핸드폰 번호를 다시 확인해 주세요")
+                print("DEBUG: sms 전송 실패", error.localizedDescription)
+                completion(nil)
             }
         }
     }
