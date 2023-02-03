@@ -1259,10 +1259,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
                 
                 /* imageCell에 tap gesture 추가 (이미지 확대 기능 위해) */
-                cell.isUserInteractionEnabled = false
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
-//                cell.addGestureRecognizer(tapGesture)
                 cell.leftImageMessageView.addGestureRecognizer(tapGesture)
                 cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
@@ -1318,10 +1316,8 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageMessageCell.identifier, for: indexPath) as! ImageMessageCell
                 cell.delegate = self
                 
-                cell.isUserInteractionEnabled = false
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
-//                cell.addGestureRecognizer(tapGesture)
                 cell.leftImageMessageView.addGestureRecognizer(tapGesture)
                 cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
