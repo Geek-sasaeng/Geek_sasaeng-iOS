@@ -58,13 +58,6 @@ class BankAccountViewController: UIViewController {
         $0.delegate = self
     }
     
-    /* 추후 수정이 가능합니다 */
-    let guideLabel = UILabel().then {
-        $0.text = "추후 수정이 가능합니다"
-        $0.font = .customFont(.neoMedium, size: 13)
-        $0.textColor = UIColor(hex: 0xA8A8A8)
-    }
-    
     /* 완료 버튼 */
     lazy var confirmButton = UIButton().then {
         $0.setTitle("완료", for: .normal)
@@ -124,7 +117,6 @@ class BankAccountViewController: UIViewController {
             titleLabel, backButton,
             bankTextField,
             accountNumberTextField,
-            guideLabel,
             confirmButton
         ].forEach { view.addSubview($0) }
     }
@@ -156,11 +148,6 @@ class BankAccountViewController: UIViewController {
             make.bottom.equalToSuperview().inset(35)
             make.width.equalTo(262)
             make.height.equalTo(51)
-        }
-        
-        guideLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(confirmButton.snp.top).offset(-23)
-            make.centerX.equalToSuperview()
         }
     }
     
