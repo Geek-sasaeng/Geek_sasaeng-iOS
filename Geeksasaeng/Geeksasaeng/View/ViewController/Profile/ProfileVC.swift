@@ -112,9 +112,7 @@ class ProfileViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapMyActivityArrowButton), for: .touchUpInside)
     }
     /* 나의 활동 container view */
-    lazy var myActivityContainerView = UIView().then {
-        $0.isUserInteractionEnabled = true
-    }
+    lazy var myActivityContainerView = UIView()
     
     /* 나의 활동 view (활동 내역이 있을 때) */
     lazy var existMyActivityView = UIView().then { view in
@@ -129,10 +127,10 @@ class ProfileViewController: UIViewController {
         }
         showMyActivityLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(27)
-            make.left.equalToSuperview().inset(20)
+            make.left.equalToSuperview().inset(24)
         }
         myActivityArrowButton.snp.makeConstraints { make in
-            make.top.equalTo(showMyActivityLabel.snp.top)
+            make.centerY.equalTo(showMyActivityLabel.snp.centerY)
             make.right.equalToSuperview().inset(30)
         }
     }
@@ -141,7 +139,7 @@ class ProfileViewController: UIViewController {
         $0.minimumLineSpacing = 7
         
         let screenWidth = UIScreen.main.bounds.width
-        $0.itemSize = CGSize(width: (screenWidth-54)/3, height: 80)
+        $0.itemSize = CGSize(width: (screenWidth-54)/3, height: 84 + 17 + 22)
         
         $0.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     }
@@ -406,6 +404,21 @@ class ProfileViewController: UIViewController {
     
     // MARK: - Functions
     
+    // 배경의 블러뷰를 터치하면 띄워진 뷰와 블러뷰가 같이 사라지도록 설정
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if let touch = touches.first, touch.view == self.visualEffectView {
+            visualEffectView?.removeFromSuperview()
+            // view에 addSubview가 된 즉, 현재 띄워져있는 뷰인지 확인
+            if logoutView.isDescendant(of: view) {
+                logoutView.removeFromSuperview()
+            } else if withdrawalMembershipView.isDescendant(of: view) {
+                withdrawalMembershipView.removeFromSuperview()
+            }
+        }
+    }
+    
     private func getUserInfo() {
         UserInfoAPI.getUserInfo { isSuccess, result in
             if isSuccess {
@@ -464,11 +477,6 @@ class ProfileViewController: UIViewController {
     }
     
     private func setAttributes() {
-        /* view */
-        view.isUserInteractionEnabled = true
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapViewController))
-        view.addGestureRecognizer(gesture)
-        
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
         
@@ -499,14 +507,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func createBlurView() {
-        if visualEffectView == nil {
-            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-            visualEffectView.layer.opacity = 0.6
-            visualEffectView.frame = view.frame
-            visualEffectView.isUserInteractionEnabled = false
-            view.addSubview(visualEffectView)
-            self.visualEffectView = visualEffectView
-        }
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        view.addSubview(visualEffectView)
+        self.visualEffectView = visualEffectView
     }
     
     private func addSubViews() {
@@ -531,7 +536,7 @@ class ProfileViewController: UIViewController {
         backgroundView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.left.right.equalToSuperview()
-            make.height.equalTo(300)
+            make.height.equalTo(285)
         }
         
         gradeView.snp.makeConstraints { make in
@@ -569,9 +574,9 @@ class ProfileViewController: UIViewController {
         }
         
         myActivityContainerView.snp.makeConstraints { make in
-            make.top.equalTo(backgroundView.snp.bottom).offset(15)
+            make.top.equalTo(backgroundView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(160)
+            make.height.equalTo(162)
         }
         
         separateView.snp.makeConstraints { make in
@@ -637,16 +642,15 @@ class ProfileViewController: UIViewController {
     private func showExistMyActivityView() {
         self.noneMyActivityView.removeFromSuperview()
         
-        self.existMyActivityView.addSubview(self.myActivityCollectionView)
-        self.myActivityCollectionView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(22)
-            make.top.equalToSuperview().inset(56)
-            make.left.right.equalToSuperview().inset(15)
-        }
-        
         self.myActivityContainerView.addSubview(self.existMyActivityView)
         self.existMyActivityView.snp.makeConstraints { make in
             make.left.right.top.bottom.equalToSuperview()
+        }
+        self.existMyActivityView.addSubview(self.myActivityCollectionView)
+        self.myActivityCollectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(49)
+            make.left.right.equalToSuperview().inset(15)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -683,34 +687,29 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapLogoutButton() {
-        if visualEffectView == nil {
-            createBlurView()
-            view.addSubview(logoutView)
-            logoutView.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalTo(256)
-                make.height.equalTo(236)
-            }
+        createBlurView()
+        view.addSubview(logoutView)
+        logoutView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(256)
+            make.height.equalTo(236)
         }
     }
     
     @objc
     private func tapWithdrawalMembershipButton() {
-        if visualEffectView == nil {
-            createBlurView()
-            view.addSubview(withdrawalMembershipView)
-            withdrawalMembershipView.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalTo(256)
-                make.height.equalTo(236)
-            }
+        createBlurView()
+        view.addSubview(withdrawalMembershipView)
+        withdrawalMembershipView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(256)
+            make.height.equalTo(236)
         }
     }
     
     @objc
     private func tapXButton() {
         visualEffectView?.removeFromSuperview()
-        visualEffectView = nil
         logoutView.removeFromSuperview()
         withdrawalMembershipView.removeFromSuperview()
     }
@@ -754,17 +753,6 @@ class ProfileViewController: UIViewController {
     }
     
     @objc
-    private func tapViewController() {
-        if visualEffectView != nil {
-            visualEffectView?.removeFromSuperview()
-            visualEffectView = nil
-            logoutView.removeFromSuperview()
-            withdrawalMembershipView.removeFromSuperview()
-            NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
-        }
-    }
-    
-    @objc
     private func showUserStageView() {
         let userStageVC = UserStageViewController()
         self.navigationController?.pushViewController(userStageVC, animated: true)
@@ -792,7 +780,6 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected works: ", indexPath.row)
         guard let selectedPartyId = myActivities[indexPath.row].id else { return }
         
         let partyVC = PartyViewController(partyId: selectedPartyId, isEnded: true)
