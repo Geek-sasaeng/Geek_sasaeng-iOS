@@ -231,7 +231,7 @@ class ForcedExitViewController: UIViewController {
     
     private func setForcedExitAlertView(stackView: UIStackView) {
         /* 강제퇴장 확인 Alert View & Alert View에 들어갈 Cmoponents */
-        let view = UIView().then { view in
+        forcedExitConfirmView = UIView().then { view in
             view.backgroundColor = .white
             view.clipsToBounds = true
             view.layer.cornerRadius = 7
@@ -265,8 +265,7 @@ class ForcedExitViewController: UIViewController {
             /* set cancelButton */
             lazy var cancelButton = UIButton().then {
                 $0.setImage(UIImage(named: "Xmark"), for: .normal)
-                // MARK: - 확인 버튼 addTarget 안 먹어서 일단 X버튼에 강퇴 연결해놓음
-                $0.addTarget(self, action: #selector(self.tapExitConfirmButton), for: .touchUpInside)
+                $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
             }
             topSubView.addSubview(cancelButton)
             cancelButton.snp.makeConstraints { make in
@@ -278,13 +277,13 @@ class ForcedExitViewController: UIViewController {
             
             /* bottom View: contents, 확인 버튼 */
             let bottomSubView = UIView().then {
-                $0.backgroundColor = UIColor.white
+                $0.backgroundColor = .white
             }
             view.addSubview(bottomSubView)
             bottomSubView.snp.makeConstraints { make in
                 make.top.equalTo(topSubView.snp.bottom)
                 make.width.equalToSuperview()
-                make.height.equalTo(200)
+                make.bottom.equalToSuperview()
             }
             
             let contentLabel = UILabel().then {
@@ -331,18 +330,16 @@ class ForcedExitViewController: UIViewController {
                 make.width.height.equalTo(34)
             }
         }
-        
-        forcedExitConfirmView = view
     }
     
-    // MARK: - @objc Functions
-    
-    @objc
+    // 서브뷰와 블러뷰 제거
     private func removeForcedExitConfirmView() {
         forcedExitConfirmView?.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
         visualEffectView = nil
     }
+    
+    // MARK: - @objc Functions
     
     @objc
     private func tapNextButton() {
@@ -356,6 +353,12 @@ class ForcedExitViewController: UIViewController {
         forcedExitConfirmView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+    }
+    
+    // X 버튼 클릭 시 실행
+    @objc
+    private func tapXButton() {
+        removeForcedExitConfirmView()
     }
     
     // 확인 버튼 눌렀을 때 실행 -> 채팅방 강제퇴장 API 호출
@@ -378,7 +381,6 @@ class ForcedExitViewController: UIViewController {
                     PartyAPI.forcedExitParty(partyInput) { model in
                         if let model = model {
                             // 채팅, 파티 모두 강제퇴장 완료
-                            // TODO: - 화면 전환
                             if model.code == 1000 {
                                 self.removeForcedExitConfirmView()
                                 self.navigationController?.popViewController(animated: true)
