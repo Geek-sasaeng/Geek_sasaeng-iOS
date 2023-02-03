@@ -497,11 +497,13 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapDefaultUserImage() {
-        userImageView.image = UIImage(named: "Character")
+        userImageView.image = UIImage(named: "DefaultProfileImage")
         
         visualEffectView?.removeFromSuperview()
         visualEffectView = nil
         changeProfileImageView.removeFromSuperview()
+        
+        self.activeRightBarButton()
     }
     
     @objc

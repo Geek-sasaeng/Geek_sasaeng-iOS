@@ -80,7 +80,7 @@ class ImageMessageCell: UICollectionViewCell {
             rightTimeLabel, leftTimeLabel,
             leftUnreadCntLabel, rightUnreadCntLabel
         ].forEach {
-            addSubview($0)
+            contentView.addSubview($0)
         }
         
         leftImageMessageView.addSubview(leftImageView)
@@ -150,6 +150,8 @@ class ImageMessageCell: UICollectionViewCell {
     }
     
     private func setAttributes() {
+        contentView.isUserInteractionEnabled = true
+        
         nicknameLabel.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 11))
         rightTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
         leftTimeLabel.setTextAndColorAndFont(textColor: .init(hex: 0xA8A8A8), font: .customFont(.neoMedium, size: 12))
