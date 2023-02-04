@@ -252,6 +252,9 @@ class NaverRegisterViewController: UIViewController {
     }
     
     private func setLayouts() {
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
+        
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(3)
