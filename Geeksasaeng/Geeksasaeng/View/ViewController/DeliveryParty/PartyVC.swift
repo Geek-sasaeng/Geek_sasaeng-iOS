@@ -362,6 +362,106 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     lazy var toastView: UIView? = nil
     
+    // 배달파티에서 나간 파티원은 같은 파티에 다시 참여할 수 없어요. 안내뷰
+    lazy var exitedGuideView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        $0.snp.makeConstraints { make in
+            make.width.equalTo(256)
+            make.height.equalTo(202)
+        }
+        
+        /* top View: 안내 */
+        let topSubView = UIView()
+        topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+            make.top.equalToSuperview()
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel()
+        titleLabel.text = "안내"
+        titleLabel.textColor = UIColor(hex: 0xA8A8A8)
+        titleLabel.font = .customFont(.neoMedium, size: 14)
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton()
+        cancelButton.setImage(UIImage(named: "Xmark"), for: .normal)
+        cancelButton.tintColor = UIColor(hex: 0x5B5B5B)
+        cancelButton.addTarget(self, action: #selector(tapGoMainButton), for: .touchUpInside)
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 버튼 */
+        let bottomSubView = UIView()
+        bottomSubView.backgroundColor = UIColor.white
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(152)
+            make.top.equalTo(topSubView.snp.bottom)
+        }
+        
+        let contentLabel = UILabel()
+        let lineView = UIView()
+        lazy var confirmButton = UIButton()
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        
+        /* set contentLabel */
+        contentLabel.text = "배달파티에서 나간 파티원은\n같은 파티에 다시 참여할 수 없어요."
+        contentLabel.numberOfLines = 0
+        contentLabel.textColor = .init(hex: 0x2F2F2F)
+        contentLabel.font = .customFont(.neoMedium, size: 14)
+        let attrString = NSMutableAttributedString(string: contentLabel.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.36
+        paragraphStyle.alignment = .center
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        contentLabel.attributedText = attrString
+        contentLabel.snp.makeConstraints { make in
+            make.width.equalTo(206)
+            make.height.equalTo(48)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        
+        /* set lineView */
+        lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(15)
+            make.left.right.equalToSuperview().inset(18)
+            make.height.equalTo(1.7)
+        }
+        
+        /* set confirmButton */
+        confirmButton.setTitleColor(.mainColor, for: .normal)
+        confirmButton.setTitle("메인으로 돌아가기", for: .normal)
+        confirmButton.titleLabel?.font = .customFont(.neoBold, size: 18)
+        confirmButton.addTarget(self, action: #selector(tapGoMainButton), for: .touchUpInside)
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.equalTo(137)
+            make.height.equalTo(31)
+        }
+    }
+    
     /* 네이버 지도 */
     let naverMapView = NMFNaverMapView().then {
         $0.isUserInteractionEnabled = true
@@ -384,10 +484,10 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         scrollView.delegate = self
         view.backgroundColor = .white
         
-        getDetailData()
         addSubViews()
         setLayouts()
         setAttributes()
+        getDetailData()
         startTimer()
         showToastFromCreated()
         
@@ -437,6 +537,13 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     if let self = self {
                         self.detailData = result
                         self.setDetailData()
+                        
+                        // belongStatus가 Y인데 activeStatus가 false => 나간 방장 또는 파티원
+                        if self.detailData.belongStatus == "Y" && self.detailData.activeStatus == false {
+                            self.showExitedGuideView()
+                            // rightBarButtonItem(옵션탭) 비활성화
+                            self.navigationItem.rightBarButtonItem?.isEnabled = false
+                        }
                     }
                 } else {
                     print("DEBUG: 파티 상세 조회 실패")
@@ -477,10 +584,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         setDefaultValue()
         
         guard let belongStatus = self.detailData.belongStatus else { return }
-        print("속해있는가", belongStatus)
+        guard let activeStatus = self.detailData.activeStatus else { return }
+        print("DEBUG: belongStatus, activeStatus", belongStatus, activeStatus)
         print("방장인가", self.detailData.authorStatus as Any)
         
-        if belongStatus == "Y" {
+        // belongStatus Y activeStatus true -> 방에 들어와 있는 상태
+        if belongStatus == "Y" && activeStatus {
             self.signUpButton.setTitle("채팅방 가기", for: .normal)
         } else {
             self.signUpButton.setTitle("신청하기", for: .normal)
@@ -739,14 +848,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             UIAlertAction(title: "닫기", style: .cancel)
         ].forEach{ actionSheet.addAction($0) }
         
-        // 글쓴이인데 속해있지 않다 == 나간 방장 -> 수정, 삭제 권한 비활성화
-        if self.detailData.belongStatus == "N" {
-            actionSheet.actions[0].isEnabled = false
-            actionSheet.actions[0].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
-            actionSheet.actions[1].isEnabled = false
-            actionSheet.actions[1].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
-        }
-        
         // alert 나타내기
         present(actionSheet, animated: true)
     }
@@ -766,11 +867,29 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         present(actionSheet, animated: true)
     }
     
+    /* 나간 파티원 또는 나간 방장일 경우 안내 뷰 띄우기 */
+    private func showExitedGuideView() {
+        // 배경을 흐리게, 블러뷰로 설정
+        showBlurBackground()
+        
+        // 안내뷰 띄우기
+        view.addSubview(exitedGuideView)
+        exitedGuideView.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
+    }
+    
     /* 배경의 블러뷰를 터치하면 띄워진 뷰와 블러뷰가 같이 사라지도록 */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        removeViewWithBlurView(deleteView)
-        removeViewWithBlurView(registerView)
+        if let touch = touches.first, touch.view == self.visualEffectView {
+            // view에 addSubview가 된 즉, 현재 띄워져있는 뷰인지 확인
+            if deleteView.isDescendant(of: view) {
+                removeViewWithBlurView(deleteView)
+            } else if registerView.isDescendant(of: view) {
+                removeViewWithBlurView(registerView)
+            }
+        }
     }
     
     /* 남은 시간 변경해줄 타이머 작동 */

@@ -36,4 +36,5 @@ struct DeliveryListDetailModelResult: Decodable {
     var uuid: String?
     var belongStatus: String?
     var partyChatRoomId: String?
+    var activeStatus: Bool?
 }

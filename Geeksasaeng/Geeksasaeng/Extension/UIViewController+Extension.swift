@@ -115,4 +115,17 @@ extension UIViewController {
     public func back(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    // 메인 화면으로 돌아가기
+    @objc
+    public func tapGoMainButton() {
+        // tabBarController 안의 deliveryVC에 데이터를 전달하는 방법!
+        let mainVC = TabBarController()
+        let navController = mainVC.viewControllers![0] as! UINavigationController
+        let deliveryVC = navController.topViewController as! DeliveryViewController
+        deliveryVC.dormitoryInfo = DormitoryNameResult(id: LoginModel.dormitoryId, name: LoginModel.dormitoryName)
+        
+        UIApplication.shared.windows.first?.rootViewController = mainVC
+        self.view.window?.rootViewController?.dismiss(animated: true)
+    }
 }

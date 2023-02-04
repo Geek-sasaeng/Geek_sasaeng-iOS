@@ -104,7 +104,7 @@ class UserStageViewController: UIViewController {
         $0.setTitle("배달파티 하러 가기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .customFont(.neoBold, size: 20)
-        $0.addTarget(self, action: #selector(showMainView), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(tapGoMainButton), for: .touchUpInside)
     }
     
     // MARK: - Life Cycle
@@ -267,20 +267,5 @@ class UserStageViewController: UIViewController {
             make.bottom.equalTo(goToPartyButton.snp.top).offset(-12)
             make.centerX.equalToSuperview()
         }
-    }
-    
-    // MARK: - @objc Functions
-    
-    // 배달 파티 목록 화면으로 이동
-    @objc
-    private func showMainView() {
-        // tabBarController 안의 deliveryVC에 데이터를 전달하는 방법!
-        let mainVC = TabBarController()
-        let navController = mainVC.viewControllers![0] as! UINavigationController
-        let deliveryVC = navController.topViewController as! DeliveryViewController
-        deliveryVC.dormitoryInfo = DormitoryNameResult(id: LoginModel.dormitoryId, name: LoginModel.dormitoryName)
-        
-        UIApplication.shared.windows.first?.rootViewController = mainVC
-        self.view.window?.rootViewController?.dismiss(animated: true)
     }
 }
