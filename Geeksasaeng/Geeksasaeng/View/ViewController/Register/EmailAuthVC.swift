@@ -527,18 +527,23 @@ class EmailAuthViewController: UIViewController {
             let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
-            EmailAuthViewModel.requestSendEmail(input) { model in// // 경우에 맞는 토스트 메세지 출력
-                self.authSendButton.isHidden = true
-                self.authResendButton.isHidden = false
-                self.startTimer()
-                self.remainTimeLabel.isHidden = false
-                
-                self.showToast(viewController: self, message: message, font: .customFont(.neoMedium, size: 13), color: .mainColor)
-                
-                if isSuccess {
-                    self.timer?.cancel()
-                    self.currentSeconds = 300
-                    self.startTimer()
+            EmailAuthViewModel.requestSendEmail(input) { model in
+                if let model = model {
+                    // 경우에 맞는 토스트 메세지 출력
+                    switch model.code {
+                    case 1001:
+                        self.showToast(viewController: self, message: "인증번호가 전송되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        // 타이머 시작
+                        self.timer?.cancel()
+                        self.currentSeconds = 300
+                        self.startTimer()
+                    case 2015:
+                        self.showToast(viewController: self, message: "일일 최대 전송 횟수를 초과했습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
+                    default:
+                        self.showToast(viewController: self, message: "잠시 후에 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 212, height: 40)
+                    }
+                } else {
+                    self.showToast(viewController: self, message: "잠시 후에 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 212, height: 40)
                 }
             }
         }

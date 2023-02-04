@@ -58,6 +58,11 @@ class MyActivityCollectionViewCell: UICollectionViewCell {
     }
     
     private func setLayouts() {
+        contentView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(17)
+            make.right.left.equalToSuperview()
+            make.bottom.equalToSuperview().inset(22)
+        }
         categoryLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(9)
             make.left.equalToSuperview().inset(8)
