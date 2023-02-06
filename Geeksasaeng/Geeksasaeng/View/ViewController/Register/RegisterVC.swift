@@ -11,6 +11,12 @@ import SnapKit
 import Then
 
 class RegisterViewController: UIViewController {
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var idCheck = false
+    var nicknameCheck = false
     
     // MARK: - Subviews
     
@@ -86,10 +92,6 @@ class RegisterViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
     }
     
-    // MARK: - Properties
-    
-    var idCheck = false
-    var nicknameCheck = false
     
     // MARK: - Life Cycle
     
@@ -122,19 +124,16 @@ class RegisterViewController: UIViewController {
     }
     
     private func setLayouts() {
-        let screenWidth = UIScreen.main.bounds.width
-        let screenHeight = UIScreen.main.bounds.height
-        
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
             make.height.equalTo(screenWidth / 142)
-            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5)
+            make.width.equalTo((screenWidth - 50) / 5)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         remainBar.snp.makeConstraints { make in
-            make.height.equalTo(screenWidth / 284)
+            make.height.equalTo(screenWidth / 142)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalTo(progressBar.snp.right)
             make.right.equalToSuperview().inset(screenWidth / 15.72)

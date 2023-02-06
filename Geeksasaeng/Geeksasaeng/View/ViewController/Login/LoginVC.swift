@@ -11,6 +11,14 @@ import NaverThirdPartyLogin
 import AuthenticationServices
 
 class LoginViewController: UIViewController {
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    let naverLoginVM = naverLoginViewModel()
+    var accessToken: String?
+    var dormitoryInfo: DormitoryNameResult?
+    var userImageUrl: String?
     
     // MARK: - SubViews
     
@@ -78,13 +86,6 @@ class LoginViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
     }
     
-    // MARK: - Properties
-    
-    let naverLoginVM = naverLoginViewModel()
-    var accessToken: String?
-    var dormitoryInfo: DormitoryNameResult?
-    var userImageUrl: String?
-    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -121,9 +122,6 @@ class LoginViewController: UIViewController {
     }
     
     private func setLayouts() {
-        let screenWidth = UIScreen.main.bounds.width
-        let screenHeight = UIScreen.main.bounds.height
-        
         // 스크롤뷰
         scrollView.snp.makeConstraints { make in
             make.edges.width.equalTo(view.safeAreaLayoutGuide)
