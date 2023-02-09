@@ -1158,47 +1158,49 @@ class ChattingViewController: UIViewController {
     private func tapExitConfirmButton() {
         // 방장이라면
         if self.roomInfo?.isChief ?? false {
-            // 1. 방장 채팅방 나가기
-            let chatInput = ExitChiefInput(roomId: self.roomId)
-            ChatAPI.exitChief(chatInput) { isSuccess in
+            // 1. 방장 배달 파티 나가기
+            let partyInput = ExitPartyChiefInput(partyId: self.roomInfo?.partyId)
+            PartyAPI.exitPartyChief(partyInput) { isSuccess in
                 if isSuccess {
-                    print("방장 채팅방 나가기 성공", chatInput)
-                    // 2. 방장 배달 파티 나가기
-                    let partyInput = ExitPartyChiefInput(partyId: self.roomInfo?.partyId)
-                    PartyAPI.exitPartyChief(partyInput) { isSuccess in
+                    print("DEBUG: 방장 배달파티 나가기 성공", partyInput)
+                    // 2. 방장 채팅방 나가기
+                    let chatInput = ExitChiefInput(roomId: self.roomId)
+                    ChatAPI.exitChief(chatInput) { isSuccess in
                         if isSuccess {
+                            print("DEBUG: 방장 채팅방 나가기 성공", chatInput)
                             self.navigationController?.popViewController(animated: true)
                             // 채팅 목록 VC에 토스트 메세지 띄우기
                             NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
-                            print("방장 파티 나가기 실패", partyInput)
+                            print("방장 채팅방 나가기 실패", chatInput)
+                            self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                         }
                     }
                 } else {
-                    print("방장 채팅방 나가기 실패", chatInput)
-                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
+                    print("방장 파티 나가기 실패", partyInput)
                 }
             }
         } else {
-            // 1. 파티원 채팅방 나가기
-            let chatInput = ExitMemberInput(roomId: roomId)
-            ChatAPI.exitMember(chatInput) { isSuccess in
+            // 1. 파티원 배달파티 나가기
+            let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
+            PartyAPI.exitPartyMember(partyInput) { isSuccess in
                 if isSuccess {
-                    print("파티원 채팅방 나가기 성공", chatInput)
-                    // 2. 파티원 배달파티 나가기
-                    let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
-                    PartyAPI.exitPartyMember(partyInput) { isSuccess in
+                    print("DEBUG: 파티원 배달파티 나가기 성공", partyInput)
+                    // 2. 파티원 채팅방 나가기
+                    let chatInput = ExitMemberInput(roomId: self.roomId)
+                    ChatAPI.exitMember(chatInput) { isSuccess in
                         if isSuccess {
+                            print("DEBUG: 파티원 채팅방 나가기 성공", chatInput)
                             self.navigationController?.popViewController(animated: true)
                             // 채팅 목록 VC에 토스트 메세지 띄우기
                             NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
-                            print("파티원 파티 나가기 실패", partyInput)
+                            print("DEBUG: 파티원 채팅방 나가기 실패", chatInput)
+                            self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                         }
                     }
                 } else {
-                    print("파티원 채팅방 나가기 실패", chatInput)
-                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
+                    print("파티원 파티 나가기 실패", partyInput)
                 }
             }
         }
