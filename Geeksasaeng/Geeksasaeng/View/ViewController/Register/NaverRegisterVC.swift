@@ -12,6 +12,27 @@ import Then
 // MARK: - 수정된 회원가입 Res에 맞게 수정 필요
 class NaverRegisterViewController: UIViewController {
     
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var isNicknameChecked = false
+    var isEmailSended = false
+    var isExpanded: Bool! = false
+    let tempEmailAddress = "@gachon.ac.kr"
+    
+    /* 회원가입 정보 */
+    // 밑에 건 이 화면에서 바로 생성하여 전달 -> 변수로 둘 필요 x
+    var nickNameData: String? = nil // nickNameTextField에서
+    var university: String? = nil // selectYourUnivLabel에서
+    var email: String? = nil // emailTextField에서
+    var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
+    var emailId: Int?
+    
+    // Timer
+    var currentSeconds = 300 // 남은 시간
+    var timer: DispatchSourceTimer?
+    
     // MARK: - SubViews
     
     lazy var progressBar = UIView().then {
@@ -49,14 +70,14 @@ class NaverRegisterViewController: UIViewController {
         $0.addSubview(selectYourUnivLabel)
         $0.addSubview(toggleImageView)
         selectYourUnivLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(12)
+            make.left.equalToSuperview().inset(screenWidth / 32.75)
             make.centerY.equalToSuperview()
         }
         toggleImageView.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(18)
+            make.right.equalToSuperview().inset(screenWidth / 21.83)
             make.centerY.equalToSuperview()
-            make.width.equalTo(15)
-            make.height.equalTo(8)
+            make.width.equalTo(screenWidth / 26.2)
+            make.height.equalTo(screenHeight / 106.5)
         }
     }
     
@@ -99,22 +120,22 @@ class NaverRegisterViewController: UIViewController {
             view.addSubview($0)
         }
         selectYourUnivLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(10)
-            make.left.equalToSuperview().inset(12)
+            make.top.equalToSuperview().inset(screenHeight / 85.2)
+            make.left.equalToSuperview().inset(screenWidth / 32.75)
         }
         toggleImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(17)
-            make.right.equalToSuperview().inset(18)
-            make.width.equalTo(15)
-            make.height.equalTo(8)
+            make.top.equalToSuperview().inset(screenHeight / 50.11)
+            make.right.equalToSuperview().inset(screenWidth / 21.83)
+            make.width.equalTo(screenWidth / 26.2)
+            make.height.equalTo(screenHeight / 106.5)
         }
         markUnivLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectYourUnivLabel.snp.bottom).offset(35)
-            make.left.equalToSuperview().inset(12)
+            make.top.equalTo(selectYourUnivLabel.snp.bottom).offset(screenHeight / 24.34)
+            make.left.equalToSuperview().inset(screenWidth / 32.75)
         }
         univNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(markUnivLabel.snp.bottom).offset(11)
-            make.left.equalToSuperview().inset(12)
+            make.top.equalTo(markUnivLabel.snp.bottom).offset(screenHeight / 77.45)
+            make.left.equalToSuperview().inset(screenWidth / 32.75)
         }
         view.isHidden = true
     }
@@ -189,25 +210,7 @@ class NaverRegisterViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapNextButton), for: .touchUpInside)
         $0.isEnabled = false
     }
-    
-    // MARK: - Properties
-    
-    var isNicknameChecked = false
-    var isEmailSended = false
-    var isExpanded: Bool! = false
-    let tempEmailAddress = "@gachon.ac.kr"
-    
-    /* 회원가입 정보 */
-    // 밑에 건 이 화면에서 바로 생성하여 전달 -> 변수로 둘 필요 x
-    var nickNameData: String? = nil // nickNameTextField에서
-    var university: String? = nil // selectYourUnivLabel에서
-    var email: String? = nil // emailTextField에서
-    var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
-    var emailId: Int?
-    
-    // Timer
-    var currentSeconds = 300 // 남은 시간
-    var timer: DispatchSourceTimer?
+
     
     // MARK: - Life Cycle
     
@@ -254,136 +257,135 @@ class NaverRegisterViewController: UIViewController {
     private func setLayouts() {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 50) / 3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.left.equalToSuperview().inset(25)
+            make.height.equalTo(screenWidth / 142)
+            make.width.equalTo((screenWidth - 50) / 3)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
+            make.left.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         remainBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.height.equalTo(screenWidth / 142)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.right.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         progressIcon.snp.makeConstraints { make in
-            make.width.equalTo(35)
-            make.height.equalTo(22)
-            make.top.equalTo(progressBar.snp.top).offset(-10)
-            make.left.equalTo(progressBar.snp.right).inset(15)
+            make.width.equalTo(screenWidth / 11.22)
+            make.height.equalTo(screenHeight / 38.72)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 85.2))
+            make.left.equalTo(progressBar.snp.right).inset(screenWidth / 26.2)
         }
         
         remainIcon.snp.makeConstraints { make in
-            make.width.equalTo(22)
-            make.height.equalTo(36)
-            make.top.equalTo(progressBar.snp.top).offset(-8)
-            make.right.equalTo(remainBar.snp.right).offset(3)
+            make.width.equalTo(screenWidth / 17.86)
+            make.height.equalTo(screenHeight / 23.66)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 106.5))
+            make.right.equalTo(remainBar.snp.right).offset(screenWidth / 131)
         }
         
         /* labels */
         nickNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(progressBar.snp.bottom).offset(50)
-            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(progressBar.snp.bottom).offset(screenHeight / 17.04)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
         }
         
         schoolLabel.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(108)
-            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(screenHeight / 7.88)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
         }
         
         emailLabel.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(82)
-            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(schoolLabel.snp.bottom).offset(screenHeight / 10.39)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
         }
         
         emailTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(25)
-            make.top.equalTo(emailLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.right.equalToSuperview().inset(screenWidth / 15.72)
+            make.top.equalTo(emailLabel.snp.bottom).offset(screenHeight / 56.8)
         }
         
         /* select univ */
         universitySelectView.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(41)
+            make.top.equalTo(schoolLabel.snp.bottom).offset(screenHeight / 85.2)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.height.equalTo(screenHeight / 20.78)
         }
         universityListView.snp.makeConstraints { make in
-            make.top.equalTo(schoolLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(316)
+            make.top.equalTo(schoolLabel.snp.bottom).offset(screenHeight / 85.2)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.height.equalTo(screenHeight / 2.69)
         }
         
         /* nextButton */
         nextButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(28)
-            make.bottom.equalToSuperview().inset(51)
-            make.height.equalTo(51)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.bottom.equalToSuperview().inset(screenHeight / 16.7)
+            make.height.equalTo(screenHeight / 16.7)
         }
         
         /* nickNameCheckButton */
         nickNameCheckButton.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(82)
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
+            make.top.equalTo(remainBar.snp.bottom).offset(screenHeight / 10.39)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 4.85)
+            make.height.equalTo(screenHeight / 20.78)
         }
         
         /* text fields */
         nickNameTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(15)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-(screenWidth / 24.56))
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(screenHeight / 56.8)
         }
         
         /* nickNameAvailableLabel */
         nickNameAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
-            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-(screenWidth / 24.56))
+            make.top.equalTo(nickNameTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* authSendButton */
         authSendButton.snp.makeConstraints { make in
-            make.top.equalTo(emailTextField.snp.bottom).offset(28)
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(105)
-            make.height.equalTo(41)
+            make.top.equalTo(emailTextField.snp.bottom).offset(screenHeight / 30.42)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 3.74)
+            make.height.equalTo(screenHeight / 20.78)
         }
         authResendButton.snp.makeConstraints { make in
-            make.top.equalTo(emailTextField.snp.bottom).offset(28)
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(105)
-            make.height.equalTo(41)
+            make.top.equalTo(emailTextField.snp.bottom).offset(screenHeight / 30.42)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 3.74)
+            make.height.equalTo(screenHeight / 20.78)
         }
         
         emailAddressTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalTo(authSendButton.snp.left).offset(-15)
-            make.top.equalTo(emailTextField.snp.bottom).offset(35)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.right.equalTo(authSendButton.snp.left).offset(-(screenWidth / 26.2))
+            make.top.equalTo(emailTextField.snp.bottom).offset(screenHeight / 24.34)
         }
         
         /* 인증번호 전송 */
         authNumLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(emailLabel.snp.bottom).offset(138)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.top.equalTo(emailLabel.snp.bottom).offset(screenHeight / 6.17)
         }
         authNumTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalTo(authResendButton.snp.left).offset(-15)
-            make.top.equalTo(authNumLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.right.equalTo(authResendButton.snp.left).offset(-(screenWidth / 26.2))
+            make.top.equalTo(authNumLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         authCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(105)
-            make.height.equalTo(41)
-            make.bottom.equalTo(authNumTextField.snp.bottom).offset(9)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 3.74)
+            make.height.equalTo(screenHeight / 20.78)
+            make.bottom.equalTo(authNumTextField.snp.bottom).offset(screenHeight / 94.66)
         }
         remainTimeLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(authNumTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(authNumTextField.snp.bottom).offset(screenHeight / 40.57)
         }
     }
     

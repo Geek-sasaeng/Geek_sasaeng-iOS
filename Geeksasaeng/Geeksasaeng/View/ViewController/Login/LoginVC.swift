@@ -11,6 +11,14 @@ import NaverThirdPartyLogin
 import AuthenticationServices
 
 class LoginViewController: UIViewController {
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    let naverLoginVM = naverLoginViewModel()
+    var accessToken: String?
+    var dormitoryInfo: DormitoryNameResult?
+    var userImageUrl: String?
     
     // MARK: - SubViews
     
@@ -78,13 +86,6 @@ class LoginViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapSignUpButton), for: .touchUpInside)
     }
     
-    // MARK: - Properties
-    
-    let naverLoginVM = naverLoginViewModel()
-    var accessToken: String?
-    var dormitoryInfo: DormitoryNameResult?
-    var userImageUrl: String?
-    
     // MARK: - viewDidLoad()
     
     override func viewDidLoad() {
@@ -128,64 +129,64 @@ class LoginViewController: UIViewController {
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.bottom.equalTo(signUpButton.snp.bottom).offset(30)
+            make.bottom.equalTo(signUpButton.snp.bottom).offset(screenHeight / 28.4)
         }
         
         logoImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(133)
+            make.width.height.equalTo(screenWidth / 2.95)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height / 6.83)
+            make.top.equalToSuperview().inset(screenHeight / 6.83)
         }
         
         idTextField.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
-            make.top.equalTo(logoImageView.snp.bottom).offset(UIScreen.main.bounds.height / 16.8)
-            make.left.equalTo(23)
-            make.right.equalTo(-23)
+            make.top.equalTo(logoImageView.snp.bottom).offset(screenHeight / 16.8)
+            make.left.equalTo(screenWidth / 17.08)
+            make.right.equalTo(-(screenWidth / 17.08))
         }
         
         passwordTextField.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
-            make.top.equalTo(idTextField.snp.bottom).offset(30)
-            make.left.equalTo(23)
-            make.right.equalTo(-23)
+            make.top.equalTo(idTextField.snp.bottom).offset(screenHeight / 28.4)
+            make.left.equalTo(screenWidth / 17.08)
+            make.right.equalTo(-(screenWidth / 17.08))
         }
         
         loginButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
-            make.top.equalTo(passwordTextField.snp.bottom).offset(50)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(51)
+            make.top.equalTo(passwordTextField.snp.bottom).offset(screenHeight / 17.04)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.height.equalTo(screenHeight / 16.7)
         }
         
         naverLoginButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
-            make.top.equalTo(loginButton.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(51)
+            make.top.equalTo(loginButton.snp.bottom).offset(screenHeight / 85.2)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.height.equalTo(screenHeight / 16.7)
         }
         
         appleLoginButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
-            make.top.equalTo(naverLoginButton.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(51)
+            make.top.equalTo(naverLoginButton.snp.bottom).offset(screenHeight / 85.2)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.height.equalTo(screenHeight / 16.7)
         }
         
         autoLoginLabel.snp.makeConstraints { make in
-            make.top.equalTo(appleLoginButton.snp.bottom).offset(21)
-            make.centerX.equalTo(logoImageView).offset(9.5)
+            make.top.equalTo(appleLoginButton.snp.bottom).offset(screenHeight / 40.57)
+            make.centerX.equalTo(logoImageView).offset(screenWidth / 41.36)
         }
         
         automaticLoginButton.snp.makeConstraints { make in
-            make.right.equalTo(autoLoginLabel.snp.left).offset(-5)
+            make.right.equalTo(autoLoginLabel.snp.left).offset(-(screenWidth / 78.6))
             make.centerY.equalTo(autoLoginLabel)
-            make.width.height.equalTo(15)
+            make.width.height.equalTo(screenWidth / 26.2)
         }
         
         signUpButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
-            make.top.equalTo(automaticLoginButton.snp.bottom).offset(UIScreen.main.bounds.height / 18.7)
+            make.top.equalTo(automaticLoginButton.snp.bottom).offset(screenHeight / 18.7)
         }
     }
     
