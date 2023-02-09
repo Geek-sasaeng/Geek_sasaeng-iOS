@@ -11,6 +11,12 @@ import SnapKit
 import Then
 
 class RegisterViewController: UIViewController {
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var idCheck = false
+    var nicknameCheck = false
     
     // MARK: - Subviews
     
@@ -86,10 +92,6 @@ class RegisterViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
     }
     
-    // MARK: - Properties
-    
-    var idCheck = false
-    var nicknameCheck = false
     
     // MARK: - Life Cycle
     
@@ -124,118 +126,118 @@ class RegisterViewController: UIViewController {
     private func setLayouts() {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.left.equalToSuperview().inset(25)
+            make.height.equalTo(screenWidth / 142)
+            make.width.equalTo((screenWidth - 50) / 5)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
+            make.left.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         remainBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.height.equalTo(screenWidth / 142)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.right.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         progressIcon.snp.makeConstraints { make in
-            make.width.equalTo(35)
-            make.height.equalTo(22)
-            make.top.equalTo(progressBar.snp.top).offset(-10)
-            make.left.equalTo(progressBar.snp.right).inset(15)
+            make.width.equalTo(screenWidth / 11.22)
+            make.height.equalTo(screenHeight / 38.72)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 85.2))
+            make.left.equalTo(progressBar.snp.right).inset(screenWidth / 26.2)
         }
         
         remainIcon.snp.makeConstraints { make in
-            make.width.equalTo(22)
-            make.height.equalTo(36)
-            make.top.equalTo(progressBar.snp.top).offset(-8)
-            make.right.equalTo(remainBar.snp.right).offset(3)
+            make.width.equalTo(screenWidth / 17.86)
+            make.height.equalTo(screenHeight / 23.66)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 106.5))
+            make.right.equalTo(remainBar.snp.right).offset(screenWidth / 131)
         }
         
         /* id */
         idLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(progressBar.snp.bottom).offset(50)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(progressBar.snp.bottom).offset(screenHeight / 17.04)
         }
         
         idCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.top.equalTo(remainBar.snp.bottom).offset(82)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 4.85)
+            make.height.equalTo(screenHeight / 20.78)
+            make.top.equalTo(remainBar.snp.bottom).offset(screenHeight / 10.39)
         }
         
         idTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalTo(idCheckButton.snp.left).offset(-16)
-            make.top.equalTo(idLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.right.equalTo(idCheckButton.snp.left).offset(-(screenWidth / 24.56))
+            make.top.equalTo(idLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         idAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(idTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(idTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* password */
         passwordLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(idAvailableLabel.snp.bottom).offset(31)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(idAvailableLabel.snp.bottom).offset(screenHeight / 27.48)
         }
         
         pwTextField.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(27)
-            make.top.equalTo(passwordLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         passwordAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(pwTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(pwTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* password check */
         passwordCheckLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(passwordAvailableLabel.snp.bottom).offset(31)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordAvailableLabel.snp.bottom).offset(screenHeight / 27.48)
         }
         
         pwCheckTextField.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(27)
-            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         passwordSameCheckLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(pwCheckTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(pwCheckTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* nickname */
         nickNameLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(passwordSameCheckLabel.snp.bottom).offset(31)
-        }
-        
-        nickNameCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.top.equalTo(pwCheckTextField.snp.bottom).offset(73)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordSameCheckLabel.snp.bottom).offset(screenHeight / 27.48)
         }
         
         nickNameTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-(screenWidth / 24.56))
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(screenHeight / 42.6)
+        }
+        
+        nickNameCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 4.85)
+            make.height.equalTo(screenHeight / 20)
+            make.bottom.equalTo(nickNameTextField.snp.bottom).offset(6)
         }
         
         nickNameAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(nickNameTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* nextButton */
         nextButton.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(28)
-            make.bottom.equalToSuperview().inset(51)
-            make.height.equalTo(51)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.bottom.equalToSuperview().inset(screenHeight / 16.7)
+            make.height.equalTo(screenHeight / 16.7)
         }
     }
     

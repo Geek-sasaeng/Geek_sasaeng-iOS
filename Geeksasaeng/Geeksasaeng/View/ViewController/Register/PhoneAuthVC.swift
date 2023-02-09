@@ -10,6 +10,24 @@ import SnapKit
 import Then
 
 class PhoneAuthViewController: UIViewController {
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    /* 이전 화면에서 받아온 데이터들 */
+    var idData: String? = nil
+    var pwData: String? = nil
+    var pwCheckData: String? = nil
+    var nickNameData: String? = nil
+    var university: String? = nil
+    var emailId: Int? = nil
+    var uuid: UUID? = nil
+    
+    var phoneNumberId: Int? = nil
+    
+    // Timer
+    var currentSeconds = 300 // 남은 시간
+    var timer: DispatchSourceTimer?
     
     // MARK: - SubViews
     
@@ -63,23 +81,6 @@ class PhoneAuthViewController: UIViewController {
     
     var visualEffectView: UIVisualEffectView?
     
-    // MARK: - Properties
-    
-    /* 이전 화면에서 받아온 데이터들 */
-    var idData: String? = nil
-    var pwData: String? = nil
-    var pwCheckData: String? = nil
-    var nickNameData: String? = nil
-    var university: String? = nil
-    var emailId: Int? = nil
-    var uuid: UUID? = nil
-    
-    var phoneNumberId: Int? = nil
-    
-    // Timer
-    var currentSeconds = 300 // 남은 시간
-    var timer: DispatchSourceTimer?
-    
     
     // MARK: - Life Cycle
     
@@ -131,87 +132,86 @@ class PhoneAuthViewController: UIViewController {
     private func setLayouts() {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5 * 4)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.left.equalToSuperview().inset(25)
+            make.height.equalTo(screenWidth / 142)
+            make.width.equalTo((screenWidth - 50) / 5 * 4)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
+            make.left.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         /* remain Bar */
         remainBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.height.equalTo(screenWidth / 142)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.right.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         progressIcon.snp.makeConstraints { make in
-            make.width.equalTo(35)
-            make.height.equalTo(22)
-            make.top.equalTo(progressBar.snp.top).offset(-10)
-            make.left.equalTo(progressBar.snp.right).inset(15)
+            make.width.equalTo(screenWidth / 11.22)
+            make.height.equalTo(screenHeight / 38.72)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 85.2))
+            make.left.equalTo(progressBar.snp.right).inset(screenWidth / 26.2)
         }
         
         remainIcon.snp.makeConstraints { make in
-            make.width.equalTo(22)
-            make.height.equalTo(36)
-            make.top.equalTo(progressBar.snp.top).offset(-8)
-            make.right.equalTo(remainBar.snp.right).offset(3)
+            make.width.equalTo(screenWidth / 17.86)
+            make.height.equalTo(screenHeight / 23.66)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 106.5))
+            make.right.equalTo(remainBar.snp.right).offset(screenWidth / 131)
         }
         
         /* phoneNumLabel */
         phoneNumLabel.snp.makeConstraints { make in
-            make.top.equalTo(progressBar.snp.bottom).offset(50)
-            make.left.equalToSuperview().inset(27)
+            make.top.equalTo(progressBar.snp.bottom).offset(screenHeight / 17.04)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
         }
         
         /* authLabel */
         authLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(phoneNumLabel.snp.bottom).offset(81)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(phoneNumLabel.snp.bottom).offset(screenHeight / 10.51)
         }
         
         /* phoneNumTextField */
         phoneNumTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalTo(authSendButton.snp.left).offset(-15)
-            make.top.equalTo(phoneNumLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.right.equalTo(authSendButton.snp.left).offset(-(screenWidth / 26.2))
+            make.top.equalTo(phoneNumLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         /* authTextField */
         authTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalTo(authCheckButton.snp.left).offset(-15)
-            make.top.equalTo(authLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.right.equalTo(authCheckButton.snp.left).offset(-(screenWidth / 26.2))
+            make.top.equalTo(authLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         /* authSendButton */
         authSendButton.snp.makeConstraints { make in
-            make.bottom.equalTo(phoneNumTextField.snp.bottom).offset(10)
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(105)
-            make.height.equalTo(41)
+            make.bottom.equalTo(phoneNumTextField.snp.bottom).offset(screenHeight / 85.2)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 3.74)
+            make.height.equalTo(screenHeight / 20.78)
         }
         
         /* authCheckButton */
         authCheckButton.snp.makeConstraints { make in
-            make.bottom.equalTo(authTextField.snp.bottom).offset(10)
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(105)
-            make.height.equalTo(41)
+            make.bottom.equalTo(authTextField.snp.bottom).offset(screenHeight / 85.2)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 3.74)
+            make.height.equalTo(screenHeight / 20.78)
         }
         
         /* nextButton */
         nextButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(28)
-            make.bottom.equalToSuperview().inset(51)
-            make.height.equalTo(51)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.bottom.equalToSuperview().inset(screenHeight / 16.7)
+            make.height.equalTo(screenHeight / 16.7)
         }
         
         /* remainTimeLabel */
         remainTimeLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(authTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(authTextField.snp.bottom).offset(screenHeight / 40.57)
         } // authTextField 레이아웃 초기화 이후에 레이아웃 설정해줘야 하기 때문에 일단 뒤에 배치
     }
     

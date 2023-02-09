@@ -14,6 +14,8 @@ import Then
 class DormitoryViewController: UIViewController {
     
     // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
     
     var dormitoryNameArray: [DormitoryNameResult] = [] {
         didSet {
@@ -90,36 +92,36 @@ class DormitoryViewController: UIViewController {
     
     private func setLayouts() {
         welcomeLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 17.04)
+            make.left.equalToSuperview().inset(screenWidth / 17.08)
         }
         
         questionLabel.snp.makeConstraints { make in
-            make.top.equalTo(welcomeLabel.snp.bottom).offset(68)
-            make.left.equalToSuperview().inset(28)
-            make.width.equalTo(195)
+            make.top.equalTo(welcomeLabel.snp.bottom).offset(screenHeight / 12.52)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.width.equalTo(screenWidth / 2.01)
         }
         
         guideLabel.snp.makeConstraints { make in
-            make.top.equalTo(questionLabel.snp.bottom).offset(14)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(questionLabel.snp.bottom).offset(screenHeight / 60.85)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         backgroundLogoImageView.snp.makeConstraints { make in
-            make.top.equalTo(guideLabel.snp.bottom).offset(3)
+            make.top.equalTo(guideLabel.snp.bottom).offset(screenHeight / 284)
             make.right.equalToSuperview()
         }
         
         dormitoryPickerView.snp.makeConstraints { make in
-            make.centerY.equalTo(guideLabel.snp.bottom).offset(150)
+            make.centerY.equalTo(guideLabel.snp.bottom).offset(screenHeight / 5.68)
             make.centerX.equalToSuperview()
-            make.width.equalTo(180)
+            make.width.equalTo(screenWidth / 2.18)
         }
         
         startButton.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(28)
-            make.bottom.equalToSuperview().inset(51)
-            make.height.equalTo(51)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.bottom.equalToSuperview().inset(screenHeight / 16.7)
+            make.height.equalTo(screenHeight / 16.7)
         }
     }
     
