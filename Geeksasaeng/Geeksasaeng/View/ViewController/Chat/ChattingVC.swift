@@ -1164,7 +1164,7 @@ class ChattingViewController: UIViewController {
                 if isSuccess {
                     print("방장 채팅방 나가기 성공", chatInput)
                     // 2. 방장 배달 파티 나가기
-                    let partyInput = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
+                    let partyInput = ExitPartyChiefInput(partyId: self.roomInfo?.partyId)
                     PartyAPI.exitPartyChief(partyInput) { isSuccess in
                         if isSuccess {
                             self.navigationController?.popViewController(animated: true)
