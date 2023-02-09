@@ -294,6 +294,8 @@ class ReportDetailViewController: UIViewController {
         // view에 탭 제스쳐 추가 -> 키보드 숨기려고
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
                 view.addGestureRecognizer(tapGesture)
+        
+        print("DEBUG: 어떤 사유로 사용자 신고 화면 데이터", reportCategoryLabel.text, reportCategoryId, partyId, memberId)
     }
     
     /* 뷰 생길 때 옵져버를 등록 */

@@ -16,6 +16,7 @@ class ImageMessageCell: UICollectionViewCell {
 
     // 여기서 ChattingVC의 함수를 호출하기 위한 delegate
     var delegate: PresentPopUpViewDelegate?
+    var memberId: Int?
     
     // MARK: - SubViews
     
@@ -194,7 +195,9 @@ class ImageMessageCell: UICollectionViewCell {
     @objc
     private func tapProfileImage() {
         // MARK: - 사진 채팅의 프로필 이미지가 안 와서 더미 넣어둠
-        delegate?.presentPopUpView(profileImage: (self.leftProfileImageView.image ?? UIImage(named: "GachonLogo"))!,
+        guard let memberId = self.memberId else { return }
+        delegate?.presentPopUpView(memberId: memberId,
+                                   profileImage: (self.leftProfileImageView.image ?? UIImage(named: "GachonLogo"))!,
                                    nickNameStr: self.nicknameLabel.text!)
     }
 }

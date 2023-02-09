@@ -17,14 +17,13 @@ import PhotosUI
 
 // Delegate Pattern을 통해 pushVC 구현
 protocol PushReportUserDelegate {
-    func pushReportUserVC()
+    func pushReportUserVC(memberId: Int)
 }
 
 protocol PresentPopUpViewDelegate {
-    func presentPopUpView(profileImage: UIImage, nickNameStr: String)
+    func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String)
 }
 
-// TODO: - 채팅에서 나갔습니다 토스트 메세지 추가
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
@@ -1324,6 +1323,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.text = msg.message?.nickName
+                cell.memberId = msg.message?.memberId
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
@@ -1371,6 +1371,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
                 cell.delegate = self
                 cell.nicknameLabel.text = msg.message?.nickName
+                cell.memberId = msg.message?.memberId
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
@@ -1469,18 +1470,17 @@ extension ChattingViewController: UITextViewDelegate {
 // MARK: - PushReportUserDelegate
 
 extension ChattingViewController: PushReportUserDelegate {
-    public func pushReportUserVC() {
-        // TODO: - memberId 값 넘기기
+    public func pushReportUserVC(memberId: Int) {
         guard let partyId = self.roomInfo?.partyId else { return }
-        let reportUserVC = ReportUserViewController(partyId: partyId, memberId: 1)
+        let reportUserVC = ReportUserViewController(partyId: partyId, memberId: memberId)
         self.navigationController?.pushViewController(reportUserVC, animated: true)
     }
 }
 
 extension ChattingViewController: PresentPopUpViewDelegate {
     /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
-    public func presentPopUpView(profileImage: UIImage, nickNameStr: String) {
-        let popUpView = ProfilePopUpViewController(profileImage: profileImage, nickNameStr: nickNameStr)
+    public func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String) {
+        let popUpView = ProfilePopUpViewController(memberId: memberId, profileImage: profileImage, nickNameStr: nickNameStr)
         popUpView.delegate = self
         popUpView.modalPresentationStyle = .overFullScreen
         popUpView.modalTransitionStyle = .crossDissolve
