@@ -20,6 +20,8 @@ protocol UpdateDeliveryDelegate {
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
     
     // 유저의 기숙사 정보 -> id랑 name 들어있음!
     var dormitoryInfo: DormitoryNameResult?
@@ -169,13 +171,13 @@ class DeliveryViewController: UIViewController {
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(14)
+            make.left.equalToSuperview().offset(screenWidth / 28.07)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(12)
-            make.height.equalTo(6)
-            make.centerY.equalToSuperview().offset(-1)
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
+            make.width.equalTo(screenWidth / 32.75)
+            make.height.equalTo(screenHeight / 142)
+            make.centerY.equalToSuperview().offset(-(screenHeight / screenHeight))
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(screenWidth / 56.14)
         }
     }
    
@@ -205,8 +207,8 @@ class DeliveryViewController: UIViewController {
         
         $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(15)
-            make.left.equalToSuperview().inset(14)
+            make.top.equalToSuperview().inset(screenHeight / 56.8)
+            make.left.equalToSuperview().inset(screenWidth / 28.07)
         }
     }
     
@@ -276,8 +278,8 @@ class DeliveryViewController: UIViewController {
         $0.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.width.equalTo(153)
-            make.height.equalTo(143)
+            make.width.equalTo(UIScreen.main.bounds.width / 2.56)
+            make.height.equalTo(UIScreen.main.bounds.height / 5.95)
         }
     }
     
@@ -346,99 +348,99 @@ class DeliveryViewController: UIViewController {
         
         /* Category Tap */
         deliveryPartyLabel.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(screenHeight / 42.6)
             make.centerX.equalTo(deliveryPartyBar.snp.centerX)
         }
         schoolImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(31)
+            make.width.height.equalTo(screenWidth / 12.67)
         }
         marketLabel.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(screenHeight / 42.6)
             make.centerX.equalTo(marketBar.snp.centerX)
         }
         helperLabel.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(screenHeight / 42.6)
             make.centerX.equalTo(helperBar.snp.centerX)
         }
         deliveryPartyBar.snp.makeConstraints { make in
-            make.top.equalTo(deliveryPartyLabel.snp.bottom).offset(13)
-            make.left.equalToSuperview().inset(18)
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
+            make.top.equalTo(deliveryPartyLabel.snp.bottom).offset(screenHeight / 65.53)
+            make.left.equalToSuperview().inset(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / 284)
+            make.width.equalTo(screenWidth / 3.3)
         }
         marketBar.snp.makeConstraints { make in
-            make.top.equalTo(marketLabel.snp.bottom).offset(13)
+            make.top.equalTo(marketLabel.snp.bottom).offset(screenHeight / 65.63)
             make.left.equalTo(deliveryPartyBar.snp.right)
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
+            make.height.equalTo(screenHeight / 284)
+            make.width.equalTo(screenWidth / 3.3)
         }
         helperBar.snp.makeConstraints { make in
-            make.top.equalTo(helperLabel.snp.bottom).offset(13)
+            make.top.equalTo(helperLabel.snp.bottom).offset(screenHeight / 65.53)
             make.left.equalTo(marketBar.snp.right)
-            make.right.equalToSuperview().inset(18)
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 36) / 3)
+            make.right.equalToSuperview().inset(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / 284)
+            make.width.equalTo(screenWidth / 3.3)
         }
         
         /* Ad */
         adCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(deliveryPartyBar.snp.bottom).offset(20)
+            make.top.equalTo(deliveryPartyBar.snp.bottom).offset(screenHeight / 42.6)
             make.left.right.equalToSuperview()
-            make.height.equalTo(86)
+            make.height.equalTo(screenHeight / 9.9)
         }
         
         /* Filter */
         // 인원수 필터
         filterImageView.snp.makeConstraints { make in
-            make.width.equalTo(23)
-            make.height.equalTo(15)
+            make.width.equalTo(screenWidth / 17.08)
+            make.height.equalTo(screenHeight / 56.8)
             make.centerY.equalTo(peopleFilterView.snp.centerY)
-            make.left.equalTo(adCollectionView.snp.left).offset(28)
+            make.left.equalTo(adCollectionView.snp.left).offset(screenWidth / 14.03)
         }
         peopleFilterView.snp.makeConstraints { make in
-            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
-            make.left.equalTo(filterImageView.snp.right).offset(16)
-            make.width.equalTo(101)
-            make.height.equalTo(34)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(screenHeight / 53.25)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
+            make.width.equalTo(screenWidth / 3.89)
+            make.height.equalTo(screenHeight / 25.05)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(219)
+            make.height.equalTo(screenHeight / 3.89)
             make.top.equalTo(peopleFilterView.snp.bottom)
-            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(253)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
-            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.height.equalTo(screenHeight / 3.36)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(screenHeight / 53.25)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
         }
         // 시간 필터
         timeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(peopleFilterView.snp.right).offset(9)
-            make.right.equalToSuperview().inset(9)
+            make.left.equalTo(peopleFilterView.snp.right).offset(screenWidth / 43.66)
+            make.right.equalToSuperview().inset(screenWidth / 43.66)
             make.centerY.equalTo(peopleFilterView)
-            make.height.equalTo(34)
+            make.height.equalTo(screenHeight / 25.05)
         }
         
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(screenHeight / 106.5)
         }
         
         /* Button */
         createPartyButton.snp.makeConstraints { make in
-            make.width.height.equalTo(62)
-            make.bottom.equalToSuperview().offset(-100)
-            make.right.equalToSuperview().offset(-20)
+            make.width.height.equalTo(screenWidth / 6.33)
+            make.bottom.equalToSuperview().offset(-(screenHeight / 8.52))
+            make.right.equalToSuperview().offset(-(screenWidth / 19.65))
         }
         
         /* blur view */
         blurView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(140)
+            make.height.equalTo(screenHeight / 6.08)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
@@ -756,7 +758,7 @@ class DeliveryViewController: UIViewController {
         readyView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(screenHeight / 106.5)
         }
     }
     
