@@ -14,6 +14,7 @@ class ProfilePopUpViewController: UIViewController {
     // MARK: - Properties
     
     var delegate: PushReportUserDelegate?
+    var memberId: Int?
     var profileImage: UIImage?
     var nickNameStr: String?
     
@@ -77,12 +78,14 @@ class ProfilePopUpViewController: UIViewController {
         addSubviews()
         setLayouts()
         setAttributes()
+        print("DEBUG: 프로필 팝업뷰 데이터", memberId, profileImage, nickNameStr)
     }
     
     // MARK: - Initialization
     
-    init(profileImage: UIImage, nickNameStr: String) {
+    init(memberId: Int, profileImage: UIImage, nickNameStr: String) {
         super.init(nibName: nil, bundle: nil)
+        self.memberId = memberId
         self.profileImage = profileImage
         self.nickNameStr = nickNameStr
     }
@@ -171,9 +174,11 @@ class ProfilePopUpViewController: UIViewController {
     
     @objc
     private func tapUserReportView() {
-        // present로 띄운 이 화면을 dismiss시키고
-        dismiss(animated: true)
-        // navigation을 쓴 chattingVC를 통해 ReportUserVC를 push한다!
-        delegate?.pushReportUserVC()
+        if let memberId = memberId {
+            // present로 띄운 이 화면을 dismiss시키고
+            dismiss(animated: true)
+            // navigation을 쓴 chattingVC를 통해 ReportUserVC를 push한다!
+            delegate?.pushReportUserVC(memberId: memberId)
+        }
     }
 }
