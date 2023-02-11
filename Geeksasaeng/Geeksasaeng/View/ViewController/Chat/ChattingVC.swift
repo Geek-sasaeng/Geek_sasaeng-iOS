@@ -17,14 +17,13 @@ import PhotosUI
 
 // Delegate Pattern을 통해 pushVC 구현
 protocol PushReportUserDelegate {
-    func pushReportUserVC()
+    func pushReportUserVC(memberId: Int)
 }
 
 protocol PresentPopUpViewDelegate {
-    func presentPopUpView(profileImage: UIImage, nickNameStr: String)
+    func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String)
 }
 
-// TODO: - 채팅에서 나갔습니다 토스트 메세지 추가
 class ChattingViewController: UIViewController {
     
     // MARK: - SubViews
@@ -1158,47 +1157,49 @@ class ChattingViewController: UIViewController {
     private func tapExitConfirmButton() {
         // 방장이라면
         if self.roomInfo?.isChief ?? false {
-            // 1. 방장 채팅방 나가기
-            let chatInput = ExitChiefInput(roomId: self.roomId)
-            ChatAPI.exitChief(chatInput) { isSuccess in
+            // 1. 방장 배달 파티 나가기
+            let partyInput = ExitPartyChiefInput(partyId: self.roomInfo?.partyId)
+            PartyAPI.exitPartyChief(partyInput) { isSuccess in
                 if isSuccess {
-                    print("방장 채팅방 나가기 성공", chatInput)
-                    // 2. 방장 배달 파티 나가기
-                    let partyInput = ExitPartyChiefInput(nickName: LoginModel.nickname, partyId: self.roomInfo?.partyId)
-                    PartyAPI.exitPartyChief(partyInput) { isSuccess in
+                    print("DEBUG: 방장 배달파티 나가기 성공", partyInput)
+                    // 2. 방장 채팅방 나가기
+                    let chatInput = ExitChiefInput(roomId: self.roomId)
+                    ChatAPI.exitChief(chatInput) { isSuccess in
                         if isSuccess {
+                            print("DEBUG: 방장 채팅방 나가기 성공", chatInput)
                             self.navigationController?.popViewController(animated: true)
                             // 채팅 목록 VC에 토스트 메세지 띄우기
                             NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
-                            print("방장 파티 나가기 실패", partyInput)
+                            print("방장 채팅방 나가기 실패", chatInput)
+                            self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                         }
                     }
                 } else {
-                    print("방장 채팅방 나가기 실패", chatInput)
-                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
+                    print("방장 파티 나가기 실패", partyInput)
                 }
             }
         } else {
-            // 1. 파티원 채팅방 나가기
-            let chatInput = ExitMemberInput(roomId: roomId)
-            ChatAPI.exitMember(chatInput) { isSuccess in
+            // 1. 파티원 배달파티 나가기
+            let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
+            PartyAPI.exitPartyMember(partyInput) { isSuccess in
                 if isSuccess {
-                    print("파티원 채팅방 나가기 성공", chatInput)
-                    // 2. 파티원 배달파티 나가기
-                    let partyInput = ExitPartyMemberInput(partyId: self.roomInfo?.partyId)
-                    PartyAPI.exitPartyMember(partyInput) { isSuccess in
+                    print("DEBUG: 파티원 배달파티 나가기 성공", partyInput)
+                    // 2. 파티원 채팅방 나가기
+                    let chatInput = ExitMemberInput(roomId: self.roomId)
+                    ChatAPI.exitMember(chatInput) { isSuccess in
                         if isSuccess {
+                            print("DEBUG: 파티원 채팅방 나가기 성공", chatInput)
                             self.navigationController?.popViewController(animated: true)
                             // 채팅 목록 VC에 토스트 메세지 띄우기
                             NotificationCenter.default.post(name: NSNotification.Name("CompleteExit"), object: nil)
                         } else {
-                            print("파티원 파티 나가기 실패", partyInput)
+                            print("DEBUG: 파티원 채팅방 나가기 실패", chatInput)
+                            self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
                         }
                     }
                 } else {
-                    print("파티원 채팅방 나가기 실패", chatInput)
-                    self.showToast(viewController: self, message: "채팅방 나가기가 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 250)
+                    print("파티원 파티 나가기 실패", partyInput)
                 }
             }
         }
@@ -1322,6 +1323,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.text = msg.message?.nickName
+                cell.memberId = msg.message?.memberId
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
@@ -1369,6 +1371,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
                 cell.delegate = self
                 cell.nicknameLabel.text = msg.message?.nickName
+                cell.memberId = msg.message?.memberId
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
@@ -1467,18 +1470,17 @@ extension ChattingViewController: UITextViewDelegate {
 // MARK: - PushReportUserDelegate
 
 extension ChattingViewController: PushReportUserDelegate {
-    public func pushReportUserVC() {
-        // TODO: - memberId 값 넘기기
+    public func pushReportUserVC(memberId: Int) {
         guard let partyId = self.roomInfo?.partyId else { return }
-        let reportUserVC = ReportUserViewController(partyId: partyId, memberId: 1)
+        let reportUserVC = ReportUserViewController(partyId: partyId, memberId: memberId)
         self.navigationController?.pushViewController(reportUserVC, animated: true)
     }
 }
 
 extension ChattingViewController: PresentPopUpViewDelegate {
     /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
-    public func presentPopUpView(profileImage: UIImage, nickNameStr: String) {
-        let popUpView = ProfilePopUpViewController(profileImage: profileImage, nickNameStr: nickNameStr)
+    public func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String) {
+        let popUpView = ProfilePopUpViewController(memberId: memberId, profileImage: profileImage, nickNameStr: nickNameStr)
         popUpView.delegate = self
         popUpView.modalPresentationStyle = .overFullScreen
         popUpView.modalTransitionStyle = .crossDissolve

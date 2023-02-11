@@ -42,6 +42,7 @@ class ReportUserViewController: UIViewController {
         setAttributes()
         addSubViews()
         setLayouts()
+        print("DEBUG: 유저 신고 화면 데이터", partyId, memberId)
     }
     
     // MARK: - Initialization

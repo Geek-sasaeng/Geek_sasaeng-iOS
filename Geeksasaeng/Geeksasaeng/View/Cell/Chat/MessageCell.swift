@@ -15,6 +15,7 @@ class MessageCell: UICollectionViewCell {
     
     // 여기서 ChattingVC의 함수를 호출하기 위한 delegate
     var delegate: PresentPopUpViewDelegate?
+    var memberId: Int?
     
     // MARK: - SubViews
     
@@ -185,7 +186,9 @@ class MessageCell: UICollectionViewCell {
     /* 상대 유저 프로필 클릭시 실행 -> ChattingVC에서 팝업뷰를 띄워준다 */
     @objc
     private func tapProfileImage() {
-        delegate?.presentPopUpView(profileImage: self.leftImageView.image!,
+        guard let memberId = self.memberId else { return }
+        delegate?.presentPopUpView(memberId: memberId,
+                                   profileImage: self.leftImageView.image!,
                                    nickNameStr: self.nicknameLabel.text!)
     }
 }

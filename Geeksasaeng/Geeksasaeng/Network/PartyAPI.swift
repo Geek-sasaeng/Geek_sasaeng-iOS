@@ -27,7 +27,6 @@ struct JoinPartyModelResult: Decodable {
 
 /* 배달파티 방장 삭제 및 교체 */
 struct ExitPartyChiefInput: Encodable {
-    var nickName: String?
     var partyId: Int?
 }
 struct ExitPartyChiefModel: Decodable {
