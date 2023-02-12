@@ -95,6 +95,13 @@ class ForcedExitViewController: UIViewController {
             if isSuccess {
                 if let resultArray = resultArray {
                     self.memberInfoList = resultArray
+                    
+                    if let count = self.memberInfoList?.count {
+                        self.countNumLabel.text = "0/\(count) 명"
+                    } else {
+                        self.countNumLabel.text = "0/\(0) 명"
+                    }
+                    
                     self.userTableView.reloadData()
                 }
             } else {
@@ -111,12 +118,6 @@ class ForcedExitViewController: UIViewController {
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
-        
-        if let count = memberInfoList?.count {
-            countNumLabel.text = "0/\(count) 명"
-        } else {
-            countNumLabel.text = "0/\(0) 명"
-        }
     }
     
     private func setTableView() {
@@ -426,6 +427,12 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ForcedExitTableViewCell.identifier, for: indexPath) as? ForcedExitTableViewCell else { return UITableViewCell() }
         let row = memberInfoList?[indexPath.row]
+        
+        // 송금을 완료한 유저면 체크박스 없애고, 셀 클릭 못하도록 설정
+        if row?.accountTransferStatus == "Y" {
+            cell.checkBox.isHidden = true
+            cell.isUserInteractionEnabled = false
+        }
         
         let profileImgUrl = URL(string: row?.userProfileImgUrl ?? "")
         cell.userProfileImage.kf.setImage(with: profileImgUrl)

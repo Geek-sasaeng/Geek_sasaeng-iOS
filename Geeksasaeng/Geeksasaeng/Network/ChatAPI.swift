@@ -152,6 +152,7 @@ struct InfoForForcedExitModelResult: Decodable {
     var chatMemberId: String?
     var userName: String?
     var userProfileImgUrl: String?
+    var accountTransferStatus: String?
 }
 
 /* 채팅방 강제 퇴장 */
