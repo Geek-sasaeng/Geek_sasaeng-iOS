@@ -12,6 +12,19 @@ import Then
 import NMapsMap
 
 class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var isSettedOptions = false // 옵션이 모두 설정되었는지
+    var isEditedContentsTextView = false // 내용이 수정되었는지
+    
+    var dormitoryInfo: DormitoryNameResult?
+    var delegate: UpdateDeliveryDelegate?
+    
+    /* 네이버 지도 마커 */
+    var naverMarker = NMFMarker()
 
     // MARK: - SubViews
     
@@ -118,16 +131,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         $0.layer.cornerRadius = 5
     }
     
-    
-    // MARK: - Properties
-    var isSettedOptions = false // 옵션이 모두 설정되었는지
-    var isEditedContentsTextView = false // 내용이 수정되었는지
-    
-    var dormitoryInfo: DormitoryNameResult?
-    var delegate: UpdateDeliveryDelegate?
-    
-    /* 네이버 지도 마커 */
-    var naverMarker = NMFMarker()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -365,105 +368,105 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         // 스크롤뷰
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.width.equalTo(UIScreen.main.bounds.width)
+            make.width.equalTo(screenWidth)
         }
         
         // 컨텐츠뷰
         contentView.snp.makeConstraints { (make) in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height)
+            make.height.equalTo(screenHeight)
         }
         
         eatTogetherButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(37)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalToSuperview().inset(screenHeight / 23.02)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         titleTextField.snp.makeConstraints { make in
-            make.top.equalTo(eatTogetherButton.snp.bottom).offset(11)
-            make.left.equalToSuperview().inset(28)
-            make.width.equalTo(314)
-            make.height.equalTo(45)
+            make.top.equalTo(eatTogetherButton.snp.bottom).offset(screenHeight / 77.45)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.width.equalTo(screenWidth / 1.25)
+            make.height.equalTo(screenHeight / 18.93)
         }
         
         contentsTextView.snp.makeConstraints { make in
-            make.top.equalTo(titleTextField.snp.bottom).offset(16)
-            make.left.equalToSuperview().inset(38)
-            make.width.equalTo(294)
-            make.height.equalTo(157)
+            make.top.equalTo(titleTextField.snp.bottom).offset(screenHeight / 53.25)
+            make.left.equalToSuperview().inset(screenWidth / 10.34)
+            make.width.equalTo(screenWidth / 1.33)
+            make.height.equalTo(screenHeight / 5.42)
         }
         
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(contentsTextView.snp.bottom).offset(16)
-            make.height.equalTo(8)
+            make.top.equalTo(contentsTextView.snp.bottom).offset(screenHeight / 53.25)
+            make.height.equalTo(screenHeight / 106.5)
             make.width.equalToSuperview()
         }
         
         orderForecastTimeLabel.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(31)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 27.48)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         matchingPersonLabel.snp.makeConstraints { make in
-            make.top.equalTo(orderForecastTimeLabel.snp.bottom).offset(38)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(orderForecastTimeLabel.snp.bottom).offset(screenHeight / 22.42)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         categoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(matchingPersonLabel.snp.bottom).offset(38)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(matchingPersonLabel.snp.bottom).offset(screenHeight / 22.42)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         urlLabel.snp.makeConstraints { make in
-            make.top.equalTo(categoryLabel.snp.bottom).offset(38)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(categoryLabel.snp.bottom).offset(screenHeight / 22.42)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         locationLabel.snp.makeConstraints { make in
-            make.top.equalTo(urlLabel.snp.bottom).offset(38)
-            make.left.equalToSuperview().inset(28)
+            make.top.equalTo(urlLabel.snp.bottom).offset(screenHeight / 22.42)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
         }
         
         orderForecastTimeButton.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(20)
-            make.left.equalTo(orderForecastTimeLabel.snp.right).offset(45)
-            make.width.equalTo(188)
-            make.height.equalTo(38)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 42.6)
+            make.left.equalTo(orderForecastTimeLabel.snp.right).offset(screenWidth / 8.73)
+            make.width.equalTo(screenWidth / 2.09)
+            make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedPersonLabel.snp.makeConstraints { make in
-            make.top.equalTo(orderForecastTimeButton.snp.bottom).offset(16)
+            make.top.equalTo(orderForecastTimeButton.snp.bottom).offset(screenHeight / 53.25)
             make.left.equalTo(orderForecastTimeButton.snp.left)
-            make.width.equalTo(188)
-            make.height.equalTo(38)
+            make.width.equalTo(screenWidth / 2.09)
+            make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedCategoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedPersonLabel.snp.bottom).offset(16)
+            make.top.equalTo(selectedPersonLabel.snp.bottom).offset(screenHeight / 53.25)
             make.left.equalTo(orderForecastTimeButton.snp.left)
-            make.width.equalTo(188)
-            make.height.equalTo(38)
+            make.width.equalTo(screenWidth / 2.09)
+            make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedUrlLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(16)
+            make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(screenHeight / 53.25)
             make.left.equalTo(orderForecastTimeButton.snp.left)
-            make.width.equalTo(188)
-            make.height.equalTo(38)
+            make.width.equalTo(screenWidth / 2.09)
+            make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedLocationLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedUrlLabel.snp.bottom).offset(16)
+            make.top.equalTo(selectedUrlLabel.snp.bottom).offset(screenHeight / 53.25)
             make.left.equalTo(orderForecastTimeButton.snp.left)
-            make.width.equalTo(188)
-            make.height.equalTo(38)
+            make.width.equalTo(screenWidth / 2.09)
+            make.height.equalTo(screenHeight / 22.42)
         }
         
         naverMapView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(28)
-            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(16)
-            make.left.right.equalToSuperview().inset(23)
-            make.height.equalTo(205)
+            make.top.equalTo(selectedLocationLabel.snp.bottom).offset(screenHeight / 53.25)
+            make.left.right.equalToSuperview().inset(screenWidth / 17.08)
+            make.height.equalTo(screenHeight / 4.15)
         }
     }
     
