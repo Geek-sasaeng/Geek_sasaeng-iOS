@@ -86,8 +86,12 @@ class ForcedExitViewController: UIViewController {
     
     // 강제퇴장 뷰를 위한 채팅 참여자들 정보 불러오기
     private func getUsersInfo() {
+        MyLoadingView.shared.show()
+        
         let input = InfoForForcedExitInput(partyId: self.partyId, roomId: self.roomId)
         ChatAPI.getInfoForForcedExit(input: input) { isSuccess, resultArray in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 if let resultArray = resultArray {
                     self.memberInfoList = resultArray
@@ -364,6 +368,8 @@ class ForcedExitViewController: UIViewController {
     // 확인 버튼 눌렀을 때 실행 -> 채팅방 강제퇴장 API 호출
     @objc
     private func tapExitConfirmButton() {
+        MyLoadingView.shared.show()
+        
         let selectedChatMemberIdList = selectedMemberInfoList.map { infoList in
             infoList.chatMemberId ?? ""
         }
@@ -373,6 +379,8 @@ class ForcedExitViewController: UIViewController {
         
         let input = ForcedExitInput(removedChatMemberIdList: selectedChatMemberIdList, roomId: self.roomId!)
         ChatAPI.forcedExitChat(input) { model in
+            MyLoadingView.shared.hide()
+            
             print(input)
             if let model = model {
                 if model.code == 1000 {

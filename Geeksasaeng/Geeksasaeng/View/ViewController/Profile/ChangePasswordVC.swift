@@ -188,12 +188,16 @@ class ChangePasswordViewController: UIViewController {
     
     @objc
     private func tapRightBarButton() {
+        MyLoadingView.shared.show()
+        
         let input = EditPasswordInput(
             checkNewPassword: self.checkPassword,
             newPassword: self.password
         )
         
         UserInfoAPI.editPassword(input) { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 // 0번째 인덱스(= 프로필 VC) 화면으로 이동
                 let controller = self.navigationController?.viewControllers[0]

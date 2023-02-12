@@ -173,6 +173,8 @@ class BankAccountViewController: UIViewController {
               let bank = CreateParty.bank,
               let accountNumber = CreateParty.accountNumber else { return }
         
+        MyLoadingView.shared.show()
+        
         let input = CreatePartyInput(
             title: title,
             content: content,
@@ -190,6 +192,8 @@ class BankAccountViewController: UIViewController {
         
         /* 배달 파티 생성 API 호출 */
         CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { [self] isSuccess, model in
+            MyLoadingView.shared.hide()
+            
             // 배달파티 생성 성공
             if isSuccess {
                 guard let model = model,

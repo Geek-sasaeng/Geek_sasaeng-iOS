@@ -450,6 +450,8 @@ class ReportDetailEtcViewController: UIViewController {
     /* 하단의 신고하기 버튼을 눌렀을 때 실행되는 함수 -> 신고 제출, 신고하기 성패 안내 */
     @objc
     private func tapReportButton() {
+        MyLoadingView.shared.show()
+        
         guard let reportCategoryId = reportCategoryId else { return }
         
         print("reportCategoryId: ", reportCategoryId)
@@ -457,6 +459,8 @@ class ReportDetailEtcViewController: UIViewController {
         if reportCategoryId < 5 {
             let input = ReportPartyInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedDeliveryPartyId: partyId, reportedMemberId: memberId)
             ReportAPI.requestReportParty(input) { isSuccess, resultMessage in
+                MyLoadingView.shared.hide()
+                
                 // 블러뷰 세팅
                 self.visualEffectView = self.setDarkBlurView()
                 
@@ -472,6 +476,8 @@ class ReportDetailEtcViewController: UIViewController {
         } else {    // 사용자 신고일 때
             let input = ReportMemberInput(block: isBlock, reportCategoryId: self.reportCategoryId, reportContent: reportTextView.text, reportedMemberId: memberId)
             ReportAPI.requestReportMember(input) { isSuccess, resultMessage in
+                MyLoadingView.shared.hide()
+                
                 // 블러뷰 세팅
                 self.visualEffectView = self.setDarkBlurView()
                 

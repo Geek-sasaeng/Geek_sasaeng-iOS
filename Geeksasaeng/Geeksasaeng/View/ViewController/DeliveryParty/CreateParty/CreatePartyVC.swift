@@ -166,8 +166,11 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Functions
     
     private func setMapView() {
+        MyLoadingView.shared.show()
         /* 기숙사 좌표 불러오기 */
         LocationAPI.getLocation(dormitoryInfo?.id ?? 1) { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 /* 수령 장소로 지도 카메라 이동, 마커 표시 */
                 if let latitude = CreateParty.latitude,

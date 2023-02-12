@@ -420,7 +420,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func getUserInfo() {
+        MyLoadingView.shared.show()
+        
         UserInfoAPI.getUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 self.nicknameLabel.text = result.nickname
                 self.universityLabel.text = result.universityName
@@ -434,8 +438,12 @@ class ProfileViewController: UIViewController {
     
     // 나의 활동 3개 데이터 보여주기
     private func getUserActivities() {
+        MyLoadingView.shared.show()
+        
         // 목록의 최상단 3개를 가져와서 보여준다
         UserInfoAPI.getMyActivityList(cursor: 0) { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             // 활동 내역이 있냐 없냐에 따라 맞는 뷰 띄워주기
             if let parties = result?.endedDeliveryPartiesVoList {
                 if parties.count == 0 { // 활동 내역이 없을 때
@@ -716,10 +724,14 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapLogoutConfirmButton() {
+        MyLoadingView.shared.show()
+        
         UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
         naverLoginVM.resetToken() // delete naver login token
         
         LoginAPI.logout { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 print("DEBUG: 로그아웃 완료")
                 
@@ -735,8 +747,12 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapWithdrawalMembershipConfirmButton() {
+        MyLoadingView.shared.show()
+        
         let input = MemberDeleteInput(checkPassword: "apple123!", password: "apple123!")
         UserInfoAPI.deleteMember(input, memberId: LoginModel.memberId!) { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 print("DEBUG: 회원 탈퇴 완료")
                 

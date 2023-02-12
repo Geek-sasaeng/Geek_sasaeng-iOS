@@ -480,8 +480,6 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        /* 더미 데이터 */
-        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -607,8 +605,12 @@ class ChattingViewController: UIViewController {
     
     // 채팅방 상세조회 API 호출
     private func getRoomInfo() {
+        MyLoadingView.shared.show()
+        
         print("DEBUG: [1] getRoomInfo")
         ChatAPI.getChattingRoomInfo(ChattingRoomInput(chatRoomId: roomId)) { result in
+            MyLoadingView.shared.hide()
+            
             // 조회 성공 시
             if let res = result {
                 print("DEBUG: 채팅방 \(self.roomId!)의 상세 정보", res)
@@ -1551,6 +1553,8 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
             
             let sheet = UIAlertController(title: "사진 전송", message: "선택한 사진을 전송하시겠어요?", preferredStyle: .alert)
             sheet.addAction(UIAlertAction(title: "전송", style: .default, handler: { _ in
+                MyLoadingView.shared.show()
+                
                 let input = ChatImageSendInput(
                     chatId: "none",
                     chatRoomId: self.roomId,
@@ -1561,6 +1565,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in
+                    MyLoadingView.shared.hide()
                     if isSuccess {
                         print("이미지 전송 성공")
                     } else {

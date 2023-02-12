@@ -228,7 +228,7 @@ class ActivityListViewController: UIViewController {
         // 푸터뷰(= 데이터 받아올 때 테이블뷰 맨 아래 새로고침 표시 뜨는 거) 생성
         self.activityTableView.tableFooterView = createSpinnerFooter()
         
-        /* 필터에 따른 배달목록 불러오기 API 요청 */
+        /* 나의 활동 목록 불러오기 API 요청 */
         UserInfoAPI.getMyActivityList(cursor: cursor) { [weak self] isSuccess, result in
             if isSuccess {
                 guard let result = result,

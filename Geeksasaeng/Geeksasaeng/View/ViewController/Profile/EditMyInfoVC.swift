@@ -386,8 +386,12 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setUserInfo() {
+        MyLoadingView.shared.show()
+        
         /* textfield로 변경 */
         UserInfoAPI.getEditUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 let url = URL(string: result.imgUrl!)
                 self.userImageView.kf.setImage(with: url)
@@ -521,12 +525,16 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapEditConfirmButton() {
+        MyLoadingView.shared.show()
+        
         let input = EditUserInput (
             dormitoryId: self.dormitoryId,
             nickname: self.nickname
         )
         
         UserInfoAPI.editUser(input, imageData: userImageView.image!) { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()
@@ -552,16 +560,20 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         if sender == nicknameCheckButton { // 닉네임 중복 확인 버튼일 경우
             guard let isValidNickname = nicknameDataTextField.text?.isValidNickname() else { return }
             if isValidNickname { // validation 적합한 경우 -> 닉네임 중복 확인 API 호출
+                MyLoadingView.shared.show()
+                
                 guard let newNickname = nicknameDataTextField.text else { return }
                 let input = NickNameRepetitionInput(nickName: newNickname)
                 RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
+                    MyLoadingView.shared.hide()
+                    
                     switch isSuccess {
                     case .success:
                         self.nickname = newNickname
                         self.showToast(viewController: self, message: "사용 가능한 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                         self.activeRightBarButton()
                     case .onlyRequestSuccess:
-                        self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        self.showToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     case .failure:
                         self.showToast(viewController: self, message: "중복되는 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }

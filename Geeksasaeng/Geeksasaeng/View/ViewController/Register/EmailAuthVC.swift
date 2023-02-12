@@ -488,6 +488,7 @@ class EmailAuthViewController: UIViewController {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            MyLoadingView.shared.show()
             authSendButton.setDeactivatedButton()   // 비활성화
             
             print("DEBUG: ", email+emailAddress, univ)
@@ -496,6 +497,8 @@ class EmailAuthViewController: UIViewController {
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(input) { model in
+                MyLoadingView.shared.hide()
+                
                 if let model = model {
                     // 경우에 맞는 토스트 메세지 출력
                     switch model.code {
@@ -522,6 +525,8 @@ class EmailAuthViewController: UIViewController {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            MyLoadingView.shared.show()
+            
             authSendButton.setDeactivatedButton()   // 비활성화
             
             print("DEBUG: ", email+emailAddress, univ)
@@ -530,6 +535,8 @@ class EmailAuthViewController: UIViewController {
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(input) { model in
+                MyLoadingView.shared.hide()
+                
                 if let model = model {
                     // 경우에 맞는 토스트 메세지 출력
                     switch model.code {
@@ -556,9 +563,13 @@ class EmailAuthViewController: UIViewController {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let authNum = authNumTextField.text {
+            MyLoadingView.shared.show()
+            
             let email = email + emailAddress
             print("DEBUG: ", email, authNum)
             EmailAuthCheckViewModel.requestCheckEmailAuth(EmailAuthCheckInput(email: email, key: authNum)) { isSuccess, emailId in
+                MyLoadingView.shared.hide()
+                
                 if isSuccess {
                     self.emailId = emailId
                     self.nextButton.setActivatedNextButton()
@@ -589,4 +600,4 @@ class EmailAuthViewController: UIViewController {
     }
 }
 
-// TODO: - 리팩토링: authResendButton 필요한지 생각해보고 삭제
+// TODO: - 리팩토링: authResendButton 필요한지 생각해보고 삭제 -> ?
