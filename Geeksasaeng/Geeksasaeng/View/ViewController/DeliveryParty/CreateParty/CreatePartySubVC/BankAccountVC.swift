@@ -221,6 +221,9 @@ class BankAccountViewController: UIViewController {
                     guard let result = result else { return }
                     if isSuccess {
                         print("DEBUG: 채팅방 생성 성공 \(result)")
+                        
+                        // 파티가 생성됐으니 배달파티 목록 리로드
+                        delegate?.updateDeliveryList()
                     } else {
                         print("DEBUG: 채팅방 생성 실패 \(result)")
                     }
