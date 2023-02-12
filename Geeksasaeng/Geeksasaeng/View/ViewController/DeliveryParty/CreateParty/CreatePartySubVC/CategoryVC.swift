@@ -9,6 +9,14 @@ import UIKit
 import SnapKit
 
 class CategoryViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var selectedCategory: UIButton?
+    var data: String?
+    
     // MARK: - SubViews
     /* titleLabel: 카테고리 선택 */
     let titleLabel = UILabel().then {
@@ -81,9 +89,6 @@ class CategoryViewController: UIViewController {
         $0.textColor = UIColor(hex: 0xD8D8D8)
     }
     
-    // MARK: - Properties
-    var selectedCategory: UIButton?
-    var data: String?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -103,8 +108,8 @@ class CategoryViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
-            make.width.equalTo(304)
-            make.height.equalTo(405)
+            make.width.equalTo(screenWidth / 1.29)
+            make.height.equalTo(screenHeight / 2.1)
         }
     }
     
@@ -130,73 +135,73 @@ class CategoryViewController: UIViewController {
     
     private func setLayouts() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(29)
+            make.top.equalToSuperview().offset(screenHeight / 29.37)
             make.centerX.equalToSuperview()
         }
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
+            make.left.equalToSuperview().inset(screenWidth / 12.67)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.width.equalTo(262)
-            make.height.equalTo(51)
-            make.bottom.equalToSuperview().inset(35)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 16.7)
+            make.bottom.equalToSuperview().inset(screenHeight / 24.34)
             make.centerX.equalToSuperview()
         }
         
         pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(nextButton.snp.bottom).offset(10)
+            make.top.equalTo(nextButton.snp.bottom).offset(screenHeight / 85.2)
             make.centerX.equalToSuperview()
         }
         
         [korean, western, chinese, japanese, snack, chicken, rawfish, fastfood, dessert, etc].forEach {
             $0.snp.makeConstraints { make in
-                make.width.equalTo(126)
-                make.height.equalTo(38)
+                make.width.equalTo(screenWidth / 3.11)
+                make.height.equalTo(screenHeight / 22.42)
             }
         }
         
         [korean, chinese, snack, rawfish, dessert].forEach {
             $0.snp.makeConstraints { make in
-                make.left.equalToSuperview().inset(21)
+                make.left.equalToSuperview().inset(screenWidth / 18.71)
             }
         }
         
         [western, japanese, chicken, fastfood, etc].forEach {
             $0.snp.makeConstraints { make in
-                make.right.equalToSuperview().inset(21)
+                make.right.equalToSuperview().inset(screenWidth / 18.71)
             }
         }
         
         [korean, western].forEach {
             $0.snp.makeConstraints { make in
-                make.top.equalTo(titleLabel.snp.bottom).offset(23)
+                make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 37.04)
             }
         }
         
         [chinese, japanese].forEach {
             $0.snp.makeConstraints { make in
-                make.top.equalTo(korean.snp.bottom).offset(7)
+                make.top.equalTo(korean.snp.bottom).offset(screenHeight / 121.71)
             }
         }
         
         [snack, chicken].forEach {
             $0.snp.makeConstraints { make in
-                make.top.equalTo(chinese.snp.bottom).offset(7)
+                make.top.equalTo(chinese.snp.bottom).offset(screenHeight / 121.71)
             }
         }
         
         [rawfish, fastfood].forEach {
             $0.snp.makeConstraints { make in
-                make.top.equalTo(snack.snp.bottom).offset(7)
+                make.top.equalTo(snack.snp.bottom).offset(screenHeight / 121.71)
             }
         }
         
         [dessert, etc].forEach {
             $0.snp.makeConstraints { make in
-                make.top.equalTo(rawfish.snp.bottom).offset(7)
+                make.top.equalTo(rawfish.snp.bottom).offset(screenHeight / 121.71)
             }
         }
     }
