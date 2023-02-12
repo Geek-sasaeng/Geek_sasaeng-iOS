@@ -10,6 +10,26 @@ import SnapKit
 
 class AgreementViewController: UIViewController {
     
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    /* 이전 화면에서 받아온 데이터들 */
+    var pwCheckData: String? = nil
+    var emailId: Int? = nil
+    var idData: String? = nil
+    var nickNameData: String? = nil
+    var pwData: String? = nil
+    var phoneNumberId: Int? = nil
+    var university: String? = nil
+    
+    var isFromNaverRegister = false
+    var accessToken: String?
+    var email: String?
+    
+    var isAgreeTermsOfUse = false
+    var isAgreePersonalInfo = false
+    
     // MARK: - SubViews
     
     var progressBar: UIView = {
@@ -105,23 +125,6 @@ class AgreementViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Properties
-    
-    /* 이전 화면에서 받아온 데이터들 */
-    var pwCheckData: String? = nil
-    var emailId: Int? = nil
-    var idData: String? = nil
-    var nickNameData: String? = nil
-    var pwData: String? = nil
-    var phoneNumberId: Int? = nil
-    var university: String? = nil
-    
-    var isFromNaverRegister = false
-    var accessToken: String?
-    var email: String?
-    
-    var isAgreeTermsOfUse = false
-    var isAgreePersonalInfo = false
     
     // MARK: - viewDidLoad()
     
@@ -181,90 +184,89 @@ class AgreementViewController: UIViewController {
     private func setLayouts() {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.width.equalTo(UIScreen.main.bounds.width - 67)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.left.equalToSuperview().inset(25)
+            make.height.equalTo(screenWidth / 142)
+            make.width.equalTo(screenWidth / 1.2)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
+            make.left.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         /* remain Bar */
         remainBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.height.equalTo(screenWidth / 142)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.right.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         progressIcon.snp.makeConstraints { make in
-            make.width.equalTo(25)
-            make.height.equalTo(16)
-            make.top.equalTo(progressBar.snp.top).offset(-4)
-            make.right.equalTo(remainIcon.snp.right).offset(-6)
+            make.width.equalTo(screenWidth / 15.72)
+            make.height.equalTo(screenHeight / 53.25)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 213))
+            make.right.equalTo(remainIcon.snp.right).offset(-(screenWidth / 65.5))
         }
         
         remainIcon.snp.makeConstraints { make in
-            make.width.equalTo(18)
-            make.height.equalTo(31)
-            make.top.equalTo(progressIcon.snp.top).offset(-2.19)
+            make.width.equalTo(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / 27.48)
+            make.top.equalTo(progressIcon.snp.top).offset(-(screenHeight / 389.04))
             make.right.equalTo(remainBar.snp.right)
         }
         
         welcomeLabel.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(183)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(remainBar.snp.bottom).offset(screenHeight / 4.65)
+            make.left.equalToSuperview().inset(screenWidth / 17.08)
         }
         
         wholeAgreementCheckBox.snp.makeConstraints { make in
-            make.top.equalTo(welcomeLabel.snp.bottom).offset(106)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(welcomeLabel.snp.bottom).offset(screenHeight / 8.03)
+            make.left.equalToSuperview().inset(screenWidth / 17.08)
         }
         
         wholeAgreementButton.snp.makeConstraints { make in
-            make.top.equalTo(wholeAgreementCheckBox.snp.top).offset(-5)
-            make.left.equalTo(wholeAgreementCheckBox.snp.right).offset(9)
+            make.top.equalTo(wholeAgreementCheckBox.snp.top).offset(-(screenHeight / 170.4))
+            make.left.equalTo(wholeAgreementCheckBox.snp.right).offset(screenWidth / 43.66)
         }
         
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(wholeAgreementButton.snp.bottom).offset(30)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1)
+            make.top.equalTo(wholeAgreementButton.snp.bottom).offset(screenHeight / 28.4)
+            make.left.right.equalToSuperview().inset(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / screenHeight)
         }
         
         termsOfUseAgreementCheckBox.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(39)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 21.84)
+            make.left.equalToSuperview().inset(screenWidth / 17.08)
         }
         
         termsOfUseAgreementButton.snp.makeConstraints { make in
-            make.top.equalTo(termsOfUseAgreementCheckBox.snp.top).offset(-5)
-            make.left.equalTo(termsOfUseAgreementCheckBox.snp.right).offset(9)
+            make.top.equalTo(termsOfUseAgreementCheckBox.snp.top).offset(-(screenHeight / 170.4))
+            make.left.equalTo(termsOfUseAgreementCheckBox.snp.right).offset(screenWidth / 43.66)
         }
         
         personalInfoAgreementCheckBox.snp.makeConstraints { make in
-            make.top.equalTo(termsOfUseAgreementButton.snp.bottom).offset(44)
-            make.left.equalToSuperview().inset(23)
+            make.top.equalTo(termsOfUseAgreementButton.snp.bottom).offset(screenHeight / 19.36)
+            make.left.equalToSuperview().inset(screenWidth / 17.08)
         }
         
         personalInfoAgreementButton.snp.makeConstraints { make in
-            make.top.equalTo(personalInfoAgreementCheckBox.snp.top).offset(-5)
-            make.left.equalTo(personalInfoAgreementCheckBox.snp.right).offset(9)
+            make.top.equalTo(personalInfoAgreementCheckBox.snp.top).offset(-(screenHeight / 170.4))
+            make.left.equalTo(personalInfoAgreementCheckBox.snp.right).offset(screenWidth / 43.66)
         }
         
         termsOfUseAgreementArrow.snp.makeConstraints { make in
-            make.top.equalTo(termsOfUseAgreementButton.snp.top).offset(5)
-            make.right.equalToSuperview().inset(32)
+            make.top.equalTo(termsOfUseAgreementButton.snp.top).offset(screenHeight / 170.4)
+            make.right.equalToSuperview().inset(screenWidth / 12.28)
         }
         
         personalInfoAgreementArrow.snp.makeConstraints { make in
-            make.top.equalTo(personalInfoAgreementButton.snp.top).offset(5)
-            make.right.equalToSuperview().inset(32)
+            make.top.equalTo(personalInfoAgreementButton.snp.top).offset(screenHeight / 170.4)
+            make.right.equalToSuperview().inset(screenWidth / 12.28)
         }
         
         completeButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.right.equalToSuperview().inset(28)
-            make.bottom.equalToSuperview().inset(51)
-            make.height.equalTo(51)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.bottom.equalToSuperview().inset(screenHeight / 16.7)
+            make.height.equalTo(screenHeight / 16.7)
         }
     }
     
