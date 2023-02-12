@@ -1021,11 +1021,19 @@ class ChattingViewController: UIViewController {
         guard let roomId = self.roomId else { return }
         let orderCompletedInput = OrderCompletedInput(roomId: roomId)
         
-        ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
-            if isSuccess {
-                self.orderCompletedView.removeFromSuperview()
+        ChatAPI.orderCompleted(orderCompletedInput) { model in
+            if let model = model {
+                if model.code == 1000 {
+                    self.orderCompletedView.removeFromSuperview()
+                }else if model.code == 2409 || model.code == 2410 {
+                    // 매칭 마감이 아직 안 된 상태에서 주문완료를 하려는 경우
+                    self.showToast(viewController: self, message: "매칭 마감을 먼저 해주세요!", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                } else {
+                    self.showToast(viewController: self, message: "주문완료에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                }
+            } else {
+                self.showToast(viewController: self, message: "주문완료에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
             }
-            // TODO: - 실패 시 토스트 필요
         }
     }
     

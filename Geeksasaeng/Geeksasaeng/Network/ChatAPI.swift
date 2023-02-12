@@ -302,7 +302,7 @@ class ChatAPI {
     }
     
     /* 방장의 주문완료 */
-    public static func orderCompleted(_ parameter: OrderCompletedInput, completion: @escaping (Bool) -> Void) {
+    public static func orderCompleted(_ parameter: OrderCompletedInput, completion: @escaping (OrderCompletedModel?) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/order"
         AF.request(URL, method: .patch, parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
@@ -312,14 +312,13 @@ class ChatAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("주문완료 처리 성공")
-                    completion(true)
                 } else {
                     print("DEBUG: ", result.message!)
-                    completion(false)
                 }
+                completion(result)
             case .failure(let error):
                 print("DEBUG: ", error.localizedDescription)
-                completion(false)
+                completion(nil)
             }
         }   
     }
