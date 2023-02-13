@@ -12,6 +12,17 @@ import Then
 import NMapsMap
 
 class ReceiptPlaceViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    let geocoder = CLGeocoder()
+    var latitude: Double? // 현재 위도
+    var longitude: Double? // 현재 경도
+    var marker = NMFMarker() // 마커
+    var address: String? // 좌표의 주소
+    
     // MARK: - SubViews
     /* titleLabel: 수령 장소 */
     let titleLabel = UILabel().then {
@@ -41,8 +52,8 @@ class ReceiptPlaceViewController: UIViewController {
     
     let customView = UIView().then {
         $0.snp.makeConstraints { make in
-            make.width.equalTo(150)
-            make.height.equalTo(30)
+            make.width.equalTo(UIScreen.main.bounds.width / 2.62)
+            make.height.equalTo(UIScreen.main.bounds.height / 28.4)
         }
         
         let button = UIButton().then {
@@ -79,14 +90,6 @@ class ReceiptPlaceViewController: UIViewController {
         $0.font = .customFont(.neoMedium, size: 13)
         $0.textColor = UIColor(hex: 0xD8D8D8)
     }
-    
-    // MARK: - Properties
-//    var mapView: MTMapView?
-    let geocoder = CLGeocoder()
-    var latitude: Double? // 현재 위도
-    var longitude: Double? // 현재 경도
-    var marker = NMFMarker() // 마커
-    var address: String? // 좌표의 주소
     
     
     // MARK: - Life Cycle
@@ -147,8 +150,8 @@ class ReceiptPlaceViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
-            make.width.equalTo(304)
-            make.height.equalTo(405)
+            make.width.equalTo(screenWidth / 1.29)
+            make.height.equalTo(screenHeight / 2.1)
         }
     }
     
@@ -160,43 +163,43 @@ class ReceiptPlaceViewController: UIViewController {
     
     private func setLayouts() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(29)
+            make.top.equalToSuperview().offset(screenHeight / 29.37)
             make.centerX.equalToSuperview()
         }
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
+            make.left.equalToSuperview().inset(screenWidth / 12.67)
         }
         
         searchTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(24)
-            make.left.equalToSuperview().inset(29)
-            make.width.equalTo(210)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.left.equalToSuperview().inset(screenWidth / 13.55)
+            make.width.equalTo(screenWidth / 1.87)
         }
         
         searchButton.snp.makeConstraints { make in
             make.top.equalTo(searchTextField.snp.top)
-            make.left.equalTo(searchTextField.snp.right).offset(18)
-            make.width.height.equalTo(30)
+            make.left.equalTo(searchTextField.snp.right).offset(screenWidth / 21.83)
+            make.width.height.equalTo(screenWidth / 13.1)
         }
         
         naverMapView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(106)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 8.03)
             make.centerX.equalToSuperview()
-            make.width.equalTo(262)
-            make.height.equalTo(144)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 5.91)
         }
         
         confirmButton.snp.makeConstraints { make in
-            make.width.equalTo(262)
-            make.height.equalTo(51)
-            make.bottom.equalToSuperview().inset(35)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 16.7)
+            make.bottom.equalToSuperview().inset(screenHeight / 24.34)
             make.centerX.equalToSuperview()
         }
         
         pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(confirmButton.snp.bottom).offset(10)
+            make.top.equalTo(confirmButton.snp.bottom).offset(screenHeight / 85.2)
             make.centerX.equalToSuperview()
         }
     }

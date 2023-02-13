@@ -10,6 +10,11 @@ import SnapKit
 import Then
 
 class OrderForecastTimeViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     // MARK: - SubViews
     /* titleLabel: 주문 예정 시간 */
     let titleLabel = UILabel().then {
@@ -85,8 +90,8 @@ class OrderForecastTimeViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
-            make.width.equalTo(304)
-            make.height.equalTo(405)
+            make.width.equalTo(screenWidth / 1.29)
+            make.height.equalTo(screenHeight / 2.1)
         }
     }
     
@@ -128,29 +133,29 @@ class OrderForecastTimeViewController: UIViewController {
     
     private func setLayouts() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(29)
+            make.top.equalToSuperview().offset(screenHeight / 29.37)
             make.centerX.equalToSuperview()
         }
         
         dateTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(94)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 9.06)
             make.centerX.equalToSuperview()
         }
         
         timeTextField.snp.makeConstraints { make in
-            make.top.equalTo(dateTextField.snp.bottom).offset(17)
+            make.top.equalTo(dateTextField.snp.bottom).offset(screenHeight / 50.11)
             make.centerX.equalToSuperview()
         }
         
         nextButton.snp.makeConstraints { make in
-            make.width.equalTo(262)
-            make.height.equalTo(51)
-            make.bottom.equalToSuperview().inset(35)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 16.7)
+            make.bottom.equalToSuperview().inset(screenHeight / 24.34)
             make.centerX.equalToSuperview()
         }
         
         pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(nextButton.snp.bottom).offset(10)
+            make.top.equalTo(nextButton.snp.bottom).offset(screenHeight / 85.2)
             make.centerX.equalToSuperview()
         }
     }

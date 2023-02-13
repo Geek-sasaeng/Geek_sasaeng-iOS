@@ -13,6 +13,17 @@ import SnapKit
 import Then
 
 class BankAccountViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var dormitoryInfo: DormitoryNameResult?
+    
+    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
+    var delegate: UpdateDeliveryDelegate?
+    let db = Firestore.firestore()
+    let settings = FirestoreSettings()
 
     // MARK: - SubViews
     
@@ -70,14 +81,6 @@ class BankAccountViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapConfirmButton), for: .touchUpInside)
     }
     
-    // MARK: - Properties
-    
-    var dormitoryInfo: DormitoryNameResult?
-    
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
-    var delegate: UpdateDeliveryDelegate?
-    let db = Firestore.firestore()
-    let settings = FirestoreSettings()
     
     // MARK: - Life Cycle
     
@@ -107,8 +110,8 @@ class BankAccountViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
-            make.width.equalTo(304)
-            make.height.equalTo(343)
+            make.width.equalTo(screenWidth / 1.29)
+            make.height.equalTo(screenHeight / 2.48)
         }
     }
     
@@ -123,31 +126,31 @@ class BankAccountViewController: UIViewController {
     
     private func setLayouts() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(29)
+            make.top.equalToSuperview().offset(screenHeight / 29.37)
             make.centerX.equalToSuperview()
         }
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
+            make.left.equalToSuperview().inset(screenWidth / 12.67)
         }
         
         bankTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(37)
-            make.left.equalToSuperview().inset(29)
-            make.width.equalTo(248)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 23.02)
+            make.left.equalToSuperview().inset(screenWidth / 13.55)
+            make.width.equalTo(screenWidth / 1.58)
         }
         accountNumberTextField.snp.makeConstraints { make in
-            make.top.equalTo(bankTextField.snp.bottom).offset(30)
-            make.left.equalToSuperview().inset(29)
-            make.width.equalTo(248)
+            make.top.equalTo(bankTextField.snp.bottom).offset(screenHeight / 28.4)
+            make.left.equalToSuperview().inset(screenWidth / 13.55)
+            make.width.equalTo(screenWidth / 1.58)
         }
         
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(35)
-            make.width.equalTo(262)
-            make.height.equalTo(51)
+            make.bottom.equalToSuperview().inset(screenHeight / 24.34)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 16.7)
         }
     }
     
