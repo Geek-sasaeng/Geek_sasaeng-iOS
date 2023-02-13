@@ -276,6 +276,14 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // 계좌번호 label
+    lazy var accountLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAccountLabel)))
+    }
+    
     // 송금하기 상단 뷰 (Firestore의 participant의 isRemittance 값이 false인 경우에만 노출)
     lazy var remittanceView = UIView().then { view in
         view.backgroundColor = .init(hex: 0xF6F9FB)
@@ -283,12 +291,6 @@ class ChattingViewController: UIViewController {
         
         let coinImageView = UIImageView().then {
             $0.image = UIImage(named: "RemittanceIcon")
-        }
-        
-        let accountLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 14)
-            $0.textColor = .init(hex: 0x2F2F2F)
-            $0.text = "\(self.roomInfo?.bank ?? "은행")  \(self.roomInfo?.accountNumber ?? "000-0000-0000-00")"
         }
         
         let remittanceConfirmButton = UIButton().then {
@@ -624,6 +626,7 @@ class ChattingViewController: UIViewController {
                 // 방장이 아니고, 아직 송금을 안 했다면 송금완료 뷰 띄우기
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
                     self.showTopView(view: self.remittanceView)
+                    self.accountLabel.text = "\(self.roomInfo?.bank ?? "은행")  \(self.roomInfo?.accountNumber ?? "000-0000-0000-00")"
                 } else if (self.roomInfo!.isChief! && !(self.roomInfo!.isOrderFinish!)) {  // 방장이고 주문 완료 안 했다면 주문완료 뷰 띄우기
                     self.showTopView(view: self.orderCompletedView)
                 }
@@ -1001,6 +1004,14 @@ class ChattingViewController: UIViewController {
             sendMessage(input: input)
         }
     }
+    
+    /* 계좌번호 label 클릭 -> 계좌번호 클립보드에 복사, 토스트 띄우기 */
+    @objc
+    private func tapAccountLabel() {
+        UIPasteboard.general.string = accountLabel.text?.replacingOccurrences(of: "-", with: "")
+        self.showBottomToast(viewController: self, message: "클립보드에 복사되었습니다", font: .customFont(.neoMedium, size: 13), color: .lightGray)
+    }
+    
     
     /* 송금 완료 버튼 클릭 */
     @objc
