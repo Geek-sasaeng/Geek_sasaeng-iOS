@@ -10,6 +10,11 @@ import SnapKit
 import Then
 
 class UrlViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
     let titleLabel = UILabel().then {
@@ -81,7 +86,6 @@ class UrlViewController: UIViewController {
         $0.textColor = UIColor(hex: 0xD8D8D8)
     }
     
-    // MARK: - Properties
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -103,8 +107,8 @@ class UrlViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
-            make.width.equalTo(304)
-            make.height.equalTo(405)
+            make.width.equalTo(screenWidth / 1.29)
+            make.height.equalTo(screenHeight / 2.1)
         }
     }
     
@@ -118,57 +122,57 @@ class UrlViewController: UIViewController {
     
     private func setLayouts() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(29)
+            make.top.equalToSuperview().offset(screenHeight / 29.37)
             make.centerX.equalToSuperview()
         }
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
+            make.left.equalToSuperview().inset(screenWidth / 12.67)
         }
         
         urlTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(24)
-            make.left.equalToSuperview().inset(48)
-            make.width.equalTo(210)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.left.equalToSuperview().inset(screenWidth / 8.18)
+            make.width.equalTo(screenWidth / 1.87)
         }
         
         urlTextFieldArrow.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(67)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 12.71)
             make.centerX.equalToSuperview()
         }
         
         urlExplainLabel.snp.makeConstraints { make in
-            make.top.equalTo(urlTextFieldArrow.snp.bottom).offset(4)
+            make.top.equalTo(urlTextFieldArrow.snp.bottom).offset(screenHeight / 213)
             make.centerX.equalToSuperview()
         }
         
         urlExampleLabel.snp.makeConstraints { make in
-            make.top.equalTo(urlExplainLabel.snp.bottom).offset(4)
+            make.top.equalTo(urlExplainLabel.snp.bottom).offset(screenHeight / 213)
             make.left.equalTo(urlExplainLabel.snp.left)
         }
         
         urlImageView.snp.makeConstraints { make in
-            make.top.equalTo(urlTextField.snp.bottom).offset(38)
-            make.right.equalToSuperview().inset(39)
-            make.width.equalTo(144)
-            make.height.equalTo(124)
+            make.top.equalTo(urlTextField.snp.bottom).offset(screenHeight / 22.42)
+            make.right.equalToSuperview().inset(screenWidth / 10.07)
+            make.width.equalTo(screenWidth / 2.72)
+            make.height.equalTo(screenHeight / 6.87)
         }
         
         passButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(nextButton.snp.top).offset(-33)
+            make.bottom.equalTo(nextButton.snp.top).offset(-(screenHeight / 25.81))
         }
         
         nextButton.snp.makeConstraints { make in
-            make.width.equalTo(262)
-            make.height.equalTo(51)
-            make.bottom.equalToSuperview().inset(35)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 16.7)
+            make.bottom.equalToSuperview().inset(screenHeight / 24.34)
             make.centerX.equalToSuperview()
         }
         
         pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(nextButton.snp.bottom).offset(10)
+            make.top.equalTo(nextButton.snp.bottom).offset(screenHeight / 85.2)
             make.centerX.equalToSuperview()
         }
     }

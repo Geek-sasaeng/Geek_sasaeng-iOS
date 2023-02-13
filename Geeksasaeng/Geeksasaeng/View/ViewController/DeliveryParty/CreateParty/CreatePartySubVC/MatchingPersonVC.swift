@@ -10,6 +10,14 @@ import SnapKit
 import Then
 
 class MatchingPersonViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var pickerViewData = ["2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명"]
+    var data: String? // CreateParty 전역 변수에 저장할 데이터
+    
     // MARK: - SubViews
     /* titleLabel: 매칭 인원 선택 */
     let titleLabel = UILabel().then {
@@ -45,9 +53,6 @@ class MatchingPersonViewController: UIViewController {
     
     let personPickerView = UIPickerView()
     
-    // MARK: - Properties
-    var pickerViewData = ["2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명"]
-    var data: String? // CreateParty 전역 변수에 저장할 데이터
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -66,8 +71,8 @@ class MatchingPersonViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
         view.snp.makeConstraints { make in
-            make.width.equalTo(304)
-            make.height.equalTo(405)
+            make.width.equalTo(screenWidth / 1.29)
+            make.height.equalTo(screenHeight / 2.1)
         }
     }
     
@@ -79,29 +84,29 @@ class MatchingPersonViewController: UIViewController {
     
     private func setLayouts() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(29)
+            make.top.equalToSuperview().offset(screenHeight / 29.37)
             make.centerX.equalToSuperview()
         }
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.top)
-            make.left.equalToSuperview().inset(31)
+            make.left.equalToSuperview().inset(screenWidth / 12.67)
         }
         
         personPickerView.snp.makeConstraints { make in
-            make.width.height.equalTo(180)
+            make.width.height.equalTo(screenWidth / 2.18)
             make.center.equalToSuperview()
         }
         
         nextButton.snp.makeConstraints { make in
-            make.width.equalTo(262)
-            make.height.equalTo(51)
-            make.bottom.equalToSuperview().inset(35)
+            make.width.equalTo(screenWidth / 1.5)
+            make.height.equalTo(screenHeight / 16.7)
+            make.bottom.equalToSuperview().inset(screenHeight / 24.34)
             make.centerX.equalToSuperview()
         }
         
         pageLabel.snp.makeConstraints { make in
-            make.top.equalTo(nextButton.snp.bottom).offset(10)
+            make.top.equalTo(nextButton.snp.bottom).offset(screenHeight / 85.2)
             make.centerX.equalToSuperview()
         }
     }

@@ -16,6 +16,8 @@ import Kingfisher
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
     
     var partyId: Int?
     var detailData = DeliveryListDetailModelResult()
@@ -172,8 +174,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 5
         $0.snp.makeConstraints { make in
-            make.width.equalTo(256)
-            make.height.equalTo(202)
+            make.width.equalTo(screenWidth / 1.53)
+            make.height.equalTo(screenHeight / 4.21)
         }
         
         /* top View: 삭제하기 */
@@ -181,9 +183,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
-            make.width.equalToSuperview()
-            make.height.equalTo(50)
-            make.top.equalToSuperview()
+            make.top.width.equalToSuperview()
+            make.height.equalTo(screenHeight / 17.04)
         }
         
         /* set titleLabel */
@@ -204,9 +205,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.width.equalTo(20)
-            make.height.equalTo(12)
-            make.right.equalToSuperview().offset(-15)
+            make.width.equalTo(screenWidth / 19.65)
+            make.height.equalTo(screenHeight / 71)
+            make.right.equalToSuperview().offset(-(screenWidth / 26.2))
         }
         
         /* bottom View: contents, 확인 버튼 */
@@ -215,7 +216,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(152)
+            make.height.equalTo(screenHeight / 5.6)
             make.top.equalTo(topSubView.snp.bottom)
         }
         
@@ -239,18 +240,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
-            make.width.equalTo(176)
-            make.height.equalTo(48)
+            make.width.equalTo(screenWidth / 2.23)
+            make.height.equalTo(screenHeight / 17.75)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
+            make.top.equalToSuperview().inset(screenHeight / 42.6)
         }
         
         /* set lineView */
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(15)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1.7)
+            make.top.equalTo(contentLabel.snp.bottom).offset(screenHeight / 56.8)
+            make.left.right.equalToSuperview().inset(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / 501.17)
         }
         
         /* set confirmButton */
@@ -260,8 +261,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.addTarget(self, action: #selector(tapDeleteConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(18)
-            make.width.height.equalTo(34)
+            make.top.equalTo(lineView.snp.bottom).offset(screenHeight / 47.33)
+            make.width.height.equalTo(screenWidth / 11.55)
         }
     }
     
@@ -271,8 +272,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
-            make.width.equalTo(256)
-            make.height.equalTo(178)
+            make.width.equalTo(screenWidth / 1.53)
+            make.height.equalTo(screenHeight / 4.78)
         }
         
         /* top View: 파티 신청하기 */
@@ -281,7 +282,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.width.equalToSuperview()
-            make.height.equalTo(50)
+            make.height.equalTo(screenHeight / 17.04)
         }
         
         /* set titleLabel */
@@ -301,9 +302,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.width.equalTo(20)
-            make.height.equalTo(12)
-            make.right.equalToSuperview().offset(-15)
+            make.width.equalTo(screenWidth / 19.65)
+            make.height.equalTo(screenHeight / 71)
+            make.right.equalToSuperview().offset(-(screenWidth / 26.2))
         }
         
         /* bottom View: contents, 확인 버튼 */
@@ -313,7 +314,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(128)
+            make.height.equalTo(screenHeight / 6.65)
         }
         
         let contentLabel = UILabel()
@@ -337,15 +338,15 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
+            make.top.equalToSuperview().inset(screenHeight / 42.6)
         }
         
         /* set lineView */
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(16)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1.7)
+            make.top.equalTo(contentLabel.snp.bottom).offset(screenHeight / 53.25)
+            make.left.right.equalToSuperview().inset(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / 501.176)
         }
         
         /* set confirmButton */
@@ -355,8 +356,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.addTarget(self, action: #selector(tapRegisterConfirmButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(18)
-            make.width.height.equalTo(34)
+            make.top.equalTo(lineView.snp.bottom).offset(screenHeight / 47.33)
+            make.width.height.equalTo(screenWidth / 11.55)
         }
     }
     
@@ -368,8 +369,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
-            make.width.equalTo(256)
-            make.height.equalTo(202)
+            make.width.equalTo(screenWidth / 1.53)
+            make.height.equalTo(screenHeight / 4.21)
         }
         
         /* top View: 안내 */
@@ -377,9 +378,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.backgroundColor = UIColor(hex: 0xF8F8F8)
         $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
-            make.width.equalToSuperview()
-            make.height.equalTo(50)
-            make.top.equalToSuperview()
+            make.top.width.equalToSuperview()
+            make.height.equalTo(screenHeight / 17.04)
         }
         
         /* set titleLabel */
@@ -400,9 +400,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.width.equalTo(20)
-            make.height.equalTo(12)
-            make.right.equalToSuperview().offset(-15)
+            make.width.equalTo(screenWidth / 19.65)
+            make.height.equalTo(screenHeight / 71)
+            make.right.equalToSuperview().offset(-(screenWidth / 26.2))
         }
         
         /* bottom View: contents, 버튼 */
@@ -411,7 +411,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(152)
+            make.height.equalTo(screenHeight / 5.6)
             make.top.equalTo(topSubView.snp.bottom)
         }
         
@@ -435,18 +435,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
-            make.width.equalTo(206)
-            make.height.equalTo(48)
+            make.width.equalTo(screenWidth / 1.9)
+            make.height.equalTo(screenHeight / 17.75)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
+            make.top.equalToSuperview().inset(screenHeight / 42.6)
         }
         
         /* set lineView */
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(15)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1.7)
+            make.top.equalTo(contentLabel.snp.bottom).offset(screenHeight / 56.8)
+            make.left.right.equalToSuperview().inset(screenWidth / 21.83)
+            make.height.equalTo(screenHeight / 501.176)
         }
         
         /* set confirmButton */
@@ -456,9 +456,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.addTarget(self, action: #selector(tapGoMainButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(18)
-            make.width.equalTo(137)
-            make.height.equalTo(31)
+            make.top.equalTo(lineView.snp.bottom).offset(screenHeight / 47.33)
+            make.width.equalTo(screenWidth / 2.86)
+            make.height.equalTo(screenHeight / 27.48)
         }
     }
     
@@ -670,12 +670,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         // 스크롤뷰
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.width.equalTo(UIScreen.main.bounds.width)
+            make.width.equalTo(screenWidth)
         }
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.bottom.equalTo(naverMapView.snp.bottom).offset(55 + 20)
+            make.bottom.equalTo(naverMapView.snp.bottom).offset(screenHeight / 11.36)
         }
         
         // 신청하기 뷰를 고정시켜 놓을 컨테이너 뷰
@@ -683,80 +683,80 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             make.bottom.width.equalToSuperview()
             // 컨테이너뷰 높이 = 탭바 높이 + 매칭 상태바 높이
             if let tabBarCont = tabBarController {
-                make.height.equalTo(tabBarCont.tabBar.bounds.height + 55)
+                make.height.equalTo(tabBarCont.tabBar.bounds.height + (screenHeight / 15.49))
             }
         }
         
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(20)
-            make.left.equalToSuperview().inset(23)
-            make.width.height.equalTo(26)
+            make.top.equalToSuperview().inset(screenHeight / 42.6)
+            make.left.equalToSuperview().inset(screenWidth / 17.08)
+            make.width.height.equalTo(screenWidth / 15.11)
         }
         
         stageLabel.snp.makeConstraints { make in
-            make.left.equalTo(profileImageView.snp.right).offset(8)
+            make.left.equalTo(profileImageView.snp.right).offset(screenWidth / 49.12)
             make.centerY.equalTo(profileImageView.snp.centerY)
         }
         
         nickNameLabel.snp.makeConstraints { make in
-            make.left.equalTo(stageLabel.snp.right).offset(5)
+            make.left.equalTo(stageLabel.snp.right).offset(screenWidth / 78.6)
             make.centerY.equalTo(stageLabel.snp.centerY)
         }
         
         postingTimeLabel.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(23)
+            make.right.equalToSuperview().inset(screenWidth / 17.08)
             make.centerY.equalTo(nickNameLabel.snp.centerY)
         }
         
         hashTagLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(24)
-            make.top.equalTo(profileImageView.snp.bottom).offset(22)
+            make.left.equalToSuperview().inset(screenWidth / 16.37)
+            make.top.equalTo(profileImageView.snp.bottom).offset(screenHeight / 38.72)
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(24)
-            make.top.equalTo(hashTagLabel.snp.bottom).offset(9)
+            make.left.equalToSuperview().inset(screenWidth / 16.375)
+            make.top.equalTo(hashTagLabel.snp.bottom).offset(screenHeight / 94.66)
         }
         
         contentLabel.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(23)
-            make.top.equalTo(titleLabel.snp.bottom).offset(14)
+            make.left.right.equalToSuperview().inset(screenWidth / 17.08)
+            make.top.equalTo(titleLabel.snp.bottom).offset(screenHeight / 60.85)
         }
         
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(34)
-            make.height.equalTo(8)
+            make.top.equalTo(contentLabel.snp.bottom).offset(screenHeight / 25.05)
+            make.height.equalTo(screenHeight / 106.5)
             make.width.equalToSuperview()
         }
         
         orderLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(separateView.snp.bottom).offset(31)
-            make.width.equalTo(78)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 27.48)
+            make.width.equalTo(screenWidth / 5.03)
         }
         
         matchingLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(orderLabel.snp.bottom).offset(24)
-            make.width.equalTo(78)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.top.equalTo(orderLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.width.equalTo(screenWidth / 5.03)
         }
         
         categoryLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(matchingLabel.snp.bottom).offset(24)
-            make.width.equalTo(78)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.top.equalTo(matchingLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.width.equalTo(screenWidth / 5.03)
         }
         
         storeLinkLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(categoryLabel.snp.bottom).offset(24)
-            make.width.equalTo(78)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.top.equalTo(categoryLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.width.equalTo(screenWidth / 5.03)
         }
         
         pickupLocationLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(28)
-            make.top.equalTo(storeLinkLabel.snp.bottom).offset(24)
-            make.width.equalTo(78)
+            make.left.equalToSuperview().inset(screenWidth / 14.03)
+            make.top.equalTo(storeLinkLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.width.equalTo(screenWidth / 5.03)
         }
         
         orderReserveLabel.snp.makeConstraints { make in
@@ -785,35 +785,35 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         naverMapView.snp.makeConstraints { make in
-            make.top.equalTo(pickupLocationLabel.snp.bottom).offset(24)
-            make.left.right.equalToSuperview().inset(23)
-            make.height.equalTo(205)
+            make.top.equalTo(pickupLocationLabel.snp.bottom).offset(screenHeight / 35.5)
+            make.left.right.equalToSuperview().inset(screenWidth / 17.08)
+            make.height.equalTo(screenHeight / 4.15)
         }
         
         matchingStatusView.snp.makeConstraints { make in
             // 탭바 높이만큼 떨어뜨려 놓는다
             if let tabBarCont = tabBarController {
                 make.bottom.equalToSuperview().inset(tabBarCont.tabBar.bounds.height)
-                make.height.equalTo(55)
+                make.height.equalTo(screenHeight / 15.49)
                 make.width.equalToSuperview()
             }
         }
         
         matchingDataWhiteLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(29)
+            make.left.equalToSuperview().inset(screenWidth / 13.55)
             make.centerY.equalTo(matchingStatusView.snp.centerY)
         }
         remainTimeLabel.snp.makeConstraints { make in
-            make.left.equalTo(matchingDataWhiteLabel.snp.right).offset(45)
+            make.left.equalTo(matchingDataWhiteLabel.snp.right).offset(screenWidth / 8.73)
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
         }
         signUpButton.snp.makeConstraints { make in
-            make.right.equalTo(arrowImageView.snp.left).offset(-11)
+            make.right.equalTo(arrowImageView.snp.left).offset(-(screenWidth / 35.72))
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
         }
         arrowImageView.snp.makeConstraints { make in
             make.centerY.equalTo(matchingDataWhiteLabel.snp.centerY)
-            make.right.equalToSuperview().inset(29)
+            make.right.equalToSuperview().inset(screenWidth / 13.55)
         }
         
     }
@@ -969,20 +969,20 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             [toastLabel, cancelButton, goChatButton]
                 .forEach { view.addSubview($0) }
             toastLabel.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(24)
+                make.top.equalToSuperview().inset(screenHeight / 35.5)
                 make.centerX.equalToSuperview()
             }
             cancelButton.snp.makeConstraints { make in
-                make.top.equalToSuperview().inset(12)
-                make.right.equalToSuperview().inset(6)
-                make.width.equalTo(20)
-                make.height.equalTo(15)
+                make.top.equalToSuperview().inset(screenHeight / 71)
+                make.right.equalToSuperview().inset(screenWidth / 65.5)
+                make.width.equalTo(screenWidth / 19.65)
+                make.height.equalTo(screenHeight / 56.8)
             }
             goChatButton.snp.makeConstraints { make in
                 make.centerX.equalToSuperview()
-                make.top.equalTo(toastLabel.snp.bottom).offset(9)
-                make.width.equalTo(72)
-                make.height.equalTo(19)
+                make.top.equalTo(toastLabel.snp.bottom).offset(screenHeight / 94.66)
+                make.width.equalTo(screenWidth / 5.45)
+                make.height.equalTo(screenHeight / 44.84)
             }
             
             return view
@@ -993,8 +993,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         toastView!.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.width.equalTo(246)
-            make.height.equalTo(93)
+            make.width.equalTo(screenWidth / 1.59)
+            make.height.equalTo(screenHeight / 9.16)
         }
         
         // 3초 뒤에 사라지도록 타이머 설정
