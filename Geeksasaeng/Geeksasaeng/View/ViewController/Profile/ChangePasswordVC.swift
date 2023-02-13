@@ -120,7 +120,7 @@ class ChangePasswordViewController: UIViewController {
     private func setLayouts() {
         passwordLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(23)
-            make.top.equalToSuperview().inset(119)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
         }
         passwordDataTextField.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(28)
