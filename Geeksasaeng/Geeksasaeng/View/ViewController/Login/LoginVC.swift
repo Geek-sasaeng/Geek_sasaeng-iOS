@@ -276,7 +276,7 @@ class LoginViewController: UIViewController {
         
         let navController = tabBarController.viewControllers![0] as! UINavigationController
         let deliveryVC = navController.topViewController as! DeliveryViewController
-        deliveryVC.dormitoryInfo = dormitoryInfo
+        deliveryVC.dormitoryInfo = dormitoryInfo ?? DormitoryNameResult(id: 1, name: "제1기숙사")
         deliveryVC.userImageUrl = userImageUrl
         
         tabBarController.modalTransitionStyle = .crossDissolve

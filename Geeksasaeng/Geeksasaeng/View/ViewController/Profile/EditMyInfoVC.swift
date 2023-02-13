@@ -561,9 +561,14 @@ class EditMyInfoViewController: UIViewController {
         UserInfoAPI.editUser(input, imageData: userImageView.image!) { isSuccess, result in
             MyLoadingView.shared.hide()
             
-            // TODO: - 수정된 값 할당 필요
             if isSuccess {
                 print("회원정보 수정 완료")
+                // LoginModel의 정보를 수정된 값으로 갱신
+                LoginModel.dormitoryId = result.dormitoryId
+                LoginModel.dormitoryName = result.dormitoryName
+                LoginModel.profileImgUrl = result.profileImgUrl
+                LoginModel.nickname = result.nickname
+                
                 self.setUserInfo()
                 self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
