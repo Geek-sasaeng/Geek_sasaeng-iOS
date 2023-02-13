@@ -2386,9 +2386,9 @@
 				10411FDA29811D1A00758816 /* SubViews */,
 				A21DB933289D896B00A523F1 /* ChattingListVC.swift */,
 				A203B2912954DB20001DFE14 /* ChattingVC.swift */,
-				A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */,
 				10A4A35428E3734E00AF4235 /* ForcedExitVC.swift */,
 				A248720028EA2DCF002F84A8 /* ReportUserVC.swift */,
+				A21E82B428E48FA400D75084 /* ChattingStorageVC.swift */,
 				106D78A828F7B8D500CA6F4A /* ChattingStorageChatVC.swift */,
 			);
 			path = Chat;

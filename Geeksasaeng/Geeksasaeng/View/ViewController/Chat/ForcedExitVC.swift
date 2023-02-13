@@ -48,6 +48,9 @@ class ForcedExitViewController: UIViewController {
     
     // MARK: - Properties
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     var partyId: Int?
     var roomId: String?
     var memberInfoList: [InfoForForcedExitModelResult]?
@@ -141,7 +144,7 @@ class ForcedExitViewController: UIViewController {
     
     private func setLayouts() {
         containerView.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width)
+            make.width.equalTo(screenWidth)
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview()
         }
@@ -149,28 +152,28 @@ class ForcedExitViewController: UIViewController {
         userTableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview().inset(55 + 59)
+            make.bottom.equalToSuperview().inset(screenHeight / 7)
         }
         
         noticeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(83)
+            make.bottom.equalToSuperview().inset(screenHeight / 9.7)
         }
 
         bottomView.snp.makeConstraints { make in
-            make.height.equalTo(60)
+            make.height.equalTo(screenHeight / 13.33)
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         
         countNumLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(29)
-            make.top.equalToSuperview().inset(17)
+            make.left.equalToSuperview().inset(screenWidth / 12.4)
+            make.top.equalToSuperview().inset(screenHeight / 47.1)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.top.equalToSuperview().inset(17)
+            make.right.equalToSuperview().inset(screenWidth / 13.85)
+            make.top.equalToSuperview().inset(screenHeight / 47.1)
         }
     }
     

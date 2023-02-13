@@ -440,6 +440,9 @@ class ChattingViewController: UIViewController {
     
     // MARK: - Properties
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     private var socket: WebSocket? = nil
     private var conn: RMQConnection? = nil  // rabbitmq 채널 변수
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
@@ -458,7 +461,6 @@ class ChattingViewController: UIViewController {
     var msgContents: [MsgContents] = []
     var msgRecords: Results<MsgToSave>?
     var userNickname: String?
-    var maxMatching: Int?
     var currentMatching: Int?
     
     // 선택한 채팅방의 id값
@@ -668,31 +670,31 @@ class ChattingViewController: UIViewController {
     private func setLayouts() {
         collectionView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(bottomView.snp.top).offset(-15)
+            make.bottom.equalTo(bottomView.snp.top).offset(screenHeight / -53.3)
         }
         
         bottomView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(69)
+            make.height.equalTo(screenHeight / 11.6)
         }
         
         sendImageButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.width.height.equalTo(33)
-            make.left.equalToSuperview().inset(20)
+            make.left.equalToSuperview().inset(screenWidth / 18)
         }
         
         sendButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(22)
+            make.right.equalToSuperview().inset(screenWidth / 16.4)
         }
         
         contentsTextView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(sendImageButton.snp.right).offset(13)
-            make.width.equalTo(230)
-            make.height.equalTo(40)
+            make.left.equalTo(sendImageButton.snp.right).offset(screenWidth / 27.7)
+            make.width.equalTo(screenWidth / 1.6)
+            make.height.equalTo(screenHeight / 20)
         }
     }
     
