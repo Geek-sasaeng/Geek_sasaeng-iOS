@@ -11,9 +11,19 @@ import Then
 import PhotosUI
 import Kingfisher
 
-class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
+class EditMyInfoViewController: UIViewController {
     
     // MARK: - SubViews
+    
+    // 스크롤뷰
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    
+    // 콘텐츠뷰
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
     /* 우측 하단 BarButton */
     let deactivatedRightBarButtonItem = UIBarButtonItem().then {
@@ -254,6 +264,9 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     /* 회원정보 (수정 시 변경) */
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     var dormitoryId: Int?
     var nickname: String?
     var dormitoryList: [Dormitory]?
@@ -312,24 +325,37 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func addSubViews() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        [userImageBlurView, userImageViewIcon].forEach {
+            userImageView.addSubview($0)
+        }
         [
             userImageView,
             dormitoryLabel,
             nicknameLabel, nicknameDataTextField, nicknameCheckButton, nicknameValidationLabel,
             changePasswordButton
         ].forEach {
-            view.addSubview($0)
-        }
-        
-        [userImageBlurView, userImageViewIcon].forEach {
-            userImageView.addSubview($0)
+            contentView.addSubview($0)
         }
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.width.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        // 컨텐츠뷰
+        contentView.snp.makeConstraints { make in
+            make.edges.width.equalToSuperview()
+            make.bottom.equalTo(changePasswordButton.snp.bottom).offset(screenHeight / 10)
+        }
+        
         userImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(120)
-            make.width.height.equalTo(166)
+            make.top.equalToSuperview().inset(20)
+            make.width.height.equalTo(157)
             make.centerX.equalToSuperview()
         }
         userImageBlurView.snp.makeConstraints { make in
@@ -367,7 +393,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         changePasswordButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(150)
+            make.top.equalTo(nicknameCheckButton.snp.bottom).offset(screenHeight / 4.32)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(42)
         }
@@ -535,6 +561,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         UserInfoAPI.editUser(input, imageData: userImageView.image!) { isSuccess, result in
             MyLoadingView.shared.hide()
             
+            // TODO: - 수정된 값 할당 필요
             if isSuccess {
                 print("회원정보 수정 완료")
                 self.setUserInfo()
