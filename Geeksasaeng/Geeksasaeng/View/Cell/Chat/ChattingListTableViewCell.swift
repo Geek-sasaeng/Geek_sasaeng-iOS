@@ -99,8 +99,7 @@ class ChattingListTableViewCell: UITableViewCell {
     
     private func setLayouts() {
         contentView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(0)
-            make.left.right.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
 
         partyChatImageView.snp.makeConstraints { make in

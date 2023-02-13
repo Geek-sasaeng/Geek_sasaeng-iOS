@@ -1118,7 +1118,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let chattingVC = ChattingViewController()
             chattingVC.roomName = self.detailData.title
             chattingVC.roomId = roomId
-            chattingVC.maxMatching = self.detailData.maxMatching
             self.navigationController?.pushViewController(chattingVC, animated: true)
         } else {
             // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
