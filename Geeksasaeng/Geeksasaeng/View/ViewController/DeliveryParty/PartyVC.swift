@@ -55,8 +55,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     let stageLabel = UILabel().then {
-        // TODO: - 서버가 주면 값 연결
-        $0.text = "신입생" // 더미
         $0.textColor = .mainColor
         $0.font = .customFont(.neoBold, size: 13)
     }
@@ -604,6 +602,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         let url = URL(string: detailData.chiefProfileImgUrl!)
         profileImageView.kf.setImage(with: url)
         nickNameLabel.text = detailData.chief
+        stageLabel.text = detailData.chiefGrade
         contentLabel.text = detailData.content
         matchingDataLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!)"
         matchingDataWhiteLabel.text = "\(detailData.currentMatching!)/\(detailData.maxMatching!) 명"
