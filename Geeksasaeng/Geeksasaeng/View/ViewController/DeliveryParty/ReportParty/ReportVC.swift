@@ -111,7 +111,7 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(screenHeight)
+            make.bottom.equalTo(userReportTableView.snp.bottom).offset(screenHeight / 26.67)
         }
         
         // 파티 게시글 신고
