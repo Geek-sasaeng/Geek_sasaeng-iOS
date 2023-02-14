@@ -13,6 +13,8 @@ import Then
 class ReportViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
     
     // 테이블뷰 셀의 label로 들어갈 신고 카테고리 항목들을 정의
     let postReportCategoryData = ["광고 같아요", "사기가 의심돼요", "배달 정보가 부정확해요", "기타 사유 선택"]
@@ -102,45 +104,45 @@ class ReportViewController: UIViewController, UIScrollViewDelegate {
     private func setLayouts() {
         // 스크롤뷰
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(30)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(screenHeight / 26.66)
             make.left.right.bottom.equalToSuperview()
-            make.width.equalTo(UIScreen.main.bounds.width)
+            make.width.equalTo(screenWidth)
         }
         // 스크롤뷰 안에 들어갈 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height)
+            make.height.equalTo(screenHeight)
         }
         
         // 파티 게시글 신고
         postReportLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(29)
+            make.left.equalToSuperview().inset(screenWidth / 12.41)
             make.top.equalToSuperview()
         }
         
         postReportTableView.snp.makeConstraints { make in
-            make.top.equalTo(postReportLabel.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(29)
+            make.top.equalTo(postReportLabel.snp.bottom).offset(screenHeight / 40)
+            make.left.right.equalToSuperview().inset(screenWidth / 12.41)
             print(postReportTableView.rowHeight)
             make.height.equalTo(postReportTableView.rowHeight * CGFloat(postReportCategoryData.count))
         }
         
         // 구분선 뷰
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(postReportTableView.snp.bottom).offset(40)
+            make.top.equalTo(postReportTableView.snp.bottom).offset(screenHeight / 20)
             make.width.equalToSuperview()
-            make.height.equalTo(8)
+            make.height.equalTo(screenHeight / 100)
         }
         
         // 사용자 신고
         userReportLabel.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(51)
-            make.left.equalToSuperview().inset(29)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 15.68)
+            make.left.equalToSuperview().inset(screenWidth / 12.41)
         }
         
         userReportTableView.snp.makeConstraints { make in
-            make.top.equalTo(userReportLabel.snp.bottom).offset(30)
-            make.left.right.equalToSuperview().inset(29)
+            make.top.equalTo(userReportLabel.snp.bottom).offset(screenHeight / 26.66)
+            make.left.right.equalToSuperview().inset(screenWidth / 12.41)
             make.height.equalTo(userReportTableView.rowHeight * CGFloat(userReportCategoryData.count))
         }
     }

@@ -14,6 +14,8 @@ import Then
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
     
     var recentSearchDataArray: Results<SearchRecord>?
     var timeDataArray = ["아침", "점심", "저녁", "야식"]
@@ -137,13 +139,13 @@ class SearchViewController: UIViewController {
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(14)
+            make.left.equalToSuperview().offset(screenWidth / 25.71)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(12)
-            make.height.equalTo(6)
-            make.centerY.equalToSuperview().offset(-1)
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
+            make.width.equalTo(screenWidth / 30)
+            make.height.equalTo(screenHeight / 133.33)
+            make.centerY.equalToSuperview().offset(-(screenHeight / screenHeight))
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(screenWidth / 114.28)
         }
     }
     
@@ -173,7 +175,7 @@ class SearchViewController: UIViewController {
         
         $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().inset(16)
+            make.top.left.equalToSuperview().inset(screenWidth / 22.5)
         }
     }
     
@@ -262,19 +264,19 @@ class SearchViewController: UIViewController {
         }
         noResultLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(resultImageView.snp.bottom).offset(34)
+            make.top.equalTo(resultImageView.snp.bottom).offset(screenHeight / 23.52)
         }
         guideLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(noResultLabel.snp.bottom).offset(24)
+            make.top.equalTo(noResultLabel.snp.bottom).offset(screenHeight / 33.33)
         }
         flagImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(guideLabel.snp.bottom).offset(40)
+            make.top.equalTo(guideLabel.snp.bottom).offset(screenHeight / 20)
         }
         questionLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(flagImageView.snp.bottom).offset(14)
+            make.top.equalTo(flagImageView.snp.bottom).offset(screenHeight / 57.14)
         }
     }
     
@@ -355,83 +357,83 @@ class SearchViewController: UIViewController {
     
     private func setLayouts() {
         searchTextField.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.left.equalToSuperview().inset(30)
-            make.right.equalTo(searchButton.snp.left).offset(-10)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(screenHeight / 40)
+            make.left.equalToSuperview().inset(screenWidth / 12)
+            make.right.equalTo(searchButton.snp.left).offset(-(screenWidth / 36))
         }
         
         searchButton.snp.makeConstraints { make in
-            make.centerY.equalTo(searchTextField).offset(-3)
-            make.right.equalToSuperview().inset(33)
-            make.width.height.equalTo(30)
+            make.centerY.equalTo(searchTextField).offset(-(screenHeight / 266.66))
+            make.right.equalToSuperview().inset(screenWidth / 10.9)
+            make.width.height.equalTo(screenWidth / 12)
         }
         
         recentSearchLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
-            make.top.equalTo(searchTextField.snp.bottom).offset(45)
+            make.left.equalToSuperview().inset(screenWidth / 15.65)
+            make.top.equalTo(searchTextField.snp.bottom).offset(screenHeight / 17.77)
         }
         recentSearchCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchLabel.snp.bottom).offset(11)
-            make.left.right.equalToSuperview().inset(28)
-            make.height.equalTo(28)
+            make.top.equalTo(recentSearchLabel.snp.bottom).offset(screenHeight / 72.72)
+            make.left.right.equalToSuperview().inset(screenWidth / 12.85)
+            make.height.equalTo(screenHeight / 28.57)
         }
         firstSeparateView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(17)
+            make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(screenHeight / 47.05)
             make.width.equalToSuperview()
-            make.height.equalTo(8)
+            make.height.equalTo(screenHeight / 100)
         }
         
         logoImageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(128)
+            make.bottom.equalToSuperview().inset(screenHeight / 6.25)
             make.centerX.equalToSuperview()
-            make.width.equalTo(91)
-            make.height.equalTo(94)
+            make.width.equalTo(screenWidth / 3.95)
+            make.height.equalTo(screenHeight / 8.51)
         }
         
         /* 검색 결과 화면 서브뷰들 */
         /* Filter */
         filterImageView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(31)
-            make.left.equalToSuperview().inset(28)
-            make.width.equalTo(23)
-            make.height.equalTo(15)
+            make.top.equalTo(searchTextField.snp.bottom).offset(screenHeight / 25.8)
+            make.left.equalToSuperview().inset(screenWidth / 12.85)
+            make.width.equalTo(screenWidth / 15.65)
+            make.height.equalTo(screenHeight / 53.33)
         }
         peopleFilterView.snp.makeConstraints { make in
             make.centerY.equalTo(filterImageView)
-            make.left.equalTo(filterImageView.snp.right).offset(16)
-            make.width.equalTo(101)
-            make.height.equalTo(34)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
+            make.width.equalTo(screenWidth / 3.56)
+            make.height.equalTo(screenHeight / 23.52)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(219)
+            make.height.equalTo(screenHeight / 3.65)
             make.top.equalTo(peopleFilterView.snp.bottom)
-            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(253)
+            make.height.equalTo(screenHeight / 3.16)
             make.top.equalTo(peopleFilterView)
-            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
         }
         timeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(peopleFilterView.snp.right).offset(9)
-            make.right.equalToSuperview().inset(9)
+            make.left.equalTo(peopleFilterView.snp.right).offset(screenWidth / 40)
+            make.right.equalToSuperview().inset(screenWidth / 40)
             make.centerY.equalTo(peopleFilterView)
-            make.height.equalTo(34)
+            make.height.equalTo(screenHeight / 23.52)
         }
         
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(screenHeight / 100)
         }
         
         /* blur view */
         blurView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(140)
+            make.height.equalTo(screenHeight / 5.71)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
@@ -439,7 +441,7 @@ class SearchViewController: UIViewController {
         noSearchResultView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(screenHeight / 100)
         }
     }
     
@@ -585,8 +587,8 @@ class SearchViewController: UIViewController {
             recentSearchCollectionView.isHidden = true
             noSearchRecordsLabel.isHidden = false
             noSearchRecordsLabel.snp.makeConstraints { make in
-                make.top.equalTo(recentSearchLabel.snp.bottom).offset(15)
-                make.left.equalToSuperview().inset(28)
+                make.top.equalTo(recentSearchLabel.snp.bottom).offset(screenHeight / 53.33)
+                make.left.equalToSuperview().inset(screenWidth / 12.85)
             }
         } else {
             // 데이터가 있으면 컬렉션뷰 보이게 하고 안내 text 숨기기

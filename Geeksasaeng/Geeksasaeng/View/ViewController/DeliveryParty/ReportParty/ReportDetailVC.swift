@@ -13,6 +13,8 @@ import Then
 class ReportDetailViewController: UIViewController {
     
     // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
     
     // 유저 차단 체크박스가 체크되었는지 확인하기 위해
     var isBlock: Bool = false
@@ -70,7 +72,7 @@ class ReportDetailViewController: UIViewController {
         $0.addSubview(reportLabel)
         reportLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(15)
+            make.top.equalToSuperview().inset(screenHeight / 53.33)
         }
     }
     
@@ -83,8 +85,8 @@ class ReportDetailViewController: UIViewController {
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
-            make.width.equalTo(256)
-            make.height.equalTo(203)
+            make.width.equalTo(screenWidth / 1.4)
+            make.height.equalTo(screenHeight / 3.94)
         }
         
         /* top View */
@@ -95,7 +97,7 @@ class ReportDetailViewController: UIViewController {
         topSubView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(50)
+            make.height.equalTo(screenHeight / 16)
         }
         
         /* set titleLabel */
@@ -115,9 +117,9 @@ class ReportDetailViewController: UIViewController {
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.width.equalTo(20)
-            make.height.equalTo(12)
-            make.right.equalToSuperview().offset(-15)
+            make.width.equalTo(screenWidth / 18)
+            make.height.equalTo(screenHeight / 66.66)
+            make.right.equalToSuperview().offset(-(screenWidth / 24))
         }
         
         /* bottom View: contents, 확인 버튼 */
@@ -128,7 +130,7 @@ class ReportDetailViewController: UIViewController {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(153)
+            make.height.equalTo(screenHeight / 5.22)
         }
         
         let contentLabel = UILabel().then {
@@ -160,19 +162,19 @@ class ReportDetailViewController: UIViewController {
         }
         contentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(21)
+            make.top.equalToSuperview().inset(screenHeight / 38.09)
         }
         /* set lineView */
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(15)
-            make.left.equalTo(18)
-            make.right.equalTo(-18)
-            make.height.equalTo(1.7)
+            make.top.equalTo(contentLabel.snp.bottom).offset(screenHeight / 53.33)
+            make.left.equalTo(screenWidth / 20)
+            make.right.equalTo(-(screenWidth / 20))
+            make.height.equalTo(screenHeight / 470.58)
         }
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(18)
-            make.width.height.equalTo(34)
+            make.top.equalTo(lineView.snp.bottom).offset(screenHeight / 44.44)
+            make.width.height.equalTo(screenWidth / 10.58)
         }
     }
     
@@ -189,8 +191,8 @@ class ReportDetailViewController: UIViewController {
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
-            make.width.equalTo(256)
-            make.height.equalTo(203)
+            make.width.equalTo(screenWidth / 1.4)
+            make.height.equalTo(screenHeight / 3.94)
         }
         
         /* top View */
@@ -199,7 +201,7 @@ class ReportDetailViewController: UIViewController {
         $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.width.equalToSuperview()
-            make.height.equalTo(50)
+            make.height.equalTo(screenHeight / 16)
         }
         
         /* set titleLabel */
@@ -218,9 +220,9 @@ class ReportDetailViewController: UIViewController {
             topSubView.addSubview($0)
             $0.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
-                make.width.equalTo(20)
-                make.height.equalTo(12)
-                make.right.equalToSuperview().offset(-15)
+                make.width.equalTo(self.screenWidth / 18)
+                make.height.equalTo(self.screenHeight / 66.66)
+                make.right.equalToSuperview().offset(-(self.screenWidth / 24))
             }
         }
         
@@ -232,7 +234,7 @@ class ReportDetailViewController: UIViewController {
         bottomSubView.snp.makeConstraints { make in
             make.top.equalTo(topSubView.snp.bottom)
             make.width.equalToSuperview()
-            make.height.equalTo(153)
+            make.height.equalTo(screenHeight / 5.22)
         }
         
         let lineView = UIView().then {
@@ -259,24 +261,24 @@ class ReportDetailViewController: UIViewController {
         
         failContentLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
-            make.width.equalTo(190)
-            make.height.equalTo(48)
+            make.top.equalToSuperview().inset(screenHeight / 40)
+            make.width.equalTo(screenWidth / 1.89)
+            make.height.equalTo(screenHeight / 16.66)
         }
         
         /* set lineView */
         lineView.snp.makeConstraints { make in
             make.top.equalTo(failContentLabel.snp.bottom).offset(15)
-            make.left.equalTo(18)
-            make.right.equalTo(-18)
-            make.height.equalTo(1.7)
+            make.left.equalTo(screenWidth / 20)
+            make.right.equalTo(-(screenWidth / 20))
+            make.height.equalTo(screenHeight / 470.58)
         }
         
         /* set confirmButton */
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(18)
-            make.width.height.equalTo(34)
+            make.top.equalTo(lineView.snp.bottom).offset(screenHeight / 44.44)
+            make.width.height.equalTo(screenWidth / 10.58)
         }
     }
     
@@ -358,37 +360,37 @@ class ReportDetailViewController: UIViewController {
     
     private func setLayouts() {
         reportCategoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(30)
-            make.left.equalToSuperview().inset(29)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(screenHeight / 26.66)
+            make.left.equalToSuperview().inset(screenWidth / 12.41)
         }
         reportTextView.snp.makeConstraints { make in
-            make.top.equalTo(reportCategoryLabel.snp.bottom).offset(23)
-            make.left.right.equalToSuperview().inset(29)
-            make.height.equalTo(100)
+            make.top.equalTo(reportCategoryLabel.snp.bottom).offset(screenHeight / 34.78)
+            make.left.right.equalToSuperview().inset(screenWidth / 12.41)
+            make.height.equalTo(screenHeight / 8)
         }
         
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(reportTextView.snp.bottom).offset(20)
+            make.top.equalTo(reportTextView.snp.bottom).offset(screenHeight / 40)
             make.width.equalToSuperview()
-            make.height.equalTo(8)
+            make.height.equalTo(screenHeight / 100)
         }
         
         checkBoxButton.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(25)
-            make.left.equalToSuperview().inset(29)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 32)
+            make.left.equalToSuperview().inset(screenWidth / 12.41)
         }
         blockUserLabel.snp.makeConstraints { make in
-            make.left.equalTo(checkBoxButton.snp.right).offset(5)
+            make.left.equalTo(checkBoxButton.snp.right).offset(screenWidth / 72)
             make.centerY.equalTo(checkBoxButton)
         }
         guideLabel.snp.makeConstraints { make in
-            make.top.equalTo(blockUserLabel.snp.bottom).offset(11)
-            make.left.right.equalToSuperview().inset(30)
+            make.top.equalTo(blockUserLabel.snp.bottom).offset(screenHeight / 72.72)
+            make.left.right.equalToSuperview().inset(screenWidth / 12)
         }
         
         reportButton.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(55 + 20)    // 20은 safeAreaLayoutGuide 아래 빈 공간 가리기 위해 추가
+            make.height.equalTo(screenHeight / 10.66)    // 20은 safeAreaLayoutGuide 아래 빈 공간 가리기 위해 추가
             make.bottom.equalToSuperview()
         }
     }
