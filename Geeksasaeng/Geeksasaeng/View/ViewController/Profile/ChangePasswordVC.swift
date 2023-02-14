@@ -120,7 +120,7 @@ class ChangePasswordViewController: UIViewController {
     private func setLayouts() {
         passwordLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(23)
-            make.top.equalToSuperview().inset(119)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
         }
         passwordDataTextField.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(28)
@@ -188,12 +188,16 @@ class ChangePasswordViewController: UIViewController {
     
     @objc
     private func tapRightBarButton() {
+        MyLoadingView.shared.show()
+        
         let input = EditPasswordInput(
             checkNewPassword: self.checkPassword,
             newPassword: self.password
         )
         
         UserInfoAPI.editPassword(input) { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 // 0번째 인덱스(= 프로필 VC) 화면으로 이동
                 let controller = self.navigationController?.viewControllers[0]

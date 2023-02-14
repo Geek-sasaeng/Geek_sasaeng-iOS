@@ -44,6 +44,15 @@ class ForcedExitTableViewCell: UITableViewCell {
         setLayouts()
     }
     
+    // cell을 사용하기 전에 초기화 해주는 것
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // 초기화
+        self.checkBox.isHidden = false
+        self.isUserInteractionEnabled = true
+    }
+    
     // MARK: - Functions
     
     private func addSubViews() {

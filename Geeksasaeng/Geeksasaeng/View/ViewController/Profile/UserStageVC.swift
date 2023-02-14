@@ -12,7 +12,22 @@ import Then
 
 class UserStageViewController: UIViewController {
     
+    // MARK: - Properties
+    
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     // MARK: - SubViews
+    
+    // 스크롤뷰
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    
+    // 콘텐츠뷰
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
     let mainTitleLabel = UILabel().then {
         $0.textColor = .black
@@ -191,6 +206,9 @@ class UserStageViewController: UIViewController {
     }
     
     private func addSubViews() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
         [
             mainTitleLabel,
             gradeGuideLabel,
@@ -200,12 +218,23 @@ class UserStageViewController: UIViewController {
             upgradeGuideLabel,
             goToPartyLabel,
             goToPartyButton
-        ].forEach { view.addSubview($0) }
+        ].forEach { contentView.addSubview($0) }
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.width.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        // 컨텐츠뷰
+        contentView.snp.makeConstraints { make in
+            make.edges.width.equalToSuperview()
+            make.bottom.equalTo(goToPartyButton.snp.bottom).offset(screenHeight / 27.6)
+        }
+        
         mainTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(25)
+            make.top.equalToSuperview().offset(25)
             make.left.equalToSuperview().inset(34)
             make.width.equalTo(210)
         }
@@ -257,15 +286,14 @@ class UserStageViewController: UIViewController {
             make.right.equalToSuperview().inset(23)
         }
         
+        goToPartyLabel.snp.makeConstraints { make in
+            make.top.equalTo(upgradeGuideLabel.snp.bottom).offset(screenHeight / 8.88)
+            make.centerX.equalToSuperview()
+        }
         goToPartyButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(29)
+            make.top.equalTo(goToPartyLabel.snp.bottom).offset(12)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(51)
-        }
-        
-        goToPartyLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(goToPartyButton.snp.top).offset(-12)
-            make.centerX.equalToSuperview()
         }
     }
 }

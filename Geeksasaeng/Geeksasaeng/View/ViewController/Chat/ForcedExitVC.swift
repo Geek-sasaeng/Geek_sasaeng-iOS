@@ -48,6 +48,9 @@ class ForcedExitViewController: UIViewController {
     
     // MARK: - Properties
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     var partyId: Int?
     var roomId: String?
     var memberInfoList: [InfoForForcedExitModelResult]?
@@ -86,11 +89,22 @@ class ForcedExitViewController: UIViewController {
     
     // 강제퇴장 뷰를 위한 채팅 참여자들 정보 불러오기
     private func getUsersInfo() {
+        MyLoadingView.shared.show()
+        
         let input = InfoForForcedExitInput(partyId: self.partyId, roomId: self.roomId)
         ChatAPI.getInfoForForcedExit(input: input) { isSuccess, resultArray in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 if let resultArray = resultArray {
                     self.memberInfoList = resultArray
+                    
+                    if let count = self.memberInfoList?.count {
+                        self.countNumLabel.text = "0/\(count) 명"
+                    } else {
+                        self.countNumLabel.text = "0/\(0) 명"
+                    }
+                    
                     self.userTableView.reloadData()
                 }
             } else {
@@ -107,12 +121,6 @@ class ForcedExitViewController: UIViewController {
         // 커스텀한 새 백버튼으로 구성
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Back"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
-        
-        if let count = memberInfoList?.count {
-            countNumLabel.text = "0/\(count) 명"
-        } else {
-            countNumLabel.text = "0/\(0) 명"
-        }
     }
     
     private func setTableView() {
@@ -136,7 +144,7 @@ class ForcedExitViewController: UIViewController {
     
     private func setLayouts() {
         containerView.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width)
+            make.width.equalTo(screenWidth)
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview()
         }
@@ -144,28 +152,28 @@ class ForcedExitViewController: UIViewController {
         userTableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview().inset(55 + 59)
+            make.bottom.equalToSuperview().inset(screenHeight / 7)
         }
         
         noticeLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(83)
+            make.bottom.equalToSuperview().inset(screenHeight / 9.7)
         }
 
         bottomView.snp.makeConstraints { make in
-            make.height.equalTo(60)
+            make.height.equalTo(screenHeight / 13.33)
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         
         countNumLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(29)
-            make.top.equalToSuperview().inset(17)
+            make.left.equalToSuperview().inset(screenWidth / 12.4)
+            make.top.equalToSuperview().inset(screenHeight / 47.1)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.top.equalToSuperview().inset(17)
+            make.right.equalToSuperview().inset(screenWidth / 13.85)
+            make.top.equalToSuperview().inset(screenHeight / 47.1)
         }
     }
     
@@ -364,6 +372,8 @@ class ForcedExitViewController: UIViewController {
     // 확인 버튼 눌렀을 때 실행 -> 채팅방 강제퇴장 API 호출
     @objc
     private func tapExitConfirmButton() {
+        MyLoadingView.shared.show()
+        
         let selectedChatMemberIdList = selectedMemberInfoList.map { infoList in
             infoList.chatMemberId ?? ""
         }
@@ -373,6 +383,8 @@ class ForcedExitViewController: UIViewController {
         
         let input = ForcedExitInput(removedChatMemberIdList: selectedChatMemberIdList, roomId: self.roomId!)
         ChatAPI.forcedExitChat(input) { model in
+            MyLoadingView.shared.hide()
+            
             print(input)
             if let model = model {
                 if model.code == 1000 {
@@ -418,6 +430,12 @@ extension ForcedExitViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ForcedExitTableViewCell.identifier, for: indexPath) as? ForcedExitTableViewCell else { return UITableViewCell() }
         let row = memberInfoList?[indexPath.row]
+        
+        // 송금을 완료한 유저면 체크박스 없애고, 셀 클릭 못하도록 설정
+        if row?.accountTransferStatus == "Y" {
+            cell.checkBox.isHidden = true
+            cell.isUserInteractionEnabled = false
+        }
         
         let profileImgUrl = URL(string: row?.userProfileImgUrl ?? "")
         cell.userProfileImage.kf.setImage(with: profileImgUrl)

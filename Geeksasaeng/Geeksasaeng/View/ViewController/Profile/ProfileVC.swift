@@ -17,6 +17,9 @@ class ProfileViewController: UIViewController {
 
     // MARK: - Properties
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     var naverLoginVM = naverLoginViewModel()
     var safariVC: SFSafariViewController?
     var myActivities: [EndedDeliveryPartyList] = [] {
@@ -28,6 +31,16 @@ class ProfileViewController: UIViewController {
     
     
     // MARK: - SubViews
+    
+    // 스크롤뷰
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    
+    // 콘텐츠뷰
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
     /* MyInfo View가 올라가는 background View */
     let backgroundView = UIView().then {
@@ -420,7 +433,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func getUserInfo() {
+        MyLoadingView.shared.show()
+        
         UserInfoAPI.getUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 self.nicknameLabel.text = result.nickname
                 self.universityLabel.text = result.universityName
@@ -434,8 +451,12 @@ class ProfileViewController: UIViewController {
     
     // 나의 활동 3개 데이터 보여주기
     private func getUserActivities() {
+        MyLoadingView.shared.show()
+        
         // 목록의 최상단 3개를 가져와서 보여준다
         UserInfoAPI.getMyActivityList(cursor: 0) { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             // 활동 내역이 있냐 없냐에 따라 맞는 뷰 띄워주기
             if let parties = result?.endedDeliveryPartiesVoList {
                 if parties.count == 0 { // 활동 내역이 없을 때
@@ -515,11 +536,8 @@ class ProfileViewController: UIViewController {
     }
     
     private func addSubViews() {
-        [ heartImageView, nicknameLabel, universityLabel, dormitoryLabel, profileImageView ].forEach {
-            myInfoView.addSubview($0)
-        }
-        myInfoView.addSubview(gradeView)
-        backgroundView.addSubview(myInfoView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
         [
             backgroundView,
@@ -529,14 +547,32 @@ class ProfileViewController: UIViewController {
             customerServiceLabel, customerServiceButton, secondLineView,
             logoutLabel, logoutArrowButton,
             withdrawalMembershipButton
-        ].forEach { view.addSubview($0) }
+        ].forEach { contentView.addSubview($0) }
+        
+        [ heartImageView, nicknameLabel, universityLabel, dormitoryLabel, profileImageView ].forEach {
+            myInfoView.addSubview($0)
+        }
+        myInfoView.addSubview(gradeView)
+        backgroundView.addSubview(myInfoView)
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(screenWidth)
+        }
+        
+        // 컨텐츠뷰
+        contentView.snp.makeConstraints { (make) in
+            make.edges.width.equalToSuperview()
+            make.bottom.equalTo(withdrawalMembershipButton.snp.bottom).offset(screenHeight / 20)
+        }
+        
         backgroundView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.left.right.equalToSuperview()
-            make.height.equalTo(285)
+            make.bottom.equalTo(myInfoView.snp.bottom).offset(16)
         }
         
         gradeView.snp.makeConstraints { make in
@@ -547,18 +583,18 @@ class ProfileViewController: UIViewController {
         
         heartImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-            make.left.equalToSuperview().inset(20)
+            make.left.equalToSuperview().inset(screenWidth / 18)
         }
         nicknameLabel.snp.makeConstraints { make in
             make.top.equalTo(heartImageView.snp.top)
-            make.left.equalToSuperview().inset(50)
+            make.left.equalToSuperview().inset(screenWidth / 7.2)
         }
         universityLabel.snp.makeConstraints { make in
-            make.top.equalTo(nicknameLabel.snp.bottom).offset(10)
+            make.top.equalTo(nicknameLabel.snp.bottom).offset(screenHeight / 80)
             make.left.equalTo(nicknameLabel.snp.left)
         }
         dormitoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(universityLabel.snp.bottom).offset(10)
+            make.top.equalTo(universityLabel.snp.bottom).offset(screenHeight / 80)
             make.left.equalTo(universityLabel.snp.left)
         }
         profileImageView.snp.makeConstraints { make in
@@ -568,7 +604,7 @@ class ProfileViewController: UIViewController {
         }
         
         myInfoView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(100)
+            make.top.equalToSuperview().inset(screenHeight / 40)
             make.left.right.equalToSuperview().inset(23)
             make.height.equalTo(166)
         }
@@ -586,46 +622,46 @@ class ProfileViewController: UIViewController {
         }
 
         editMyInfoLabel.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 42.1)
+            make.left.equalToSuperview().inset(screenWidth / 15)
         }
         firstLineView.snp.makeConstraints { make in
-            make.top.equalTo(editMyInfoLabel.snp.bottom).offset(19)
-            make.left.right.equalToSuperview().inset(19)
+            make.top.equalTo(editMyInfoLabel.snp.bottom).offset(screenHeight / 42.1)
+            make.left.right.equalToSuperview().inset(screenWidth / 18.95)
             make.height.equalTo(1)
         }
 
         customerServiceLabel.snp.makeConstraints { make in
-            make.top.equalTo(firstLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
+            make.top.equalTo(firstLineView.snp.bottom).offset(screenHeight / 42.1)
+            make.left.equalToSuperview().inset(screenWidth / 15)
         }
         secondLineView.snp.makeConstraints { make in
-            make.top.equalTo(customerServiceLabel.snp.bottom).offset(19)
-            make.left.right.equalToSuperview().inset(18)
+            make.top.equalTo(customerServiceLabel.snp.bottom).offset(screenHeight / 42.1)
+            make.left.right.equalToSuperview().inset(screenWidth / 20)
             make.height.equalTo(1)
         }
         
         logoutLabel.snp.makeConstraints { make in
-            make.top.equalTo(secondLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
+            make.top.equalTo(secondLineView.snp.bottom).offset(screenHeight / 42.1)
+            make.left.equalToSuperview().inset(screenWidth / 15)
         }
 
         editMyInfoArrowButton.snp.makeConstraints { make in
             make.centerY.equalTo(editMyInfoLabel)
-            make.right.equalToSuperview().inset(31)
+            make.right.equalToSuperview().inset(screenWidth / 11.6)
         }
         customerServiceButton.snp.makeConstraints { make in
             make.centerY.equalTo(customerServiceLabel)
-            make.right.equalToSuperview().inset(31)
+            make.right.equalToSuperview().inset(screenWidth / 11.6)
         }
         logoutArrowButton.snp.makeConstraints { make in
             make.centerY.equalTo(logoutLabel)
-            make.right.equalToSuperview().inset(31)
+            make.right.equalToSuperview().inset(screenWidth / 11.6)
         }
         
         withdrawalMembershipButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoutLabel.snp.bottom).offset(100)
+            make.top.equalTo(logoutLabel.snp.bottom).offset(screenHeight / 8)
         }
     }
     
@@ -716,10 +752,14 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapLogoutConfirmButton() {
+        MyLoadingView.shared.show()
+        
         UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
         naverLoginVM.resetToken() // delete naver login token
         
         LoginAPI.logout { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 print("DEBUG: 로그아웃 완료")
                 
@@ -735,8 +775,12 @@ class ProfileViewController: UIViewController {
     
     @objc
     private func tapWithdrawalMembershipConfirmButton() {
+        MyLoadingView.shared.show()
+        
         let input = MemberDeleteInput(checkPassword: "apple123!", password: "apple123!")
         UserInfoAPI.deleteMember(input, memberId: LoginModel.memberId!) { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 print("DEBUG: 회원 탈퇴 완료")
                 

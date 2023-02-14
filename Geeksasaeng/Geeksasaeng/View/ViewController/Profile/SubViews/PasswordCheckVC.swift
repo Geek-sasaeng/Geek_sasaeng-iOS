@@ -149,10 +149,14 @@ class PasswordCheckViewController: UIViewController {
     /* 다음 버튼 누르면 실행되는 함수 */
     @objc
     private func tapNextButton() {
+        MyLoadingView.shared.show()
+        
         guard let password = passwordTextField.text else { return }
         let passwordInput = PasswordCheckInput(password: password)
         
         UserInfoAPI.passwordCheck(passwordInput) { isSuccess in
+            MyLoadingView.shared.hide()
+            
             if isSuccess { // 비밀번호 맞았을 때 -> 수정 화면으로 이동
                 NotificationCenter.default.post(name: NSNotification.Name("CorrectPassword"), object: "true")
                 let changePasswordVC = ChangePasswordViewController().then {

@@ -290,6 +290,8 @@ class AgreementViewController: UIViewController {
 
     /* 회원가입 Request 보내는 함수 */
     @objc private func tapCompleteButton() {
+        MyLoadingView.shared.show()
+        
         // TODO: - 네이버 회원가입 수정 필요
         if isFromNaverRegister { // naver 회원가입인 경우
             if let email = email,
@@ -298,6 +300,8 @@ class AgreementViewController: UIViewController {
                let accessToken = self.accessToken {
                 let input = NaverRegisterInput(accessToken: accessToken, email: email, informationAgreeStatus: "Y", nickname: nickname, universityName: universityName)
                 RegisterAPI.registerUserFromNaver(input) { isSuccess, result in
+                    MyLoadingView.shared.hide()
+                    
                     switch isSuccess {
                     case .success:
                         // 네이버 회원가입은 자동 로그인이 default
@@ -335,6 +339,8 @@ class AgreementViewController: UIViewController {
                                           universityName: univ)
                 
                 RegisterAPI.registerUser(input) { isSuccess in
+                    MyLoadingView.shared.hide()
+                    
                     switch isSuccess {
                     case .success:
                         self.showLoginView()

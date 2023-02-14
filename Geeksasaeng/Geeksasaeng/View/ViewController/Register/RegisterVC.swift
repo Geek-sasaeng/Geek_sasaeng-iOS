@@ -350,8 +350,12 @@ class RegisterViewController: UIViewController {
             idAvailableLabel.isHidden = false
         } else {
             if let id = idTextField.text {
+                MyLoadingView.shared.show()
+                
                 let input = IdRepetitionInput(loginId: id)
                 RepetitionAPI.checkIdRepetition(input) { isSuccess, message in
+                    MyLoadingView.shared.hide()
+                    
                     switch isSuccess {
                     case .success:
                         self.idCheck = true
@@ -386,8 +390,12 @@ class RegisterViewController: UIViewController {
             nickNameAvailableLabel.isHidden = false
         } else {
             if let nickname = nickNameTextField.text {
+                MyLoadingView.shared.show()
+                
                 let input = NickNameRepetitionInput(nickName: nickname)
                 RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
+                    MyLoadingView.shared.hide()
+                    
                     switch isSuccess {
                     case .success:
                         self.nicknameCheck = true

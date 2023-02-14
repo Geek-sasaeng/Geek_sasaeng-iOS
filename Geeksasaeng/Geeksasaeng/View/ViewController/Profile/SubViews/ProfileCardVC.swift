@@ -60,6 +60,8 @@ class ProfileCardViewController: UIViewController {
     
     /* 내 정보 view */
     lazy var myInfoView = UIView().then { view in
+        MyLoadingView.shared.show()
+        
         view.layer.masksToBounds = false
         view.layer.cornerRadius = 10
         view.backgroundColor = .white
@@ -83,6 +85,8 @@ class ProfileCardViewController: UIViewController {
         }
         
         UserInfoAPI.getUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 nicknameLabel.text = result.nickname
                 universityLabel.text = result.universityName
@@ -122,6 +126,8 @@ class ProfileCardViewController: UIViewController {
     
     /* 아이디, 이메일, 전화번호, 가입일 View */
     let etcInfoView = UIView().then { view in
+        MyLoadingView.shared.show()
+        
         view.backgroundColor = .init(hex: 0xF1F5F9)
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 10
@@ -151,6 +157,8 @@ class ProfileCardViewController: UIViewController {
         }
         
         UserInfoAPI.getUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 idDataLabel.text = result.nickname
                 emailDataLabel.text = result.emailAddress

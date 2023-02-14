@@ -196,7 +196,11 @@ class LoginViewController: UIViewController {
     
     private func attemptAutoLogin() {
         if let jwt = UserDefaults.standard.string(forKey: "jwt") {
+            MyLoadingView.shared.show()
+            
             LoginAPI.attemptAutoLogin(jwt: jwt) { result in
+                MyLoadingView.shared.hide()
+                
                 // static에 필요한 데이터 저장
                 LoginModel.jwt = jwt
                 LoginModel.memberId = result.memberId
@@ -272,7 +276,7 @@ class LoginViewController: UIViewController {
         
         let navController = tabBarController.viewControllers![0] as! UINavigationController
         let deliveryVC = navController.topViewController as! DeliveryViewController
-        deliveryVC.dormitoryInfo = dormitoryInfo
+        deliveryVC.dormitoryInfo = dormitoryInfo ?? DormitoryNameResult(id: 1, name: "제1기숙사")
         deliveryVC.userImageUrl = userImageUrl
         
         tabBarController.modalTransitionStyle = .crossDissolve
@@ -313,6 +317,8 @@ class LoginViewController: UIViewController {
     
     @objc
     private func tapLoginButton() {
+        MyLoadingView.shared.show()
+          
         // 로그인 시도
         if let id = self.idTextField.text,
            let pw = self.passwordTextField.text {
@@ -323,6 +329,8 @@ class LoginViewController: UIViewController {
             let input = LoginInput(loginId: id, password: pw, fcmToken: fcmToken)
             
             LoginViewModel.login(input) { isSuccess, result, message  in
+                MyLoadingView.shared.hide()
+                
                 switch isSuccess {
                 case .success:
                     // 자동로그인 체크 시 UserDefaults에 jwt 저장
