@@ -183,7 +183,7 @@ class NaverRegisterViewController: UIViewController {
         $0.setTitle("재전송 하기", for: .normal)
         $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
         $0.layer.cornerRadius = 5
-        $0.addTarget(self, action: #selector(tapAuthResendButton), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(tapAuthSendButton), for: .touchUpInside)
         $0.isHidden = true
     }
     
@@ -491,8 +491,12 @@ class NaverRegisterViewController: UIViewController {
             nickNameAvailableLabel.isHidden = false
         } else {
             if let nickname = nickNameTextField.text {
+                MyLoadingView.shared.show()
+                
                 let input = NickNameRepetitionInput(nickName: nickname)
                 RepetitionAPI.checkNicknameRepetitionFromNaverRegister(parameters: input) { success, message in
+                    MyLoadingView.shared.hide()
+                    
                     if success {
                         self.isNicknameChecked = true
                         if self.selectYourUnivLabel.text != "자신의 학교를 선택해주세요"
@@ -553,8 +557,6 @@ class NaverRegisterViewController: UIViewController {
     
     @objc
     private func tapUnivSelectView() {
-        // TODO: API 연결 필요
-//        UniversityListViewModel.requestGetUnivList(self)
         isExpanded = !isExpanded
         // 확장하는 거면 리스트 보여주기
         if isExpanded {
@@ -583,6 +585,7 @@ class NaverRegisterViewController: UIViewController {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
+            MyLoadingView.shared.show()
             authSendButton.setDeactivatedButton()   // 비활성화
             
             print("DEBUG: ", email+emailAddress, univ)
@@ -591,11 +594,22 @@ class NaverRegisterViewController: UIViewController {
             print("DEBUG: ", uuid.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(input) { model in
+                MyLoadingView.shared.hide()
+                
                 if let model = model {
                     // 경우에 맞는 토스트 메세지 출력
                     switch model.code {
                     case 1001:
                         self.showToast(viewController: self, message: "인증번호가 전송되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        // 이미 돌아가고 있는 타이머가 있으면 -> 재전송 버튼 누른 경우
+                        if let timer = self.timer {
+                            // 돌고 있는 타이머 종료하고 시간 재설정
+                            timer.cancel()
+                            self.currentSeconds = 300
+                        }
+                        // 타이머 시작
+                        self.startTimer()
+                        
                         if self.isNicknameChecked {
                             self.authSendButton.isHidden = true
                             self.authResendButton.isHidden = false
@@ -615,48 +629,17 @@ class NaverRegisterViewController: UIViewController {
     }
     
     @objc
-    private func tapAuthResendButton() {
-        if let email = emailTextField.text,
-           let emailAddress = emailAddressTextField.text,
-           let univ = univNameLabel.text {    // 값이 들어 있어야 괄호 안의 코드 실행 가능
-            authSendButton.setDeactivatedButton()   // 비활성화
-            
-            print("DEBUG: ", email+emailAddress, univ)
-
-            let uuid = UUID()
-            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
-            print("DEBUG: ", uuid.uuidString)
-            // 이메일로 인증번호 전송하는 API 호출
-            EmailAuthViewModel.requestSendEmail(input) { model in
-                if let model = model {
-                    // 경우에 맞는 토스트 메세지 출력
-                    switch model.code {
-                    case 1001:
-                        self.showToast(viewController: self, message: "인증번호가 전송되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                        // 타이머 시작
-                        self.timer?.cancel()
-                        self.currentSeconds = 300
-                        self.startTimer()
-                    case 2015:
-                        self.showToast(viewController: self, message: "일일 최대 전송 횟수를 초과했습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
-                    default:
-                        self.showToast(viewController: self, message: "잠시 후에 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 212, height: 40)
-                    }
-                } else {
-                    self.showToast(viewController: self, message: "잠시 후에 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 212, height: 40)
-                }
-            }
-        }
-    }
-    
-    @objc
     private func tapAuthCheckButton() {
         if let email = emailTextField.text,
            let emailAddress = emailAddressTextField.text,
            let authNum = authNumTextField.text {
+            MyLoadingView.shared.show()
+            
             let email = email + emailAddress
             print("DEBUG: ", email, authNum)
             EmailAuthCheckViewModel.requestCheckEmailAuth(EmailAuthCheckInput(email: email, key: authNum)) { isSuccess, emailId in
+                MyLoadingView.shared.hide()
+                
                 if isSuccess {
                     self.emailId = emailId
                     self.nextButton.setActivatedButton()

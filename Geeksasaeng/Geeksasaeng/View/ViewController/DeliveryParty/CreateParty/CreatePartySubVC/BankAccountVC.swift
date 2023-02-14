@@ -176,6 +176,8 @@ class BankAccountViewController: UIViewController {
               let bank = CreateParty.bank,
               let accountNumber = CreateParty.accountNumber else { return }
         
+        MyLoadingView.shared.show()
+        
         let input = CreatePartyInput(
             title: title,
             content: content,
@@ -193,6 +195,8 @@ class BankAccountViewController: UIViewController {
         
         /* 배달 파티 생성 API 호출 */
         CreatePartyViewModel.registerParty(dormitoryId: dormitoryInfo?.id ?? 1, input) { [self] isSuccess, model in
+            MyLoadingView.shared.hide()
+            
             // 배달파티 생성 성공
             if isSuccess {
                 guard let model = model,
@@ -220,6 +224,9 @@ class BankAccountViewController: UIViewController {
                     guard let result = result else { return }
                     if isSuccess {
                         print("DEBUG: 채팅방 생성 성공 \(result)")
+                        
+                        // 파티가 생성됐으니 배달파티 목록 리로드
+                        delegate?.updateDeliveryList()
                     } else {
                         print("DEBUG: 채팅방 생성 실패 \(result)")
                     }

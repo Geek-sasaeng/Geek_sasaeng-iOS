@@ -55,6 +55,9 @@ class ChattingListViewController: UIViewController {
     
     // MARK: - Properties
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     // rabbitmq 채널 변수
     private var conn: RMQConnection? = nil
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
@@ -95,7 +98,7 @@ class ChattingListViewController: UIViewController {
     }
     
     /* 테이블뷰 셀 하단에 블러뷰 */
-    let blurView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 140)).then {
+    let blurView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 5.6)).then {
         // 그라데이션 적용
         $0.setGradient(startColor: .init(hex: 0xFFFFFF, alpha: 0.0), endColor: .init(hex: 0xFFFFFF, alpha: 1.0))
         $0.isUserInteractionEnabled = false // 블러뷰에 가려진 테이블뷰 셀이 선택 가능하도록 하기 위해
@@ -110,8 +113,8 @@ class ChattingListViewController: UIViewController {
         $0.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.width.equalTo(153)
-            make.height.equalTo(143)
+            make.width.equalTo(UIScreen.main.bounds.width / 2.4)
+            make.height.equalTo(UIScreen.main.bounds.height / 5.6)
         }
     }
     
@@ -123,7 +126,7 @@ class ChattingListViewController: UIViewController {
         
         setAttributes()
         setFilterStackView(filterNameArray: ["배달파티", "심부름", "거래"],
-                           width: [80, 67, 54],
+                           width: [screenWidth / 4.5, screenWidth / 5.4, screenWidth / 6.7],
                            stackView: filterStackView)
         addSubViews()
         setLayouts()
@@ -346,29 +349,29 @@ class ChattingListViewController: UIViewController {
     private func setLayouts() {
         /* Category Filter */
         filterImageView.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(23)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(33)
-            make.width.equalTo(23)
-            make.height.equalTo(15)
+            make.left.equalToSuperview().inset(screenWidth / 15.7)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 24.2)
+            make.width.equalTo(screenWidth / 15.7)
+            make.height.equalTo(screenHeight / 53.3)
         }
         filterStackView.snp.makeConstraints { make in
-            make.left.equalTo(filterImageView.snp.right).offset(17)
+            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 21.2)
             make.centerY.equalTo(filterImageView)
-            make.width.equalTo(134 + 85)
+            make.width.equalTo(screenWidth / 1.64)
         }
         
         /* Blur View */
         blurView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(140)
+            make.height.equalTo(screenHeight / 5.7)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         chattingTableView.snp.makeConstraints { make in
-            make.top.equalTo(filterStackView.snp.bottom).offset(18)
-            make.left.equalToSuperview().inset(18)
-            make.right.equalToSuperview().inset(30)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(filterStackView.snp.bottom).offset(screenHeight / 44.44)
+            make.left.equalToSuperview().inset(screenWidth / 20)
+            make.right.equalToSuperview().inset(screenWidth / 12)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / -53.3)
         }
     }
     
@@ -652,7 +655,6 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
         // 해당 채팅방 uuid값 받아서 이동
         chattingVC.roomId = chattingRoomList[indexPath.row].roomId
         chattingVC.roomName = chattingRoomList[indexPath.row].roomTitle
-        // TODO: - 여기서도 MaxMatching 값 넘겨줘야 되지 않나
         
         // RabbitMQ Connection 끊기
         conn?.close()

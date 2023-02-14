@@ -440,6 +440,9 @@ class ChattingViewController: UIViewController {
     
     // MARK: - Properties
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     private var socket: WebSocket? = nil
     private var conn: RMQConnection? = nil  // rabbitmq 채널 변수
     private let rabbitMQUri = "amqp://\(Keys.idPw)@\(Keys.address)"
@@ -458,7 +461,6 @@ class ChattingViewController: UIViewController {
     var msgContents: [MsgContents] = []
     var msgRecords: Results<MsgToSave>?
     var userNickname: String?
-    var maxMatching: Int?
     var currentMatching: Int?
     
     // 선택한 채팅방의 id값
@@ -480,8 +482,6 @@ class ChattingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        /* 더미 데이터 */
-        msgContents.append(MsgContents(msgType: .message, message: MsgToSave(chatId: "", content: "http://placeimg.com/155/154/any", chatRoomId: "", isSystemMessage: false, memberId: 1, nickName: "애플플", profileImgUrl: "", createdAt: Date(), unreadMemberCnt: 0, isImageMessage: true)))
         
         // 웹소켓 설정
         setupWebSocket()
@@ -607,8 +607,12 @@ class ChattingViewController: UIViewController {
     
     // 채팅방 상세조회 API 호출
     private func getRoomInfo() {
+        MyLoadingView.shared.show()
+        
         print("DEBUG: [1] getRoomInfo")
         ChatAPI.getChattingRoomInfo(ChattingRoomInput(chatRoomId: roomId)) { result in
+            MyLoadingView.shared.hide()
+            
             // 조회 성공 시
             if let res = result {
                 print("DEBUG: 채팅방 \(self.roomId!)의 상세 정보", res)
@@ -666,31 +670,31 @@ class ChattingViewController: UIViewController {
     private func setLayouts() {
         collectionView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
-            make.bottom.equalTo(bottomView.snp.top).offset(-15)
+            make.bottom.equalTo(bottomView.snp.top).offset(screenHeight / -53.3)
         }
         
         bottomView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(69)
+            make.height.equalTo(screenHeight / 11.6)
         }
         
         sendImageButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.width.height.equalTo(33)
-            make.left.equalToSuperview().inset(20)
+            make.left.equalToSuperview().inset(screenWidth / 18)
         }
         
         sendButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(22)
+            make.right.equalToSuperview().inset(screenWidth / 16.4)
         }
         
         contentsTextView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalTo(sendImageButton.snp.right).offset(13)
-            make.width.equalTo(230)
-            make.height.equalTo(40)
+            make.left.equalTo(sendImageButton.snp.right).offset(screenWidth / 27.7)
+            make.width.equalTo(screenWidth / 1.6)
+            make.height.equalTo(screenHeight / 20)
         }
     }
     
@@ -1019,11 +1023,19 @@ class ChattingViewController: UIViewController {
         guard let roomId = self.roomId else { return }
         let orderCompletedInput = OrderCompletedInput(roomId: roomId)
         
-        ChatAPI.orderCompleted(orderCompletedInput) { isSuccess in
-            if isSuccess {
-                self.orderCompletedView.removeFromSuperview()
+        ChatAPI.orderCompleted(orderCompletedInput) { model in
+            if let model = model {
+                if model.code == 1000 {
+                    self.orderCompletedView.removeFromSuperview()
+                }else if model.code == 2409 || model.code == 2410 {
+                    // 매칭 마감이 아직 안 된 상태에서 주문완료를 하려는 경우
+                    self.showToast(viewController: self, message: "매칭 마감을 먼저 해주세요!", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                } else {
+                    self.showToast(viewController: self, message: "주문완료에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
+                }
+            } else {
+                self.showToast(viewController: self, message: "주문완료에 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 287, height: 59)
             }
-            // TODO: - 실패 시 토스트 필요
         }
     }
     
@@ -1551,6 +1563,8 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
             
             let sheet = UIAlertController(title: "사진 전송", message: "선택한 사진을 전송하시겠어요?", preferredStyle: .alert)
             sheet.addAction(UIAlertAction(title: "전송", style: .default, handler: { _ in
+                MyLoadingView.shared.show()
+                
                 let input = ChatImageSendInput(
                     chatId: "none",
                     chatRoomId: self.roomId,
@@ -1561,6 +1575,7 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                 )
                 
                 ChatAPI.sendImage(input, imageData: images) { isSuccess in
+                    MyLoadingView.shared.hide()
                     if isSuccess {
                         print("이미지 전송 성공")
                     } else {

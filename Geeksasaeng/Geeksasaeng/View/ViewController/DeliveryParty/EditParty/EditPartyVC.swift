@@ -680,6 +680,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func tapRegisterButton() {
+        MyLoadingView.shared.show()
+        
         /* 파티 수정하기 API 호출 */
         // CreateParty를 통해 초기화해야 하는 속성: foodCategory, orderTime, maxMatching, storeUrl, latitude, longtitude, hashTag
         if let foodCategory = CreateParty.foodCategory,
@@ -702,6 +704,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                                longitude: longitude,
                                hashTag: hashTag)
             ) { success in
+                MyLoadingView.shared.hide()
+                
                 if success {
                     /* 수정된 정보로 이전 뷰 내용 업데이트 */
                     NotificationCenter.default.post(name: NSNotification.Name("TapEditCompleteButton"), object: "true")

@@ -24,7 +24,7 @@ class DeliveryViewController: UIViewController {
     let screenHeight = UIScreen.main.bounds.height
     
     // 유저의 기숙사 정보 -> id랑 name 들어있음!
-    var dormitoryInfo: DormitoryNameResult?
+    var dormitoryInfo = DormitoryNameResult(id: LoginModel.dormitoryId, name: LoginModel.dormitoryName)
     // userImageUrl -> 채팅, 내 프로필 등에서 사용
     var userImageUrl: String?
     
@@ -69,9 +69,6 @@ class DeliveryViewController: UIViewController {
     // MARK: - Subviews
     
     lazy var dormitoryLabel = UILabel().then {
-        if let name = dormitoryInfo?.name {
-            $0.text = "제" + name
-        }
         $0.font = .customFont(.neoBold, size: 20)
         $0.textColor = .black
     }
@@ -314,6 +311,11 @@ class DeliveryViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // 뷰가 보일 때마다 label text 값 업데이트
+        if let name = LoginModel.dormitoryName {
+            dormitoryLabel.text = "제" + name
+        }
+        
         super.viewWillAppear(animated)
         // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
         self.navigationController?.isNavigationBarHidden = false
@@ -518,7 +520,7 @@ class DeliveryViewController: UIViewController {
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
         // 기숙사 id가 nil일 경우, 배달파티 목록을 불러올 수 없기 때문에 로그 띄우기
-        guard let dormitoryId = dormitoryInfo?.id else {
+        guard let dormitoryId = LoginModel.dormitoryId else {
             print("DEBUG: 기숙사id가 nil값입니다.")
             return
         }
@@ -1035,8 +1037,7 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let partyId = deliveryCellDataArray[indexPath.row].id,
-              let dormitoryInfo = dormitoryInfo else { return }
+        guard let partyId = deliveryCellDataArray[indexPath.row].id else { return }
         let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo)
         
         // delegate로 자기 자신(DeliveryVC)를 넘겨줌

@@ -11,9 +11,19 @@ import Then
 import PhotosUI
 import Kingfisher
 
-class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
+class EditMyInfoViewController: UIViewController {
     
     // MARK: - SubViews
+    
+    // 스크롤뷰
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+    }
+    
+    // 콘텐츠뷰
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
     
     /* 우측 하단 BarButton */
     let deactivatedRightBarButtonItem = UIBarButtonItem().then {
@@ -254,6 +264,9 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - Properties
     /* 회원정보 (수정 시 변경) */
     
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
     var dormitoryId: Int?
     var nickname: String?
     var dormitoryList: [Dormitory]?
@@ -312,24 +325,37 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func addSubViews() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        [userImageBlurView, userImageViewIcon].forEach {
+            userImageView.addSubview($0)
+        }
         [
             userImageView,
             dormitoryLabel,
             nicknameLabel, nicknameDataTextField, nicknameCheckButton, nicknameValidationLabel,
             changePasswordButton
         ].forEach {
-            view.addSubview($0)
-        }
-        
-        [userImageBlurView, userImageViewIcon].forEach {
-            userImageView.addSubview($0)
+            contentView.addSubview($0)
         }
     }
     
     private func setLayouts() {
+        // 스크롤뷰
+        scrollView.snp.makeConstraints { make in
+            make.edges.width.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        // 컨텐츠뷰
+        contentView.snp.makeConstraints { make in
+            make.edges.width.equalToSuperview()
+            make.bottom.equalTo(changePasswordButton.snp.bottom).offset(screenHeight / 10)
+        }
+        
         userImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(120)
-            make.width.height.equalTo(166)
+            make.top.equalToSuperview().inset(20)
+            make.width.height.equalTo(157)
             make.centerX.equalToSuperview()
         }
         userImageBlurView.snp.makeConstraints { make in
@@ -367,7 +393,7 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         }
         
         changePasswordButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(150)
+            make.top.equalTo(nicknameCheckButton.snp.bottom).offset(screenHeight / 4.32)
             make.left.right.equalToSuperview().inset(28)
             make.height.equalTo(42)
         }
@@ -386,8 +412,12 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setUserInfo() {
+        MyLoadingView.shared.show()
+        
         /* textfield로 변경 */
         UserInfoAPI.getEditUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 let url = URL(string: result.imgUrl!)
                 self.userImageView.kf.setImage(with: url)
@@ -521,14 +551,24 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
     
     @objc
     private func tapEditConfirmButton() {
+        MyLoadingView.shared.show()
+        
         let input = EditUserInput (
             dormitoryId: self.dormitoryId,
             nickname: self.nickname
         )
         
         UserInfoAPI.editUser(input, imageData: userImageView.image!) { isSuccess, result in
+            MyLoadingView.shared.hide()
+            
             if isSuccess {
                 print("회원정보 수정 완료")
+                // LoginModel의 정보를 수정된 값으로 갱신
+                LoginModel.dormitoryId = result.dormitoryId
+                LoginModel.dormitoryName = result.dormitoryName
+                LoginModel.profileImgUrl = result.profileImgUrl
+                LoginModel.nickname = result.nickname
+                
                 self.setUserInfo()
                 self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
@@ -552,16 +592,20 @@ class EditMyInfoViewController: UIViewController, UIScrollViewDelegate {
         if sender == nicknameCheckButton { // 닉네임 중복 확인 버튼일 경우
             guard let isValidNickname = nicknameDataTextField.text?.isValidNickname() else { return }
             if isValidNickname { // validation 적합한 경우 -> 닉네임 중복 확인 API 호출
+                MyLoadingView.shared.show()
+                
                 guard let newNickname = nicknameDataTextField.text else { return }
                 let input = NickNameRepetitionInput(nickName: newNickname)
                 RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
+                    MyLoadingView.shared.hide()
+                    
                     switch isSuccess {
                     case .success:
                         self.nickname = newNickname
                         self.showToast(viewController: self, message: "사용 가능한 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                         self.activeRightBarButton()
                     case .onlyRequestSuccess:
-                        self.showToast(viewController: self, message: "서버 오류입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        self.showToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     case .failure:
                         self.showToast(viewController: self, message: "중복되는 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }

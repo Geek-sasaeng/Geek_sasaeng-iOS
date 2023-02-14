@@ -294,8 +294,12 @@ class PhoneAuthViewController: UIViewController {
         /* 인증번호 입력한 게 맞는지 "확인" 버튼 눌렀을 때 확인하는 것으로 변경. */
         if let phoneNum = phoneNumTextField.text,
            let authNum = authTextField.text {
+            MyLoadingView.shared.show()
+            
             let input = PhoneAuthCheckInput(recipientPhoneNumber: phoneNum, verifyRandomNumber: authNum)
             PhoneAuthCheckViewModel.requestCheckPhoneAuth(input) { isSuccess, result, message in
+                MyLoadingView.shared.hide()
+                
                 switch isSuccess {
                 case .success:
                     self.phoneNumberId = result?.phoneNumberId
@@ -332,12 +336,16 @@ class PhoneAuthViewController: UIViewController {
     private func tapAuthSendButton() {
         if let phoneNum = self.phoneNumTextField.text,
            let uuid = uuid {
+            MyLoadingView.shared.show()
+            
             startTimer()
             authCheckButton.setActivatedButton()
             authSendButton.setTitle("재전송 하기", for: .normal)
             let input = PhoneAuthInput(recipientPhoneNumber: phoneNum, uuid: uuid.uuidString)
             print("DEBUG:", uuid.uuidString)
             PhoneAuthViewModel.requestSendPhoneAuth(input) { model in
+                MyLoadingView.shared.hide()
+                
                 if let model = model {
                     // 경우에 맞는 토스트 메세지 출력
                     switch model.code {

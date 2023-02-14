@@ -116,7 +116,7 @@ class CustomerServiceViewController: UIViewController {
     
     private func setLayouts() {
         termsOfUseAgreementLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(130)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(30)
             make.left.equalToSuperview().inset(24)
         }
         termsOfUseAgreementButton.snp.makeConstraints { make in

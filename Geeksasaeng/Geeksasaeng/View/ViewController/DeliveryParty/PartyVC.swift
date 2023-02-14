@@ -530,8 +530,11 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
      2. 배달파티 목록에서 클릭한 파티의 상세보기로 오는 경우
      */
     private func getDetailData() {
+        MyLoadingView.shared.show()
         if let partyId = partyId {
             DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
+                MyLoadingView.shared.hide()
+                
                 if let result = result {
                     // detailData에 데이터 넣기
                     if let self = self {
@@ -1115,7 +1118,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             let chattingVC = ChattingViewController()
             chattingVC.roomName = self.detailData.title
             chattingVC.roomId = roomId
-            chattingVC.maxMatching = self.detailData.maxMatching
             self.navigationController?.pushViewController(chattingVC, animated: true)
         } else {
             // 파티장이 아니고, 아직 채팅방에 참여하지 않은 유저라면 신청하는 로직에 연결
@@ -1133,14 +1135,17 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     /* 신청하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapRegisterConfirmButton() {
+        guard let partyId = self.partyId else { return }
+        MyLoadingView.shared.show()
+        
         // 신청하기 뷰 없애고
         removeRegisterView()
         
         // API를 통해 이 유저를 서버의 partyMember에도 추가해 줘야 함
         // 배달 파티 신청하기 API 호출
-        guard let partyId = self.partyId else { return }
         PartyAPI.requestJoinParty(JoinPartyInput(partyId: partyId)) { [self] isSuccess in
             print("DEBUG: 배달파티 신청 API 호출")
+            MyLoadingView.shared.hide()
             
             // 배달파티 신청 성공
             if isSuccess {
