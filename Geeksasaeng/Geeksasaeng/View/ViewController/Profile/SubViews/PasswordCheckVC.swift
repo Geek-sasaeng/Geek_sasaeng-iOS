@@ -179,6 +179,7 @@ class PasswordCheckViewController: UIViewController {
     private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
+        NotificationCenter.default.post(name: NSNotification.Name("TapBackButtonOfPasswordCheckVC"), object: "true")
     }
     
     @objc
