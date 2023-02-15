@@ -431,35 +431,40 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         }
         
         orderForecastTimeButton.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 42.6)
+//            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 42.6)
+            make.centerY.equalTo(orderForecastTimeLabel.snp.centerY)
             make.left.equalTo(orderForecastTimeLabel.snp.right).offset(screenWidth / 8.73)
             make.width.equalTo(screenWidth / 2.09)
             make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedPersonLabel.snp.makeConstraints { make in
-            make.top.equalTo(orderForecastTimeButton.snp.bottom).offset(screenHeight / 53.25)
+//            make.top.equalTo(orderForecastTimeButton.snp.bottom).offset(screenHeight / 53.25)
+            make.centerY.equalTo(matchingPersonLabel.snp.centerY)
             make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(screenWidth / 2.09)
             make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedCategoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedPersonLabel.snp.bottom).offset(screenHeight / 53.25)
+//            make.top.equalTo(selectedPersonLabel.snp.bottom).offset(screenHeight / 53.25)
+            make.centerY.equalTo(categoryLabel.snp.centerY)
             make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(screenWidth / 2.09)
             make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedUrlLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(screenHeight / 53.25)
+//            make.top.equalTo(selectedCategoryLabel.snp.bottom).offset(screenHeight / 53.25)
+            make.centerY.equalTo(urlLabel.snp.centerY)
             make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(screenWidth / 2.09)
             make.height.equalTo(screenHeight / 22.42)
         }
         
         selectedLocationLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectedUrlLabel.snp.bottom).offset(screenHeight / 53.25)
+//            make.top.equalTo(selectedUrlLabel.snp.bottom).offset(screenHeight / 53.25)
+            make.centerY.equalTo(locationLabel.snp.centerY)
             make.left.equalTo(orderForecastTimeButton.snp.left)
             make.width.equalTo(screenWidth / 2.09)
             make.height.equalTo(screenHeight / 22.42)

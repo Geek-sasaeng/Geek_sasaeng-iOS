@@ -497,6 +497,15 @@ class EditMyInfoViewController: UIViewController {
                 self.userImageView.isUserInteractionEnabled = true
             }
         }
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name("TapBackButtonOfPasswordCheckVC"), object: nil, queue: nil) { notification in
+            let result = notification.object as! String
+            if result == "true" {
+                self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+                self.userImageView.isUserInteractionEnabled = true
+            }
+        }
     }
     
     
