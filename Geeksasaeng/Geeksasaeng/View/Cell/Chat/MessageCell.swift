@@ -186,9 +186,7 @@ class MessageCell: UICollectionViewCell {
     /* 상대 유저 프로필 클릭시 실행 -> ChattingVC에서 팝업뷰를 띄워준다 */
     @objc
     private func tapProfileImage() {
-        guard let memberId = self.memberId else { return }
-        delegate?.presentPopUpView(memberId: memberId,
-                                   profileImage: self.leftImageView.image!,
-                                   nickNameStr: self.nicknameLabel.text!)
+        guard let profileImg = self.leftImageView.image else { return }
+        delegate?.getInfoMember(memberId: memberId ?? 0, profileImg: profileImg)
     }
 }

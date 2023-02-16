@@ -191,13 +191,14 @@ class ImageMessageCell: UICollectionViewCell {
     
     // MARK: - @objc Functions
     
-    /* 상대 유저 프로필 클릭시 실행 -> ChattingVC에서 팝업뷰를 띄워준다 */
+    /* 상대 유저 프로필 클릭 시 실행되는 함수
+     1. ChattingVC에서 해당 유저의 정보를 받아온다
+     2. 성공 시 팝업뷰를 띄워준다
+     */
     @objc
     private func tapProfileImage() {
-        // MARK: - 사진 채팅의 프로필 이미지가 안 와서 더미 넣어둠
-        guard let memberId = self.memberId else { return }
-        delegate?.presentPopUpView(memberId: memberId,
-                                   profileImage: (self.leftProfileImageView.image ?? UIImage(named: "GachonLogo"))!,
-                                   nickNameStr: self.nicknameLabel.text!)
+        guard let profileImg = self.leftImageView.image else { return }
+        // 서버로부터 해당 유저의 정보를 받아온다.
+        delegate?.getInfoMember(memberId: memberId ?? 0, profileImg: profileImg)
     }
 }

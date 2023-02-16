@@ -21,7 +21,7 @@ protocol PushReportUserDelegate {
 }
 
 protocol PresentPopUpViewDelegate {
-    func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String)
+    func getInfoMember(memberId: Int, profileImg: UIImage)
 }
 
 class ChattingViewController: UIViewController {
@@ -934,6 +934,22 @@ class ChattingViewController: UIViewController {
         self.ownerAlertController.actions[index].isEnabled = false
         self.ownerAlertController.actions[index].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
     }
+    
+    /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
+    private func presentPopUpView(memberId: Int, profileImg: UIImage, model: ChattingMemberResultModel) {
+        guard let nickName = model.userName,
+                let grade = model.grade,
+                let isChief = model.isChief else { return }
+        let popUpView = ProfilePopUpViewController(memberId: memberId,
+                                                   profileImg: profileImg,
+                                                   nickNameStr: nickName,
+                                                   gradeStr: grade,
+                                                   isChief: isChief)
+        popUpView.delegate = self
+        popUpView.modalPresentationStyle = .overFullScreen
+        popUpView.modalTransitionStyle = .crossDissolve
+        self.present(popUpView, animated: true)
+    }
 
     // MARK: - @objc Functions
     
@@ -1501,13 +1517,19 @@ extension ChattingViewController: PushReportUserDelegate {
 }
 
 extension ChattingViewController: PresentPopUpViewDelegate {
-    /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
-    public func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String) {
-        let popUpView = ProfilePopUpViewController(memberId: memberId, profileImage: profileImage, nickNameStr: nickNameStr)
-        popUpView.delegate = self
-        popUpView.modalPresentationStyle = .overFullScreen
-        popUpView.modalTransitionStyle = .crossDissolve
-        self.present(popUpView, animated: true)
+    // 상대 프로필 클릭 시 해당 멤버의 정보 불러오기
+    public func getInfoMember(memberId: Int, profileImg: UIImage) {
+        MyLoadingView.shared.show()
+        
+        ChatAPI.getInfoChattingMember(input: ChattingMemberInput(chatRoomId: self.roomId, memberId: memberId)) { result in
+            MyLoadingView.shared.hide()
+            if let res = result {
+                // 정보 불러오기 성공 시 프로필 팝업뷰로 화면 전환
+                self.presentPopUpView(memberId: Int(LoginModel.memberId ?? 0), profileImg: profileImg, model: res)
+            } else {
+                self.showToast(viewController: self, message: "멤버 정보 조회에 실패했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
+            }
+        }
     }
 }
 
@@ -1549,6 +1571,8 @@ extension ChattingViewController: WebSocketDelegate {
             print("DEBUG: websocket is cancelled")
         case .error(let error):
             print("DEBUG: 에러 websocket is error = \(error!)")
+        @unknown default:
+            fatalError()
         }
     }
 }
