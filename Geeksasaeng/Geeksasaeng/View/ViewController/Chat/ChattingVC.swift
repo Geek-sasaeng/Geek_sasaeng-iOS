@@ -21,7 +21,7 @@ protocol PushReportUserDelegate {
 }
 
 protocol PresentPopUpViewDelegate {
-    func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String)
+    func getInfoMember(memberId: Int, profileImg: UIImage)
 }
 
 class ChattingViewController: UIViewController {
@@ -276,6 +276,14 @@ class ChattingViewController: UIViewController {
         }
     }
     
+    // 계좌번호 label
+    lazy var accountLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = .init(hex: 0x2F2F2F)
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAccountLabel)))
+    }
+    
     // 송금하기 상단 뷰 (Firestore의 participant의 isRemittance 값이 false인 경우에만 노출)
     lazy var remittanceView = UIView().then { view in
         view.backgroundColor = .init(hex: 0xF6F9FB)
@@ -283,12 +291,6 @@ class ChattingViewController: UIViewController {
         
         let coinImageView = UIImageView().then {
             $0.image = UIImage(named: "RemittanceIcon")
-        }
-        
-        let accountLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 14)
-            $0.textColor = .init(hex: 0x2F2F2F)
-            $0.text = "\(self.roomInfo?.bank ?? "은행")  \(self.roomInfo?.accountNumber ?? "000-0000-0000-00")"
         }
         
         let remittanceConfirmButton = UIButton().then {
@@ -624,6 +626,7 @@ class ChattingViewController: UIViewController {
                 // 방장이 아니고, 아직 송금을 안 했다면 송금완료 뷰 띄우기
                 if (!(self.roomInfo!.isChief!) && !(self.roomInfo!.isRemittanceFinish!)) {
                     self.showTopView(view: self.remittanceView)
+                    self.accountLabel.text = "\(self.roomInfo?.bank ?? "은행")  \(self.roomInfo?.accountNumber ?? "000-0000-0000-00")"
                 } else if (self.roomInfo!.isChief! && !(self.roomInfo!.isOrderFinish!)) {  // 방장이고 주문 완료 안 했다면 주문완료 뷰 띄우기
                     self.showTopView(view: self.orderCompletedView)
                 }
@@ -931,6 +934,22 @@ class ChattingViewController: UIViewController {
         self.ownerAlertController.actions[index].isEnabled = false
         self.ownerAlertController.actions[index].setValue(UIColor.init(hex: 0xA8A8A8), forKey: "titleTextColor")
     }
+    
+    /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
+    private func presentPopUpView(memberId: Int, profileImg: UIImage, model: ChattingMemberResultModel) {
+        guard let nickName = model.userName,
+                let grade = model.grade,
+                let isChief = model.isChief else { return }
+        let popUpView = ProfilePopUpViewController(memberId: memberId,
+                                                   profileImg: profileImg,
+                                                   nickNameStr: nickName,
+                                                   gradeStr: grade,
+                                                   isChief: isChief)
+        popUpView.delegate = self
+        popUpView.modalPresentationStyle = .overFullScreen
+        popUpView.modalTransitionStyle = .crossDissolve
+        self.present(popUpView, animated: true)
+    }
 
     // MARK: - @objc Functions
     
@@ -1001,6 +1020,14 @@ class ChattingViewController: UIViewController {
             sendMessage(input: input)
         }
     }
+    
+    /* 계좌번호 label 클릭 -> 계좌번호 클립보드에 복사, 토스트 띄우기 */
+    @objc
+    private func tapAccountLabel() {
+        UIPasteboard.general.string = accountLabel.text?.replacingOccurrences(of: "-", with: "")
+        self.showBottomToast(viewController: self, message: "클립보드에 복사되었습니다", font: .customFont(.neoMedium, size: 13), color: .lightGray)
+    }
+    
     
     /* 송금 완료 버튼 클릭 */
     @objc
@@ -1490,13 +1517,19 @@ extension ChattingViewController: PushReportUserDelegate {
 }
 
 extension ChattingViewController: PresentPopUpViewDelegate {
-    /* 상대방의 프로필 클릭 시 실행 -> 팝업 VC를 띄워준다 */
-    public func presentPopUpView(memberId: Int, profileImage: UIImage, nickNameStr: String) {
-        let popUpView = ProfilePopUpViewController(memberId: memberId, profileImage: profileImage, nickNameStr: nickNameStr)
-        popUpView.delegate = self
-        popUpView.modalPresentationStyle = .overFullScreen
-        popUpView.modalTransitionStyle = .crossDissolve
-        self.present(popUpView, animated: true)
+    // 상대 프로필 클릭 시 해당 멤버의 정보 불러오기
+    public func getInfoMember(memberId: Int, profileImg: UIImage) {
+        MyLoadingView.shared.show()
+        
+        ChatAPI.getInfoChattingMember(input: ChattingMemberInput(chatRoomId: self.roomId, memberId: memberId)) { result in
+            MyLoadingView.shared.hide()
+            if let res = result {
+                // 정보 불러오기 성공 시 프로필 팝업뷰로 화면 전환
+                self.presentPopUpView(memberId: Int(LoginModel.memberId ?? 0), profileImg: profileImg, model: res)
+            } else {
+                self.showToast(viewController: self, message: "멤버 정보 조회에 실패했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
+            }
+        }
     }
 }
 
@@ -1538,6 +1571,8 @@ extension ChattingViewController: WebSocketDelegate {
             print("DEBUG: websocket is cancelled")
         case .error(let error):
             print("DEBUG: 에러 websocket is error = \(error!)")
+        @unknown default:
+            fatalError()
         }
     }
 }

@@ -522,6 +522,32 @@ class ChatAPI {
         }
     }
     
+    // 채팅방 내 멤버 프로필 클릭 시 정보 조회 API
+    public static func getInfoChattingMember(input: ChattingMemberInput,
+                                            completion: @escaping (ChattingMemberResultModel?) -> ()) {
+        guard let memberId = input.memberId, let roomId = input.chatRoomId else { return }
+        let url = "https://geeksasaeng.shop/party-chat-room/\(roomId)/\(memberId)/member-profile"
+        
+        AF.request(url,
+                   method: .get,
+                   headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        .validate()
+        .responseDecodable(of: ChattingMemberModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 채팅방 내 멤버 프로필 클릭 시 정보 조회 성공", result.message)
+                } else {
+                    print("DEBUG: 채팅방 내 멤버 프로필 클릭 시 정보 조회 실패", response, result)
+                }
+                completion(result.result)
+            case .failure(let error):
+                print("DEBUG: 채팅 참여자들 정보 가져오기 실패", error.localizedDescription)
+                completion(nil)
+            }
+        }
+    }
+    
 }
 
 

@@ -15,8 +15,6 @@ class ProfilePopUpViewController: UIViewController {
     
     var delegate: PushReportUserDelegate?
     var memberId: Int?
-    var profileImage: UIImage?
-    var nickNameStr: String?
     
     // MARK: - SubViews
     
@@ -28,7 +26,7 @@ class ProfilePopUpViewController: UIViewController {
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.layer.cornerRadius = 10
     }
-    let profileImageView = UIImageView().then {
+    lazy var profileImageView = UIImageView().then {
         $0.layer.cornerRadius = 72 / 2
         $0.clipsToBounds = true
     }
@@ -37,8 +35,6 @@ class ProfilePopUpViewController: UIViewController {
         $0.image = UIImage(named: "UserStage")
     }
     let infoLabel = UILabel().then {
-        // TODO: - 값 연결
-        $0.text = "신입생  ㅣ  파티원"
         $0.font = .customFont(.neoBold, size: 13)
         $0.textColor = .mainColor
     }
@@ -77,17 +73,17 @@ class ProfilePopUpViewController: UIViewController {
         
         addSubviews()
         setLayouts()
-        setAttributes()
-        print("DEBUG: 프로필 팝업뷰 데이터", memberId, profileImage, nickNameStr)
+        print("DEBUG: 프로필 팝업뷰 데이터", memberId, self.nickNameLabel.text ?? "", self.infoLabel.text ?? "")
     }
     
     // MARK: - Initialization
     
-    init(memberId: Int, profileImage: UIImage, nickNameStr: String) {
+    init(memberId: Int, profileImg: UIImage, nickNameStr: String, gradeStr: String, isChief: Bool) {
         super.init(nibName: nil, bundle: nil)
         self.memberId = memberId
-        self.profileImage = profileImage
-        self.nickNameStr = nickNameStr
+        self.profileImageView.image = profileImg
+        self.nickNameLabel.text = nickNameStr
+        self.infoLabel.text = "\(gradeStr)  |  \(isChief ? "파티장" : "파티원")"
     }
     
     required init?(coder: NSCoder) {
@@ -163,11 +159,6 @@ class ProfilePopUpViewController: UIViewController {
         reportStackView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
-    }
-    
-    private func setAttributes() {
-        profileImageView.image = profileImage
-        nickNameLabel.text = nickNameStr
     }
     
     // MARK: - @objc Functions

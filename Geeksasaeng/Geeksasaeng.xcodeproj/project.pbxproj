@@ -1147,6 +1147,9 @@
 		A288072E297AD38200FC655C /* CompleteDeliveryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A288072D297AD38200FC655C /* CompleteDeliveryModel.swift */; };
 		A288072F297AD38200FC655C /* CompleteDeliveryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A288072D297AD38200FC655C /* CompleteDeliveryModel.swift */; };
 		A2880730297AD38200FC655C /* CompleteDeliveryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A288072D297AD38200FC655C /* CompleteDeliveryModel.swift */; };
+		A28AEA05299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28AEA04299BE6A700F8E5D4 /* ChattingMemberModel.swift */; };
+		A28AEA06299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28AEA04299BE6A700F8E5D4 /* ChattingMemberModel.swift */; };
+		A28AEA07299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28AEA04299BE6A700F8E5D4 /* ChattingMemberModel.swift */; };
 		A2911FE2297E607E00747E7C /* UserStageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2911FE1297E607E00747E7C /* UserStageVC.swift */; };
 		A2911FE3297E607E00747E7C /* UserStageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2911FE1297E607E00747E7C /* UserStageVC.swift */; };
 		A2911FE4297E607E00747E7C /* UserStageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2911FE1297E607E00747E7C /* UserStageVC.swift */; };
@@ -1657,6 +1660,7 @@
 		A271CBF92976E6B60045DEE0 /* MyActivityListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyActivityListTableViewCell.swift; sourceTree = "<group>"; };
 		A2754ECC29968C0B00B7954E /* MyLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLoadingView.swift; sourceTree = "<group>"; };
 		A288072D297AD38200FC655C /* CompleteDeliveryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteDeliveryModel.swift; sourceTree = "<group>"; };
+		A28AEA04299BE6A700F8E5D4 /* ChattingMemberModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingMemberModel.swift; sourceTree = "<group>"; };
 		A2911FE1297E607E00747E7C /* UserStageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStageVC.swift; sourceTree = "<group>"; };
 		A29B560129740ECB00945776 /* CloseMatchingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseMatchingModel.swift; sourceTree = "<group>"; };
 		A2A6D0AF28E504F1008F6C7B /* ProfilePopUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePopUpVC.swift; sourceTree = "<group>"; };
@@ -2327,6 +2331,7 @@
 				A2A7141A296B478A006410E2 /* ChattingRoomModel.swift */,
 				A29B560129740ECB00945776 /* CloseMatchingModel.swift */,
 				A288072D297AD38200FC655C /* CompleteDeliveryModel.swift */,
+				A28AEA04299BE6A700F8E5D4 /* ChattingMemberModel.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3895,6 +3900,7 @@
 				10A4A35928E3750B00AF4235 /* ForcedExitTableViewCell.swift in Sources */,
 				1040FB982875C06E0060A3E4 /* AgreementVC.swift in Sources */,
 				A2B42088286F0F1100278F92 /* EmailAuthVC.swift in Sources */,
+				A28AEA05299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3905,6 +3911,7 @@
 				A2AF5396289696810052F734 /* ReportAPI.swift in Sources */,
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				A2EE2BC4294727B200335680 /* MessageData.swift in Sources */,
+				A28AEA06299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */,
 				106D975A287D8735005CFB85 /* ReceiptPlaceVC.swift in Sources */,
 				103AD395297AB81100295D9C /* CustomerServiceVC.swift in Sources */,
 				A2EC623E288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
@@ -4032,6 +4039,7 @@
 				10AC5CAB2889269000C8086A /* EditPartyVC.swift in Sources */,
 				10D7EC962886AFC500D9E0FD /* UrlVC.swift in Sources */,
 				A2B420AC286F58C100278F92 /* DeliveryVC.swift in Sources */,
+				A28AEA07299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */,
 				A2EC623F288C0784000FD6CB /* ReportTableViewCell.swift in Sources */,
 				1036F0AC291A800F00306840 /* EditMyInfoVC.swift in Sources */,
 				A2AF539F2896C0680052F734 /* SearchViewModel.swift in Sources */,

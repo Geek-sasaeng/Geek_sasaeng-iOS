@@ -16,6 +16,7 @@ struct DeliveryListDetailModel: Decodable {
 
 struct DeliveryListDetailModelResult: Decodable {
     var chief: String?
+    var chiefGrade: String?
     var chiefId: Int?
     var chiefProfileImgUrl: String?
     var content: String?

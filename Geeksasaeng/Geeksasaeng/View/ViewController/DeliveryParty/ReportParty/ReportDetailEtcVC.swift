@@ -71,8 +71,7 @@ class ReportDetailEtcViewController: UIViewController {
         }
         $0.addSubview(reportLabel)
         reportLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(screenHeight / 53.33)
+            make.centerX.centerY.equalToSuperview()
         }
     }
     
