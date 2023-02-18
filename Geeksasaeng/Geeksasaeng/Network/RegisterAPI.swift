@@ -62,6 +62,23 @@ struct NaverRegisterModelResult: Decodable {
     var jwt: String?
 }
 
+struct AppleRegisterModel: Decodable {
+    var isSuccess: Bool?
+    var code: Int?
+    var message: String?
+    var result: AppleRegisterModelResult?
+}
+
+struct AppleRegisterModelResult: Decodable {
+    var access_token: String?
+    var expires_in: Int?
+    var id_token: String?
+    var refresh_token: String?
+    var token_type: String?
+    var userId: Int?
+    
+}
+
 // 회원가입 API 연동
 class RegisterAPI {
     public static func registerUser(_ parameter : RegisterInput, completion: @escaping (ResponseCase) -> Void) {
@@ -103,6 +120,27 @@ class RegisterAPI {
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
                 completion(.failure, nil)
+            }
+        }
+    }
+    
+    public static func registerUserFromApple(completion: @escaping (AppleRegisterModelResult) -> Void) {
+        AF.request("https://appleid.apple.com/auth/authorize?client_id=shop.geeksasaeng&redirect_uri=https://geeksasaeng.shop/apple-login&response_type=code", method: .post)
+        .validate()
+        .responseDecodable(of: AppleRegisterModel.self) { response in
+            switch response.result {
+            case .success(let result):
+                if result.isSuccess! {
+                    print("DEBUG: 애플 회원가입 성공")
+                    guard let passedResult = result.result else { return }
+                    completion(passedResult)
+                } else {
+                    print("DEBUG:", result.message!)
+                    completion(AppleRegisterModelResult())
+                }
+            case .failure(let error):
+                print("DEBUG:", error.localizedDescription)
+                completion(AppleRegisterModelResult())
             }
         }
     }

@@ -530,7 +530,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     private func getDetailData() {
         MyLoadingView.shared.show()
         if let partyId = partyId {
-            DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result in
+            DeliveryListDetailViewModel.getDetailInfo(partyId: partyId, completion: { [weak self] result, message in
                 MyLoadingView.shared.hide()
                 
                 if let result = result {
@@ -548,6 +548,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     }
                 } else {
                     print("DEBUG: 파티 상세 조회 실패")
+                    self?.navigationController?.popViewController(animated: true)
                 }
             })
         }

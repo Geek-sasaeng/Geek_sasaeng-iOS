@@ -30,6 +30,26 @@ struct AutoLoginModelResult: Decodable {
     var dormitoryName: String?
 }
 
+/* 애플 로그인 */
+struct AppleLoginInput: Encodable {
+    var idToken: String?
+    var refreshToken: String?
+}
+
+struct AppleLoginModel: Decodable {
+    var isSuccess: Bool?
+    var code: Int?
+    var message: String?
+    var result: AppleLoginModelResult?
+}
+struct AppleLoginModelResult: Decodable {
+    var jwt: String?
+    var nickName: String?
+    var loginStatus: String?
+    var profileImgUrl: String?
+    var memberId: Int?
+}
+
 /* 로그아웃 */
 struct LogoutModel: Decodable {
     var code: Int?
@@ -54,6 +74,24 @@ class LoginAPI {
                     }
                 case .failure(let error):
                     print("DEBUG: 자동 로그인 실패", error.localizedDescription)
+                }
+            }
+    }
+    
+    public static func appleLogin(input: AppleLoginInput, completion: @escaping (AppleLoginModelResult) -> Void ) {
+        AF.request("https://geeksasaeng.shop/log-in/apple", method: .post)
+            .validate()
+            .responseDecodable(of: AppleLoginModel.self) { response in
+                switch response.result {
+                case .success(let result):
+                    if result.isSuccess! {
+                        print("DEBUG: 애플 로그인 성공", result.result)
+                        completion(result.result ?? AppleLoginModelResult())
+                    } else {
+                        print("DEBUG: 애플 로그인 실패", result.message!)
+                    }
+                case .failure(let error):
+                    print("DEBUG: 애플 로그인 실패", error.localizedDescription)
                 }
             }
     }
