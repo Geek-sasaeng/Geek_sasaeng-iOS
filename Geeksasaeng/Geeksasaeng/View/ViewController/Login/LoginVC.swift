@@ -328,39 +328,46 @@ class LoginViewController: UIViewController {
             print("DEBUG: fcmToken in LoginVC", fcmToken)
             let input = LoginInput(loginId: id, password: pw, fcmToken: fcmToken)
             
-            LoginViewModel.login(input) { isSuccess, result, message  in
+            LoginViewModel.login(input) { model  in
                 MyLoadingView.shared.hide()
                 
-                switch isSuccess {
-                case .success:
-                    // 자동로그인 체크 시 UserDefaults에 jwt 저장
-                    if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
-                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
+                if let model = model {
+                    switch model.code {
+                    case 1000: // 로그인 성공
+                        guard let result = model.result else { return }
+                        // 자동로그인 체크 시 UserDefaults에 jwt 저장
+                        if self.automaticLoginButton.currentImage == UIImage(systemName: "checkmark.rectangle") {
+                            UserDefaults.standard.set(result.jwt, forKey: "jwt")
+                        }
+                        
+                        // static property에 jwt, nickname, userImgUrl 저장
+                        LoginModel.jwt = result.jwt
+                        LoginModel.nickname = result.nickName
+                        LoginModel.profileImgUrl = result.profileImgUrl
+                        LoginModel.memberId = result.memberId
+                        LoginModel.dormitoryId = result.dormitoryId
+                        LoginModel.dormitoryName = result.dormitoryName
+                        
+                        // dormitoryId, Name 저장
+                        self.dormitoryInfo = DormitoryNameResult(id: result.dormitoryId, name: result.dormitoryName)
+                        // userImageUrl 저장
+                        self.userImageUrl = result.profileImgUrl
+                        
+                        // 로그인 완료 후 경우에 따른 화면 전환
+                        if result.loginStatus == "NEVER" {
+                            self.showNextView(isFirstLogin: true, nickName: result.nickName ?? "홍길동")
+                        } else {
+                            self.showNextView(isFirstLogin: false)
+                        }
+                    case 2011, 2012, 2400:
+                        self.showToast(viewController: self, message: "로그인 실패! 다시 시도해주세요", font: .customFont(.neoMedium, size: 15), color: .init(hex: 0xA8A8A8), width: 229, height: 40, top: 26)
+                    default:
+                        // 서버 에러
+                        self.showBottomToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoMedium, size: 15), color: .lightGray)
                     }
-                    
-                    // static property에 jwt, nickname, userImgUrl 저장
-                    LoginModel.jwt = result?.jwt
-                    LoginModel.nickname = result?.nickName
-                    LoginModel.profileImgUrl = result?.profileImgUrl
-                    LoginModel.memberId = result?.memberId
-                    LoginModel.dormitoryId = result?.dormitoryId
-                    LoginModel.dormitoryName = result?.dormitoryName
-                    
-                    // dormitoryId, Name 저장
-                    self.dormitoryInfo = DormitoryNameResult(id: result?.dormitoryId, name: result?.dormitoryName)
-                    // userImageUrl 저장
-                    self.userImageUrl = result?.profileImgUrl
-                    
-                    // 로그인 완료 후 경우에 따른 화면 전환
-                    if result?.loginStatus == "NEVER" {
-                        self.showNextView(isFirstLogin: true, nickName: result?.nickName ?? "홍길동")
-                    } else {
-                        self.showNextView(isFirstLogin: false)
-                    }
-                case .onlyRequestSuccess:
-                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
-                case .failure:
-                    self.showBottomToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)   
+                } else {
+                    // 서버 에러
+                    self.showBottomToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoMedium, size: 15), color: .lightGray)
                 }
             }
         }
