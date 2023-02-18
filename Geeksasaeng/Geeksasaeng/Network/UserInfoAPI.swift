@@ -116,7 +116,7 @@ struct MyActivityModelResult: Codable {
 }
 struct EndedDeliveryPartyList: Codable {
     let foodCategory: String?
-    let id, maxMatching: Int?
+    let id, matchingCount: Int?
     let title, updatedAt: String?
 }
 
