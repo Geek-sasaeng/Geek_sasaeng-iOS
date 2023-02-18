@@ -22,7 +22,7 @@ class ProfileViewController: UIViewController {
     
     var naverLoginVM = naverLoginViewModel()
     var safariVC: SFSafariViewController?
-    var myActivities: [EndedDeliveryPartyList] = [] {
+    var myActivities: [UserInfoPartiesModel] = [] {
         didSet {
             myActivityCollectionView.reloadData()
         }
@@ -409,7 +409,6 @@ class ProfileViewController: UIViewController {
         
         // 나의 활동 3개 띄우기
         self.getUserInfo()
-        self.getUserActivities()
         
         // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
         NotificationCenter.default.addObserver(self, selector: #selector(completeChangingPw), name: NSNotification.Name("CompleteChangingPw"), object: nil)
@@ -437,6 +436,7 @@ class ProfileViewController: UIViewController {
         
         UserInfoAPI.getUserInfo { isSuccess, result in
             MyLoadingView.shared.hide()
+            print(result)
             
             if isSuccess {
                 self.nicknameLabel.text = result.nickname
@@ -445,47 +445,23 @@ class ProfileViewController: UIViewController {
                 
                 let url = URL(string: result.profileImgUrl!)
                 self.profileImageView.kf.setImage(with: url)
-            }
-        }
-    }
-    
-    // 나의 활동 3개 데이터 보여주기
-    private func getUserActivities() {
-        MyLoadingView.shared.show()
-        
-        // 목록의 최상단 3개를 가져와서 보여준다
-        UserInfoAPI.getMyActivityList(cursor: 0) { isSuccess, result in
-            MyLoadingView.shared.hide()
-            
-            // 활동 내역이 있냐 없냐에 따라 맞는 뷰 띄워주기
-            if let parties = result?.endedDeliveryPartiesVoList {
-                if parties.count == 0 { // 활동 내역이 없을 때
+                
+                if let parties = result.parties {
+                    if parties.count == 0 {
+                        self.showNoneMyActivityView()
+                    } else {
+                        self.myActivities = parties
+                        self.showExistMyActivityView()
+                        
+                        parties.forEach {
+                            let str = $0.createdAt
+                            let endIdx = str?.index(str!.startIndex, offsetBy: 10)
+                            self.updatedAt.append(String(str![...endIdx!]))
+                        }
+                    }
+                } else {
                     self.showNoneMyActivityView()
-                } else { // 있으면 내역 띄우기
-                    self.showExistMyActivityView()
                 }
-            } else { // 활동 내역이 없을 때
-                self.showNoneMyActivityView()
-            }
-            
-            if isSuccess {
-                if let result = result {
-                    guard var parties = result.endedDeliveryPartiesVoList else { return }
-                    // 3개보다 많으면 그 뒤에 데이터들은 안 쓴다
-                    if parties.count > 3 {
-                        let endIdx = parties.index(parties.startIndex, offsetBy: 2)
-                        parties = Array(parties[...endIdx])
-                    }
-                    self.myActivities = parties
-                    
-                    parties.forEach {
-                        let str = $0.updatedAt
-                        let endIdx = str?.index(str!.startIndex, offsetBy: 10)
-                        self.updatedAt.append(String(str![...endIdx!]))
-                    }
-                }
-            } else {
-                self.showToast(viewController: self, message: "나의 활동을 불러오지 못했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
             }
         }
     }
