@@ -60,7 +60,7 @@ class LoginViewController: UIViewController {
     lazy var appleLoginButton = UIButton().then {
         $0.setImage(UIImage(named: "AppleLogo"), for: .normal)
         $0.adjustsImageWhenHighlighted = false
-        $0.setTitle("  Apple 로그인", for: .normal)
+        $0.setTitle("  Apple로 로그인", for: .normal)
         $0.titleLabel?.textColor = .white
         $0.backgroundColor = .black
         $0.addTarget(self, action: #selector(tapAppleLoginButton), for: .touchUpInside)
@@ -169,8 +169,8 @@ class LoginViewController: UIViewController {
         appleLoginButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
             make.top.equalTo(naverLoginButton.snp.bottom).offset(screenHeight / 85.2)
-            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
-            make.height.equalTo(screenHeight / 16.7)
+            make.width.equalTo(317)
+            make.height.equalTo(44)
         }
         
         autoLoginLabel.snp.makeConstraints { make in
@@ -368,6 +368,9 @@ class LoginViewController: UIViewController {
     
     @objc
     private func tapNaverLoginButton() {
+        if naverLoginVM.returnToken() != "" { // 토큰이 이미 발행되었다면
+            naverLoginVM.naverLoginPaser(self) // 가입 페이지로
+        }
         // 토큰 존재하면 재발급 받아서 로그인 시도
         if naverLoginVM.isValidAccessTokenExpireTimeNow() {
             naverLoginVM.requestAccessTokenWithRefreshToken()
@@ -377,14 +380,17 @@ class LoginViewController: UIViewController {
     
     @objc
     private func tapAppleLoginButton() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
+        RegisterAPI.registerUserFromApple { result in
+            print(result)
+        }
+//        let appleIDProvider = ASAuthorizationAppleIDProvider()
+//        let request = appleIDProvider.createRequest()
+//        request.requestedScopes = [.fullName, .email]
+//
+//        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+//        authorizationController.delegate = self
+//        authorizationController.presentationContextProvider = self
+//        authorizationController.performRequests()
     }
     
     @objc
