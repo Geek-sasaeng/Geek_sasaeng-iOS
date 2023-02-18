@@ -1088,9 +1088,6 @@
 		A248D89D289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
 		A248D89E289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
 		A248D89F289FF344000E2422 /* BankAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248D89C289FF344000E2422 /* BankAccountVC.swift */; };
-		A24C25D42998E87200770771 /* loading_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = A24C25D32998E87200770771 /* loading_ball.json */; };
-		A24C25D52998E87200770771 /* loading_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = A24C25D32998E87200770771 /* loading_ball.json */; };
-		A24C25D62998E87200770771 /* loading_ball.json in Resources */ = {isa = PBXBuildFile; fileRef = A24C25D32998E87200770771 /* loading_ball.json */; };
 		A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
 		A24F0B21289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
 		A24F0B22289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */; };
@@ -1129,6 +1126,9 @@
 		A25F96BC2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */; };
 		A25F96BD2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */; };
 		A25F96BE2972EC9500E0A4F6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */; };
+		A2694CA229A0CE470095221D /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = A2694CA129A0CE470095221D /* loading.json */; };
+		A2694CA329A0CE470095221D /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = A2694CA129A0CE470095221D /* loading.json */; };
+		A2694CA429A0CE470095221D /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = A2694CA129A0CE470095221D /* loading.json */; };
 		A26BD188287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD189287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
 		A26BD18A287B0415003A0A48 /* DormitoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD187287B0415003A0A48 /* DormitoryVC.swift */; };
@@ -1640,7 +1640,6 @@
 		A248D890289FB8F1000E2422 /* systemMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = systemMessageCell.swift; sourceTree = "<group>"; };
 		A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingListTableViewCell.swift; sourceTree = "<group>"; };
 		A248D89C289FF344000E2422 /* BankAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountVC.swift; sourceTree = "<group>"; };
-		A24C25D32998E87200770771 /* loading_ball.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = loading_ball.json; path = ../../../../../loading_ball.json; sourceTree = "<group>"; };
 		A24F0B1F289CC16A007A9C5C /* SplashPlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashPlayerVC.swift; sourceTree = "<group>"; };
 		A2513EC928781D1B0029C279 /* PhoneAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthModel.swift; sourceTree = "<group>"; };
 		A2513F0C2878261F0029C279 /* PhoneAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAuthViewModel.swift; sourceTree = "<group>"; };
@@ -1654,6 +1653,7 @@
 		A25825F52969A00100BC3FF7 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		A260AFB328D26ACD0055C251 /* Geeksasaeng.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Geeksasaeng.entitlements; sourceTree = "<group>"; };
+		A2694CA129A0CE470095221D /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
 		A26BD187287B0415003A0A48 /* DormitoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryVC.swift; sourceTree = "<group>"; };
 		A26DA3C328918D0F002DB07D /* DormitoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DormitoryListViewModel.swift; sourceTree = "<group>"; };
 		A271CBF12976C6DC0045DEE0 /* ActivityListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityListVC.swift; sourceTree = "<group>"; };
@@ -1816,7 +1816,6 @@
 		103F1452286ACA84004B637B /* Geeksasaeng */ = {
 			isa = PBXGroup;
 			children = (
-				A24C25D32998E87200770771 /* loading_ball.json */,
 				10543E64287F0054003B8799 /* IOS_DaumMap_SDK_1.4.0 */,
 				10C8D26F287735E60044552A /* Network */,
 				A2B4208F286F1F1300278F92 /* App */,
@@ -1831,6 +1830,7 @@
 				103F1461286ACA86004B637B /* Info.plist */,
 				10B75B5F289CDD810002865C /* GoogleService-Info.plist */,
 				105442B8287F0083003B8799 /* Kakao-Map-Bridge-Header.h */,
+				A2694CA129A0CE470095221D /* loading.json */,
 				A2FA18B828B3FDF80079AC36 /* splash.json */,
 			);
 			path = Geeksasaeng;
@@ -3000,6 +3000,7 @@
 				105440F9287F0056003B8799 /* all_7.js in Resources */,
 				10543FA9287F0055003B8799 /* copyright.png in Resources */,
 				10544102287F0056003B8799 /* search.css in Resources */,
+				A2694CA229A0CE470095221D /* loading.json in Resources */,
 				10544114287F0056003B8799 /* variables_2.html in Resources */,
 				10544138287F0056003B8799 /* all_9.js in Resources */,
 				103F1460286ACA86004B637B /* LaunchScreen.storyboard in Resources */,
@@ -3065,7 +3066,6 @@
 				10544279287F0057003B8799 /* functions_type.html in Resources */,
 				10543F8B287F0055003B8799 /* OpenSourceNotice.md in Resources */,
 				10543FEE287F0055003B8799 /* globals_type.html in Resources */,
-				A24C25D42998E87200770771 /* loading_ball.json in Resources */,
 				10544219287F0057003B8799 /* all_f.js in Resources */,
 				1054416B287F0056003B8799 /* functions_e.html in Resources */,
 				105440A8287F0056003B8799 /* searchdata.js in Resources */,
@@ -3139,7 +3139,6 @@
 				1054417B287F0056003B8799 /* all_0.html in Resources */,
 				10544115287F0056003B8799 /* variables_2.html in Resources */,
 				10544055287F0055003B8799 /* interface_m_t_map_camera_update-members.html in Resources */,
-				A24C25D52998E87200770771 /* loading_ball.json in Resources */,
 				1054404F287F0055003B8799 /* _m_t_map_location_marker_item_8h.html in Resources */,
 				1054413F287F0056003B8799 /* properties_4.html in Resources */,
 				105440AF287F0056003B8799 /* all_6.js in Resources */,
@@ -3324,6 +3323,7 @@
 				10543F9B287F0055003B8799 /* map_pinup.png in Resources */,
 				10543FE0287F0055003B8799 /* map_pin_shadow.png in Resources */,
 				10544070287F0055003B8799 /* protocol_m_t_map_reverse_geo_coder_delegate_01-p.js in Resources */,
+				A2694CA329A0CE470095221D /* loading.json in Resources */,
 				10544049287F0055003B8799 /* doc.png in Resources */,
 				10544211287F0057003B8799 /* properties_9.js in Resources */,
 				105440BB287F0056003B8799 /* all_a.js in Resources */,
@@ -3427,7 +3427,6 @@
 				1054417C287F0056003B8799 /* all_0.html in Resources */,
 				10544116287F0056003B8799 /* variables_2.html in Resources */,
 				10544056287F0055003B8799 /* interface_m_t_map_camera_update-members.html in Resources */,
-				A24C25D62998E87200770771 /* loading_ball.json in Resources */,
 				10544050287F0055003B8799 /* _m_t_map_location_marker_item_8h.html in Resources */,
 				10544140287F0056003B8799 /* properties_4.html in Resources */,
 				105440B0287F0056003B8799 /* all_6.js in Resources */,
@@ -3612,6 +3611,7 @@
 				10543F9C287F0055003B8799 /* map_pinup.png in Resources */,
 				10543FE1287F0055003B8799 /* map_pin_shadow.png in Resources */,
 				10544071287F0055003B8799 /* protocol_m_t_map_reverse_geo_coder_delegate_01-p.js in Resources */,
+				A2694CA429A0CE470095221D /* loading.json in Resources */,
 				1054404A287F0055003B8799 /* doc.png in Resources */,
 				10544212287F0057003B8799 /* properties_9.js in Resources */,
 				105440BC287F0056003B8799 /* all_a.js in Resources */,
