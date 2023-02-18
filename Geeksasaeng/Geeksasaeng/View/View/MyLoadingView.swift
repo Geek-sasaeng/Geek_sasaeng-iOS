@@ -27,8 +27,7 @@ final class MyLoadingView: UIView {
     }()
     
     private let loadingView: LottieAnimationView = {
-        // TODO: - 애니메이션 파일은 현재 더미 데이터. 디자이너에게 받으면 그걸로 넣을 예정.
-        let view = LottieAnimationView(name: "loading_ball")
+        let view = LottieAnimationView(name: "loading")
         view.loopMode = .loop
         return view
     }()
@@ -41,13 +40,13 @@ final class MyLoadingView: UIView {
         
         self.addSubview(self.contentView)
         self.contentView.addSubview(self.loadingView)
+        loadingView.frame = loadingView.superview!.bounds
         
         self.contentView.snp.makeConstraints {
             $0.center.equalTo(self.safeAreaLayoutGuide)
         }
         self.loadingView.snp.makeConstraints {
             $0.center.equalTo(self.safeAreaLayoutGuide)
-            $0.size.equalTo(300)
         }
     }
     

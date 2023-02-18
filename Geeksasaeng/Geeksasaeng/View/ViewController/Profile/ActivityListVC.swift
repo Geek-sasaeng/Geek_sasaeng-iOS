@@ -353,7 +353,7 @@ extension ActivityListViewController: UITableViewDataSource, UITableViewDelegate
         let date = FormatCreater.sharedLongFormat.date(from: nowData.updatedAt!)
         
         cell.partyTitleLabel.text = nowData.title
-        cell.peopleLabel.text = "\(nowData.maxMatching ?? 0)"
+        cell.peopleLabel.text = "\(nowData.matchingCount ?? 0)"
         cell.foodCategoryLabel.text = nowData.foodCategory
         
         // 뒤에 시간 자르기

@@ -687,6 +687,14 @@ class SearchViewController: UIViewController {
         DispatchQueue.main.async {
             self.partyTableView.reloadData()
         }
+        
+        // 검색 결과에 해당하는 데이터가 없으면
+        if (deliveryCellDataArray.isEmpty) {
+            // 검색 결과 없다는 뷰 띄우기
+            showNoSearchResult()
+        } else {
+            showSearchResultView()
+        }
     }
     
     /* 배달파티 목록, 커서 초기화 함수 */
@@ -789,14 +797,8 @@ class SearchViewController: UIViewController {
             
             nowSearchKeyword = searchTextField.text!
             print("DEBUG: 검색 키워드", nowSearchKeyword)
-            showSearchResultView()
-            saveSearchRecords(nowSearchKeyword)
             
-            // 검색 결과에 해당하는 데이터가 없으면
-            if (deliveryCellDataArray.isEmpty) {
-                // 검색 결과 없다는 뷰 띄우기
-                showNoSearchResult()
-            }
+            saveSearchRecords(nowSearchKeyword)
         }
     }
     

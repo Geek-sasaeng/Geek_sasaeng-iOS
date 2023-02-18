@@ -753,8 +753,7 @@ class ProfileViewController: UIViewController {
     private func tapWithdrawalMembershipConfirmButton() {
         MyLoadingView.shared.show()
         
-        let input = MemberDeleteInput(checkPassword: "apple123!", password: "apple123!")
-        UserInfoAPI.deleteMember(input, memberId: LoginModel.memberId!) { isSuccess in
+        UserInfoAPI.deleteMember(memberId: LoginModel.memberId!) { isSuccess in
             MyLoadingView.shared.hide()
             
             if isSuccess {
