@@ -121,10 +121,6 @@ struct EndedDeliveryPartyList: Codable {
 }
 
 /* 회원 탈퇴 */
-struct MemberDeleteInput: Encodable {
-    var checkPassword: String?
-    var password: String?
-}
 struct MemberDeleteModel: Decodable {
     var code: Int?
     var isSuccess: Bool?
@@ -285,10 +281,11 @@ class UserInfoAPI {
         }
     }
     
-    public static func deleteMember(_ parameter: MemberDeleteInput, memberId: Int, completion: @escaping (Bool) -> Void) {
-        let url = "https://geeksasaeng.shop/members/account-delete/\(memberId)"
+    // 회원탈퇴 API
+    public static func deleteMember(memberId: Int, completion: @escaping (Bool) -> Void) {
+        let url = "https://geeksasaeng.shop/members/account-delete"
         
-        AF.request(url, method: .patch, parameters: parameter, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        AF.request(url, method: .patch, parameters: nil, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
             .validate()
             .responseDecodable(of: MemberDeleteModel.self) { response in
                 switch response.result {
