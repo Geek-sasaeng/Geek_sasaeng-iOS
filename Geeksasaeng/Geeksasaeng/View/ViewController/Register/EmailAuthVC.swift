@@ -502,7 +502,7 @@ class EmailAuthViewController: UIViewController {
                 if let model = model {
                     // 경우에 맞는 토스트 메세지 출력
                     switch model.code {
-                    case 1001:
+                    case 1802:
                         self.showToast(viewController: self, message: "인증번호가 전송되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                         // 이미 돌아가고 있는 타이머가 있으면 -> 재전송 버튼 누른 경우
                         if let timer = self.timer {
@@ -516,8 +516,10 @@ class EmailAuthViewController: UIViewController {
                         self.authSendButton.isHidden = true
                         self.authResendButton.isHidden = false
                         self.remainTimeLabel.isHidden = false
-                    case 2015:
-                        self.showToast(viewController: self, message: "일일 최대 전송 횟수를 초과했습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
+                    case 2803:
+                        self.showToast(viewController: self, message: "유효하지 않은 인증번호입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
+                    case 2804:
+                        self.showToast(viewController: self, message: "이메일 인증은 하루 최대 10번입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     default:
                         self.showToast(viewController: self, message: "잠시 후에 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 212, height: 40)
                     }
