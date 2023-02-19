@@ -312,7 +312,7 @@ class PhoneAuthViewController: UIViewController {
                     self.timer = nil
                     
                     self.phoneNumberId = result?.phoneNumberId
-                    self.showNextView()
+                    self.nextButton.setActivatedNextButton()
                 default:
                     self.showToast(viewController: self, message: message!, font: .customFont(.neoBold, size: 13), color: UIColor(hex: 0xA8A8A8))
                 }
