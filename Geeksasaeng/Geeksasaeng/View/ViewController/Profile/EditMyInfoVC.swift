@@ -292,6 +292,11 @@ class EditMyInfoViewController: UIViewController {
     // MARK: - Functions
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+        
+        // 블러뷰 클릭 시 pw 확인 뷰 닫기
+        if let touch = touches.first, touch.view == self.visualEffectView {
+            closePasswordCheckView()
+        }
     }
     
     private func setNavigationBar() {
@@ -306,11 +311,6 @@ class EditMyInfoViewController: UIViewController {
     }
     
     private func setAttributes() {
-        /* 화면 터치 반응 설정 */
-        view.isUserInteractionEnabled = true
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapViewController))
-        view.addGestureRecognizer(gesture)
-        
         /* 프로필 이미지 뷰 설정 */
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapUserImageView))
         userImageView.addGestureRecognizer(tapGesture)
@@ -407,7 +407,6 @@ class EditMyInfoViewController: UIViewController {
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
             visualEffectView.frame = view.frame
-            visualEffectView.isUserInteractionEnabled = false
             self.userImageView.isUserInteractionEnabled = false
             view.addSubview(visualEffectView)
             self.visualEffectView = visualEffectView
@@ -676,7 +675,7 @@ class EditMyInfoViewController: UIViewController {
     }
     
     @objc
-    private func tapViewController() {
+    private func closePasswordCheckView() {
         if visualEffectView != nil {
             editConfirmView.removeFromSuperview()
             changeProfileImageView.removeFromSuperview()

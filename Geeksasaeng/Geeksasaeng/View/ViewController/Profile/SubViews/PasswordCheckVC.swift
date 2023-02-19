@@ -11,13 +11,14 @@ import SnapKit
 import Then
 
 class PasswordCheckViewController: UIViewController {
+    
     // MARK: - Properties
+    
     /* 이전 뷰에서 받아오는 properties */
     var dormitoryId: Int?
     var loginId: String?
     var nickname: String?
     var profileImg: UIImage?
-    
     
     // MARK: - SubViews
     

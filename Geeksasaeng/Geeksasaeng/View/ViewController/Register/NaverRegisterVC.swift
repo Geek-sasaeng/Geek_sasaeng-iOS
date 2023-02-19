@@ -176,6 +176,7 @@ class NaverRegisterViewController: UIViewController {
             string: "입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        $0.keyboardType = .numberPad
         $0.makeBottomLine()
     }
     
@@ -599,7 +600,7 @@ class NaverRegisterViewController: UIViewController {
                 if let model = model {
                     // 경우에 맞는 토스트 메세지 출력
                     switch model.code {
-                    case 1001:
+                    case 1802:
                         self.showToast(viewController: self, message: "인증번호가 전송되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
                         // 이미 돌아가고 있는 타이머가 있으면 -> 재전송 버튼 누른 경우
                         if let timer = self.timer {
@@ -616,8 +617,10 @@ class NaverRegisterViewController: UIViewController {
                             self.startTimer()
                             self.remainTimeLabel.isHidden = false
                         }
-                    case 2015:
-                        self.showToast(viewController: self, message: "일일 최대 전송 횟수를 초과했습니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
+                    case 2803:
+                        self.showToast(viewController: self, message: "유효하지 않은 인증번호입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
+                    case 2804:
+                        self.showToast(viewController: self, message: "이메일 인증은 하루 최대 10번입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     default:
                         self.showToast(viewController: self, message: "잠시 후에 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 212, height: 40)
                     }
@@ -641,8 +644,13 @@ class NaverRegisterViewController: UIViewController {
                 MyLoadingView.shared.hide()
                 
                 if isSuccess {
+                    // 인증 완료 텍스트 띄우기
+                    self.remainTimeLabel.text = "성공적으로 인증이 완료되었습니다"
+                    self.timer?.cancel()
+                    self.timer = nil
+                    
                     self.emailId = emailId
-                    self.nextButton.setActivatedButton()
+                    self.nextButton.setActivatedNextButton()
                 } else {
                     self.showToast(viewController: self, message: "인증번호가 틀렸습니다", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8), width: 179, height: 40)
                 }

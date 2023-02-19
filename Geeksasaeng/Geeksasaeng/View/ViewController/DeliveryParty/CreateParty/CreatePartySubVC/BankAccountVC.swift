@@ -66,6 +66,7 @@ class BankAccountViewController: UIViewController {
         $0.font = .customFont(.neoMedium, size: 15)
         $0.textColor = .init(hex: 0x5B5B5B)
         $0.addTarget(self, action: #selector(changeValueTitleTextField), for: .editingChanged)
+        $0.keyboardType = .numberPad
         $0.delegate = self
     }
     
