@@ -544,6 +544,11 @@ class EmailAuthViewController: UIViewController {
                 MyLoadingView.shared.hide()
                 
                 if isSuccess {
+                    // 인증 완료 텍스트 띄우기
+                    self.remainTimeLabel.text = "성공적으로 인증이 완료되었습니다"
+                    self.timer?.cancel()
+                    self.timer = nil
+                    
                     self.emailId = emailId
                     self.nextButton.setActivatedNextButton()
                 } else {
