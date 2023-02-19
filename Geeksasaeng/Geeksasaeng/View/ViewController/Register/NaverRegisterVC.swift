@@ -176,6 +176,7 @@ class NaverRegisterViewController: UIViewController {
             string: "입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0xD8D8D8)]
         )
+        $0.keyboardType = .numberPad
         $0.makeBottomLine()
     }
     

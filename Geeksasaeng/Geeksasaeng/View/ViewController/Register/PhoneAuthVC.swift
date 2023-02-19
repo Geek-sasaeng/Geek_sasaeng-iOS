@@ -47,8 +47,12 @@ class PhoneAuthViewController: UIViewController {
     var phoneNumLabel = UILabel()
     var authLabel = UILabel()
     
-    var phoneNumTextField = UITextField()
-    var authTextField = UITextField()
+    var phoneNumTextField = UITextField().then {
+        $0.keyboardType = .numberPad
+    }
+    var authTextField = UITextField().then {
+        $0.keyboardType = .numberPad
+    }
     
     lazy var authSendButton = UIButton().then {
         $0.setTitle("인증번호 전송", for: .normal)
