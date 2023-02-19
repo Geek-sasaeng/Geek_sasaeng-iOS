@@ -306,6 +306,11 @@ class PhoneAuthViewController: UIViewController {
                 
                 switch isSuccess {
                 case .success:
+                    // 인증 완료 텍스트 띄우기
+                    self.remainTimeLabel.text = "성공적으로 인증이 완료되었습니다"
+                    self.timer?.cancel()
+                    self.timer = nil
+                    
                     self.phoneNumberId = result?.phoneNumberId
                     self.showNextView()
                 default:
@@ -316,7 +321,7 @@ class PhoneAuthViewController: UIViewController {
     }
     
     @objc
-    public func showNextView() {
+    private func showNextView() {
         // 일치했을 때에만 화면 전환
         if let idData = self.idData,
            let pwData = self.pwData,
