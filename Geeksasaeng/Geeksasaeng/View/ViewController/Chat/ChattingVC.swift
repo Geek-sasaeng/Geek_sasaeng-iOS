@@ -562,6 +562,7 @@ class ChattingViewController: UIViewController {
         // 큐 생성, 바인딩
         let q = ch.queue("\(LoginModel.memberId ?? 0)", options: .durable)
         q.bind(x)
+        print("=====: ", LoginModel.memberId)
         print("DEBUG: [Rabbit] 수신 대기 중", ch, x, q)
         
         // 큐 수신 리스너 설치 -> 메세지 수신 시 실행될 코드 작성

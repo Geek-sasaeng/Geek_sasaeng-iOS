@@ -155,15 +155,15 @@ class LoginViewController: UIViewController {
         loginButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
             make.top.equalTo(passwordTextField.snp.bottom).offset(screenHeight / 17.04)
-            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
-            make.height.equalTo(screenHeight / 16.7)
+            make.width.equalTo(317)
+            make.height.equalTo(44)
         }
         
         naverLoginButton.snp.makeConstraints { make in
             make.centerX.equalTo(logoImageView)
             make.top.equalTo(loginButton.snp.bottom).offset(screenHeight / 85.2)
-            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
-            make.height.equalTo(screenHeight / 16.7)
+            make.width.equalTo(317)
+            make.height.equalTo(44)
         }
         
         appleLoginButton.snp.makeConstraints { make in
@@ -387,17 +387,17 @@ class LoginViewController: UIViewController {
     
     @objc
     private func tapAppleLoginButton() {
-        RegisterAPI.registerUserFromApple { result in
-            print(result)
-        }
-//        let appleIDProvider = ASAuthorizationAppleIDProvider()
-//        let request = appleIDProvider.createRequest()
-//        request.requestedScopes = [.fullName, .email]
-//
-//        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-//        authorizationController.delegate = self
-//        authorizationController.presentationContextProvider = self
-//        authorizationController.performRequests()
+//        RegisterAPI.registerUserFromApple { result in
+//            print(result)
+//        }
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
     }
     
     @objc
