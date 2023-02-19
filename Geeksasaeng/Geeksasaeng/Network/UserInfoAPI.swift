@@ -35,6 +35,8 @@ struct UserInfoModelResult: Decodable {
     var reportedCount: Int?
     var fcmToken: String?
     var parties: [UserInfoPartiesModel]?
+    var grade: String?
+    var nextGradeAndRemainCredits: String?
 }
 struct UserInfoPartiesModel: Decodable {
     var id: Int?

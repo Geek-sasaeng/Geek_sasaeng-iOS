@@ -47,25 +47,22 @@ class ProfileViewController: UIViewController {
         $0.backgroundColor = .init(hex: 0xF8F8F8)
     }
     
+    lazy var gradeLabel = UILabel().then {
+        $0.font = .customFont(.neoBold, size: 12)
+        $0.textColor = .white
+    }
+    lazy var remainLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 12)
+        $0.textColor = .white
+    }
     /* grade & 복학까지 ~ 가 들어있는 view */
-    let gradeView = UIView().then { view in
+    lazy var gradeView = UIView().then { view in
         view.backgroundColor = .mainColor
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 10
         view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         
-        // TODO: - gradeLabel, remainLabel getUserInfo API에서 불러와야 함
-        let gradeLabel = UILabel().then {
-            $0.font = .customFont(.neoBold, size: 12)
-            $0.textColor = .white
-            $0.text = "신입생"
-        }
         let separateImageView = UIImageView(image: UIImage(named: "MyInfoSeparateIcon"))
-        let remainLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 12)
-            $0.textColor = .white
-            $0.text = "복학까지 5학점 남았어요"
-        }
         let arrowImageView = UIImageView(image: UIImage(named: "MyInfoArrowIcon"))
         
         [ gradeLabel, separateImageView, remainLabel, arrowImageView ].forEach {
@@ -407,8 +404,8 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // 나의 활동 3개 띄우기
         self.getUserInfo()
+        // 나의 활동 3개 띄우기
         self.getUserActivities()
         
         // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
@@ -440,6 +437,8 @@ class ProfileViewController: UIViewController {
             print(result)
             
             if isSuccess {
+                self.gradeLabel.text = result.grade
+                self.remainLabel.text = result.nextGradeAndRemainCredits
                 self.nicknameLabel.text = result.nickname
                 self.universityLabel.text = result.universityName
                 self.dormitoryLabel.text = result.dormitoryName

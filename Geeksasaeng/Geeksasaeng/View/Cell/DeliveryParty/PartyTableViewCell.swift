@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Then
 
 class PartyTableViewCell: UITableViewCell {
     
@@ -23,7 +24,9 @@ class PartyTableViewCell: UITableViewCell {
     let timeLabel = UILabel()
     let titleLabel = UILabel()
     let categoryLabel = UILabel()
-    let hashtagLabel = UILabel()
+    let hashtagLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 12)
+    }
     
     // MARK: - layoutSubviews()
     
@@ -35,7 +38,20 @@ class PartyTableViewCell: UITableViewCell {
         setAttributes()
     }
     
-    // MARK: - Set Functions
+    // MARK: - prepareForReuse()
+    
+    // reuse cell을 사용하기 전에 뷰를 초기화 해주는 것
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.text = ""
+        peopleLabel.text = ""
+        timeLabel.text = ""
+        categoryLabel.text = ""
+        hashtagLabel.textColor = .init(hex: 0xEFEFEF)
+    }
+    
+    // MARK: - Functions
     
     private func addSubViews() {
         [
@@ -87,7 +103,6 @@ class PartyTableViewCell: UITableViewCell {
         timeLabel.setTextAndColorAndFont(textColor: .mainColor, font: .customFont(.neoMedium, size: 14))
         titleLabel.setTextAndColorAndFont(textColor: .black, font: .customFont(.neoBold, size: 18))
         categoryLabel.setTextAndColorAndFont(textColor: UIColor(hex: 0x636363), font: .customFont(.neoMedium, size: 12))
-        hashtagLabel.setTextAndColorAndFont(textColor: UIColor(hex: 0xEFEFEF), font: .customFont(.neoMedium, size: 12))
         hashtagLabel.text = "같이 먹고 싶어요"
         
         self.selectionStyle = .gray

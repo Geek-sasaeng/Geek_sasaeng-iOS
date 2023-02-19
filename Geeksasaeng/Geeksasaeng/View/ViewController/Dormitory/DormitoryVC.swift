@@ -38,10 +38,14 @@ class DormitoryViewController: UIViewController {
     }
     
     let questionLabel = UILabel().then {
-        $0.text = "현재 어느 기숙사에 거주하고 계신가요?"
         $0.numberOfLines = 2
         $0.font = .customFont(.neoBold, size: 24)
         $0.textColor = .init(hex: 0x2F2F2F)
+        
+        // 행간 설정
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.2
+        $0.attributedText = NSMutableAttributedString(string: "현재 어느 기숙사에\n거주하고 계신가요?", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
     }
     
     let guideLabel = UILabel().then {
@@ -99,7 +103,6 @@ class DormitoryViewController: UIViewController {
         questionLabel.snp.makeConstraints { make in
             make.top.equalTo(welcomeLabel.snp.bottom).offset(screenHeight / 12.52)
             make.left.equalToSuperview().inset(screenWidth / 14.03)
-            make.width.equalTo(screenWidth / 2.01)
         }
         
         guideLabel.snp.makeConstraints { make in

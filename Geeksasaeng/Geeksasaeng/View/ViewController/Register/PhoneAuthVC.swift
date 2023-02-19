@@ -47,8 +47,12 @@ class PhoneAuthViewController: UIViewController {
     var phoneNumLabel = UILabel()
     var authLabel = UILabel()
     
-    var phoneNumTextField = UITextField()
-    var authTextField = UITextField()
+    var phoneNumTextField = UITextField().then {
+        $0.keyboardType = .numberPad
+    }
+    var authTextField = UITextField().then {
+        $0.keyboardType = .numberPad
+    }
     
     lazy var authSendButton = UIButton().then {
         $0.setTitle("인증번호 전송", for: .normal)
@@ -305,7 +309,7 @@ class PhoneAuthViewController: UIViewController {
                     self.phoneNumberId = result?.phoneNumberId
                     self.showNextView()
                 default:
-                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                    self.showToast(viewController: self, message: message!, font: .customFont(.neoBold, size: 13), color: UIColor(hex: 0xA8A8A8))
                 }
             }
         }
