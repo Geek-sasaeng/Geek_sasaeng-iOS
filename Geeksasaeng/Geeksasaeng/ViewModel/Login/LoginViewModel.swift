@@ -45,15 +45,18 @@ class LoginViewModel {
                     LoginModel.nickname = result.result?.nickName
                     LoginModel.profileImgUrl = result.result?.profileImgUrl
                     LoginModel.memberId = result.result?.memberId
+                    LoginModel.dormitoryId = result.result?.dormitoryId
+                    LoginModel.dormitoryName = result.result?.dormitoryName
                     
                     if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
-                        print("DEBUG: 네이버 로그인 성공", result.result)
+                        print("DEBUG: 네이버 로그인 성공 후 기숙사 화면", result.result)
                         print("DEBUG: \(result.code!)")
                         viewController.showDormitoryView(nickname: result.result?.nickName ?? "홍길동")
                     } else { // 로그인 성공 -> 홈 화면으로 이동
-                        viewController.dormitoryInfo = DormitoryNameResult(id: result.result?.dormitoryId, name: result.result?.dormitoryName)
                         viewController.userImageUrl = result.result?.profileImgUrl
                         viewController.showHomeView()
+                        
+                        print("DEBUG: 네이버 로그인 성공 후 홈 화면", result.result)
                     }
                     
                 } else {

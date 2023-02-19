@@ -20,7 +20,7 @@ class ProfileViewController: UIViewController {
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
-    var naverLoginVM = naverLoginViewModel()
+    var naverLoginVM = NaverLoginViewModel()
     var safariVC: SFSafariViewController?
     var myActivities: [EndedDeliveryPartyList] = [] {
         didSet {

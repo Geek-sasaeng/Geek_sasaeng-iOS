@@ -520,7 +520,7 @@ class DeliveryViewController: UIViewController {
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
         // 기숙사 id가 nil일 경우, 배달파티 목록을 불러올 수 없기 때문에 로그 띄우기
-        guard let dormitoryId = LoginModel.dormitoryId else {
+        guard let dormitoryId = self.dormitoryInfo.id else {
             print("DEBUG: 기숙사id가 nil값입니다.")
             return
         }

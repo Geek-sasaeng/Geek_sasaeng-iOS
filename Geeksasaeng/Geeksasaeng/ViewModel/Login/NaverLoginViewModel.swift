@@ -8,7 +8,7 @@
 import Alamofire
 import NaverThirdPartyLogin
 
-class naverLoginViewModel {
+class NaverLoginViewModel {
     let naverLoginModel = NaverLoginModel()
     
     // 토큰이 남아 있는지 확인
@@ -66,7 +66,7 @@ class naverLoginViewModel {
                 
                 // 그니까 로그인 버튼 누르면 email, phone 정보 가져와서 기존 DB랑 비교하고 있으면 DB에 있는 사용자 정보 불러와서 로그인 완료, 홈 화면으로  <->  없으면 회원가입 화면으로
                 
-                if resultCode.trimmingCharacters(in: .whitespaces) == "success"{
+                if resultCode.trimmingCharacters(in: .whitespaces) == "success" {
                     let resultJson = body["response"] as! [String: Any]
                     
                     let phone = resultJson["mobile"] as! String

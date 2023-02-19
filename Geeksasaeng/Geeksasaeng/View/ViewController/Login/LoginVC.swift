@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
-    let naverLoginVM = naverLoginViewModel()
+    let naverLoginVM = NaverLoginViewModel()
     var accessToken: String?
     var dormitoryInfo: DormitoryNameResult?
     var userImageUrl: String?
@@ -214,9 +214,9 @@ class LoginViewController: UIViewController {
                 
                 // 로그인 완료 후 경우에 따른 화면 전환
                 if result.loginStatus == "NEVER" {
-                    self.showNextView(isFirstLogin: true, nickName: result.nickname ?? "홍길동")
+                    self.showDormitoryView(nickname: result.nickname ?? "홍길동")
                 } else {
-                    self.showNextView(isFirstLogin: false)
+                    self.showHomeView()
                 }
             }
         }
@@ -253,21 +253,6 @@ class LoginViewController: UIViewController {
         // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
         NotificationCenter.default.addObserver(self, selector: #selector(completeLogout), name: NSNotification.Name("CompleteLogout"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(completeWithdrawal), name: NSNotification.Name("CompleteWithdrawal"), object: nil)
-    }
-    
-    /* 로그인 완료 후 화면 전환 */
-    public func showNextView(isFirstLogin: Bool, nickName: String? = nil) {
-        // 첫 로그인 시에는 기숙사 선택 화면으로 이동
-        if isFirstLogin {
-            let dormitoryVC = DormitoryViewController()
-            dormitoryVC.userNickName = nickName
-            dormitoryVC.modalTransitionStyle = .crossDissolve
-            dormitoryVC.modalPresentationStyle = .fullScreen
-            present(dormitoryVC, animated: true)
-        } else {
-            // 첫 로그인이 아니면 바로 홈 화면으로 이동
-            showHomeView()
-        }
     }
     
     /* 홈 화면으로 이동 */
@@ -355,9 +340,9 @@ class LoginViewController: UIViewController {
                         
                         // 로그인 완료 후 경우에 따른 화면 전환
                         if result.loginStatus == "NEVER" {
-                            self.showNextView(isFirstLogin: true, nickName: result.nickName ?? "홍길동")
+                            self.showDormitoryView(nickname: result.nickName ?? "홍길동")
                         } else {
-                            self.showNextView(isFirstLogin: false)
+                            self.showHomeView()
                         }
                     case 2011, 2012, 2400:
                         self.showToast(viewController: self, message: "로그인 실패! 다시 시도해주세요", font: .customFont(.neoMedium, size: 15), color: .init(hex: 0xA8A8A8), width: 229, height: 40, top: 26)
