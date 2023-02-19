@@ -15,25 +15,22 @@ class ProfileCardViewController: UIViewController {
     
     var blurView: UIVisualEffectView?
     
+    lazy var gradeLabel = UILabel().then {
+        $0.font = .customFont(.neoBold, size: 12)
+        $0.textColor = .white
+    }
+    lazy var remainLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 12)
+        $0.textColor = .white
+    }
     /* grade & 복학까지 ~ 가 들어있는 view */
-    let gradeView = UIView().then { view in
+    lazy var gradeView = UIView().then { view in
         view.backgroundColor = .mainColor
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 10
         view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         
-        // TODO: - gradeLabel, remainLabel getUserInfo API에서 불러와야 함
-        let gradeLabel = UILabel().then {
-            $0.font = .customFont(.neoBold, size: 12)
-            $0.textColor = .white
-            $0.text = "신입생"
-        }
         let separateImageView = UIImageView(image: UIImage(named: "MyInfoSeparateIcon"))
-        let remainLabel = UILabel().then {
-            $0.font = .customFont(.neoMedium, size: 12)
-            $0.textColor = .white
-            $0.text = "복학까지 5학점 남았어요"
-        }
         let arrowImageView = UIImageView(image: UIImage(named: "MyInfoArrowIcon"))
         
         [ gradeLabel, separateImageView, remainLabel, arrowImageView ].forEach {
@@ -84,10 +81,13 @@ class ProfileCardViewController: UIViewController {
             $0.layer.cornerRadius = 54
         }
         
+        // TODO: - 추후에 리팩토링 굳이 api 안 써도 됨 init으로 프로필 화면의 데이터 가져오면 되니까
         UserInfoAPI.getUserInfo { isSuccess, result in
             MyLoadingView.shared.hide()
             
             if isSuccess {
+                self.gradeLabel.text = result.grade
+                self.remainLabel.text = result.nextGradeAndRemainCredits
                 nicknameLabel.text = result.nickname
                 universityLabel.text = result.universityName
                 dormitoryLabel.text = result.dormitoryName
@@ -156,6 +156,7 @@ class ProfileCardViewController: UIViewController {
             $0.textColor = .init(hex: 0xA8A8A8)
         }
         
+        // TODO: - 추후 리팩토링
         UserInfoAPI.getUserInfo { isSuccess, result in
             MyLoadingView.shared.hide()
             
