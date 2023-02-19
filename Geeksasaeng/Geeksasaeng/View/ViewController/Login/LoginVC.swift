@@ -507,10 +507,15 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             let idToken = appleIDCredential.identityToken!
             let tokenStr = String(data: idToken, encoding: .utf8)
             
-            print("User ID : \(userIdentifier)")
-            print("User Email : \(email ?? "")")
-            print("User Name : \((fullName?.givenName ?? "") + (fullName?.familyName ?? ""))")
-            print("token : \(tokenStr ?? "")")
+            guard let code = appleIDCredential.authorizationCode else { return }
+            let codeStr = String(data: code, encoding: .utf8)
+            
+            print(".user : \(userIdentifier)")
+            print(".email : \(email ?? "")")
+            print(".full name : \((fullName?.givenName ?? "") + (fullName?.familyName ?? ""))")
+            print(".identityToken : \(tokenStr ?? "")")
+            print(".authorizationCode : \(codeStr ?? "")")
+            
             
         default:
             break
