@@ -228,6 +228,20 @@ class NaverRegisterViewController: UIViewController {
         addRightSwipe()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -397,7 +411,7 @@ class NaverRegisterViewController: UIViewController {
         setMainLabelAttrs(emailLabel, text: "학교 이메일 입력")
         
         /* textFields attr */
-        setTextFieldAttrs(nickNameTextField, msg: "3-8자 영문으로 입력", width: 210)
+        setTextFieldAttrs(nickNameTextField, msg: "3-8자 영문 혹은 한글로 입력", width: 210)
         nickNameTextField.autocapitalizationType = .none
         
         setTextFieldAttrs(emailTextField, msg: "입력하세요", width: 307)
@@ -629,6 +643,21 @@ class NaverRegisterViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    // 인증번호 textfield 채울 때 뷰 y값을 키보드 높이만큼 올리기 -> 밑에 있어서 키보드에 가려지기 때문
+    @objc
+    private func keyboardWillChange(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if authNumTextField.isFirstResponder {
+                self.view.frame.origin.y = -keyboardSize.height
+            }
+        }
+    }
+    
+    @objc
+    private func keyboardWillHide() {
+        self.view.frame.origin.y = 0    // 뷰의 y값 되돌리기
     }
     
     @objc
