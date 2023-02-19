@@ -305,7 +305,7 @@ class PhoneAuthViewController: UIViewController {
                     self.phoneNumberId = result?.phoneNumberId
                     self.showNextView()
                 default:
-                    self.showToast(viewController: self, message: message!, font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8))
+                    self.showToast(viewController: self, message: message!, font: .customFont(.neoBold, size: 13), color: UIColor(hex: 0xA8A8A8))
                 }
             }
         }
