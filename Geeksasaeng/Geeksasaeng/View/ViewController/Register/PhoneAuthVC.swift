@@ -255,7 +255,7 @@ class PhoneAuthViewController: UIViewController {
         [authSendButton, authCheckButton].forEach {
             $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
             $0.layer.cornerRadius = 5
-            $0.clipsToBounds = true
+//            $0.clipsToBounds = true
         }
     }
     

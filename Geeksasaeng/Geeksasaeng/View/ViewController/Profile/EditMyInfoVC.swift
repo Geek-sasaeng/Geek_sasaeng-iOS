@@ -273,6 +273,9 @@ class EditMyInfoViewController: UIViewController {
     
     var selectedDormitory: UIButton?
     
+    var isChangedNickname = false
+    var isCheckedNickname = false
+    
     // MARK: - Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -541,7 +544,13 @@ class EditMyInfoViewController: UIViewController {
         visualEffectView = nil
         changeProfileImageView.removeFromSuperview()
         
-        self.activeRightBarButton()
+        if isChangedNickname {
+            if isCheckedNickname {
+                self.activeRightBarButton()
+            }
+        } else {
+            self.activeRightBarButton()
+        }
     }
     
     @objc
@@ -611,6 +620,7 @@ class EditMyInfoViewController: UIViewController {
                     case .success:
                         self.nickname = newNickname
                         self.showToast(viewController: self, message: "사용 가능한 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        self.isCheckedNickname = true
                         self.activeRightBarButton()
                     case .onlyRequestSuccess:
                         self.showToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoBold, size: 15), color: .mainColor)
@@ -627,7 +637,13 @@ class EditMyInfoViewController: UIViewController {
     @objc
     private func tapDormitoryButton(_ sender: UIButton) {
         if sender != selectedDormitory {
-            activeRightBarButton()
+            if isChangedNickname {
+                if isCheckedNickname {
+                    activeRightBarButton()
+                }
+            } else {
+                activeRightBarButton()
+            }
             
             selectedDormitory?.setTitleColor(.init(hex: 0xA8A8A8), for: .normal)
             selectedDormitory = sender
@@ -677,6 +693,7 @@ extension EditMyInfoViewController: UITextFieldDelegate {
         
         switch textField {
         case nicknameDataTextField:
+            self.isChangedNickname = true
             nicknameValidationLabel.isHidden = false
             nicknameCheckButton.setActivatedCheckButton()
             nicknameDataTextField.subviews.first?.backgroundColor = .mainColor
@@ -719,6 +736,12 @@ extension EditMyInfoViewController: PHPickerViewControllerDelegate {
             }
         }
         
-        self.activeRightBarButton()
+        if isChangedNickname {
+            if isCheckedNickname {
+                self.activeRightBarButton()
+            }
+        } else {
+            self.activeRightBarButton()
+        }
     }
 }
