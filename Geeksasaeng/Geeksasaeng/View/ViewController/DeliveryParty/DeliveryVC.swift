@@ -11,12 +11,6 @@ import Kingfisher
 import SnapKit
 import Then
 
-/* Delegate Pattern을 구현하기 위한 프로토콜 */
-protocol UpdateDeliveryDelegate {
-    // 배달 목록을 새로고침 해준다.
-   func updateDeliveryList()
-}
-
 class DeliveryViewController: UIViewController {
     
     // MARK: - Properties
@@ -24,7 +18,7 @@ class DeliveryViewController: UIViewController {
     let screenHeight = UIScreen.main.bounds.height
     
     // 유저의 기숙사 정보 -> id랑 name 들어있음!
-    var dormitoryInfo = DormitoryNameResult(id: LoginModel.dormitoryId, name: LoginModel.dormitoryName)
+    var dormitoryInfo: DormitoryNameResult?
     // userImageUrl -> 채팅, 내 프로필 등에서 사용
     var userImageUrl: String?
     
@@ -315,6 +309,8 @@ class DeliveryViewController: UIViewController {
         if let name = LoginModel.dormitoryName {
             dormitoryLabel.text = "제" + name
         }
+        // 기숙사 정보 업데이트
+        self.dormitoryInfo = DormitoryNameResult(id: LoginModel.dormitoryId, name: LoginModel.dormitoryName)
         
         super.viewWillAppear(animated)
         // 이 뷰가 보여지면 네비게이션바를 나타나게 해야한다
@@ -523,7 +519,7 @@ class DeliveryViewController: UIViewController {
         self.partyTableView.tableFooterView = createSpinnerFooter()
         
         // 기숙사 id가 nil일 경우, 배달파티 목록을 불러올 수 없기 때문에 로그 띄우기
-        guard let dormitoryId = self.dormitoryInfo.id else {
+        guard let dormitoryId = self.dormitoryInfo?.id else {
             print("DEBUG: 기숙사id가 nil값입니다.")
             return
         }
@@ -954,7 +950,6 @@ class DeliveryViewController: UIViewController {
     private func tapCreatePartyButton() {
         let createPartyVC = CreatePartyViewController()
         createPartyVC.dormitoryInfo = dormitoryInfo
-        createPartyVC.delegate = self
         self.navigationController?.pushViewController(createPartyVC, animated: true)
     }
     
@@ -1042,9 +1037,6 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let partyId = deliveryCellDataArray[indexPath.row].id else { return }
         let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo)
-        
-        // delegate로 자기 자신(DeliveryVC)를 넘겨줌
-        partyVC.delegate = self
         self.navigationController?.pushViewController(partyVC, animated: true)
         
         // 클릭된 셀 배경색 제거 & separator 다시 나타나게 하기 위해서
@@ -1114,15 +1106,4 @@ extension DeliveryViewController: UICollectionViewDataSource, UICollectionViewDe
         }
     }
     
-}
-
-// MARK: - UpdateDeliveryDelegate
-
-extension DeliveryViewController: UpdateDeliveryDelegate {
-    /* PartyVC에서 배달 파티가 생성/수정/삭제되면,
-     DeliveryVC의 배달 목록을 새로고침 시키는 함수 */
-    func updateDeliveryList() {
-        print("DEBUG: 파티가 업데이트됐으니 테이블뷰 리로드 할게요")
-        pullToRefresh()
-    }
 }

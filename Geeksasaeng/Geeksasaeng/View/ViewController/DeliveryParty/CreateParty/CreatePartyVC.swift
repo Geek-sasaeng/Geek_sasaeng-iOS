@@ -21,7 +21,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     var isEditedContentsTextView = false // 내용이 수정되었는지
     
     var dormitoryInfo: DormitoryNameResult?
-    var delegate: UpdateDeliveryDelegate?
     
     /* 네이버 지도 마커 */
     var naverMarker = NMFMarker()
@@ -656,7 +655,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
             let childView = BankAccountViewController()
             childView.dormitoryInfo = self.dormitoryInfo
-            childView.delegate = self.delegate
             self.selectedUrlLabel.isUserInteractionEnabled = false
             self.selectedLocationLabel.isUserInteractionEnabled = false
             self.addChild(childView)
