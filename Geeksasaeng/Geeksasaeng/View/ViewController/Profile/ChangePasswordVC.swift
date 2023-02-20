@@ -10,7 +10,9 @@ import SnapKit
 import Then
 
 class ChangePasswordViewController: UIViewController {
+    
     // MARK: - Properties
+
     /* 이전 뷰에서 받아오는 properties */
     var dormitoryId: Int?
     var loginId: String?
@@ -23,6 +25,7 @@ class ChangePasswordViewController: UIViewController {
     
     
     // MARK: - SubViews
+    
     let deactivatedRightBarButtonItem = UIBarButtonItem().then {
         let registerButton = UIButton().then {
             $0.setTitle("완료", for: .normal)
@@ -37,8 +40,12 @@ class ChangePasswordViewController: UIViewController {
     let passwordCheckLabel = UILabel()
     
     /* data textField */
-    lazy var passwordDataTextField = UITextField()
-    lazy var passwordCheckDataTextField = UITextField()
+    lazy var passwordDataTextField = UITextField().then {
+        $0.delegate = self
+    }
+    lazy var passwordCheckDataTextField = UITextField().then {
+        $0.delegate = self
+    }
     
     /* textField 아래 notice label */
     let passwordChangeValidationLabel = UILabel()
@@ -48,7 +55,8 @@ class ChangePasswordViewController: UIViewController {
     let showPasswordChangeTextFieldButton = UIButton()
     let showPasswordCheckTextFieldButton = UIButton()
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -61,6 +69,7 @@ class ChangePasswordViewController: UIViewController {
     
     
     // MARK: - Functions
+    
     private func setAttributes() {
         passwordLabel.text = "비밀번호 변경"
         passwordCheckLabel.text = "비밀번호 확인"
@@ -211,6 +220,8 @@ class ChangePasswordViewController: UIViewController {
     }
 }
 
+// MARK: - UITextFieldDelegate
+
 extension ChangePasswordViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         switch textField {
@@ -267,5 +278,16 @@ extension ChangePasswordViewController: UITextFieldDelegate {
         default:
             return true
         }
+    }
+    
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리거나 커서 이동
+        if textField == passwordDataTextField {
+            passwordCheckDataTextField.becomeFirstResponder()
+        } else {
+            passwordCheckDataTextField.resignFirstResponder()
+        }
+        return true
     }
 }

@@ -42,9 +42,10 @@ class ProfileViewController: UIViewController {
         $0.backgroundColor = .white
     }
     
+    // TODO: - 스크롤뷰 배경색 바꿔야 함
     /* MyInfo View가 올라가는 background View */
     let backgroundView = UIView().then {
-        $0.backgroundColor = .init(hex: 0xF8F8F8)
+        $0.backgroundColor = .init(hex: 0xF1F5F9)
     }
     
     lazy var gradeLabel = UILabel().then {
@@ -500,6 +501,7 @@ class ProfileViewController: UIViewController {
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
+        self.navigationController?.navigationBar.backgroundColor = UIColor(hex: 0xF1F5F9)
         
         /* 서비스 labels Attrs 설정 */
         [ editMyInfoLabel, customerServiceLabel, logoutLabel ].forEach {
