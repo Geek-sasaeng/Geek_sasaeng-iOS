@@ -122,6 +122,7 @@ class AgreementViewController: UIViewController {
         button.backgroundColor = .mainColor
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(tapCompleteButton), for: .touchUpInside)
+        button.setDeactivatedNextButton()
         return button
     }()
     
@@ -356,22 +357,53 @@ class AgreementViewController: UIViewController {
     
     @objc
     private func tapCheckButton(_ sender: UIButton) {
-        if sender.currentImage == UIImage(systemName: "square") {
-            sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-            if sender == termsOfUseAgreementCheckBox { isAgreeTermsOfUse = true }
-            if sender == personalInfoAgreementCheckBox { isAgreePersonalInfo = true }
-        } else {
-            sender.setImage(UIImage(systemName: "square"), for: .normal)
-        }
-        
-        if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "checkmark.square") {
-            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-            isAgreeTermsOfUse = true
-            isAgreePersonalInfo = true
-        } else if sender == wholeAgreementCheckBox && sender.currentImage == UIImage(systemName: "square") {
-            termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
-            personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+        switch sender {
+        case wholeAgreementCheckBox:
+            if sender.currentImage == UIImage(systemName: "checkmark.square") { // 전체 동의 체크 해제할 때
+                sender.setImage(UIImage(systemName: "square"), for: .normal)
+                termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+                personalInfoAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+                isAgreeTermsOfUse = false
+                isAgreePersonalInfo = false
+                completeButton.setDeactivatedNextButton()
+            } else {// 전체 동의 체크할 때
+                sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                termsOfUseAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                personalInfoAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                isAgreeTermsOfUse = true
+                isAgreePersonalInfo = true
+                completeButton.setActivatedNextButton()
+            }
+        case termsOfUseAgreementCheckBox:
+            if sender.currentImage == UIImage(systemName: "square") { // 체크할 때
+                sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                isAgreeTermsOfUse = true
+                if isAgreeTermsOfUse && isAgreePersonalInfo {
+                    completeButton.setActivatedNextButton()
+                    wholeAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                }
+            } else {
+                sender.setImage(UIImage(systemName: "square"), for: .normal)
+                isAgreeTermsOfUse = false
+                completeButton.setDeactivatedNextButton()
+                wholeAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+            }
+        case personalInfoAgreementCheckBox:
+            if sender.currentImage == UIImage(systemName: "square") { // 체크할 때
+                sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                isAgreePersonalInfo = true
+                if isAgreeTermsOfUse && isAgreePersonalInfo {
+                    completeButton.setActivatedNextButton()
+                    wholeAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                }
+            } else {
+                sender.setImage(UIImage(systemName: "square"), for: .normal)
+                isAgreePersonalInfo = false
+                completeButton.setDeactivatedNextButton()
+                wholeAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+            }
+        default:
+            return
         }
     }
     
