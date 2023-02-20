@@ -158,6 +158,8 @@ class DormitoryViewController: UIViewController {
         let navController = tabBarController.viewControllers![0] as! UINavigationController
         let deliveryVC = navController.topViewController as! DeliveryViewController
         
+        LoginModel.dormitoryId = dormitoryInfo?.id
+        LoginModel.dormitoryName = dormitoryInfo?.name
         deliveryVC.dormitoryInfo = dormitoryInfo ?? DormitoryNameResult(id: 1, name: "제1기숙사")
         
         tabBarController.modalTransitionStyle = .crossDissolve
