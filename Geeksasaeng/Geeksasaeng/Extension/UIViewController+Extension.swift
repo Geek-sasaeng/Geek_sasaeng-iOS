@@ -100,6 +100,23 @@ extension UIViewController {
         view.addGestureRecognizer(rightSwipe)
     }
     
+    // 네비게이션 바 배경색, 폰트 설정
+    public func setCustomNavigationBar(_ backgroundColor: UIColor = .white) {
+        // navigation bar 배경색 설정
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = backgroundColor
+        appearance.shadowImage = nil
+        appearance.shadowColor = nil    // 하단에 1px 선 생기는 거 제거
+        
+        // title 폰트 설정
+        let titleAttribute = [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 18), NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0x2F2F2F)]
+        appearance.titleTextAttributes = titleAttribute
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+    
     // MARK: - @objc Functions
     
     /* 스와이프 감지했을 때, 이전 화면으로 돌아가는 동작 실행 */
