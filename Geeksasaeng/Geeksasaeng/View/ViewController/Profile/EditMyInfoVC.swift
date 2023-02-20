@@ -263,11 +263,11 @@ class EditMyInfoViewController: UIViewController {
     var visualEffectView: UIVisualEffectView?
     
     // MARK: - Properties
-    /* 회원정보 (수정 시 변경) */
     
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
+    /* 회원정보 (수정 시 변경) */
     var dormitoryId: Int?
     var nickname: String?
     var dormitoryList: [Dormitory]?
@@ -277,7 +277,8 @@ class EditMyInfoViewController: UIViewController {
     var isChangedNickname = false
     var isCheckedNickname = false
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -290,7 +291,14 @@ class EditMyInfoViewController: UIViewController {
         setUserInfo()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setCustomNavigationBar()
+    }
+    
     // MARK: - Functions
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
         
