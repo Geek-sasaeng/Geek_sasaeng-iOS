@@ -11,7 +11,9 @@ import NaverThirdPartyLogin
 import AuthenticationServices
 
 class LoginViewController: UIViewController {
+    
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -466,9 +468,15 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
 
 extension LoginViewController: UITextFieldDelegate {
     
-    // 키보드의 return 버튼 누르면 키보드 내려가게
+    // 키보드의 return 버튼 누르면 실행
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if textField == idTextField {
+            // 커서 이동
+            passwordTextField.becomeFirstResponder()
+        } else {
+            // 키보드 내리기
+            textField.resignFirstResponder()
+        }
         return true
     }
 }
