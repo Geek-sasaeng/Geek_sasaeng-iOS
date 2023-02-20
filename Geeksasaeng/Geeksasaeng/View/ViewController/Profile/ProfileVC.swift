@@ -34,6 +34,7 @@ class ProfileViewController: UIViewController {
     
     // 스크롤뷰
     lazy var scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
         $0.delegate = self
     }
     
@@ -573,12 +574,12 @@ class ProfileViewController: UIViewController {
     private func setLayouts() {
         // 스크롤뷰
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(view.safeAreaLayoutGuide)
             make.width.equalTo(screenWidth)
         }
         
         // 컨텐츠뷰
-        contentView.snp.makeConstraints { (make) in
+        contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
             make.bottom.equalTo(withdrawalMembershipButton.snp.bottom).offset(screenHeight / 20)
         }
