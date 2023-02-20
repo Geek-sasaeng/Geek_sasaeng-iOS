@@ -21,11 +21,11 @@ class EmailAuthViewModel {
                 if result.isSuccess! {
                     print("DEBUG: 이메일 전송 성공", result.message!)
                 } else {
-                    print("DEBUG: 이메일 전송 실패", result.message!)
+                    print("DEBUG: 이메일 전송 실패", result)
                 }
                 completion(result)
             case .failure(let error):
-                print("DEBUG: 이메일 전송 실패", error.localizedDescription)
+                print("DEBUG: 이메일 전송 실패", error)
                 completion(nil)
             }
         }

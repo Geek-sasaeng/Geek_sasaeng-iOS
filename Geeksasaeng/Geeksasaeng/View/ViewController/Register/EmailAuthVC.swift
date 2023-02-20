@@ -521,6 +521,8 @@ class EmailAuthViewController: UIViewController {
                         self.authSendButton.isHidden = true
                         self.authResendButton.isHidden = false
                         self.remainTimeLabel.isHidden = false
+                    case 2607:
+                        self.showToast(viewController: self, message: "이미 인증된 이메일입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     case 2803:
                         self.showToast(viewController: self, message: "유효하지 않은 인증번호입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     case 2804:
