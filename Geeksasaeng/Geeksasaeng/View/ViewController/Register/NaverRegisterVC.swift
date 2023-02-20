@@ -9,10 +9,10 @@ import UIKit
 import SnapKit
 import Then
 
-// MARK: - 수정된 회원가입 Res에 맞게 수정 필요
 class NaverRegisterViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -140,13 +140,17 @@ class NaverRegisterViewController: UIViewController {
         view.isHidden = true
     }
     
-    var nickNameLabel = UILabel()
-    var schoolLabel = UILabel()
-    var emailLabel = UILabel()
+    let nickNameLabel = UILabel()
+    let schoolLabel = UILabel()
+    let emailLabel = UILabel()
     
-    var nickNameTextField = UITextField()
-    var emailTextField = UITextField()
-    var emailAddressTextField = UITextField()
+    lazy var nickNameTextField = UITextField().then {
+        $0.delegate = self
+    }
+    lazy var emailTextField = UITextField().then {
+        $0.delegate = self
+    }
+    let emailAddressTextField = UITextField()
     
     lazy var nickNameCheckButton = UIButton().then {
         $0.setTitle("중복 확인", for: .normal)
@@ -178,6 +182,7 @@ class NaverRegisterViewController: UIViewController {
         )
         $0.keyboardType = .numberPad
         $0.makeBottomLine()
+        $0.delegate = self
     }
     
     lazy var authResendButton = UIButton().then {
@@ -703,5 +708,16 @@ class NaverRegisterViewController: UIViewController {
             
             present(agreementVC, animated: true)
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension NaverRegisterViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리기
+        textField.resignFirstResponder()
+        return true
     }
 }

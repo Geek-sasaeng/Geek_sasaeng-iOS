@@ -13,6 +13,7 @@ import Then
 class EmailAuthViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -139,7 +140,9 @@ class EmailAuthViewController: UIViewController {
     
     let schoolLabel = UILabel()
     let emailLabel = UILabel()
-    let emailTextField = UITextField()
+    lazy var emailTextField = UITextField().then {
+        $0.delegate = self
+    }
     let emailAddressTextField = UITextField()
     
     lazy var authSendButton = UIButton().then {
@@ -162,6 +165,7 @@ class EmailAuthViewController: UIViewController {
         )
         $0.keyboardType = .numberPad
         $0.makeBottomLine()
+        $0.delegate = self
     }
     
     lazy var authResendButton = UIButton().then {
@@ -575,5 +579,16 @@ class EmailAuthViewController: UIViewController {
             
             present(phoneAuthVC, animated: true)
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension EmailAuthViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리기
+        textField.resignFirstResponder()
+        return true
     }
 }

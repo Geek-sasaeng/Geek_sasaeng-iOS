@@ -10,7 +10,9 @@ import SnapKit
 import Then
 
 class PhoneAuthViewController: UIViewController {
+    
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -47,11 +49,13 @@ class PhoneAuthViewController: UIViewController {
     var phoneNumLabel = UILabel()
     var authLabel = UILabel()
     
-    var phoneNumTextField = UITextField().then {
+    lazy var phoneNumTextField = UITextField().then {
         $0.keyboardType = .numberPad
+        $0.delegate = self
     }
-    var authTextField = UITextField().then {
+    lazy var authTextField = UITextField().then {
         $0.keyboardType = .numberPad
+        $0.delegate = self
     }
     
     lazy var authSendButton = UIButton().then {
@@ -370,5 +374,16 @@ class PhoneAuthViewController: UIViewController {
                 }
             }
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension PhoneAuthViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리기
+        textField.resignFirstResponder()
+        return true
     }
 }
