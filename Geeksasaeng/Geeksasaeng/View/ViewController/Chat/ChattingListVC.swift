@@ -332,7 +332,7 @@ class ChattingListViewController: UIViewController {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "채팅"
         
-        chattingTableView.backgroundColor = .white
+        chattingTableView.backgroundColor = .init(hex: 0xFCFDFE)
         chattingTableView.rowHeight = 81 + 6 + 6
         chattingTableView.separatorStyle = .none
         chattingTableView.showsVerticalScrollIndicator = false
