@@ -33,8 +33,8 @@ class ProfileViewController: UIViewController {
     // MARK: - SubViews
     
     // 스크롤뷰
-    let scrollView = UIScrollView().then {
-        $0.backgroundColor = .white
+    lazy var scrollView = UIScrollView().then {
+        $0.delegate = self
     }
     
     // 콘텐츠뷰
@@ -390,7 +390,6 @@ class ProfileViewController: UIViewController {
     
     var visualEffectView: UIVisualEffectView?
 
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -501,7 +500,20 @@ class ProfileViewController: UIViewController {
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
-        self.navigationController?.navigationBar.backgroundColor = UIColor(hex: 0xF1F5F9)
+        
+        // navigation bar 배경색 설정
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .init(hex: 0xF1F5F9)
+        appearance.shadowImage = nil
+        appearance.shadowColor = nil    // 하단에 1px 선 생기는 거 제거
+        
+        // title 폰트 설정
+        let titleAttribute = [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 18), NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0x2F2F2F)] //alter to fit your needs
+        appearance.titleTextAttributes = titleAttribute
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         /* 서비스 labels Attrs 설정 */
         [ editMyInfoLabel, customerServiceLabel, logoutLabel ].forEach {
@@ -831,5 +843,20 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
         self.navigationController?.pushViewController(partyVC, animated: true)
         
         collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension ProfileViewController: UIScrollViewDelegate {
+    // 스크롤 감지
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 스크롤을 위로 올릴 때는 스크롤뷰 배경색을 0xF1F5F9로
+        if scrollView.contentOffset.y < 0 {
+            self.scrollView.backgroundColor = .init(hex: 0xF1F5F9)
+        } else {
+            // 스크롤을 아래로 내릴 때는 스크롤뷰 배경색을 white로 설정
+            self.scrollView.backgroundColor = .white
+        }
     }
 }
