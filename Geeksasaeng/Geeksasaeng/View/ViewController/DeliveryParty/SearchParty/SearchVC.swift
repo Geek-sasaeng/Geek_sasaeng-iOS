@@ -63,6 +63,7 @@ class SearchViewController: UIViewController {
             ]
         )
         $0.makeBottomLine()
+        $0.returnKeyType = .done
         $0.delegate = self
     }
     

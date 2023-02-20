@@ -30,11 +30,12 @@ class UrlViewController: UIViewController {
     }
     
     /* url 입력 텍스트 필드 */
-    let urlTextField = UITextField().then {
+    lazy var urlTextField = UITextField().then {
         $0.font = .customFont(.neoRegular, size: 15)
         $0.placeholder = "입력하세요"
         $0.makeBottomLine()
         $0.textColor = .black
+        $0.delegate = self
     }
     
     let urlTextFieldArrow = UIImageView().then {
@@ -212,5 +213,16 @@ class UrlViewController: UIViewController {
     private func tapBackButton() {
         view.removeFromSuperview()
         removeFromParent()
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension UrlViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == urlTextField {
+            textField.resignFirstResponder()
+        }
+        return true
     }
 }

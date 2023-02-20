@@ -268,6 +268,9 @@ class BankAccountViewController: UIViewController {
     }
 }
 
+
+// MARK: - UITextFieldDelegate
+
 extension BankAccountViewController: UITextFieldDelegate {
     
     /* 은행 이름, 계좌번호 글자수 제한 걸어놓은 함수 */
@@ -287,6 +290,15 @@ extension BankAccountViewController: UITextFieldDelegate {
         let accountMax = 15
         if accountNum.count > accountMax && range.length == 0 {
             return false
+        }
+        return true
+    }
+    
+    // 키보드의 return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == bankTextField {
+            // 계좌번호 입력으로 커서 변경
+            accountNumberTextField.becomeFirstResponder()
         }
         return true
     }

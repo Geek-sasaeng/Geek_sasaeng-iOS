@@ -14,6 +14,7 @@ import NMapsMap
 class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -24,7 +25,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     /* 네이버 지도 마커 */
     var naverMarker = NMFMarker()
-
+    
     // MARK: - SubViews
     
     // 스크롤뷰
@@ -46,7 +47,6 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             $0.setTitle("다음", for: .normal)
             $0.setTitleColor(UIColor(hex: 0xBABABA), for: .normal)
         }
-//        let barButton = UIBarButtonItem(customView: registerButton)
         $0.customView = registerButton
         $0.isEnabled = false
     }
@@ -112,7 +112,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         $0.setActivatedButton()
         $0.addTarget(self, action: #selector(tapOrderForecastTimeButton), for: .touchUpInside)
     }
-        
+    
     var selectedPersonLabel = UILabel()
     var selectedCategoryLabel = UILabel()
     var selectedUrlLabel = UILabel()
@@ -273,7 +273,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             if result == "true" {
                 // 각 서브뷰에서 저장된 전역변수 데이터 출력
                 self.setLabelsData()
-
+                
                 /* 수령 장소로 지도 카메라 이동, 마커 표시 */
                 if let latitude = CreateParty.latitude,
                    let longitude = CreateParty.longitude {
@@ -673,6 +673,13 @@ extension CreatePartyViewController: UITextFieldDelegate {
         let newLength = str.count + string.count - range.length
         
         return newLength <= 20
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == titleTextField {
+            contentsTextView.becomeFirstResponder()
+        }
+        return true
     }
 }
 

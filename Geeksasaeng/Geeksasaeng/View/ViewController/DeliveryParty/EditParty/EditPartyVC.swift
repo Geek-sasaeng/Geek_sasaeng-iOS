@@ -721,6 +721,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
 }
 
+// MARK: - UITextFieldDelegate
+
 extension EditPartyViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let str = textField.text else { return true }
@@ -728,7 +730,17 @@ extension EditPartyViewController: UITextFieldDelegate {
         
         return newLength <= 20
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == titleTextField {
+            // return 버튼 클릭 시 커서 이동
+            contentsTextView.becomeFirstResponder()
+        }
+        return true
+    }
 }
+
+// MARK: - UITextViewDelegate
 
 extension EditPartyViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
