@@ -381,42 +381,43 @@ class ForcedExitViewController: UIViewController {
             infoList.memberId ?? 0
         }
         
-        let input = ForcedExitInput(removedChatMemberIdList: selectedChatMemberIdList, roomId: self.roomId!)
-        ChatAPI.forcedExitChat(input) { model in
-            MyLoadingView.shared.hide()
-            
-            print(input)
+        let partyInput = ForcedExitPartyInput(membersId: selectedMemberIdList, partyId: self.partyId)
+        // 배달파티 강제퇴장 API 호출
+        PartyAPI.forcedExitParty(partyInput) { model in
             if let model = model {
                 if model.code == 1000 {
-                    let partyInput = ForcedExitPartyInput(membersId: selectedMemberIdList, partyId: self.partyId)
-                    // 배달파티 강제퇴장 API 호출
-                    PartyAPI.forcedExitParty(partyInput) { model in
+                    // 채팅방 강제퇴장 API 호출
+                    let input = ForcedExitInput(removedChatMemberIdList: selectedChatMemberIdList, roomId: self.roomId!)
+                    ChatAPI.forcedExitChat(input) { model in
+                        MyLoadingView.shared.hide()
+                        print(input)
+                        
                         if let model = model {
-                            // 채팅, 파티 모두 강제퇴장 완료
                             if model.code == 1000 {
+                                // 채팅, 파티 모두 강제퇴장 완료
                                 self.removeForcedExitConfirmView()
                                 self.navigationController?.popViewController(animated: true)
                                 // 채팅 VC에 토스트 메세지 띄우기
                                 NotificationCenter.default.post(name: NSNotification.Name("CompleteForcedExit"), object: nil)
-                            } else {
+                            } else if model.code == 2026 {
                                 self.showToast(viewController: self,
-                                               message: "강제 퇴장에 실패했습니다",
+                                               message: "송금을 완료한 멤버는 방에서 퇴장시킬 수 없습니다",
                                                font: .customFont(.neoBold, size: 15),
-                                               color: .mainColor, width: 229)
+                                               color: .mainColor, width: 270)
                             }
+                        } else {
+                            self.showToast(viewController: self,
+                                           message: "채팅방 강제 퇴장에 실패했습니다",
+                                           font: .customFont(.neoBold, size: 15),
+                                           color: .mainColor, width: 239)
                         }
                     }
-                } else if model.code == 2026 {
+                } else {
                     self.showToast(viewController: self,
-                                   message: "송금을 완료한 멤버는 방에서 퇴장시킬 수 없습니다",
+                                   message: "배달파티 강제 퇴장에 실패했습니다",
                                    font: .customFont(.neoBold, size: 15),
-                                   color: .mainColor, width: 270)
+                                   color: .mainColor, width: 239)
                 }
-            } else {
-                self.showToast(viewController: self,
-                               message: "강제 퇴장에 실패했습니다",
-                               font: .customFont(.neoBold, size: 15),
-                               color: .mainColor, width: 229)
             }
         }
     }
