@@ -74,10 +74,12 @@ class LoginViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapAutomaticLoginButton), for: .touchUpInside)
     }
     
-    let autoLoginLabel = UILabel().then {
+    lazy var autoLoginLabel = UILabel().then {
         $0.text = "자동 로그인"
         $0.font = .customFont(.neoRegular, size: 15)
         $0.textColor = .init(hex: 0x5B5B5B)
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAutomaticLoginButton)))
     }
     
     lazy var signUpButton = UIButton().then {
