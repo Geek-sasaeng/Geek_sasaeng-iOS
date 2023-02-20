@@ -331,6 +331,19 @@ class ChattingListViewController: UIViewController {
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "채팅"
+        // navigation bar 배경색 설정
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .init(hex: 0xFCFDFE)
+        appearance.shadowImage = nil
+        appearance.shadowColor = nil    // 하단에 1px 선 생기는 거 제거
+        
+        // title 폰트 설정
+        let titleAttribute = [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 18), NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0x2F2F2F)]
+        appearance.titleTextAttributes = titleAttribute
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         chattingTableView.backgroundColor = .init(hex: 0xFCFDFE)
         chattingTableView.rowHeight = 81 + 6 + 6
