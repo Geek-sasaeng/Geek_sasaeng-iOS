@@ -316,13 +316,13 @@ class EmailAuthViewController: UIViewController {
         
         /* authSendButton, authResendButton */
         authSendButton.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(screenHeight / 3.5)
+            make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(screenHeight / 85.2)
             make.right.equalToSuperview().inset(screenWidth / 15.11)
             make.width.equalTo(screenWidth / 3.74)
             make.height.equalTo(screenHeight / 20.78)
         }
         authResendButton.snp.makeConstraints { make in
-            make.top.equalTo(remainBar.snp.bottom).offset(screenHeight / 3.5)
+            make.bottom.equalTo(emailAddressTextField.snp.bottom).offset(screenHeight / 85.2)
             make.right.equalToSuperview().inset(screenWidth / 15.11)
             make.width.equalTo(screenWidth / 3.74)
             make.height.equalTo(screenHeight / 20.78)
