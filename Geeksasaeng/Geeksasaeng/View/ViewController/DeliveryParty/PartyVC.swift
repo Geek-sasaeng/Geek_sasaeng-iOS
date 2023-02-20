@@ -28,8 +28,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
-    var delegate: UpdateDeliveryDelegate?
     
     // MARK: - Subviews
     
@@ -1100,8 +1098,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             if success {
                 // 삭제하기 뷰 없애고
                 self.removeDeleteView()
-                // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
-                self.delegate?.updateDeliveryList()
                 // 이전화면으로 이동
                 self.navigationController?.popViewController(animated: true)
             }
@@ -1208,9 +1204,6 @@ extension PartyViewController: EdittedDelegate {
     public func checkEditted(isEditted: Bool) {
         if isEditted {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 226)
-            
-            // DeliveryVC에서 배달 목록 새로고침 (수정된 거 반영되게 하려고)
-            delegate?.updateDeliveryList()
         }
     }
 }

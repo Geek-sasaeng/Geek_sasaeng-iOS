@@ -321,6 +321,9 @@ class DeliveryViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
         // 하단 탭바가 나타나게 해야한다
         self.navigationController?.tabBarController?.tabBar.isHidden = false
+        
+        // 배달목록 업데이트
+        pullToRefresh()
     }
     
     override func viewDidLayoutSubviews() {

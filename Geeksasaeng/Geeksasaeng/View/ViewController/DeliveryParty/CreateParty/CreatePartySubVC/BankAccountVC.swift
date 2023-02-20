@@ -20,8 +20,6 @@ class BankAccountViewController: UIViewController {
     
     var dormitoryInfo: DormitoryNameResult?
     
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
-    var delegate: UpdateDeliveryDelegate?
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
 
@@ -225,9 +223,6 @@ class BankAccountViewController: UIViewController {
                     guard let result = result else { return }
                     if isSuccess {
                         print("DEBUG: 채팅방 생성 성공 \(result)")
-                        
-                        // 파티가 생성됐으니 배달파티 목록 리로드
-                        delegate?.updateDeliveryList()
                     } else {
                         print("DEBUG: 채팅방 생성 실패 \(result)")
                     }
@@ -237,9 +232,6 @@ class BankAccountViewController: UIViewController {
                 guard let partyId = result.id,
                       let dormitoryInfo = dormitoryInfo else { return }
                 let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo, isFromCreated: true)
-                
-                // delegate로 DeliveryVC를 넘겨줌
-                partyVC.delegate = delegate
                 
                 var vcArray = self.navigationController?.viewControllers
                 vcArray!.removeLast()
