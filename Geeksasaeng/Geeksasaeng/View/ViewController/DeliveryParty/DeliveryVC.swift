@@ -380,7 +380,6 @@ class DeliveryViewController: UIViewController {
             make.left.equalTo(marketBar.snp.right)
             make.right.equalToSuperview().inset(screenWidth / 21.83)
             make.height.equalTo(screenHeight / 284)
-            make.width.equalTo(screenWidth / 3.3)
         }
         
         /* Ad */
