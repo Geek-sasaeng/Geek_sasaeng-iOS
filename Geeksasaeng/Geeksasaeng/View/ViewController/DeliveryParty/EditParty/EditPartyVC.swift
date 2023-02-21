@@ -626,7 +626,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     @objc func tapSelectedPersonLabel() {
         createBlurView()
         UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = EditMatchingPersonViewController()
+            guard let currentMatching = self.detailData?.currentMatching else { return }
+            let orderForecastTimeVC = EditMatchingPersonViewController(currentMatching: currentMatching)
             self.addChild(orderForecastTimeVC)
             self.view.addSubview(orderForecastTimeVC.view)
             orderForecastTimeVC.view.snp.makeConstraints { make in
@@ -703,10 +704,10 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                                latitude: latitude,
                                longitude: longitude,
                                hashTag: hashTag)
-            ) { success in
+            ) { isSuccess in
                 MyLoadingView.shared.hide()
                 
-                if success {
+                if isSuccess {
                     /* 수정된 정보로 이전 뷰 내용 업데이트 */
                     NotificationCenter.default.post(name: NSNotification.Name("TapEditCompleteButton"), object: "true")
                     
