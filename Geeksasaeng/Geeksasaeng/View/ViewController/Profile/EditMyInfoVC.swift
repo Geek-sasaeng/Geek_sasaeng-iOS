@@ -289,6 +289,7 @@ class EditMyInfoViewController: UIViewController {
         addSubViews()
         setLayouts()
         setUserInfo()
+        checkSocialLogin()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -519,6 +520,14 @@ class EditMyInfoViewController: UIViewController {
         }
     }
     
+    private func checkSocialLogin() {
+        // 소셜 로그인이면
+        if LoginModel.isSocialLogin ?? false {
+            // 비번 변경 버튼 숨기고 스크롤 못하게 설정
+            changePasswordButton.isHidden = true
+            scrollView.isScrollEnabled = false
+        }
+    }
     
     // MARK: - objc Functions
     

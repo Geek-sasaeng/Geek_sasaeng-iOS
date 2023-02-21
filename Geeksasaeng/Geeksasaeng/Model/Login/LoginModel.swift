@@ -8,6 +8,7 @@
 import Foundation
 
 class LoginModel {
+    static var isSocialLogin: Bool?
     static var jwt: String?
     static var nickname: String?
     static var profileImgUrl: String?
