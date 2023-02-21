@@ -20,8 +20,6 @@ class BankAccountViewController: UIViewController {
     
     var dormitoryInfo: DormitoryNameResult?
     
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
-    var delegate: UpdateDeliveryDelegate?
     let db = Firestore.firestore()
     let settings = FirestoreSettings()
 
@@ -225,9 +223,6 @@ class BankAccountViewController: UIViewController {
                     guard let result = result else { return }
                     if isSuccess {
                         print("DEBUG: 채팅방 생성 성공 \(result)")
-                        
-                        // 파티가 생성됐으니 배달파티 목록 리로드
-                        delegate?.updateDeliveryList()
                     } else {
                         print("DEBUG: 채팅방 생성 실패 \(result)")
                     }
@@ -237,9 +232,6 @@ class BankAccountViewController: UIViewController {
                 guard let partyId = result.id,
                       let dormitoryInfo = dormitoryInfo else { return }
                 let partyVC = PartyViewController(partyId: partyId, dormitoryInfo: dormitoryInfo, isFromCreated: true)
-                
-                // delegate로 DeliveryVC를 넘겨줌
-                partyVC.delegate = delegate
                 
                 var vcArray = self.navigationController?.viewControllers
                 vcArray!.removeLast()
@@ -276,6 +268,9 @@ class BankAccountViewController: UIViewController {
     }
 }
 
+
+// MARK: - UITextFieldDelegate
+
 extension BankAccountViewController: UITextFieldDelegate {
     
     /* 은행 이름, 계좌번호 글자수 제한 걸어놓은 함수 */
@@ -295,6 +290,15 @@ extension BankAccountViewController: UITextFieldDelegate {
         let accountMax = 15
         if accountNum.count > accountMax && range.length == 0 {
             return false
+        }
+        return true
+    }
+    
+    // 키보드의 return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == bankTextField {
+            // 계좌번호 입력으로 커서 변경
+            accountNumberTextField.becomeFirstResponder()
         }
         return true
     }

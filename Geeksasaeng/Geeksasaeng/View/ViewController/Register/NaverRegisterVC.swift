@@ -9,10 +9,10 @@ import UIKit
 import SnapKit
 import Then
 
-// MARK: - 수정된 회원가입 Res에 맞게 수정 필요
 class NaverRegisterViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -140,13 +140,17 @@ class NaverRegisterViewController: UIViewController {
         view.isHidden = true
     }
     
-    var nickNameLabel = UILabel()
-    var schoolLabel = UILabel()
-    var emailLabel = UILabel()
+    let nickNameLabel = UILabel()
+    let schoolLabel = UILabel()
+    let emailLabel = UILabel()
     
-    var nickNameTextField = UITextField()
-    var emailTextField = UITextField()
-    var emailAddressTextField = UITextField()
+    lazy var nickNameTextField = UITextField().then {
+        $0.delegate = self
+    }
+    lazy var emailTextField = UITextField().then {
+        $0.delegate = self
+    }
+    let emailAddressTextField = UITextField()
     
     lazy var nickNameCheckButton = UIButton().then {
         $0.setTitle("중복 확인", for: .normal)
@@ -178,6 +182,7 @@ class NaverRegisterViewController: UIViewController {
         )
         $0.keyboardType = .numberPad
         $0.makeBottomLine()
+        $0.delegate = self
     }
     
     lazy var authResendButton = UIButton().then {
@@ -226,6 +231,20 @@ class NaverRegisterViewController: UIViewController {
         addSubViews()
         setLayouts()
         addRightSwipe()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Functions
@@ -397,7 +416,7 @@ class NaverRegisterViewController: UIViewController {
         setMainLabelAttrs(emailLabel, text: "학교 이메일 입력")
         
         /* textFields attr */
-        setTextFieldAttrs(nickNameTextField, msg: "3-8자 영문으로 입력", width: 210)
+        setTextFieldAttrs(nickNameTextField, msg: "3-8자 영문 혹은 한글로 입력", width: 210)
         nickNameTextField.autocapitalizationType = .none
         
         setTextFieldAttrs(emailTextField, msg: "입력하세요", width: 307)
@@ -617,6 +636,8 @@ class NaverRegisterViewController: UIViewController {
                             self.startTimer()
                             self.remainTimeLabel.isHidden = false
                         }
+                    case 2607:
+                        self.showToast(viewController: self, message: "이미 인증된 이메일입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     case 2803:
                         self.showToast(viewController: self, message: "유효하지 않은 인증번호입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     case 2804:
@@ -629,6 +650,21 @@ class NaverRegisterViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    // 인증번호 textfield 채울 때 뷰 y값을 키보드 높이만큼 올리기 -> 밑에 있어서 키보드에 가려지기 때문
+    @objc
+    private func keyboardWillChange(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if authNumTextField.isFirstResponder {
+                self.view.frame.origin.y = -keyboardSize.height
+            }
+        }
+    }
+    
+    @objc
+    private func keyboardWillHide() {
+        self.view.frame.origin.y = 0    // 뷰의 y값 되돌리기
     }
     
     @objc
@@ -674,5 +710,16 @@ class NaverRegisterViewController: UIViewController {
             
             present(agreementVC, animated: true)
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension NaverRegisterViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리기
+        textField.resignFirstResponder()
+        return true
     }
 }

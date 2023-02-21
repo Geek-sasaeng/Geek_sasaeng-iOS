@@ -102,24 +102,23 @@ class RegisterAPI {
         }
     }
     
-    public static func registerUserFromNaver(_ parameter : NaverRegisterInput, completion: @escaping (ResponseCase, NaverRegisterModelResult?) -> Void) {
+    public static func registerUserFromNaver(_ parameter : NaverRegisterInput, completion: @escaping (NaverRegisterModelResult?) -> Void) {
         AF.request("https://geeksasaeng.shop/members/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
         .responseDecodable(of: NaverRegisterModel.self) { response in
             switch response.result {
             case .success(let result):
+                guard let passedResult = result.result else { return }
                 if result.isSuccess! {
                     print("DEBUG: 네이버 회원가입 성공")
-                    guard let passedResult = result.result else { return }
-                    completion(.success, passedResult)
                 } else {
-                    print("DEBUG:", result.message!)
-                    completion(.onlyRequestSuccess, nil)
+                    print("DEBUG: 네이버 회원가입 실패", result.message!)
                 }
+                completion(passedResult)
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
-                completion(.failure, nil)
+                print("DEBUG: 네이버 회원가입 실패", error.localizedDescription)
+                completion(nil)
             }
         }
     }

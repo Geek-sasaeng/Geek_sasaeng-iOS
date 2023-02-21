@@ -13,6 +13,7 @@ import Then
 class EmailAuthViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -139,7 +140,9 @@ class EmailAuthViewController: UIViewController {
     
     let schoolLabel = UILabel()
     let emailLabel = UILabel()
-    let emailTextField = UITextField()
+    lazy var emailTextField = UITextField().then {
+        $0.delegate = self
+    }
     let emailAddressTextField = UITextField()
     
     lazy var authSendButton = UIButton().then {
@@ -162,6 +165,7 @@ class EmailAuthViewController: UIViewController {
         )
         $0.keyboardType = .numberPad
         $0.makeBottomLine()
+        $0.delegate = self
     }
     
     lazy var authResendButton = UIButton().then {
@@ -517,6 +521,8 @@ class EmailAuthViewController: UIViewController {
                         self.authSendButton.isHidden = true
                         self.authResendButton.isHidden = false
                         self.remainTimeLabel.isHidden = false
+                    case 2607:
+                        self.showToast(viewController: self, message: "이미 인증된 이메일입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     case 2803:
                         self.showToast(viewController: self, message: "유효하지 않은 인증번호입니다", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 248, height: 40)
                     case 2804:
@@ -575,5 +581,16 @@ class EmailAuthViewController: UIViewController {
             
             present(phoneAuthVC, animated: true)
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension EmailAuthViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리기
+        textField.resignFirstResponder()
+        return true
     }
 }

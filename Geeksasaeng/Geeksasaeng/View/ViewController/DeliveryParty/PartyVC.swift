@@ -28,8 +28,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // 남은 시간 1초마다 구해줄 타이머
     var timer: DispatchSourceTimer?
-    // 프로토콜의 함수를 실행하기 위해 delegate를 설정
-    var delegate: UpdateDeliveryDelegate?
     
     // MARK: - Subviews
     
@@ -367,8 +365,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 7
         $0.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 1.53)
-            make.height.equalTo(screenHeight / 4.21)
+            make.width.equalTo(256)
+            make.height.equalTo(202)
         }
         
         /* top View: 안내 */
@@ -377,7 +375,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.addSubview(topSubView)
         topSubView.snp.makeConstraints { make in
             make.top.width.equalToSuperview()
-            make.height.equalTo(screenHeight / 17.04)
+            make.height.equalTo(50)
         }
         
         /* set titleLabel */
@@ -398,9 +396,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         topSubView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.width.equalTo(screenWidth / 19.65)
-            make.height.equalTo(screenHeight / 71)
-            make.right.equalToSuperview().offset(-(screenWidth / 26.2))
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
         }
         
         /* bottom View: contents, 버튼 */
@@ -409,7 +407,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         $0.addSubview(bottomSubView)
         bottomSubView.snp.makeConstraints { make in
             make.width.equalToSuperview()
-            make.height.equalTo(screenHeight / 5.6)
+            make.height.equalTo(152)
             make.top.equalTo(topSubView.snp.bottom)
         }
         
@@ -433,18 +431,18 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
         contentLabel.attributedText = attrString
         contentLabel.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 1.9)
-            make.height.equalTo(screenHeight / 17.75)
+            make.width.equalTo(206)
+            make.height.equalTo(48)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().inset(screenHeight / 42.6)
+            make.top.equalToSuperview().inset(20)
         }
         
         /* set lineView */
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(screenHeight / 56.8)
-            make.left.right.equalToSuperview().inset(screenWidth / 21.83)
-            make.height.equalTo(screenHeight / 501.176)
+            make.top.equalTo(contentLabel.snp.bottom).offset(15)
+            make.left.right.equalToSuperview().inset(18)
+            make.height.equalTo(1.7)
         }
         
         /* set confirmButton */
@@ -454,9 +452,9 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         confirmButton.addTarget(self, action: #selector(tapGoMainButton), for: .touchUpInside)
         confirmButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(lineView.snp.bottom).offset(screenHeight / 47.33)
-            make.width.equalTo(screenWidth / 2.86)
-            make.height.equalTo(screenHeight / 27.48)
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.equalTo(137)
+            make.height.equalTo(31)
         }
     }
     
@@ -1100,8 +1098,6 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
             if success {
                 // 삭제하기 뷰 없애고
                 self.removeDeleteView()
-                // DeliveryVC에서 배달 목록 새로고침 (삭제된 거 반영되게 하려고)
-                self.delegate?.updateDeliveryList()
                 // 이전화면으로 이동
                 self.navigationController?.popViewController(animated: true)
             }
@@ -1208,9 +1204,6 @@ extension PartyViewController: EdittedDelegate {
     public func checkEditted(isEditted: Bool) {
         if isEditted {
             self.showToast(viewController: self, message: "수정이 완료되었습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 226)
-            
-            // DeliveryVC에서 배달 목록 새로고침 (수정된 거 반영되게 하려고)
-            delegate?.updateDeliveryList()
         }
     }
 }

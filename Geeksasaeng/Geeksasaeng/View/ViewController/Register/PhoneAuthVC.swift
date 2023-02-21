@@ -10,7 +10,9 @@ import SnapKit
 import Then
 
 class PhoneAuthViewController: UIViewController {
+    
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -47,11 +49,13 @@ class PhoneAuthViewController: UIViewController {
     var phoneNumLabel = UILabel()
     var authLabel = UILabel()
     
-    var phoneNumTextField = UITextField().then {
+    lazy var phoneNumTextField = UITextField().then {
         $0.keyboardType = .numberPad
+        $0.delegate = self
     }
-    var authTextField = UITextField().then {
+    lazy var authTextField = UITextField().then {
         $0.keyboardType = .numberPad
+        $0.delegate = self
     }
     
     lazy var authSendButton = UIButton().then {
@@ -306,8 +310,13 @@ class PhoneAuthViewController: UIViewController {
                 
                 switch isSuccess {
                 case .success:
+                    // 인증 완료 텍스트 띄우기
+                    self.remainTimeLabel.text = "성공적으로 인증이 완료되었습니다"
+                    self.timer?.cancel()
+                    self.timer = nil
+                    
                     self.phoneNumberId = result?.phoneNumberId
-                    self.showNextView()
+                    self.nextButton.setActivatedNextButton()
                 default:
                     self.showToast(viewController: self, message: message!, font: .customFont(.neoBold, size: 13), color: UIColor(hex: 0xA8A8A8))
                 }
@@ -316,7 +325,7 @@ class PhoneAuthViewController: UIViewController {
     }
     
     @objc
-    public func showNextView() {
+    private func showNextView() {
         // 일치했을 때에만 화면 전환
         if let idData = self.idData,
            let pwData = self.pwData,
@@ -365,5 +374,16 @@ class PhoneAuthViewController: UIViewController {
                 }
             }
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension PhoneAuthViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리기
+        textField.resignFirstResponder()
+        return true
     }
 }

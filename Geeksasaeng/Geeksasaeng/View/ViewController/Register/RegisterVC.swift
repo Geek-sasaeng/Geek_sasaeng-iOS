@@ -38,14 +38,20 @@ class RegisterViewController: UIViewController {
     var passwordCheckLabel = UILabel()
     var nickNameLabel = UILabel()
     
-    var idTextField = UITextField()
+    lazy var idTextField = UITextField().then {
+        $0.delegate = self
+    }
     lazy var pwTextField = UITextField().then {
         $0.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
+        $0.delegate = self
     }
     lazy var pwCheckTextField = UITextField().then {
         $0.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
+        $0.delegate = self
     }
-    var nickNameTextField = UITextField()
+    lazy var nickNameTextField = UITextField().then {
+        $0.delegate = self
+    }
     
     var idAvailableLabel = UILabel().then {
         $0.font = .customFont(.neoMedium, size: 13)
@@ -307,7 +313,8 @@ class RegisterViewController: UIViewController {
     // MARK: - @objc Functions
     
     // EmailAuthVC로 화면 전환.
-    @objc private func showNextView() {
+    @objc
+    private func showNextView() {
         if let idData = self.idTextField.text,
            let pwData = self.pwTextField.text,
            let pwCheckData = self.pwCheckTextField.text,
@@ -323,7 +330,8 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    @objc private func didChangeTextField(_ sender: UITextField) {
+    @objc
+    private func didChangeTextField(_ sender: UITextField) {
         guard let idCount = idTextField.text?.count,
               let nickNameCount = nickNameTextField.text?.count,
               let isValidPassword = pwTextField.text?.isValidPassword()
@@ -355,7 +363,8 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    @objc private func tapIdCheckButton() {
+    @objc
+    private func tapIdCheckButton() {
         guard let isValidId = idTextField.text?.isValidId() else { return }
         
         if !isValidId {
@@ -395,7 +404,8 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    @objc private func tapNickNameCheckButton() {
+    @objc
+    private func tapNickNameCheckButton() {
         guard let isValidNickname = nickNameTextField.text?.isValidNickname() else { return }
         
         if !isValidNickname {
@@ -436,7 +446,8 @@ class RegisterViewController: UIViewController {
     }
     
     // 닉네임 textfield 채울 때 뷰 y값을 키보드 높이만큼 올리기 -> 닉네임 텍스트 필드가 꽤나 밑에 있어서 키보드에 가려지기 때문
-    @objc func keyboardWillChange(notification: NSNotification) {
+    @objc
+    private func keyboardWillChange(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if nickNameTextField.isFirstResponder {
                 self.view.frame.origin.y = -keyboardSize.height
@@ -444,18 +455,40 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    @objc func keyboardWillHide() {
+    @objc
+    private func keyboardWillHide() {
         self.view.frame.origin.y = 0    // 뷰의 y값 되돌리기
     }
     
     // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
-    @objc private func isValidPwTextField() {
+    @objc
+    private func isValidPwTextField() {
         guard let isValidPassword = pwTextField.text?.isValidPassword() else { return }
         passwordAvailableLabel.isHidden = isValidPassword
     }
     
     // pw validation 검사
-    @objc private func isValidPwCheckTextField() {
+    @objc
+    private func isValidPwCheckTextField() {
         passwordSameCheckLabel.isHidden = (pwCheckTextField.text == pwTextField.text)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension RegisterViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리거나 커서 이동
+        if textField == idTextField {
+            textField.resignFirstResponder()
+        } else if textField == pwTextField {
+            pwCheckTextField.becomeFirstResponder()
+        } else if textField == pwCheckTextField {
+            nickNameTextField.becomeFirstResponder()
+        } else if textField == nickNameTextField {
+            nickNameTextField.resignFirstResponder()
+        }
+        return true
     }
 }

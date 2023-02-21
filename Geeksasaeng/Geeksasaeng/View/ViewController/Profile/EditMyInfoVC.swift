@@ -61,6 +61,7 @@ class EditMyInfoViewController: UIViewController {
         $0.textColor = .init(hex: 0xA8A8A8)
         $0.font = .customFont(.neoMedium, size: 15)
         $0.makeBottomLine()
+        $0.returnKeyType = .done
         $0.delegate = self
     }
     
@@ -687,6 +688,8 @@ class EditMyInfoViewController: UIViewController {
     }
 }
 
+// MARK: - UITextFieldDelegate
+
 extension EditMyInfoViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.textColor = .black
@@ -714,7 +717,18 @@ extension EditMyInfoViewController: UITextFieldDelegate {
             return
         }
     }
+    
+    // return 키 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == nicknameDataTextField {
+            // 키보드 내리기
+            textField.resignFirstResponder()
+        }
+        return true
+    }
 }
+
+// MARK: - PHPickerViewControllerDelegate
 
 extension EditMyInfoViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {

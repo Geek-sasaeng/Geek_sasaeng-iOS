@@ -47,6 +47,8 @@ class PasswordCheckViewController: UIViewController {
         $0.textColor = .init(hex: 0x5B5B5B)
         $0.isSecureTextEntry = true
         $0.addTarget(self, action: #selector(changeValuePasswordTextField), for: .editingChanged)
+        $0.returnKeyType = .done
+        $0.delegate = self
     }
     
     let passwordCheckLabel = UILabel().then {
@@ -189,5 +191,16 @@ class PasswordCheckViewController: UIViewController {
         if password.count >= 1 {
             nextButton.setActivatedNextButton()
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension PasswordCheckViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == passwordTextField {
+            textField.resignFirstResponder()
+        }
+        return true
     }
 }

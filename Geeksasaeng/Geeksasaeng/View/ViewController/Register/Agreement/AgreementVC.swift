@@ -293,29 +293,26 @@ class AgreementViewController: UIViewController {
     @objc private func tapCompleteButton() {
         MyLoadingView.shared.show()
         
-        // TODO: - 네이버 회원가입 수정 필요
         if isFromNaverRegister { // naver 회원가입인 경우
             if let email = email,
                let nickname = self.nickNameData,
                let universityName = self.university,
                let accessToken = self.accessToken {
                 let input = NaverRegisterInput(accessToken: accessToken, email: email, informationAgreeStatus: "Y", nickname: nickname, universityName: universityName)
-                RegisterAPI.registerUserFromNaver(input) { isSuccess, result in
+                RegisterAPI.registerUserFromNaver(input) { result in
                     MyLoadingView.shared.hide()
                     
-                    switch isSuccess {
-                    case .success:
+                    if let result = result {
                         // 네이버 회원가입은 자동 로그인이 default
-                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
-                        LoginModel.jwt = result?.jwt
-                        LoginModel.memberId = result?.memberId
+                        UserDefaults.standard.set(result.jwt, forKey: "jwt")
+                        LoginModel.jwt = result.jwt
+                        LoginModel.memberId = result.memberId
+                        LoginModel.nickname = result.nickname
                         self.showDomitoryView()
-                    case .onlyRequestSuccess:
-                        print("onlyRequestSuccess")
-                    case .failure:
-                        print("Failure")
+                    } else {
+                        // 네이버 회원가입 실패
+                        self.showBottomToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoMedium, size: 15), color: .lightGray)
                     }
-                    
                 }
             }
         } else { // 일반 회원가입인 경우

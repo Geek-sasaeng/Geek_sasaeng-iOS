@@ -19,11 +19,13 @@ class EditReceiptPlaceViewController: UIViewController {
         $0.font = .customFont(.neoMedium, size: 18)
     }
     
-    let searchTextField = UITextField().then {
+    lazy var searchTextField = UITextField().then {
         $0.font = .customFont(.neoRegular, size: 15)
         $0.placeholder = "입력하세요"
         $0.makeBottomLine()
         $0.textColor = .black
+        $0.returnKeyType = .done
+        $0.delegate = self
     }
     
     lazy var searchButton = UIButton().then {
@@ -222,5 +224,18 @@ class EditReceiptPlaceViewController: UIViewController {
                 self.marker.captionText = self.address ?? "요기?"
             }
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension EditReceiptPlaceViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == searchTextField {
+            // 키보드 내리고 검색
+            textField.resignFirstResponder()
+            self.tapSearchButton()
+        }
+        return true
     }
 }

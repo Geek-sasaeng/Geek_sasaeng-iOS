@@ -14,6 +14,7 @@ import NMapsMap
 class ReceiptPlaceViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -24,6 +25,7 @@ class ReceiptPlaceViewController: UIViewController {
     var address: String? // 좌표의 주소
     
     // MARK: - SubViews
+    
     /* titleLabel: 수령 장소 */
     let titleLabel = UILabel().then {
         $0.text = "수령 장소"
@@ -37,11 +39,13 @@ class ReceiptPlaceViewController: UIViewController {
         $0.addTarget(self, action: #selector(tapBackButton), for: .touchUpInside)
     }
     
-    let searchTextField = UITextField().then {
+    lazy var searchTextField = UITextField().then {
         $0.font = .customFont(.neoRegular, size: 15)
         $0.placeholder = "입력하세요"
         $0.makeBottomLine()
         $0.textColor = .black
+        $0.returnKeyType = .done
+        $0.delegate = self
     }
     
     lazy var searchButton = UIButton().then {
@@ -93,6 +97,7 @@ class ReceiptPlaceViewController: UIViewController {
     
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -204,6 +209,8 @@ class ReceiptPlaceViewController: UIViewController {
         }
     }
     
+    // MARK: - @objc Functions
+    
     @objc
     private func tapConfirmButton() {
         CreateParty.address = address ?? "주소를 찾지 못했습니다"
@@ -255,5 +262,19 @@ class ReceiptPlaceViewController: UIViewController {
                 self.marker.captionText = self.address ?? "요기?"
             }
         }
+    }
+}
+
+
+// MARK: - UITextFieldDelegate
+
+extension ReceiptPlaceViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == searchTextField {
+            // return 버튼 클릭 시 키보드 내리고 검색 실행
+            textField.resignFirstResponder()
+            self.tapSearchButton()
+        }
+        return true
     }
 }
