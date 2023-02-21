@@ -57,7 +57,9 @@ class ImageMessageCell: UICollectionViewCell {
         
         leftUnreadCntLabel.text = ""
         rightUnreadCntLabel.text = ""
+        nicknameLabel.text = ""
         
+        nicknameLabel.isHidden = false
         leftImageMessageView.isHidden = false
         rightImageMessageView.isHidden = false
         

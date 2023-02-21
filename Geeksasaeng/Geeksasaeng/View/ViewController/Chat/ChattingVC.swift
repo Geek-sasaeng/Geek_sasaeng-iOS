@@ -1306,18 +1306,19 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 /* imageCell에 tap gesture 추가 (이미지 확대 기능 위해) */
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
-                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
-                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.isHidden = true
+                cell.rightProfileImageView.isHidden = true
+                cell.leftProfileImageView.isHidden = true
+                
                 if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     if let contentUrl = msg.message?.content {
                         cell.rightImageView.kf.setImage(with: URL(string: contentUrl))
                         print("TEST:", contentUrl)
                     }
+                    cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                     cell.rightTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.rightUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
-                    cell.rightProfileImageView.isHidden = true
                     cell.leftImageView.isHidden = true
                     cell.leftImageMessageView.isHidden = true
                     cell.leftTimeLabel.isHidden = true
@@ -1327,9 +1328,9 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                         print("DEBUG: 사진 Url", contentUrl)
                     }
+                    cell.leftImageMessageView.addGestureRecognizer(tapGesture)
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
-                    cell.leftProfileImageView.isHidden = true
                     cell.rightImageView.isHidden = true
                     cell.rightImageMessageView.isHidden = true
                     cell.rightTimeLabel.isHidden = true
@@ -1363,12 +1364,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 
                 let tapGesture = UITapGestureRecognizerWithParam(target: self, action: #selector(tapImageMessageCell))
                 tapGesture.index = indexPath.row
-                cell.leftImageMessageView.addGestureRecognizer(tapGesture)
-                cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                 
                 cell.nicknameLabel.text = msg.message?.nickName
                 cell.memberId = msg.message?.memberId
                 if msg.message?.memberId == LoginModel.memberId { // 그 사람이 자신이면
+                    cell.rightImageMessageView.addGestureRecognizer(tapGesture)
                     cell.nicknameLabel.textAlignment = .right
                     // nil 아니면 프로필 이미지로 설정
                     if let profileImgUrl = msg.message?.profileImgUrl {
@@ -1390,6 +1390,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     cell.leftTimeLabel.isHidden = true
                     cell.leftUnreadCntLabel.isHidden = true
                 } else { // 다른 사람이면
+                    cell.leftImageMessageView.addGestureRecognizer(tapGesture)
                     cell.nicknameLabel.textAlignment = .left
                     if let profileImgUrl = msg.message?.profileImgUrl {
                         cell.leftProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
@@ -1401,7 +1402,6 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                     if let contentUrl = msg.message?.content {
                         cell.leftImageView.kf.setImage(with: URL(string: contentUrl))
                     }
-                    cell.nicknameLabel.textAlignment = .left
                     cell.leftTimeLabel.text = FormatCreater.sharedTimeFormat.string(from: (msg.message?.createdAt)!)
                     cell.leftUnreadCntLabel.text = "\(msg.message?.unreadMemberCnt ?? 0)"
                     cell.rightProfileImageView.isHidden = true
@@ -1521,6 +1521,8 @@ extension ChattingViewController: PushReportUserDelegate {
     }
 }
 
+// MARK: - PresentPopUpViewDelegate
+
 extension ChattingViewController: PresentPopUpViewDelegate {
     // 상대 프로필 클릭 시 해당 멤버의 정보 불러오기
     public func getInfoMember(memberId: Int, profileImg: UIImage) {
@@ -1581,6 +1583,8 @@ extension ChattingViewController: WebSocketDelegate {
         }
     }
 }
+
+// MARK: - PHPickerViewControllerDelegate
 
 extension ChattingViewController: PHPickerViewControllerDelegate {
     /* 사진 선택이 완료되었을 때 */
