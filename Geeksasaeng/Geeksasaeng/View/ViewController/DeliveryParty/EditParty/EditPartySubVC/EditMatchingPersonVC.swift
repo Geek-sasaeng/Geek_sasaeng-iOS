@@ -100,13 +100,25 @@ class EditMatchingPersonViewController: UIViewController {
         }
     }
     
+    private func setPickerView() {
+        personPickerView.delegate = self
+        personPickerView.dataSource = self
+    }
+    
+    private func setDefaultValueOfPicker() {
+        if let matchingPerson = CreateParty.matchingPerson {
+            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
+            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
+        }
+    }
+    
+    // MARK: - @objc Functions
+    
     @objc
     private func tapNextButton() {
-        // PickerView를 안 돌리고 화면 전환 했을 때, default 값 currentMatching
+        // PickerView를 안 돌리고 화면 전환 했을 때, default 값은 수정 전의 모집 인원
         if data == nil {
-            guard let currentMatching = currentMatching else { return }
-            data = "\(currentMatching)명"
-            CreateParty.matchingPerson = "\(currentMatching)명"
+            data = CreateParty.matchingPerson
         } else {
             CreateParty.matchingPerson = data
         }
@@ -120,19 +132,9 @@ class EditMatchingPersonViewController: UIViewController {
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditPersonButton"), object: "true")
     }
-    
-    private func setPickerView() {
-        personPickerView.delegate = self
-        personPickerView.dataSource = self
-    }
-    
-    private func setDefaultValueOfPicker() {
-        if let matchingPerson = CreateParty.matchingPerson {
-            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
-            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
-        }
-    }
 }
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
 
 extension EditMatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
