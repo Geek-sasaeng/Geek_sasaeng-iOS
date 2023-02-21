@@ -678,7 +678,7 @@ class ChattingViewController: UIViewController {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.left.right.equalToSuperview()
-            make.bottom.equalTo(bottomView.snp.top).offset(screenHeight / -53.3)
+            make.bottom.equalTo(bottomView.snp.top).offset(-10)
         }
         
         bottomView.snp.makeConstraints { make in
