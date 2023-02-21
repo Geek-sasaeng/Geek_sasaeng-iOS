@@ -269,16 +269,6 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc func tapContentView() {
-        view.endEditing(true)
-        
-        visualEffectView?.removeFromSuperview()
-        children.forEach {
-            $0.view.removeFromSuperview()
-            $0.removeFromParent()
-        }
-    }
-    
     private func setAttributeOfOptionLabel() {
         [orderForecastTimeLabel, matchingPersonLabel, categoryLabel, urlLabel, locationLabel].forEach {
             $0.font = .customFont(.neoMedium, size: 13)
@@ -325,7 +315,7 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         
         // set barButtonItem
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(tapBackButton(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
@@ -581,7 +571,33 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         self.visualEffectView = visualEffectView
     }
     
-    @objc func tapEatTogetherButton() {
+    // 서브뷰 띄워주기
+    private func showChildVC(childVC: UIViewController) {
+        // addSubview animation 처리
+        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
+            self.addChild(childVC)
+            self.view.addSubview(childVC.view)
+            childVC.view.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+        }, completion: nil)
+    }
+    
+    // MARK: - @objc Functions
+    
+    @objc
+    private func tapContentView() {
+        view.endEditing(true)
+        
+        visualEffectView?.removeFromSuperview()
+        children.forEach {
+            $0.view.removeFromSuperview()
+            $0.removeFromParent()
+        }
+    }
+    
+    @objc
+    private func tapEatTogetherButton() {
         if eatTogetherButton.currentImage == UIImage(systemName: "checkmark.circle") {
             eatTogetherButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             eatTogetherButton.tintColor = .mainColor
@@ -595,7 +611,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc func changeValueTitleTextField() {
+    @objc
+    private func changeValueTitleTextField() {
         if isEditedContentsTextView
             && contentsTextView.text.count >= 1
             && titleTextField.text?.count ?? 0 >= 1 {
@@ -608,79 +625,44 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc func tapOrderForecastTimeButton() {
+    @objc
+    private func tapOrderForecastTimeButton() {
         view.endEditing(true)
         createBlurView()
         
         // addSubview animation 처리
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let childView = EditOrderForecastTimeViewController()
-            self.addChild(childView)
-            self.view.addSubview(childView.view)
-            childView.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
+        showChildVC(childVC: EditOrderForecastTimeViewController())
     }
     
-    @objc func tapSelectedPersonLabel() {
+    @objc
+    private func tapSelectedPersonLabel() {
         createBlurView()
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            guard let currentMatching = self.detailData?.currentMatching else { return }
-            let orderForecastTimeVC = EditMatchingPersonViewController(currentMatching: currentMatching)
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
+        
+        guard let currentMatching = self.detailData?.currentMatching else { return }
+        // addSubview animation 처리
+        showChildVC(childVC: EditMatchingPersonViewController(currentMatching: currentMatching))
     }
 
-    @objc func tapSelectedCategoryLabel() {
+    @objc
+    private func tapSelectedCategoryLabel() {
         createBlurView()
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = EditCategoryViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
+        showChildVC(childVC: EditCategoryViewController())
     }
     
-    @objc func tapSelectedUrlLabel() {
+    @objc
+    private func tapSelectedUrlLabel() {
         createBlurView()
-        // selectedUrlLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = EditUrlViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
+        showChildVC(childVC: EditUrlViewController())
     }
     
-    @objc func tapSelectedLocationLabel() {
+    @objc
+    private func tapSelectedLocationLabel() {
         createBlurView()
-        // selectedPersonLabel 탭 -> orderForecastTimeVC, matchingPersonVC, categoryVC, UrlVC,receiptPlaceVC 띄우기
-        UIView.transition(with: self.view, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-            let orderForecastTimeVC = EditReceiptPlaceViewController()
-            self.addChild(orderForecastTimeVC)
-            self.view.addSubview(orderForecastTimeVC.view)
-            orderForecastTimeVC.view.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-            }
-        }, completion: nil)
+        showChildVC(childVC: EditReceiptPlaceViewController())
     }
     
-    /* 이전 화면으로 돌아가기 */
-    @objc func tapBackButton(sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated:true)
-    }
-    
-    @objc func tapRegisterButton() {
+    @objc
+    private func tapRegisterButton() {
         MyLoadingView.shared.show()
         
         /* 파티 수정하기 API 호출 */
