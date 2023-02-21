@@ -376,9 +376,6 @@ class LoginViewController: UIViewController {
     
     @objc
     private func tapAppleLoginButton() {
-//        RegisterAPI.registerUserFromApple { result in
-//            print(result)
-//        }
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
@@ -496,20 +493,32 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             
             // 애플 로그인 시 받아올 정보
-            let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
-            let idToken = appleIDCredential.identityToken!
-            let tokenStr = String(data: idToken, encoding: .utf8)
-            
+        
             guard let code = appleIDCredential.authorizationCode else { return }
             let codeStr = String(data: code, encoding: .utf8)
             
-            print(".user : \(userIdentifier)")
+            guard let idToken = appleIDCredential.identityToken else { return }
+            let idTokenStr = String(data: idToken, encoding: .utf8)
+            
             print(".email : \(email ?? "")")
             print(".full name : \((fullName?.givenName ?? "") + (fullName?.familyName ?? ""))")
-            print(".identityToken : \(tokenStr ?? "")")
+            print(".identityToken : \(idTokenStr ?? "")")
             print(".authorizationCode : \(codeStr ?? "")")
+            
+            let appleLoginUserNameInput = AppleLoginInputUserName(firstName: fullName?.givenName, lastName: fullName?.familyName)
+            let appleLoginUserInput = AppleLoginInputUser(email: email, name: appleLoginUserNameInput)
+            let appleLoginInput = AppleLoginInput(code: codeStr, idToken: idTokenStr, user: appleLoginUserInput)
+            
+            print(appleLoginInput)
+            LoginAPI.appleLogin(input: appleLoginInput) { isSuccess, result in
+                if isSuccess {
+                    print("애플 로그인 성공", result)
+                } else {
+                    print("애플 로그인 실패")
+                }
+            }
             
             
         default:
