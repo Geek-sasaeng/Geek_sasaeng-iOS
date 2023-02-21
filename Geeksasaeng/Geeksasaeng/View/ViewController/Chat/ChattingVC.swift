@@ -713,10 +713,6 @@ class ChattingViewController: UIViewController {
         collectionView.register(ImageMessageCell.self, forCellWithReuseIdentifier: "ImageMessageCell")
         collectionView.delegate = self
         collectionView.dataSource = self
-        
-        if let collectionViewLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        }
     }
     
     // 상단에 송금완료 뷰(파티원일 때) 또는 주문완료 뷰(방장일 때) 띄우기
