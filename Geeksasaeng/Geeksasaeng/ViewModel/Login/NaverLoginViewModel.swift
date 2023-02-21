@@ -82,6 +82,7 @@ class NaverLoginViewModel {
                     print("DEBUG: fcmToken in NaverLoginVM", fcmToken ?? "")
                     let input = NaverLoginInput(accessToken: accessToken, fcmToken: "")
                     
+                    MyLoadingView.shared.show()
                     LoginViewModel.loginNaver(viewController: viewController, input)
                 }
                 else { // 실패
