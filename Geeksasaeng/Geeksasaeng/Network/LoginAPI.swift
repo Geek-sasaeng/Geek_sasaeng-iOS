@@ -32,8 +32,17 @@ struct AutoLoginModelResult: Decodable {
 
 /* 애플 로그인 */
 struct AppleLoginInput: Encodable {
+    var code: String?
     var idToken: String?
-    var refreshToken: String?
+    var user: AppleLoginInputUser?
+}
+struct AppleLoginInputUser: Encodable {
+    var email: String?
+    var name: AppleLoginInputUserName?
+}
+struct AppleLoginInputUserName: Encodable {
+    var firstName: String?
+    var lastName: String?
 }
 
 struct AppleLoginModel: Decodable {
@@ -43,11 +52,12 @@ struct AppleLoginModel: Decodable {
     var result: AppleLoginModelResult?
 }
 struct AppleLoginModelResult: Decodable {
-    var jwt: String?
-    var nickName: String?
-    var loginStatus: String?
-    var profileImgUrl: String?
-    var memberId: Int?
+    var access_token: String?
+    var expires_in: Int?
+    var id_token: String?
+    var refresh_token: String?
+    var token_type: String?
+    var userId: Int?
 }
 
 /* 로그아웃 */
@@ -78,20 +88,22 @@ class LoginAPI {
             }
     }
     
-    public static func appleLogin(input: AppleLoginInput, completion: @escaping (AppleLoginModelResult) -> Void ) {
-        AF.request("https://geeksasaeng.shop/log-in/apple", method: .post)
+    public static func appleLogin(input: AppleLoginInput, completion: @escaping (Bool, AppleLoginModelResult) -> Void ) {
+        AF.request("https://geeksasaeng.shop/apple-login", method: .post)
             .validate()
             .responseDecodable(of: AppleLoginModel.self) { response in
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 애플 로그인 성공", result.result)
-                        completion(result.result ?? AppleLoginModelResult())
+                        completion(true, result.result ?? AppleLoginModelResult())
                     } else {
                         print("DEBUG: 애플 로그인 실패", result.message!)
+                        completion(false, AppleLoginModelResult())
                     }
                 case .failure(let error):
                     print("DEBUG: 애플 로그인 실패", error.localizedDescription)
+                    completion(false, AppleLoginModelResult())
                 }
             }
     }

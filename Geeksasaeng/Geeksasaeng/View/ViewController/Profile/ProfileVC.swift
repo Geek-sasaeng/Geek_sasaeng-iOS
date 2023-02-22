@@ -90,7 +90,7 @@ class ProfileViewController: UIViewController {
     }
     
     /* 내 정보 View Components */
-    let heartImageView = UIImageView(image: UIImage(named: "MyInfoCardIcon"))
+    let heartImageView = UIImageView()
     let nicknameLabel = UILabel().then {
         $0.font = .customFont(.neoBold, size: 20)
     }
@@ -439,6 +439,14 @@ class ProfileViewController: UIViewController {
             
             if isSuccess {
                 self.gradeLabel.text = result.grade
+                if result.grade == "신입생" {
+                    self.heartImageView.image = UIImage(named: "FreshmanIcon")
+                } else if result.grade == "복학생" {
+                    self.heartImageView.image = UIImage(named: "ReturningIcon")
+                } else {
+                    self.heartImageView.image = UIImage(named: "GraduIcon")
+                }
+                
                 self.remainLabel.text = result.nextGradeAndRemainCredits
                 self.nicknameLabel.text = result.nickname
                 self.universityLabel.text = result.universityName
@@ -543,11 +551,20 @@ class ProfileViewController: UIViewController {
     }
     
     private func createBlurView() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+//        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+//        visualEffectView.layer.opacity = 0.6
+//        visualEffectView.frame = view.frame
+//        view.addSubview(visualEffectView)
+//        self.visualEffectView = visualEffectView
+        
+//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+//        self.navigationController?.navigationBar.shadowImage = UIImage()
+//        self.navigationController?.navigationBar.backgroundColor = UIColor.clear
+        
+        self.visualEffectView = setDarkBlurView()
+        self.visualEffectView!.snp.makeConstraints { make in
+            make.edges.equalTo(0)
+        }
     }
     
     private func addSubViews() {
@@ -769,14 +786,14 @@ class ProfileViewController: UIViewController {
     private func tapLogoutConfirmButton() {
         MyLoadingView.shared.show()
         
-        UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
-        naverLoginVM.resetToken() // delete naver login token
-        
         LoginAPI.logout { isSuccess in
             MyLoadingView.shared.hide()
             
             if isSuccess {
                 print("DEBUG: 로그아웃 완료")
+                self.naverLoginVM.resetToken() // delete naver login token
+                self.naverLoginVM.requestDeleteToken()
+                UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
                 
                 let rootVC = LoginViewController()
                 UIApplication.shared.windows.first?.rootViewController = rootVC
@@ -797,6 +814,8 @@ class ProfileViewController: UIViewController {
             
             if isSuccess {
                 print("DEBUG: 회원 탈퇴 완료")
+                self.naverLoginVM.resetToken()
+                self.naverLoginVM.requestDeleteToken()
                 
                 let rootVC = LoginViewController()
                 UIApplication.shared.windows.first?.rootViewController = rootVC
