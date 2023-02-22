@@ -14,6 +14,7 @@ import Then
 class DormitoryViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -24,7 +25,7 @@ class DormitoryViewController: UIViewController {
         }
     }
     // 현재 기숙사를 선택하고 있는 유저의 닉네임
-    var userNickName: String?
+    var userNickName: String? = LoginModel.nickname
     // 현재 피커뷰가 가리키고 있는 기숙사 정보 -> 스크롤 될 때마다 바뀜
     var dormitoryInfo: DormitoryNameResult?
     
