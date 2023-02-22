@@ -330,6 +330,7 @@ class LoginViewController: UIViewController {
                         }
                         
                         // static property에 jwt, nickname, userImgUrl 저장
+                        LoginModel.isSocialLogin = false    // 일반 로그인
                         LoginModel.jwt = result.jwt
                         LoginModel.nickname = result.nickName
                         LoginModel.profileImgUrl = result.profileImgUrl

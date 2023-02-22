@@ -411,6 +411,8 @@ class ProfileViewController: UIViewController {
         
         // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
         NotificationCenter.default.addObserver(self, selector: #selector(completeChangingPw), name: NSNotification.Name("CompleteChangingPw"), object: nil)
+        
+        setCustomNavigationBar(.init(hex: 0xF1F5F9))
     }
     
     // MARK: - Functions
@@ -509,20 +511,6 @@ class ProfileViewController: UIViewController {
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
-        
-        // navigation bar 배경색 설정
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .init(hex: 0xF1F5F9)
-        appearance.shadowImage = nil
-        appearance.shadowColor = nil    // 하단에 1px 선 생기는 거 제거
-        
-        // title 폰트 설정
-        let titleAttribute = [NSAttributedString.Key.font: UIFont.customFont(.neoBold, size: 18), NSAttributedString.Key.foregroundColor: UIColor.init(hex: 0x2F2F2F)] //alter to fit your needs
-        appearance.titleTextAttributes = titleAttribute
-
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         /* 서비스 labels Attrs 설정 */
         [ editMyInfoLabel, customerServiceLabel, logoutLabel ].forEach {

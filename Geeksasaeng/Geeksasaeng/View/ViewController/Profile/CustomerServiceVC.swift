@@ -12,10 +12,13 @@ import KakaoSDKTalk
 import SafariServices
 
 class CustomerServiceViewController: UIViewController {
+    
     // MARK: - Properties
+    
     var safariVC: SFSafariViewController?
     
     // MARK: - SubViews
+    
     let termsOfUseAgreementLabel = UILabel().then {
         $0.text = "서비스 이용약관 동의"
         $0.font = .customFont(.neoMedium, size: 15)
@@ -93,6 +96,12 @@ class CustomerServiceViewController: UIViewController {
         setNavigationBar()
         addSubViews()
         setLayouts()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setCustomNavigationBar()
     }
     
     // MARK: - Functions

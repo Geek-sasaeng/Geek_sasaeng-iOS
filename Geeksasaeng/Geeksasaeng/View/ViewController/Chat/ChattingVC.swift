@@ -659,6 +659,9 @@ class ChattingViewController: UIViewController {
     private func setAttributes() {
         contentsTextView.delegate = self
         sendImageButton.addTarget(self, action: #selector(tapSendImageButton), for: .touchUpInside)
+        
+        // top에 padding 설정
+        collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
     }
     
     private func addSubViews() {
@@ -673,7 +676,7 @@ class ChattingViewController: UIViewController {
     
     private func setLayouts() {
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
+            make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.left.right.equalToSuperview()
             make.bottom.equalTo(bottomView.snp.top).offset(screenHeight / -53.3)
         }

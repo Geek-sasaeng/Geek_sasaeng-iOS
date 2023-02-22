@@ -47,6 +47,7 @@ class LoginViewModel {
                     LoginModel.memberId = result.result?.memberId
                     LoginModel.dormitoryId = result.result?.dormitoryId
                     LoginModel.dormitoryName = result.result?.dormitoryName
+                    LoginModel.isSocialLogin = true // 소셜 로그인임을 저장하기 위해
                     
                     if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
                         print("DEBUG: 네이버 로그인 성공 후 기숙사 화면", result.result)
