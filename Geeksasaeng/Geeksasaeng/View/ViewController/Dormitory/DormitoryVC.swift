@@ -75,6 +75,7 @@ class DormitoryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        print("user nickname: \(userNickName)")
         getDormitoryData()
         addSubViews()
         setLayouts()

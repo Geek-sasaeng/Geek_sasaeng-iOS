@@ -611,6 +611,8 @@ class EditMyInfoViewController: UIViewController {
                 self.showToast(viewController: self, message: "회원정보 수정에 실패하였습니다", font: .customFont(.neoMedium, size: 13), color: UIColor(hex: 0xA8A8A8), width: 250)
                 print("회원정보 수정 실패")
                 self.editConfirmView.removeFromSuperview()
+                self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
             }
         }
     }
@@ -641,9 +643,9 @@ class EditMyInfoViewController: UIViewController {
                         self.isCheckedNickname = true
                         self.activeRightBarButton()
                     case .onlyRequestSuccess:
-                        self.showToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoBold, size: 15), color: .mainColor)
-                    case .failure:
                         self.showToast(viewController: self, message: "중복되는 닉네임입니다", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                    case .failure:
+                        self.showToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }
                 }
             } else { // validation 부적합한 경우 -> Alert
@@ -713,12 +715,24 @@ extension EditMyInfoViewController: UITextFieldDelegate {
         
         switch textField {
         case nicknameDataTextField:
-            self.isChangedNickname = true
             nicknameValidationLabel.isHidden = false
-            nicknameCheckButton.setActivatedCheckButton()
             nicknameDataTextField.subviews.first?.backgroundColor = .mainColor
         default:
             return
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        switch textField {
+        case nicknameDataTextField:
+            self.isChangedNickname = true
+            self.isCheckedNickname = false
+            navigationItem.rightBarButtonItem = deactivatedRightBarButtonItem
+            nicknameCheckButton.setActivatedCheckButton()
+            nicknameDataTextField.subviews.first?.backgroundColor = .mainColor
+            return true
+        default:
+            return false
         }
     }
     
