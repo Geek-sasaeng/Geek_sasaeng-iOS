@@ -32,6 +32,11 @@ class NaverLoginViewModel {
         naverLoginModel.naverLoginInstance?.resetToken()
     }
     
+    // 토큰 삭제
+    func requestDeleteToken() {
+        naverLoginModel.naverLoginInstance?.requestDeleteToken()
+    }
+    
     func setInstanceDelegate(_ viewController: UIViewController) {
         naverLoginModel.naverLoginInstance?.delegate = viewController as? NaverThirdPartyLoginConnectionDelegate
     }
