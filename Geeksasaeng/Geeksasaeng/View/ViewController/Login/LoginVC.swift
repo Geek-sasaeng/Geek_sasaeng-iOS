@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import NaverThirdPartyLogin
 import AuthenticationServices
+import Alamofire
 
 class LoginViewController: UIViewController {
     
@@ -17,7 +18,6 @@ class LoginViewController: UIViewController {
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
-    let naverLoginVM = NaverLoginViewModel()
     var accessToken: String?
     var dormitoryInfo: DormitoryNameResult?
     var userImageUrl: String?
@@ -96,7 +96,6 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        setNaverLoginVM()
         attemptAutoLogin()
         addSubViews()
         setLayouts()
@@ -192,10 +191,6 @@ class LoginViewController: UIViewController {
             make.centerX.equalTo(logoImageView)
             make.top.equalTo(automaticLoginButton.snp.bottom).offset(screenHeight / 18.7)
         }
-    }
-    
-    private func setNaverLoginVM() {
-        naverLoginVM.setInstanceDelegate(self)
     }
     
     private func attemptAutoLogin() {
@@ -365,14 +360,7 @@ class LoginViewController: UIViewController {
     
     @objc
     private func tapNaverLoginButton() {
-        if naverLoginVM.returnToken() != "" { // 토큰이 이미 발행되었다면
-            naverLoginVM.naverLoginPaser(self) // 가입 페이지로
-        }
-        // 토큰 존재하면 재발급 받아서 로그인 시도
-        if naverLoginVM.isValidAccessTokenExpireTimeNow() {
-            naverLoginVM.requestAccessTokenWithRefreshToken()
-        }
-        naverLoginVM.requestLogin()
+        self.startNaverLogin()
     }
     
     @objc
@@ -442,25 +430,86 @@ class LoginViewController: UIViewController {
 // MARK: - NaverThirdPartyLoginConnectionDelegate
 
 extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
-    // 로그인 성공
-    func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
-        print("네이버 로그인 성공")
-        naverLoginVM.naverLoginPaser(self)
-    }
-    
     // 접근 토큰 갱신
     func oauth20ConnectionDidFinishRequestACTokenWithRefreshToken() {
-        print("네이버 토큰\(naverLoginVM.returnToken())")
+        print("토큰 요청 완료")
     }
     
     // 토큰 삭제
     func oauth20ConnectionDidFinishDeleteToken() {
-        print("네이버 로그아웃")
+        print("토큰 삭제 완료")
+        NaverThirdPartyLoginConnection.getSharedInstance().requestDeleteToken()
     }
     
     // 모든 에러 출력
     func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
         print("에러 = \(error.localizedDescription)")
+    }
+    
+    // 로그인 성공
+    func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
+        print("네이버 로그인 성공")
+        guard let loginInstance = NaverThirdPartyLoginConnection.getSharedInstance() else { return }
+        self.getNaverUserInfo(loginInstance.tokenType, loginInstance.accessToken)
+    }
+    
+    func startNaverLogin() {
+        guard let loginInstance = NaverThirdPartyLoginConnection.getSharedInstance() else { return }
+        // 이미 로그인
+        if loginInstance.isValidAccessTokenExpireTimeNow() {
+            self.getNaverUserInfo(loginInstance.tokenType, loginInstance.accessToken)
+            return
+        }
+        
+        loginInstance.delegate = self
+        loginInstance.requestThirdPartyLogin()
+    }
+    
+    func getNaverUserInfo( _ tokenType : String?, _ accessToken : String?) {
+        
+        guard let tokenType = tokenType else { return }
+        guard let accessToken = accessToken else { return }
+        
+        let urlStr = "https://openapi.naver.com/v1/nid/me"
+        let url = URL(string: urlStr)!
+        
+        let authorization = "\(tokenType) \(accessToken)"
+        
+        let req = AF.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: ["Authorization": authorization])
+        
+        req.responseJSON { response in
+            
+            guard let body = response.value as? [String: Any] else { return }
+            
+            if let resultCode = body["message"] as? String {
+                // 네이버에 로그인 할 떄 아이디가 DB에 등록이 안되어있으면 추가 회원가입 절차 진행 -> 가입하는 되는 순간 phone, email 정보와 함께 닉네임 설정 화면으로 이동 -> 닉네임 중복확인하고 학교 이메일 인증 화면으로 이동 -> phone, email, nickname, university 정보 업로드
+                
+                // 그니까 로그인 버튼 누르면 email, phone 정보 가져와서 기존 DB랑 비교하고 있으면 DB에 있는 사용자 정보 불러와서 로그인 완료, 홈 화면으로  <->  없으면 회원가입 화면으로
+                
+                if resultCode.trimmingCharacters(in: .whitespaces) == "success" {
+                    let resultJson = body["response"] as! [String: Any]
+                    
+                    let phone = resultJson["mobile"] as! String
+                    let email = resultJson["email"] as? String ?? ""
+                    
+                    print("네이버 로그인 핸드폰 ",phone)
+                    print("네이버 로그인 이메일 ",email)
+                    
+                    /* 토큰으로 서버에 네이버 로그인 시도 */
+                    print("==========", accessToken)
+                    // fcm 등록토큰 값 불러오기
+                    let fcmToken = UserDefaults.standard.string(forKey: "fcmToken")
+                    print("DEBUG: fcmToken ", fcmToken ?? "")
+                    let input = NaverLoginInput(accessToken: accessToken, fcmToken: "")
+                    
+                    LoginViewModel.loginNaver(viewController: self, input)
+                }
+                else { // 실패
+                    print("ERROR!")
+                    self.showToast(viewController: self, message: "로그인 실패! 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 229, height: 40)
+                }
+            }
+        }
     }
 }
 

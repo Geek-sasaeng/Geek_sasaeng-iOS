@@ -11,6 +11,7 @@ import SnapKit
 import Then
 import Kingfisher
 import KakaoSDKTalk
+import NaverThirdPartyLogin
 import SafariServices
 
 class ProfileViewController: UIViewController {
@@ -20,7 +21,6 @@ class ProfileViewController: UIViewController {
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
-    var naverLoginVM = NaverLoginViewModel()
     var safariVC: SFSafariViewController?
     var myActivities: [EndedDeliveryPartyList] = [] {
         didSet {
@@ -779,8 +779,7 @@ class ProfileViewController: UIViewController {
             
             if isSuccess {
                 print("DEBUG: 로그아웃 완료")
-                self.naverLoginVM.resetToken() // delete naver login token
-                self.naverLoginVM.requestDeleteToken()
+//                NaverThirdPartyLoginConnection.requestDeleteToken(NaverThirdPartyLoginConnection.getSharedInstance())
                 UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
                 
                 let rootVC = LoginViewController()
@@ -802,8 +801,7 @@ class ProfileViewController: UIViewController {
             
             if isSuccess {
                 print("DEBUG: 회원 탈퇴 완료")
-                self.naverLoginVM.resetToken()
-                self.naverLoginVM.requestDeleteToken()
+//                NaverThirdPartyLoginConnection.requestDeleteToken(NaverThirdPartyLoginConnection.getSharedInstance())
                 
                 let rootVC = LoginViewController()
                 UIApplication.shared.windows.first?.rootViewController = rootVC
