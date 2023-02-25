@@ -1116,6 +1116,9 @@
 		A2513F252878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */; };
 		A2513F262878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */; };
 		A2513F272878B9B60029C279 /* EmailAuthCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */; };
+		A2564E3B29A98BD70075B723 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2564E3A29A98BD70075B723 /* NaverLoginViewModel.swift */; };
+		A2564E3C29A98BD70075B723 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2564E3A29A98BD70075B723 /* NaverLoginViewModel.swift */; };
+		A2564E3D29A98BD70075B723 /* NaverLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2564E3A29A98BD70075B723 /* NaverLoginViewModel.swift */; };
 		A25766D328AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25766D428AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
 		A25766D528AA9F9700ED8DAB /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25766D228AA9F9700ED8DAB /* ProfileVC.swift */; };
@@ -1645,6 +1648,7 @@
 		A2513F1C287872D70029C279 /* EmailAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthModel.swift; sourceTree = "<group>"; };
 		A2513F202878B9A30029C279 /* EmailAuthCheckModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckModel.swift; sourceTree = "<group>"; };
 		A2513F242878B9B60029C279 /* EmailAuthCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthCheckViewModel.swift; sourceTree = "<group>"; };
+		A2564E3A29A98BD70075B723 /* NaverLoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaverLoginViewModel.swift; sourceTree = "<group>"; };
 		A25766D228AA9F9700ED8DAB /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		A25825F52969A00100BC3FF7 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		A25F96BB2972EC9500E0A4F6 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
@@ -2590,6 +2594,7 @@
 			isa = PBXGroup;
 			children = (
 				A2085AD6287054E900D6CF79 /* LoginViewModel.swift */,
+				A2564E3A29A98BD70075B723 /* NaverLoginViewModel.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -3813,6 +3818,7 @@
 				A2085AD2287048A800D6CF79 /* RegisterAPI.swift in Sources */,
 				106D78A928F7B8D500CA6F4A /* ChattingStorageChatVC.swift in Sources */,
 				A24F0B20289CC16A007A9C5C /* SplashPlayerVC.swift in Sources */,
+				A2564E3B29A98BD70075B723 /* NaverLoginViewModel.swift in Sources */,
 				A2085AD7287054E900D6CF79 /* LoginViewModel.swift in Sources */,
 				A2513F1128785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A2E78B0928AE8EDC001292E1 /* UIImage+Extension.swift in Sources */,
@@ -3903,6 +3909,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2AF5396289696810052F734 /* ReportAPI.swift in Sources */,
+				A2564E3C29A98BD70075B723 /* NaverLoginViewModel.swift in Sources */,
 				A2E641672879DD6100B40A63 /* UniversityListViewModel.swift in Sources */,
 				A2EE2BC4294727B200335680 /* MessageData.swift in Sources */,
 				A28AEA06299BE6A700F8E5D4 /* ChattingMemberModel.swift in Sources */,
@@ -4128,6 +4135,7 @@
 				A2D2047B28885A65002350C8 /* ReportVC.swift in Sources */,
 				10AC8B102916927500A09952 /* PasswordCheckVC.swift in Sources */,
 				A2085AD9287054E900D6CF79 /* LoginViewModel.swift in Sources */,
+				A2564E3D29A98BD70075B723 /* NaverLoginViewModel.swift in Sources */,
 				A2513F1328785FA30029C279 /* PhoneAuthCheckModel.swift in Sources */,
 				A271CBF42976C6DC0045DEE0 /* ActivityListVC.swift in Sources */,
 				103F1477286ACA86004B637B /* GeeksasaengUITestsLaunchTests.swift in Sources */,

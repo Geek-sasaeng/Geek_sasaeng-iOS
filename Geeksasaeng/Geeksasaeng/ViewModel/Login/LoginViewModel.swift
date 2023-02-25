@@ -38,6 +38,8 @@ class LoginViewModel {
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
         .responseDecodable(of: LoginOutput.self) { response in
+            MyLoadingView.shared.hide()
+            
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {

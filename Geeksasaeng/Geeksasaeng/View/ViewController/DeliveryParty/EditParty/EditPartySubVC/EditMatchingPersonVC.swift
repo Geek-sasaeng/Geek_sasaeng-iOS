@@ -10,7 +10,9 @@ import SnapKit
 import Then
 
 class EditMatchingPersonViewController: UIViewController {
+    
     // MARK: - SubViews
+    
     /* titleLabel: 매칭 인원 선택 */
     let titleLabel = UILabel().then {
         $0.text = "매칭 인원 선택"
@@ -32,10 +34,13 @@ class EditMatchingPersonViewController: UIViewController {
     let personPickerView = UIPickerView()
     
     // MARK: - Properties
+    
+    var currentMatching: Int?
     var pickerViewData = ["2명", "3명", "4명", "5명", "6명", "7명", "8명", "9명", "10명"]
     var data: String? // CreateParty 전역 변수에 저장할 데이터
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -47,7 +52,20 @@ class EditMatchingPersonViewController: UIViewController {
         setLayouts()
     }
     
+    // MARK: - Initialization
+    
+    init(currentMatching: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.currentMatching = currentMatching
+        print("DEBUG: 현재 참여 인원", currentMatching)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Functions
+    
     private func setViewLayout() {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 7
@@ -82,12 +100,25 @@ class EditMatchingPersonViewController: UIViewController {
         }
     }
     
+    private func setPickerView() {
+        personPickerView.delegate = self
+        personPickerView.dataSource = self
+    }
+    
+    private func setDefaultValueOfPicker() {
+        if let matchingPerson = CreateParty.matchingPerson {
+            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
+            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
+        }
+    }
+    
+    // MARK: - @objc Functions
+    
     @objc
     private func tapNextButton() {
-        // PickerView를 안 돌리고 화면 전환 했을 때, default 값 2명
+        // PickerView를 안 돌리고 화면 전환 했을 때, default 값은 수정 전의 모집 인원
         if data == nil {
-            data = "2명"
-            CreateParty.matchingPerson = "2명"
+            data = CreateParty.matchingPerson
         } else {
             CreateParty.matchingPerson = data
         }
@@ -101,19 +132,9 @@ class EditMatchingPersonViewController: UIViewController {
         
         NotificationCenter.default.post(name: NSNotification.Name("TapEditPersonButton"), object: "true")
     }
-    
-    private func setPickerView() {
-        personPickerView.delegate = self
-        personPickerView.dataSource = self
-    }
-    
-    private func setDefaultValueOfPicker() {
-        if let matchingPerson = CreateParty.matchingPerson {
-            let value = Int(matchingPerson.replacingOccurrences(of: "명", with: "")) ?? 0
-            personPickerView.selectRow(value - 2, inComponent: 0, animated: true)
-        }
-    }
 }
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
 
 extension EditMatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -127,9 +148,14 @@ extension EditMatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDa
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let label = UILabel()
         label.text = pickerViewData[row]
+        // 현재 참여 인원 수보다 더 적은 수는 비활성화 색으로 설정
+        if currentMatching! > row + 2 {
+            label.textColor = .init(hex: 0xD8D8D8)
+        } else {
+            label.textColor = .black
+        }
         label.font = .customFont(.neoMedium, size: 20)
         label.textAlignment = .center
-        label.textColor = .black
         
         return label
     }
@@ -139,7 +165,11 @@ extension EditMatchingPersonViewController: UIPickerViewDelegate, UIPickerViewDa
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        data = pickerViewData[row]
+        if currentMatching! > row + 2{
+            // 현재 참여 인원수보다 더 적은 수를 pick하면 현재 참여 인원수로 넣어준다
+            data = pickerViewData[currentMatching! - 2]
+        } else {
+            data = pickerViewData[row]
+        }
     }
-    
 }

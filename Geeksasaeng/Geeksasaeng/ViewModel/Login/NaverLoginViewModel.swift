@@ -61,8 +61,6 @@ class NaverLoginViewModel {
         let authorization = "\(tokenType) \(accessToken)"
         
         let req = AF.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: ["Authorization": authorization])
-        
-        
     }
 
 }
