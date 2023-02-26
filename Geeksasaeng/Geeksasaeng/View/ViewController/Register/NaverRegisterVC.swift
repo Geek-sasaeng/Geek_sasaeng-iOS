@@ -31,7 +31,7 @@ class NaverRegisterViewController: UIViewController {
     
     // Timer
     var currentSeconds = 300 // 남은 시간
-    var timer: DispatchSourceTimer?
+    var timer: Timer?
     
     // MARK: - SubViews
     
@@ -201,7 +201,6 @@ class NaverRegisterViewController: UIViewController {
     }
     
     let remainTimeLabel = UILabel().then {
-        $0.textColor = .mainColor
         $0.font = .customFont(.neoMedium, size: 13)
         $0.isHidden = true
     }
@@ -481,24 +480,26 @@ class NaverRegisterViewController: UIViewController {
         univNameLabel.addGestureRecognizer(labelTapGesture)
     }
     
-    private func startTimer() {
-        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
-        timer?.schedule(deadline: .now(), repeating: 1)
-        
-        timer?.setEventHandler(handler: { [weak self] in
-            guard let self = self else { return }
-            self.currentSeconds -= 1
-            let minutes = self.currentSeconds / 60
-            let seconds = self.currentSeconds % 60
-            self.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
-            
-            if self.currentSeconds <= 0 {
-                self.timer?.cancel()
-                self.remainTimeLabel.textColor = .red
-                self.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+    private func startTimer(startTime: Date) {
+        DispatchQueue.main.async { [weak self] in
+            self?.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+                let elapsedTimeSeconds = Int(Date().timeIntervalSince(startTime))
+                let expireLimit = 300
+                
+                guard elapsedTimeSeconds <= expireLimit else { // 시간 초과한 경우
+                    timer.invalidate()
+                    self?.remainTimeLabel.textColor = .red
+                    self?.remainTimeLabel.text = "인증번호 입력 시간이 만료되었습니다."
+                    return
+                }
+                
+                let remainSeconds = expireLimit - elapsedTimeSeconds
+                let minutes = remainSeconds / 60
+                let seconds = remainSeconds % 60
+                self?.remainTimeLabel.textColor = .mainColor
+                self?.remainTimeLabel.text = String(format: "%02d분 %02d초 남았어요", minutes, seconds)
             }
-        })
-        timer?.resume()
+        }
     }
     
     // MARK: - @objc Functions
@@ -624,16 +625,13 @@ class NaverRegisterViewController: UIViewController {
                         // 이미 돌아가고 있는 타이머가 있으면 -> 재전송 버튼 누른 경우
                         if let timer = self.timer {
                             // 돌고 있는 타이머 종료하고 시간 재설정
-                            timer.cancel()
-                            self.currentSeconds = 300
+                            timer.invalidate()
                         }
-                        // 타이머 시작
-                        self.startTimer()
                         
                         if self.isNicknameChecked {
                             self.authSendButton.isHidden = true
                             self.authResendButton.isHidden = false
-                            self.startTimer()
+                            self.startTimer(startTime: Date())
                             self.remainTimeLabel.isHidden = false
                         }
                     case 2607:
@@ -682,7 +680,7 @@ class NaverRegisterViewController: UIViewController {
                 if isSuccess {
                     // 인증 완료 텍스트 띄우기
                     self.remainTimeLabel.text = "성공적으로 인증이 완료되었습니다"
-                    self.timer?.cancel()
+                    self.timer?.invalidate()
                     self.timer = nil
                     
                     self.emailId = emailId
