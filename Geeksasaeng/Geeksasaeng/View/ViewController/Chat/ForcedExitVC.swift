@@ -45,6 +45,7 @@ class ForcedExitViewController: UIViewController {
     var forcedExitConfirmView: UIView?
     
     var visualEffectView: UIVisualEffectView?
+    var visualEffectViewOnNav: UIVisualEffectView?
     
     // MARK: - Properties
     
@@ -178,13 +179,11 @@ class ForcedExitViewController: UIViewController {
     }
     
     private func createBlurView() {
-        if visualEffectView == nil {
-            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-            visualEffectView.layer.opacity = 0.6
-            visualEffectView.frame = view.frame
-            view.addSubview(visualEffectView)
-            self.visualEffectView = visualEffectView
+        self.visualEffectView = setDarkBlurView()
+        self.visualEffectView!.snp.makeConstraints { make in
+            make.edges.equalTo(0)
         }
+        self.visualEffectViewOnNav = setDarkBlurViewOnNav()
     }
     
     // 배경의 블러뷰를 터치하면 띄워진 뷰와 블러뷰가 같이 사라지도록 설정
@@ -344,7 +343,9 @@ class ForcedExitViewController: UIViewController {
     private func removeForcedExitConfirmView() {
         forcedExitConfirmView?.removeFromSuperview()
         visualEffectView?.removeFromSuperview()
+        visualEffectViewOnNav?.removeFromSuperview()
         visualEffectView = nil
+        visualEffectViewOnNav = nil
     }
     
     // MARK: - @objc Functions

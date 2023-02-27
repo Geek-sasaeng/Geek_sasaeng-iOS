@@ -390,6 +390,7 @@ class ProfileViewController: UIViewController {
     }
     
     var visualEffectView: UIVisualEffectView?
+    var visualEffectViewOnNav: UIVisualEffectView?
 
     // MARK: - Life Cycle
     
@@ -423,6 +424,7 @@ class ProfileViewController: UIViewController {
         
         if let touch = touches.first, touch.view == self.visualEffectView {
             visualEffectView?.removeFromSuperview()
+            visualEffectViewOnNav?.removeFromSuperview()
             // view에 addSubview가 된 즉, 현재 띄워져있는 뷰인지 확인
             if logoutView.isDescendant(of: view) {
                 logoutView.removeFromSuperview()
@@ -539,20 +541,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func createBlurView() {
-//        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-//        visualEffectView.layer.opacity = 0.6
-//        visualEffectView.frame = view.frame
-//        view.addSubview(visualEffectView)
-//        self.visualEffectView = visualEffectView
-        
-//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-//        self.navigationController?.navigationBar.shadowImage = UIImage()
-//        self.navigationController?.navigationBar.backgroundColor = UIColor.clear
-        
         self.visualEffectView = setDarkBlurView()
         self.visualEffectView!.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
+        self.visualEffectViewOnNav = setDarkBlurViewOnNav()
     }
     
     private func addSubViews() {
@@ -766,6 +759,7 @@ class ProfileViewController: UIViewController {
     @objc
     private func tapXButton() {
         visualEffectView?.removeFromSuperview()
+        visualEffectViewOnNav?.removeFromSuperview()
         logoutView.removeFromSuperview()
         withdrawalMembershipView.removeFromSuperview()
     }
