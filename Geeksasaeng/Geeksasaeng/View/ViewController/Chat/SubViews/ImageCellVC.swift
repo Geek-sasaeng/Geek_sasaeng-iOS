@@ -72,7 +72,21 @@ class ImageCellViewController: UIViewController {
         imageMessageExpansionDateLabel.text = str.substring(start: 0, end: 10)
         imageMessageExpansionTimeLabel.text = str.substring(start: 11, end: 19)
         
-        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+//        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
+        imageMessageExpansionImageView.kf.setImage(with: imageUrl) { result in
+            switch result {
+            case .success(let value):
+                let width = value.image.size.width
+                let height = value.image.size.height
+                
+                self.imageMessageExpansionImageView.snp.makeConstraints { make in
+                    make.width.equalTo(width)
+                    make.height.equalTo(height)
+                }
+            case .failure(let error):
+                print("kingfisher image load error: ", error)
+            }
+        }
 //        imageMessageExpansionImageView.image = UIImage(systemName: "pencil")
     }
     
