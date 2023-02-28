@@ -79,6 +79,9 @@ class ImageCellViewController: UIViewController {
                 let width = value.image.size.width
                 let height = value.image.size.height
                 
+                print("loaded image width: ", width)
+                print("loaded image height: ", height)
+                
                 self.imageMessageExpansionImageView.snp.makeConstraints { make in
                     make.width.equalTo(width)
                     make.height.equalTo(height)
