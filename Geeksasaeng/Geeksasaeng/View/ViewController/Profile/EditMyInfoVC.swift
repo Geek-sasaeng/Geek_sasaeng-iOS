@@ -261,6 +261,7 @@ class EditMyInfoViewController: UIViewController {
     }
     
     var visualEffectView: UIVisualEffectView?
+    var visualEffectViewOnNav: UIVisualEffectView?
     
     // MARK: - Properties
     
@@ -413,14 +414,11 @@ class EditMyInfoViewController: UIViewController {
     }
     
     private func createBlurView() {
-        if visualEffectView == nil {
-            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-            visualEffectView.layer.opacity = 0.6
-            visualEffectView.frame = view.frame
-            self.userImageView.isUserInteractionEnabled = false
-            view.addSubview(visualEffectView)
-            self.visualEffectView = visualEffectView
+        self.visualEffectView = setDarkBlurView()
+        self.visualEffectView!.snp.makeConstraints { make in
+            make.edges.equalTo(0)
         }
+        self.visualEffectViewOnNav = setDarkBlurViewOnNav()
     }
     
     private func setUserInfo() {
@@ -503,9 +501,10 @@ class EditMyInfoViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: Notification.Name("CorrectPassword"), object: nil, queue: nil) { notification in
             let result = notification.object as! String
             if result == "true" {
-                print("======비밀번호 맞음, 블러 뷰 내리겠음")
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectViewOnNav?.removeFromSuperview()
                 self.visualEffectView = nil
+                self.visualEffectViewOnNav = nil
                 self.userImageView.isUserInteractionEnabled = true
             }
         }
@@ -514,7 +513,9 @@ class EditMyInfoViewController: UIViewController {
             let result = notification.object as! String
             if result == "true" {
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectViewOnNav?.removeFromSuperview()
                 self.visualEffectView = nil
+                self.visualEffectViewOnNav = nil
                 self.userImageView.isUserInteractionEnabled = true
             }
         }
@@ -559,7 +560,9 @@ class EditMyInfoViewController: UIViewController {
         userImageView.image = UIImage(named: "DefaultProfileImage")
         
         visualEffectView?.removeFromSuperview()
+        visualEffectViewOnNav?.removeFromSuperview()
         visualEffectView = nil
+        visualEffectViewOnNav = nil
         changeProfileImageView.removeFromSuperview()
         
         if isChangedNickname {
@@ -612,7 +615,9 @@ class EditMyInfoViewController: UIViewController {
                 print("회원정보 수정 실패")
                 self.editConfirmView.removeFromSuperview()
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectViewOnNav?.removeFromSuperview()
                 self.visualEffectView = nil
+                self.visualEffectViewOnNav = nil
             }
         }
     }
@@ -620,7 +625,9 @@ class EditMyInfoViewController: UIViewController {
     @objc
     private func tapXButton() {
         visualEffectView?.removeFromSuperview()
+        visualEffectViewOnNav?.removeFromSuperview()
         visualEffectView = nil
+        visualEffectViewOnNav = nil
         editConfirmView.removeFromSuperview()
     }
     
@@ -700,7 +707,9 @@ class EditMyInfoViewController: UIViewController {
             editConfirmView.removeFromSuperview()
             changeProfileImageView.removeFromSuperview()
             visualEffectView?.removeFromSuperview()
+            visualEffectViewOnNav?.removeFromSuperview()
             visualEffectView = nil
+            visualEffectViewOnNav = nil
             userImageView.isUserInteractionEnabled = true
             NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
         }
@@ -775,7 +784,9 @@ extension EditMyInfoViewController: PHPickerViewControllerDelegate {
                     
                     // TODO: - visualEffectView를 remove하고 nil로 하면 imageView가 다시 탭 안 되는 이슈가 있음
                     self.visualEffectView?.removeFromSuperview()
+                    self.visualEffectViewOnNav?.removeFromSuperview()
                     self.visualEffectView = nil
+                    self.visualEffectViewOnNav = nil
                     self.changeProfileImageView.removeFromSuperview()
                 }
             }

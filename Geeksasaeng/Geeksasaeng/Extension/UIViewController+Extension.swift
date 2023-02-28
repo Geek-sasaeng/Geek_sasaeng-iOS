@@ -84,6 +84,19 @@ extension UIViewController {
         return visualEffectView
     }
     
+    /* 네이게이션 바에 어두운 블러뷰 만드는 함수 */
+    public func setDarkBlurViewOnNav() -> UIVisualEffectView {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.layer.opacity = 0.6
+        visualEffectView.frame = view.frame
+        visualEffectView.frame = (self.navigationController?.navigationBar.bounds.insetBy(dx: 0, dy: -((self.navigationController?.navigationBar.frame.size.height)!)).offsetBy(dx: 0, dy: -((self.navigationController?.navigationBar.frame.size.height)!)))!
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.addSubview(visualEffectView)
+        
+        return visualEffectView
+    }
+    
     /* 더 어두운 배경 */
     public func setMoreDarkBlurView() -> UIVisualEffectView {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
