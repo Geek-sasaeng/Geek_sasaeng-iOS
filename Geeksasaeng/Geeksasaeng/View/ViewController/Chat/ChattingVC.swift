@@ -63,7 +63,6 @@ class ChattingViewController: UIViewController {
         $0.addTarget(self, action: #selector(self.tapSendButton), for: .touchUpInside)
     }
     
-    
     // 방장에게 띄워질 액션 시트
     lazy var ownerAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet).then { actionSheet in
         [
@@ -462,8 +461,6 @@ class ChattingViewController: UIViewController {
     
     var msgContents: [MsgContents] = []
     var msgRecords: Results<MsgToSave>?
-    var userNickname: String?
-    var currentMatching: Int?
     
     // 선택한 채팅방의 id값
     var roomId: String?
@@ -1457,7 +1454,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         let msg = msgContents[indexPath.row]
         guard let isImageMessage = msg.message?.isImageMessage else { return CGSize() }
         if isImageMessage {
-            cellSize = CGSize(width: view.bounds.width, height: 155)
+            if msg.msgType == .message {
+                cellSize = CGSize(width: view.bounds.width, height: 170)
+            } else {
+                cellSize = CGSize(width: view.bounds.width, height: 155)
+            }
         } else {
             switch msg.msgType {
             case .systemMessage:
