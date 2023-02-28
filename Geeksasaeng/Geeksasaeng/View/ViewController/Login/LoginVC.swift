@@ -488,6 +488,7 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
                 
                 if resultCode.trimmingCharacters(in: .whitespaces) == "success" {
                     let resultJson = body["response"] as! [String: Any]
+                    print("naver user info: ", resultJson)
                     
                     let phone = resultJson["mobile"] as! String
                     let email = resultJson["email"] as? String ?? ""

@@ -608,6 +608,8 @@ class EditMyInfoViewController: UIViewController {
                 LoginModel.nickname = result.nickname
                 
                 self.setUserInfo()
+                self.visualEffectViewOnNav?.removeFromSuperview()
+                self.visualEffectViewOnNav = nil
                 self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
             } else {

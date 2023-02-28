@@ -43,6 +43,7 @@ class ImageCellViewController: UIViewController {
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 10
         $0.backgroundColor = .white
+        $0.contentMode = .scaleAspectFit
     }
     
     // MARK: - Life Cycles
@@ -100,7 +101,6 @@ class ImageCellViewController: UIViewController {
         
         imageMessageExpansionImageView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.height.equalTo(331)
         }
     }
     
