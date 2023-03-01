@@ -79,10 +79,10 @@ struct ChatImageSendInput: Encodable {
     var isSystemMessage: Bool?
 }
 struct ChatImageSendModel: Decodable {
-    var code : Int?
-    var isSuccess : Bool?
-    var message : String?
-    var result : String?
+    var code: Int?
+    var isSuccess: Bool?
+    var message: String?
+    var result: String?
 }
 
 /* 주문 완료 */
@@ -283,6 +283,7 @@ class ChatAPI {
                     multipartFormData.append(pngImage, withName: "images", fileName: "\(pngImage).png", mimeType: "image/png")
                 }
             }
+            print("DEBUG: 이미지 데이터", multipartFormData)
         }, to: URL, usingThreshold: UInt64.init(), method: .post, headers: header)
         .validate()
         .responseDecodable(of: ChatImageSendModel.self) { response in
@@ -296,7 +297,7 @@ class ChatAPI {
                     print("DEBUG: 이미지 업로드 실패", result.message!)
                 }
             case .failure(let error):
-                print("DEBUG: ", error.localizedDescription)
+                print("DEBUG: 이미지 업로드 실패", error.localizedDescription)
                 completion(false)
             }
         }
@@ -454,9 +455,12 @@ class ChatAPI {
     // 매칭 마감 API 호출 함수
     public static func closeMatching(_ parameter: CloseMatchingInput, completion: @escaping (Bool) -> Void) {
         guard let partyId = parameter.partyId else { return }
-        let url = "https://geeksasaeng.shop/delivery-party/\(partyId)/matching-status"
+        let url = "https://geeksasaeng.shop/party-chat-room/matching-status"
         
-        AF.request(url, method: .patch, parameters: nil, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
+        var parameters: Parameters = [
+            "partyId": partyId
+        ]
+        AF.request(url, method: .patch, parameters: parameters, headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
         .responseDecodable(of: CloseMatchingModel.self) { response in
             switch response.result {

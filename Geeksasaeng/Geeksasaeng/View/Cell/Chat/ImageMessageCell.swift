@@ -21,10 +21,13 @@ class ImageMessageCell: UICollectionViewCell {
     // MARK: - SubViews
     
     lazy var leftProfileImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
         $0.isUserInteractionEnabled = true
         $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapProfileImage)))
     }
-    let rightProfileImageView = UIImageView()
+    let rightProfileImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+    }
     let nicknameLabel = UILabel()
     
     let leftImageMessageView = UIView()

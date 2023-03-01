@@ -77,6 +77,7 @@ class ProfileCardViewController: UIViewController {
             $0.textColor = .init(hex: 0x636363)
         }
         let profileImageView = UIImageView().then {
+            $0.contentMode = .scaleAspectFill
             $0.layer.masksToBounds = true
             $0.layer.cornerRadius = 54
         }

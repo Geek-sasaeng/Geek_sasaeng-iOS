@@ -63,7 +63,6 @@ class ChattingViewController: UIViewController {
         $0.addTarget(self, action: #selector(self.tapSendButton), for: .touchUpInside)
     }
     
-    
     // 방장에게 띄워질 액션 시트
     lazy var ownerAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet).then { actionSheet in
         [
@@ -462,8 +461,6 @@ class ChattingViewController: UIViewController {
     
     var msgContents: [MsgContents] = []
     var msgRecords: Results<MsgToSave>?
-    var userNickname: String?
-    var currentMatching: Int?
     
     // 선택한 채팅방의 id값
     var roomId: String?
@@ -984,7 +981,7 @@ class ChattingViewController: UIViewController {
     @objc
     private func tapSendImageButton() {
         var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 0
+        configuration.selectionLimit = 3 // 사진 최대 3개까지 선택 가능
         configuration.filter = .images
         
         let picker = PHPickerViewController(configuration: configuration)
@@ -1335,6 +1332,7 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
                 }
                 return cell
             } else {
+                // TODO: SameSenderMessageCell 필요없을지도? MessageCell로 쓰고 이미지셀처럼 same sender일 때 닉네임 프사 isHidden 처리하면 됨
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SameSenderMessageCell", for: indexPath) as! SameSenderMessageCell
                 if msg.message?.memberId == LoginModel.memberId { // 보낸 사람이 자신
                     cell.rightMessageLabel.text = msg.message?.content
@@ -1458,7 +1456,11 @@ extension ChattingViewController: UICollectionViewDelegate, UICollectionViewData
         let msg = msgContents[indexPath.row]
         guard let isImageMessage = msg.message?.isImageMessage else { return CGSize() }
         if isImageMessage {
-            cellSize = CGSize(width: view.bounds.width, height: 155)
+            if msg.msgType == .message {
+                cellSize = CGSize(width: view.bounds.width, height: 170)
+            } else {
+                cellSize = CGSize(width: view.bounds.width, height: 155)
+            }
         } else {
             switch msg.msgType {
             case .systemMessage:
