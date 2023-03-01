@@ -2366,13 +2366,13 @@
 		A248D88B289FB881000E2422 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				A248D890289FB8F1000E2422 /* systemMessageCell.swift */,
 				A248D88C289FB8E5000E2422 /* MessageCell.swift */,
 				10FECB1928A4ECD1007B66C8 /* sameSenderMessageCell.swift */,
-				A248D890289FB8F1000E2422 /* systemMessageCell.swift */,
+				10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */,
 				A248D894289FB919000E2422 /* ChattingListTableViewCell.swift */,
 				A21E82B828E4F17E00D75084 /* ChattingStorageTableViewCell.swift */,
 				10A4A35828E3750B00AF4235 /* ForcedExitTableViewCell.swift */,
-				10EEF83A295EDBE0009F878D /* ImageMessageCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
