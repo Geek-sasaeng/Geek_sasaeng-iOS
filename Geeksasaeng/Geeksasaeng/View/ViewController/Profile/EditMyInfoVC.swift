@@ -37,6 +37,7 @@ class EditMyInfoViewController: UIViewController {
     
     /* 유저 프로필 이미지 3개 components */
     lazy var userImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 83
     }

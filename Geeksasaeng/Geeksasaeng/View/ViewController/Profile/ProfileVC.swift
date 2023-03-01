@@ -43,7 +43,6 @@ class ProfileViewController: UIViewController {
         $0.backgroundColor = .white
     }
     
-    // TODO: - 스크롤뷰 배경색 바꿔야 함
     /* MyInfo View가 올라가는 background View */
     let backgroundView = UIView().then {
         $0.backgroundColor = .init(hex: 0xF1F5F9)
@@ -103,6 +102,7 @@ class ProfileViewController: UIViewController {
         $0.textColor = .init(hex: 0x636363)
     }
     let profileImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.layer.cornerRadius = 54
     }

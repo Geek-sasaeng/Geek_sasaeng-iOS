@@ -27,6 +27,7 @@ class ProfilePopUpViewController: UIViewController {
         $0.layer.cornerRadius = 10
     }
     lazy var profileImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 72 / 2
         $0.clipsToBounds = true
     }
