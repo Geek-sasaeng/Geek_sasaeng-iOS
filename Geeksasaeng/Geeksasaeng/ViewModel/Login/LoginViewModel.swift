@@ -32,7 +32,6 @@ class LoginViewModel {
     }
     
     // TODO: - viewController를 넘기지 않는 방식으로 변경 필요.
-    /* loginNaver는 네아로에서 제공하는 메서드에서 호출 중이라 일단 보류 */
     public static func loginNaver(viewController: LoginViewController, _ parameter : NaverLoginInput) {
         AF.request("https://geeksasaeng.shop/login/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
