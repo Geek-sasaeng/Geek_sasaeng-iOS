@@ -64,7 +64,7 @@ class ProfileCardViewController: UIViewController {
         view.backgroundColor = .white
         view.setViewShadow(shadowColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.17).cgColor, shadowOpacity: 1, shadowRadius: 7)
         
-        let heartImageView = UIImageView(image: UIImage(named: "MyInfoCardIcon"))
+        let heartImageView = UIImageView()
         let nicknameLabel = UILabel().then {
             $0.font = .customFont(.neoBold, size: 20)
         }
@@ -87,6 +87,15 @@ class ProfileCardViewController: UIViewController {
             MyLoadingView.shared.hide()
             
             if isSuccess {
+                switch result.grade {
+                case "신입생":
+                    heartImageView.image = UIImage(named: "FreshmanIcon")
+                case "복학생":
+                    heartImageView.image = UIImage(named: "ReturningIcon")
+                default:
+                    heartImageView.image = UIImage(named: "GraduateIcon")
+                }
+                
                 self.gradeLabel.text = result.grade
                 self.remainLabel.text = result.nextGradeAndRemainCredits
                 nicknameLabel.text = result.nickname
