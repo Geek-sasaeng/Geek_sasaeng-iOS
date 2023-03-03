@@ -33,16 +33,7 @@ struct AutoLoginModelResult: Decodable {
 /* 애플 로그인 */
 struct AppleLoginInput: Encodable {
     var code: String?
-    var idToken: String?
-    var user: AppleLoginInputUser?
-}
-struct AppleLoginInputUser: Encodable {
-    var email: String?
-    var name: AppleLoginInputUserName?
-}
-struct AppleLoginInputUserName: Encodable {
-    var firstName: String?
-    var lastName: String?
+    var refreshToken: String?
 }
 
 struct AppleLoginModel: Decodable {
@@ -52,12 +43,14 @@ struct AppleLoginModel: Decodable {
     var result: AppleLoginModelResult?
 }
 struct AppleLoginModelResult: Decodable {
-    var access_token: String?
-    var expires_in: Int?
-    var id_token: String?
-    var refresh_token: String?
-    var token_type: String?
-    var userId: Int?
+    var dormitoryId: Int?
+    var dormitoryName: String?
+    var fcmToken: String?
+    var jwt: String?
+    var loginStatus: String?
+    var memberId: Int?
+    var nickname: String?
+    var profileImgUrl: String?
 }
 
 /* 로그아웃 */
@@ -88,22 +81,25 @@ class LoginAPI {
             }
     }
     
-    public static func appleLogin(input: AppleLoginInput, completion: @escaping (Bool, AppleLoginModelResult) -> Void ) {
-        AF.request("https://geeksasaeng.shop/apple-login", method: .post)
+    public static func appleLogin(input: AppleLoginInput, completion: @escaping (Bool, AppleLoginModelResult?, Bool?) -> Void ) {
+        AF.request("https://geeksasaeng.shop/log-in/apple", method: .post)
             .validate()
             .responseDecodable(of: AppleLoginModel.self) { response in
                 switch response.result {
                 case .success(let result):
                     if result.isSuccess! {
                         print("DEBUG: 애플 로그인 성공", result.result)
-                        completion(true, result.result ?? AppleLoginModelResult())
+                        completion(true, result.result ?? AppleLoginModelResult(), false)
                     } else {
                         print("DEBUG: 애플 로그인 실패", result.message!)
-                        completion(false, AppleLoginModelResult())
+                        
+                        if result.code == 2204 { // 가입된 계정이 없을 때
+                            completion(false, nil, true)
+                        }
                     }
                 case .failure(let error):
                     print("DEBUG: 애플 로그인 실패", error.localizedDescription)
-                    completion(false, AppleLoginModelResult())
+                    completion(false, nil, false)
                 }
             }
     }

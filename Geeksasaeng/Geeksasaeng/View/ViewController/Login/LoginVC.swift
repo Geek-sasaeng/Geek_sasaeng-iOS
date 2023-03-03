@@ -558,19 +558,27 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             print(".identityToken : \(idTokenStr ?? "")")
             print(".authorizationCode : \(codeStr ?? "")")
             
-            let appleLoginUserNameInput = AppleLoginInputUserName(firstName: fullName?.givenName, lastName: fullName?.familyName)
-            let appleLoginUserInput = AppleLoginInputUser(email: email, name: appleLoginUserNameInput)
-            let appleLoginInput = AppleLoginInput(code: codeStr, idToken: idTokenStr, user: appleLoginUserInput)
-            
-            print(appleLoginInput)
-            LoginAPI.appleLogin(input: appleLoginInput) { isSuccess, result in
-                if isSuccess {
-                    print("애플 로그인 성공", result)
-                } else {
-                    print("애플 로그인 실패")
+            if let appleRefreshToken = UserDefaults.standard.string(forKey: "appleRefreshToken") {
+                let appleLoginInput = AppleLoginInput(code: codeStr, refreshToken: appleRefreshToken)
+                
+                LoginAPI.appleLogin(input: appleLoginInput) { isSuccess, result, register in
+                    if isSuccess {
+                        print("애플 로그인 성공", result)
+                    } else {
+                        if register! { // 가입으로
+                            let registerVC = NaverRegisterViewController()
+                            registerVC.idToken = idTokenStr
+                            registerVC.code = codeStr
+                            self.navigationController?.pushViewController(registerVC, animated: true)
+                        }
+                    }
                 }
+            } else { // appleRefreshToken이 아예 없다는 건 아예 첫 로그인이므로 가입으로 이동
+                let registerVC = NaverRegisterViewController()
+                registerVC.idToken = idTokenStr
+                registerVC.code = codeStr
+                self.navigationController?.pushViewController(registerVC, animated: true)
             }
-            
             
         default:
             break

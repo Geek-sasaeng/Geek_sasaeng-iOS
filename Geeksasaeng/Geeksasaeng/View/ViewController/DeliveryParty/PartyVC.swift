@@ -483,8 +483,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         addSubViews()
         setLayouts()
-        setAttributes()
         getDetailData()
+        setAttributes()
         startTimer()
         showToastFromCreated()
         
@@ -537,7 +537,7 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     if let self = self {
                         self.detailData = result
                         self.setDetailData()
-                        
+
                         // 해시태그 안 달렸으면 사이 간격 조정
                         if !(self.detailData.hashTag!) {
                             self.titleLabel.snp.remakeConstraints { make in
