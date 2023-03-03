@@ -1617,13 +1617,21 @@ extension ChattingViewController: PHPickerViewControllerDelegate {
                     isSystemMessage: false
                 )
                 
-                ChatAPI.sendImage(input, imageData: images) { isSuccess in
+                ChatAPI.sendImage(input, imageData: images) { model in
                     MyLoadingView.shared.hide()
-                    if isSuccess {
-                        print("이미지 전송 성공")
+                    if let model = model {
+                        switch model.code {
+                        case 1000:
+                            print("이미지 전송 성공")
+                        case 2029, 2030:
+                            self.showToast(viewController: self, message: "이미지 용량이 커서 전송에 실패했어요", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 248, height: 40)
+                        default:
+                            print("이미지 전송 실패")
+                            self.showToast(viewController: self, message: "이미지 전송에 실패했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        }
                     } else {
                         print("이미지 전송 실패")
-                        self.showToast(viewController: self, message: "이미지 전송에 실패했어요.", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                        self.showToast(viewController: self, message: "이미지 전송에 실패했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
                     }
                 }
             }))
