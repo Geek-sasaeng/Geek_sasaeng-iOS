@@ -538,6 +538,14 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                         self.detailData = result
                         self.setDetailData()
                         
+                        // 해시태그 안 달렸으면 사이 간격 조정
+                        if !(self.detailData.hashTag!) {
+                            self.titleLabel.snp.remakeConstraints { make in
+                                make.top.equalTo(self.profileImageView.snp.bottom).offset(self.screenHeight / 36.26)
+                                make.left.equalTo(self.profileImageView)
+                            }
+                        }
+                        
                         // belongStatus가 Y인데 activeStatus가 false => 나간 방장 또는 파티원
                         if self.detailData.belongStatus == "Y" && self.detailData.activeStatus == false {
                             self.showExitedGuideView()
