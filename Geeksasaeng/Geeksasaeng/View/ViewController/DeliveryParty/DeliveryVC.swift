@@ -298,8 +298,6 @@ class DeliveryViewController: UIViewController {
         /* 광고 목록 데이터 로딩 */
         getAdList()
         
-        /* 배달 목록 데이터 로딩 */
-        getDeliveryList(DeliveryListInput())
         /* 1분마다 시간 재설정 */
         changeOrderTimeByMinute()
     }
