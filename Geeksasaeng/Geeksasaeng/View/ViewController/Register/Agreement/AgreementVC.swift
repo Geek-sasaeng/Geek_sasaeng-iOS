@@ -27,6 +27,11 @@ class AgreementViewController: UIViewController {
     var accessToken: String?
     var email: String?
     
+    // 애플 로그인
+    var idToken: String?
+    var code: String?
+    var phoneNumber: String?
+    
     var isAgreeTermsOfUse = false
     var isAgreePersonalInfo = false
     
@@ -161,6 +166,17 @@ class AgreementViewController: UIViewController {
         self.nickNameData = nickNameData
         self.university = university
         self.email = email
+    }
+    
+    /* 애플 회원가입용 */
+    init(idToken: String, code: String, nickNameData: String, university: String, email: String, phoneNumber: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.idToken = idToken
+        self.code = code
+        self.nickNameData = nickNameData
+        self.university = university
+        self.email = email
+        self.phoneNumber = phoneNumber
     }
     
     required init?(coder: NSCoder) {
@@ -308,13 +324,37 @@ class AgreementViewController: UIViewController {
                         LoginModel.jwt = result.jwt
                         LoginModel.memberId = result.memberId
                         LoginModel.nickname = result.nickname
-                        self.showDomitoryView()
+                        self.showDormitoryView()
                     } else {
                         // 네이버 회원가입 실패
                         self.showBottomToast(viewController: self, message: "잠시 후 다시 시도해주세요", font: .customFont(.neoMedium, size: 15), color: .lightGray)
                     }
                 }
             }
+        } else if idToken != nil { // 애플 회원가입인 경우
+            if let idToken = idToken,
+               let code = code,
+               let email = email,
+               let nickname = nickNameData,
+               let phoneNumber = phoneNumber,
+               let universityName = university {
+                let input = AppleRegisterInput(accessToken: "", code: code, email: email, idToken: idToken, informationAgreeStatus: "Y", nickname: nickname, phoneNumber: phoneNumber, universityName: universityName)
+                
+                RegisterAPI.registerUserFromApple(input) { isSuccess, result in
+                    if isSuccess {
+                        guard let parsingResult = result else { return }
+                        UserDefaults.standard.set(parsingResult.jwt, forKey: "jwt")
+                        UserDefaults.standard.set(parsingResult.refresh_token, forKey: "appleRefreshToken")
+                        LoginModel.jwt = parsingResult.jwt
+                        LoginModel.memberId = parsingResult.userId
+//                        LoginModel.nickname = parsingResult.nickname -> nickname res에 추가
+                        self.showDormitoryView()
+                    } else {
+                        print("애플 로그인 실패")
+                    }
+                }
+            }
+            
         } else { // 일반 회원가입인 경우
             // Request 생성.
             // 최종적으로 데이터 전달
@@ -427,7 +467,7 @@ class AgreementViewController: UIViewController {
     }
     
     /* 네이버 회원가입 시 사용 */
-    public func showDomitoryView() {
+    public func showDormitoryView() {
         let dormitoryVC = DormitoryViewController()
         dormitoryVC.modalTransitionStyle = .crossDissolve
         dormitoryVC.modalPresentationStyle = .fullScreen

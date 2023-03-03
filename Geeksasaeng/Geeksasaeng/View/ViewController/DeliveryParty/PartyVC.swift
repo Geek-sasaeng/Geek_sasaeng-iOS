@@ -483,8 +483,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         
         addSubViews()
         setLayouts()
-        setAttributes()
         getDetailData()
+        setAttributes()
         startTimer()
         showToastFromCreated()
         
@@ -537,6 +537,17 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     if let self = self {
                         self.detailData = result
                         self.setDetailData()
+                        
+                        print("hashTag: ", result.hashTag!)
+                        if !result.hashTag! { // 같이 먹어요 없을 때 제목 레이아웃 조정
+                            print("같이 안 먹어요에 해당")
+                            DispatchQueue.main.async {
+                                self.titleLabel.snp.remakeConstraints { make in
+                                    make.left.equalToSuperview().inset(self.screenWidth / 16.375)
+                                    make.top.equalTo(self.nickNameLabel.snp.bottom).offset(self.screenHeight / 34.08)
+                                }
+                            }
+                        }
                         
                         // belongStatus가 Y인데 activeStatus가 false => 나간 방장 또는 파티원
                         if self.detailData.belongStatus == "Y" && self.detailData.activeStatus == false {
