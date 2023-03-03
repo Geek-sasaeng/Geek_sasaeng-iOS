@@ -256,7 +256,7 @@ class ChatAPI {
     }
     
     /* 이미지 전송 */
-    public static func sendImage(_ parameter: ChatImageSendInput, imageData: [UIImage], completion: @escaping (Bool) -> Void) {
+    public static func sendImage(_ parameter: ChatImageSendInput, imageData: [UIImage], completion: @escaping (ChatImageSendModel?) -> Void) {
         let URL = "https://geeksasaeng.shop/party-chat-room/chatimage"
         let header : HTTPHeaders = [
             "Content-Type" : "multipart/form-data",
@@ -291,14 +291,13 @@ class ChatAPI {
             case .success(let result):
                 if result.isSuccess! {
                     print("DEBUG: 이미지 업로드 성공", result.message!)
-                    completion(true)
                 } else {
-                    completion(false)
                     print("DEBUG: 이미지 업로드 실패", result.message!)
                 }
+                completion(result)
             case .failure(let error):
                 print("DEBUG: 이미지 업로드 실패", error.localizedDescription)
-                completion(false)
+                completion(nil)
             }
         }
     }

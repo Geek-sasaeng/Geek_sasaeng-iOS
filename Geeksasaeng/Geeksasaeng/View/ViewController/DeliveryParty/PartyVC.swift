@@ -537,15 +537,12 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
                     if let self = self {
                         self.detailData = result
                         self.setDetailData()
-                        
-                        print("hashTag: ", result.hashTag!)
-                        if !result.hashTag! { // 같이 먹어요 없을 때 제목 레이아웃 조정
-                            print("같이 안 먹어요에 해당")
-                            DispatchQueue.main.async {
-                                self.titleLabel.snp.remakeConstraints { make in
-                                    make.left.equalToSuperview().inset(self.screenWidth / 16.375)
-                                    make.top.equalTo(self.nickNameLabel.snp.bottom).offset(self.screenHeight / 34.08)
-                                }
+
+                        // 해시태그 안 달렸으면 사이 간격 조정
+                        if !(self.detailData.hashTag!) {
+                            self.titleLabel.snp.remakeConstraints { make in
+                                make.top.equalTo(self.profileImageView.snp.bottom).offset(self.screenHeight / 36.26)
+                                make.left.equalTo(self.profileImageView)
                             }
                         }
                         

@@ -304,9 +304,38 @@ class AgreementViewController: UIViewController {
             $0.titleLabel?.font = .customFont(.neoRegular, size: 18)
         }
     }
+    
+    // 버튼 체크
+    private func checked(isTermsOfUse: Bool, sender: UIButton) {
+        if isTermsOfUse {
+            isAgreeTermsOfUse = true
+        } else {
+            isAgreePersonalInfo = true
+        }
+        sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+        if isAgreeTermsOfUse && isAgreePersonalInfo {
+            completeButton.setActivatedNextButton()
+            wholeAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+        }
+    }
+    
+    // 버튼 체크 해제
+    private func unchecked(isTermsOfUse: Bool, sender: UIButton) {
+        if isTermsOfUse {
+            isAgreeTermsOfUse = false
+        } else {
+            isAgreePersonalInfo = false
+        }
+        sender.setImage(UIImage(systemName: "square"), for: .normal)
+        completeButton.setDeactivatedNextButton()
+        wholeAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+    }
+    
+    // MARK: - @objc Functions
 
     /* 회원가입 Request 보내는 함수 */
-    @objc private func tapCompleteButton() {
+    @objc
+    private func tapCompleteButton() {
         MyLoadingView.shared.show()
         
         if isFromNaverRegister { // naver 회원가입인 경우
@@ -413,31 +442,15 @@ class AgreementViewController: UIViewController {
             }
         case termsOfUseAgreementCheckBox:
             if sender.currentImage == UIImage(systemName: "square") { // 체크할 때
-                sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-                isAgreeTermsOfUse = true
-                if isAgreeTermsOfUse && isAgreePersonalInfo {
-                    completeButton.setActivatedNextButton()
-                    wholeAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-                }
+                checked(isTermsOfUse: true, sender: sender)
             } else {
-                sender.setImage(UIImage(systemName: "square"), for: .normal)
-                isAgreeTermsOfUse = false
-                completeButton.setDeactivatedNextButton()
-                wholeAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+                unchecked(isTermsOfUse: true, sender: sender)
             }
         case personalInfoAgreementCheckBox:
             if sender.currentImage == UIImage(systemName: "square") { // 체크할 때
-                sender.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-                isAgreePersonalInfo = true
-                if isAgreeTermsOfUse && isAgreePersonalInfo {
-                    completeButton.setActivatedNextButton()
-                    wholeAgreementCheckBox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
-                }
+                checked(isTermsOfUse: false, sender: sender)
             } else {
-                sender.setImage(UIImage(systemName: "square"), for: .normal)
-                isAgreePersonalInfo = false
-                completeButton.setDeactivatedNextButton()
-                wholeAgreementCheckBox.setImage(UIImage(systemName: "square"), for: .normal)
+                unchecked(isTermsOfUse: false, sender: sender)
             }
         default:
             return
