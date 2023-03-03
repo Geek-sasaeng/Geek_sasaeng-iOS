@@ -27,6 +27,11 @@ class PhoneAuthViewController: UIViewController {
     
     var phoneNumberId: Int? = nil
     
+    // 애플 로그인
+    var idToken: String?
+    var code: String?
+    var email: String?
+    
     // Timer
     var currentSeconds = 300 // 남은 시간
     var timer: DispatchSourceTimer?
@@ -113,6 +118,17 @@ class PhoneAuthViewController: UIViewController {
         self.nickNameData = nickNameData
         self.university = university
         self.emailId = emailId
+        self.uuid = uuid
+    }
+    
+    /* 애플 로그인용 */
+    init(idToken: String, code: String, nicknameData: String, university: String, email: String, uuid: UUID) {
+        super.init(nibName: nil, bundle: nil)
+        self.idToken = idToken
+        self.code = code
+        self.nickNameData = nicknameData
+        self.university = university
+        self.email = email
         self.uuid = uuid
     }
     
@@ -334,6 +350,9 @@ class PhoneAuthViewController: UIViewController {
            let university = self.university,
            let emailId = self.emailId,
            let phoneNumberId = self.phoneNumberId {
+            if idToken != nil {
+                let agreementVC = AgreementViewController(idToken: idToken!, code: code!, nickNameData: nickNameData, university: university, email: email!, phoneNumber: phoneNumTextField.text!)
+            }
             let agreementVC = AgreementViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: university, emailId: emailId, phoneNumberId: phoneNumberId)
             
             let navVC = UINavigationController(rootViewController: agreementVC)

@@ -29,6 +29,11 @@ class NaverRegisterViewController: UIViewController {
     var accessToken: String? // 네이버 엑세스 토큰 -> Register API 호출에 필요
     var emailId: Int?
     
+    // 애플 로그인
+    var idToken: String?
+    var code: String?
+    var uuid: UUID! = UUID()
+    
     // Timer
     var currentSeconds = 300 // 남은 시간
     var timer: DispatchSourceTimer?
@@ -697,6 +702,22 @@ class NaverRegisterViewController: UIViewController {
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
     @objc
     private func tapNextButton() {
+        if idToken != nil {
+            if let idToken = idToken,
+               let code = code,
+               let nickNameData = nickNameTextField.text,
+               let university = selectYourUnivLabel.text,
+               let email = emailTextField.text,
+               let emailAddress = emailAddressTextField.text {
+                let phoneAuthVC = PhoneAuthViewController(idToken: idToken, code: code, nicknameData: nickNameData, university: university, email: email + emailAddress, uuid: uuid)
+                
+                phoneAuthVC.modalTransitionStyle = .crossDissolve
+                phoneAuthVC.modalPresentationStyle = .fullScreen
+                
+                present(phoneAuthVC, animated: true)
+            }
+        }
+        
         if let accessToken = accessToken,
            let nickNameData = nickNameTextField.text,
            let university = selectYourUnivLabel.text,
