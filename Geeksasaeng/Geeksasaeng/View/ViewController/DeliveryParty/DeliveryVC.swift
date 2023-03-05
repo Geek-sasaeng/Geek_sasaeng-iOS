@@ -159,16 +159,15 @@ class DeliveryViewController: UIViewController {
             peopleFilterLabel,
             peopleFilterToggleImageView
         ].forEach { view.addSubview($0) }
-        
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(screenWidth / 28.07)
+            make.left.equalToSuperview().offset(14)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 32.75)
-            make.height.equalTo(screenHeight / 142)
-            make.centerY.equalToSuperview().offset(-(screenHeight / screenHeight))
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(screenWidth / 56.14)
+            make.width.equalTo(12)
+            make.height.equalTo(6)
+            make.centerY.equalToSuperview().offset(-1)
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
         }
     }
    
@@ -198,8 +197,8 @@ class DeliveryViewController: UIViewController {
         
         $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(screenHeight / 56.8)
-            make.left.equalToSuperview().inset(screenWidth / 28.07)
+            make.top.equalToSuperview().inset(15)
+            make.left.equalToSuperview().inset(14)
         }
     }
     
@@ -390,35 +389,35 @@ class DeliveryViewController: UIViewController {
         /* Filter */
         // 인원수 필터
         filterImageView.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 17.08)
-            make.height.equalTo(screenHeight / 56.8)
+            make.width.equalTo(23)
+            make.height.equalTo(15)
             make.centerY.equalTo(peopleFilterView.snp.centerY)
-            make.left.equalTo(adCollectionView.snp.left).offset(screenWidth / 14.03)
+            make.left.equalTo(adCollectionView.snp.left).offset(28)
         }
         peopleFilterView.snp.makeConstraints { make in
-            make.top.equalTo(adCollectionView.snp.bottom).offset(screenHeight / 53.25)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
-            make.width.equalTo(screenWidth / 3.89)
-            make.height.equalTo(screenHeight / 25.05)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.width.equalTo(101)
+            make.height.equalTo(34)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.89)
+            make.height.equalTo(219)
             make.top.equalTo(peopleFilterView.snp.bottom)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.36)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(screenHeight / 53.25)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
+            make.height.equalTo(253)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         // 시간 필터
         timeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(peopleFilterView.snp.right).offset(screenWidth / 43.66)
-            make.right.equalToSuperview().inset(screenWidth / 43.66)
+            make.left.equalTo(peopleFilterView.snp.right).offset(9)
+            make.right.equalToSuperview().inset(9)
             make.centerY.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 25.05)
+            make.height.equalTo(34)
         }
         
         /* TableView */
