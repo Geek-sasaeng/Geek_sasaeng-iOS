@@ -14,6 +14,7 @@ import Then
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -102,11 +103,6 @@ class SearchViewController: UIViewController {
         $0.tag = 1
         // indicator 숨김
         $0.showsHorizontalScrollIndicator = false
-    }
-    
-    /* 구분선 View */
-    let firstSeparateView = UIView().then {
-        $0.backgroundColor = .init(hex: 0xF8F8F8)
     }
     
     /* 배경에 있는 로고 이미지 */
@@ -344,7 +340,6 @@ class SearchViewController: UIViewController {
             searchButton,
             recentSearchLabel, dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            firstSeparateView,
             logoImageView,
             // 이 아래는 검색 결과 화면에 쓰이는 서브뷰들
             filterImageView, peopleFilterView,
@@ -377,11 +372,6 @@ class SearchViewController: UIViewController {
             make.top.equalTo(recentSearchLabel.snp.bottom).offset(screenHeight / 72.72)
             make.left.right.equalToSuperview().inset(screenWidth / 12.85)
             make.height.equalTo(screenHeight / 28.57)
-        }
-        firstSeparateView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(screenHeight / 47.05)
-            make.width.equalToSuperview()
-            make.height.equalTo(screenHeight / 100)
         }
         
         logoImageView.snp.makeConstraints { make in
@@ -532,15 +522,23 @@ class SearchViewController: UIViewController {
     }
     
     /* 검색 메인 화면을 숨겨서 검색 결과 화면을 보여준다! */
-    private func showSearchResultView() {
+    private func showSearchResultView(isEmpty: Bool) {
+        if isEmpty { // 검색결과가 없을 때
+            noSearchResultView.isHidden = false
+            partyTableView.isHidden = true
+            blurView.isHidden = true
+        } else {
+            noSearchResultView.isHidden = true
+            partyTableView.isHidden = false
+            blurView.isHidden = false
+        }
+        
         [
             noSearchRecordsLabel,
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            firstSeparateView,
-            logoImageView,
-            noSearchResultView
+            logoImageView
         ].forEach { $0.isHidden = true }
         
         [
@@ -549,7 +547,6 @@ class SearchViewController: UIViewController {
             peopleFilterLabel,
             peopleFilterToggleImageView,
             timeCollectionView,
-            partyTableView,
             blurView
         ].forEach { $0.isHidden = false }
     }
@@ -561,7 +558,6 @@ class SearchViewController: UIViewController {
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            firstSeparateView,
             logoImageView
         ].forEach { $0.isHidden = false }
         
@@ -690,12 +686,7 @@ class SearchViewController: UIViewController {
         }
         
         // 검색 결과에 해당하는 데이터가 없으면
-        if (deliveryCellDataArray.isEmpty) {
-            // 검색 결과 없다는 뷰 띄우기
-            showNoSearchResult()
-        } else {
-            showSearchResultView()
-        }
+        showSearchResultView(isEmpty: deliveryCellDataArray.isEmpty)
     }
     
     /* 배달파티 목록, 커서 초기화 함수 */
@@ -758,13 +749,6 @@ class SearchViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    // 검색 결과 없다고 안내해주는 뷰 띄우기
-    private func showNoSearchResult() {
-        // 뷰 띄우기
-        self.noSearchResultView.isHidden = false
-        self.partyTableView.isHidden = true
     }
     
     // 최근 검색어 객체 생성 후 로컬에 저장하는 함수.
