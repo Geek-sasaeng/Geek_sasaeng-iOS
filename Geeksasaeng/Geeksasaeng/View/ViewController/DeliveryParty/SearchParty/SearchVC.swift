@@ -764,6 +764,29 @@ class SearchViewController: UIViewController {
         }
     }
     
+    /* 설정해둔 인원수 필터 뷰 초기화 */
+    private func resetPeopleFilterView() {
+        // 색깔 원상복귀
+        selectedPeopleLabel?.textColor = .init(hex: 0xA8A8A8)
+        // peopleFilterView의 텍스트도 원상복귀
+        peopleFilterLabel.text = "인원 선택"
+        peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
+        
+        // 필터 해제
+        selectedPeopleLabel = nil
+        nowPeopleFilter = nil
+    }
+    
+    /* 설정해둔 시간 필터 뷰 초기화 */
+    private func resetTimeFilterView() {
+        // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
+        selectedTimeLabel?.textColor = .init(hex: 0xD8D8D8)
+        
+        // 시간 필터 초기화
+        selectedTimeLabel = nil
+        nowTimeFilter = nil
+    }
+    
     // MARK: - @objc Functions
     
     /*
@@ -775,6 +798,9 @@ class SearchViewController: UIViewController {
     @objc
     private func tapSearchButton() {
         if nowSearchKeyword != searchTextField.text {
+            // 필터, 데이터 초기화
+            resetPeopleFilterView()
+            resetTimeFilterView()
             removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
@@ -836,17 +862,8 @@ class SearchViewController: UIViewController {
         
         // 눌렀던 거 또 눌렀을 때
         if label == selectedPeopleLabel {
-            // 색깔 원상복귀
-            label.textColor = .init(hex: 0xA8A8A8)
-            // peopleFilterView의 텍스트도 원상복귀
-            peopleFilterLabel.text = "인원 선택"
-            peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
-            
-            // 필터 해제
-            selectedPeopleLabel = nil
-            nowPeopleFilter = nil
-            
-            // 초기화
+            // 인원수 필터 뷰, 데이터 초기화
+            resetPeopleFilterView()
             removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
@@ -891,12 +908,9 @@ class SearchViewController: UIViewController {
             selectedTimeLabel = label
             // 시간 필터링 호출
             getTimeFilterList(text: label.text)
-        } else {
-            // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
-            label.textColor = .init(hex: 0xD8D8D8)
-            
-            // 시간 필터 초기화
-            nowTimeFilter = nil
+        } else { // 눌렀던 거 또 눌렀을 때
+            // 시간 필터 뷰, 데이터 초기화
+            resetTimeFilterView()
             removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
