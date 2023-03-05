@@ -952,16 +952,20 @@ class DeliveryViewController: UIViewController {
     /* 새로고침 기능 */
     @objc
     private func pullToRefresh() {
+        if isDropDownPeople {
+            tapPeopleFilterView()
+            if peopleFilterLabel.text == "인원 선택" {
+                peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
+            }
+        }
+        
         // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
-        print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
         removeCellData()
         
         // 값에 따른 API 호출
         let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
         getDeliveryList(input)
         
-        // 테이블뷰 새로고침
-        partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
         partyTableView.refreshControl?.endRefreshing()
     }
