@@ -136,13 +136,13 @@ class SearchViewController: UIViewController {
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(screenWidth / 25.71)
+            make.left.equalToSuperview().offset(14)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 30)
-            make.height.equalTo(screenHeight / 133.33)
-            make.centerY.equalToSuperview().offset(-(screenHeight / screenHeight))
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(screenWidth / 114.28)
+            make.width.equalTo(12)
+            make.height.equalTo(6)
+            make.centerY.equalToSuperview().offset(-1)
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
         }
     }
     
@@ -172,7 +172,7 @@ class SearchViewController: UIViewController {
         
         $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().inset(screenWidth / 22.5)
+            make.top.left.equalToSuperview().inset(16)
         }
     }
     
@@ -353,9 +353,9 @@ class SearchViewController: UIViewController {
     
     private func setLayouts() {
         searchTextField.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(screenHeight / 40)
-            make.left.equalToSuperview().inset(screenWidth / 12)
-            make.right.equalTo(searchButton.snp.left).offset(-(screenWidth / 36))
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.left.equalToSuperview().inset(30)
+            make.right.equalTo(searchButton.snp.left).offset(-10)
         }
         
         searchButton.snp.makeConstraints { make in
@@ -384,41 +384,41 @@ class SearchViewController: UIViewController {
         /* 검색 결과 화면 서브뷰들 */
         /* Filter */
         filterImageView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(screenHeight / 25.8)
-            make.left.equalToSuperview().inset(screenWidth / 12.85)
-            make.width.equalTo(screenWidth / 15.65)
-            make.height.equalTo(screenHeight / 53.33)
+            make.top.equalTo(searchTextField.snp.bottom).offset(31)
+            make.left.equalToSuperview().inset(28)
+            make.width.equalTo(23)
+            make.height.equalTo(15)
         }
         peopleFilterView.snp.makeConstraints { make in
             make.centerY.equalTo(filterImageView)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
-            make.width.equalTo(screenWidth / 3.56)
-            make.height.equalTo(screenHeight / 23.52)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.width.equalTo(101)
+            make.height.equalTo(34)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.65)
+            make.height.equalTo(219)
             make.top.equalTo(peopleFilterView.snp.bottom)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.16)
+            make.height.equalTo(253)
             make.top.equalTo(peopleFilterView)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         timeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(peopleFilterView.snp.right).offset(screenWidth / 40)
-            make.right.equalToSuperview().inset(screenWidth / 40)
+            make.left.equalTo(peopleFilterView.snp.right).offset(9)
+            make.right.equalToSuperview().inset(9)
             make.centerY.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 23.52)
+            make.height.equalTo(34)
         }
         
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(screenHeight / 100)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
         }
         
         /* blur view */
