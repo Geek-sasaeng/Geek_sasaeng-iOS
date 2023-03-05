@@ -542,44 +542,48 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         switch authorization.credential {
             // Apple ID
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
-            
+
             // 애플 로그인 시 받아올 정보
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
-        
+
             guard let code = appleIDCredential.authorizationCode else { return }
             let codeStr = String(data: code, encoding: .utf8)
-            
+
             guard let idToken = appleIDCredential.identityToken else { return }
             let idTokenStr = String(data: idToken, encoding: .utf8)
-            
+
             print(".email : \(email ?? "")")
             print(".full name : \((fullName?.givenName ?? "") + (fullName?.familyName ?? ""))")
             print(".identityToken : \(idTokenStr ?? "")")
             print(".authorizationCode : \(codeStr ?? "")")
-            
+
             if let appleRefreshToken = UserDefaults.standard.string(forKey: "appleRefreshToken") {
                 let appleLoginInput = AppleLoginInput(code: codeStr, refreshToken: appleRefreshToken)
-                
+
                 LoginAPI.appleLogin(input: appleLoginInput) { isSuccess, result, register in
                     if isSuccess {
                         print("애플 로그인 성공", result)
                     } else {
                         if register! { // 가입으로
                             let registerVC = NaverRegisterViewController()
+                            registerVC.modalTransitionStyle = .crossDissolve
+                            registerVC.modalPresentationStyle = .fullScreen
                             registerVC.idToken = idTokenStr
                             registerVC.code = codeStr
-                            self.navigationController?.pushViewController(registerVC, animated: true)
+                            self.present(registerVC, animated: true)
                         }
                     }
                 }
             } else { // appleRefreshToken이 아예 없다는 건 아예 첫 로그인이므로 가입으로 이동
                 let registerVC = NaverRegisterViewController()
+                registerVC.modalTransitionStyle = .crossDissolve
+                registerVC.modalPresentationStyle = .fullScreen
                 registerVC.idToken = idTokenStr
                 registerVC.code = codeStr
-                self.navigationController?.pushViewController(registerVC, animated: true)
+                self.present(registerVC, animated: true)
             }
-            
+
         default:
             break
         }
@@ -587,7 +591,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
 
     // Apple ID 연동 실패 시
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        print("Apple ID 연동 실패")
+        print("Apple ID 연동 실패, \(error)")
         self.showToast(viewController: self, message: "로그인 실패! 다시 시도해 주세요", font: .customFont(.neoBold, size: 13), color: .init(hex: 0xA8A8A8), width: 229, height: 40)
     }
 }
