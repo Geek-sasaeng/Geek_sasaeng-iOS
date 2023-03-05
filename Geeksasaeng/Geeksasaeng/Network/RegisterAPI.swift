@@ -63,7 +63,6 @@ struct NaverRegisterModelResult: Decodable {
 }
 
 struct AppleRegisterInput: Encodable {
-    var accessToken: String?
     var code: String?
     var email: String?
     var idToken: String?
@@ -83,6 +82,7 @@ struct AppleRegisterModelResult: Decodable {
     var expires_in: Int?
     var id_token: String?
     var jwt: String?
+    var nickName: String?
     var refresh_token: String?
     var token_type: String?
     var userId: Int?

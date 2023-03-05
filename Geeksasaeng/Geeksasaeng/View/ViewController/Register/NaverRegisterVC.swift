@@ -700,7 +700,7 @@ class NaverRegisterViewController: UIViewController {
     // AuthNumVC로 화면 전환 -> 이메일 인증번호 확인하는 화면으로 전환한 것
     @objc
     private func tapNextButton() {
-        if idToken != nil {
+        if idToken != nil { // 애플 로그인의 경우
             if let idToken = idToken,
                let code = code,
                let nickNameData = nickNameTextField.text,

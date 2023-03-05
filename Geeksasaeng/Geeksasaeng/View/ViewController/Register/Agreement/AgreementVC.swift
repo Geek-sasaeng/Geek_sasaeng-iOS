@@ -367,7 +367,7 @@ class AgreementViewController: UIViewController {
                let nickname = nickNameData,
                let phoneNumber = phoneNumber,
                let universityName = university {
-                let input = AppleRegisterInput(accessToken: "", code: code, email: email, idToken: idToken, informationAgreeStatus: "Y", nickname: nickname, phoneNumber: phoneNumber, universityName: universityName)
+                let input = AppleRegisterInput(code: code, email: email, idToken: idToken, informationAgreeStatus: "Y", nickname: nickname, phoneNumber: phoneNumber, universityName: universityName)
                 
                 RegisterAPI.registerUserFromApple(input) { isSuccess, result in
                     if isSuccess {
@@ -376,7 +376,7 @@ class AgreementViewController: UIViewController {
                         UserDefaults.standard.set(parsingResult.refresh_token, forKey: "appleRefreshToken")
                         LoginModel.jwt = parsingResult.jwt
                         LoginModel.memberId = parsingResult.userId
-//                        LoginModel.nickname = parsingResult.nickname -> nickname res에 추가
+                        LoginModel.nickname = parsingResult.nickName
                         self.showDormitoryView()
                     } else {
                         print("애플 로그인 실패")
