@@ -117,7 +117,7 @@ class ProfileCardViewController: UIViewController {
         }
         nicknameLabel.snp.makeConstraints { make in
             make.top.equalTo(heartImageView.snp.top)
-            make.left.equalToSuperview().offset(50)
+            make.left.equalTo(heartImageView.snp.right).offset(5.68)
         }
         universityLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(10)

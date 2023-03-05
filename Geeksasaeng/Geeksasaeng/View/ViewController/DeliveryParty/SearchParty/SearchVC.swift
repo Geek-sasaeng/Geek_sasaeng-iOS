@@ -14,6 +14,7 @@ import Then
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -104,11 +105,6 @@ class SearchViewController: UIViewController {
         $0.showsHorizontalScrollIndicator = false
     }
     
-    /* 구분선 View */
-    let firstSeparateView = UIView().then {
-        $0.backgroundColor = .init(hex: 0xF8F8F8)
-    }
-    
     /* 배경에 있는 로고 이미지 */
     let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "SearchBackLogo")
@@ -140,13 +136,13 @@ class SearchViewController: UIViewController {
         
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(screenWidth / 25.71)
+            make.left.equalToSuperview().offset(14)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 30)
-            make.height.equalTo(screenHeight / 133.33)
-            make.centerY.equalToSuperview().offset(-(screenHeight / screenHeight))
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(screenWidth / 114.28)
+            make.width.equalTo(12)
+            make.height.equalTo(6)
+            make.centerY.equalToSuperview().offset(-1)
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
         }
     }
     
@@ -176,7 +172,7 @@ class SearchViewController: UIViewController {
         
         $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().inset(screenWidth / 22.5)
+            make.top.left.equalToSuperview().inset(16)
         }
     }
     
@@ -344,7 +340,6 @@ class SearchViewController: UIViewController {
             searchButton,
             recentSearchLabel, dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            firstSeparateView,
             logoImageView,
             // 이 아래는 검색 결과 화면에 쓰이는 서브뷰들
             filterImageView, peopleFilterView,
@@ -358,9 +353,9 @@ class SearchViewController: UIViewController {
     
     private func setLayouts() {
         searchTextField.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(screenHeight / 40)
-            make.left.equalToSuperview().inset(screenWidth / 12)
-            make.right.equalTo(searchButton.snp.left).offset(-(screenWidth / 36))
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.left.equalToSuperview().inset(30)
+            make.right.equalTo(searchButton.snp.left).offset(-10)
         }
         
         searchButton.snp.makeConstraints { make in
@@ -378,11 +373,6 @@ class SearchViewController: UIViewController {
             make.left.right.equalToSuperview().inset(screenWidth / 12.85)
             make.height.equalTo(screenHeight / 28.57)
         }
-        firstSeparateView.snp.makeConstraints { make in
-            make.top.equalTo(recentSearchCollectionView.snp.bottom).offset(screenHeight / 47.05)
-            make.width.equalToSuperview()
-            make.height.equalTo(screenHeight / 100)
-        }
         
         logoImageView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(screenHeight / 6.25)
@@ -394,41 +384,41 @@ class SearchViewController: UIViewController {
         /* 검색 결과 화면 서브뷰들 */
         /* Filter */
         filterImageView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(screenHeight / 25.8)
-            make.left.equalToSuperview().inset(screenWidth / 12.85)
-            make.width.equalTo(screenWidth / 15.65)
-            make.height.equalTo(screenHeight / 53.33)
+            make.top.equalTo(searchTextField.snp.bottom).offset(31)
+            make.left.equalToSuperview().inset(28)
+            make.width.equalTo(23)
+            make.height.equalTo(15)
         }
         peopleFilterView.snp.makeConstraints { make in
             make.centerY.equalTo(filterImageView)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
-            make.width.equalTo(screenWidth / 3.56)
-            make.height.equalTo(screenHeight / 23.52)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.width.equalTo(101)
+            make.height.equalTo(34)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.65)
+            make.height.equalTo(219)
             make.top.equalTo(peopleFilterView.snp.bottom)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.16)
+            make.height.equalTo(253)
             make.top.equalTo(peopleFilterView)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 22.5)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         timeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(peopleFilterView.snp.right).offset(screenWidth / 40)
-            make.right.equalToSuperview().inset(screenWidth / 40)
+            make.left.equalTo(peopleFilterView.snp.right).offset(9)
+            make.right.equalToSuperview().inset(9)
             make.centerY.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 23.52)
+            make.height.equalTo(34)
         }
         
         /* TableView */
         partyTableView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(peopleFilterView.snp.bottom).offset(screenHeight / 100)
+            make.top.equalTo(peopleFilterView.snp.bottom).offset(8)
         }
         
         /* blur view */
@@ -532,15 +522,23 @@ class SearchViewController: UIViewController {
     }
     
     /* 검색 메인 화면을 숨겨서 검색 결과 화면을 보여준다! */
-    private func showSearchResultView() {
+    private func showSearchResultView(isEmpty: Bool) {
+        if isEmpty { // 검색결과가 없을 때
+            noSearchResultView.isHidden = false
+            partyTableView.isHidden = true
+            blurView.isHidden = true
+        } else {
+            noSearchResultView.isHidden = true
+            partyTableView.isHidden = false
+            blurView.isHidden = false
+        }
+        
         [
             noSearchRecordsLabel,
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            firstSeparateView,
-            logoImageView,
-            noSearchResultView
+            logoImageView
         ].forEach { $0.isHidden = true }
         
         [
@@ -549,7 +547,6 @@ class SearchViewController: UIViewController {
             peopleFilterLabel,
             peopleFilterToggleImageView,
             timeCollectionView,
-            partyTableView,
             blurView
         ].forEach { $0.isHidden = false }
     }
@@ -561,7 +558,6 @@ class SearchViewController: UIViewController {
             recentSearchLabel,
             dormitoryWeeklyTopLabel,
             recentSearchCollectionView,
-            firstSeparateView,
             logoImageView
         ].forEach { $0.isHidden = false }
         
@@ -690,12 +686,7 @@ class SearchViewController: UIViewController {
         }
         
         // 검색 결과에 해당하는 데이터가 없으면
-        if (deliveryCellDataArray.isEmpty) {
-            // 검색 결과 없다는 뷰 띄우기
-            showNoSearchResult()
-        } else {
-            showSearchResultView()
-        }
+        showSearchResultView(isEmpty: deliveryCellDataArray.isEmpty)
     }
     
     /* 배달파티 목록, 커서 초기화 함수 */
@@ -760,13 +751,6 @@ class SearchViewController: UIViewController {
         }
     }
     
-    // 검색 결과 없다고 안내해주는 뷰 띄우기
-    private func showNoSearchResult() {
-        // 뷰 띄우기
-        self.noSearchResultView.isHidden = false
-        self.partyTableView.isHidden = true
-    }
-    
     // 최근 검색어 객체 생성 후 로컬에 저장하는 함수.
     private func saveSearchRecords(_ data: String) {
         if !(data.isEmpty) {
@@ -780,6 +764,29 @@ class SearchViewController: UIViewController {
         }
     }
     
+    /* 설정해둔 인원수 필터 뷰 초기화 */
+    private func resetPeopleFilterView() {
+        // 색깔 원상복귀
+        selectedPeopleLabel?.textColor = .init(hex: 0xA8A8A8)
+        // peopleFilterView의 텍스트도 원상복귀
+        peopleFilterLabel.text = "인원 선택"
+        peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
+        
+        // 필터 해제
+        selectedPeopleLabel = nil
+        nowPeopleFilter = nil
+    }
+    
+    /* 설정해둔 시간 필터 뷰 초기화 */
+    private func resetTimeFilterView() {
+        // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
+        selectedTimeLabel?.textColor = .init(hex: 0xD8D8D8)
+        
+        // 시간 필터 초기화
+        selectedTimeLabel = nil
+        nowTimeFilter = nil
+    }
+    
     // MARK: - @objc Functions
     
     /*
@@ -791,6 +798,9 @@ class SearchViewController: UIViewController {
     @objc
     private func tapSearchButton() {
         if nowSearchKeyword != searchTextField.text {
+            // 필터, 데이터 초기화
+            resetPeopleFilterView()
+            resetTimeFilterView()
             removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
@@ -852,17 +862,8 @@ class SearchViewController: UIViewController {
         
         // 눌렀던 거 또 눌렀을 때
         if label == selectedPeopleLabel {
-            // 색깔 원상복귀
-            label.textColor = .init(hex: 0xA8A8A8)
-            // peopleFilterView의 텍스트도 원상복귀
-            peopleFilterLabel.text = "인원 선택"
-            peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
-            
-            // 필터 해제
-            selectedPeopleLabel = nil
-            nowPeopleFilter = nil
-            
-            // 초기화
+            // 인원수 필터 뷰, 데이터 초기화
+            resetPeopleFilterView()
             removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
@@ -907,12 +908,9 @@ class SearchViewController: UIViewController {
             selectedTimeLabel = label
             // 시간 필터링 호출
             getTimeFilterList(text: label.text)
-        } else {
-            // 선택돼있던 label이 재선택된 거면, 원래 색깔로 되돌려 놓는다 - 현재 선택된 시간 필터 0개
-            label.textColor = .init(hex: 0xD8D8D8)
-            
-            // 시간 필터 초기화
-            nowTimeFilter = nil
+        } else { // 눌렀던 거 또 눌렀을 때
+            // 시간 필터 뷰, 데이터 초기화
+            resetTimeFilterView()
             removeCellData()
             
             let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)

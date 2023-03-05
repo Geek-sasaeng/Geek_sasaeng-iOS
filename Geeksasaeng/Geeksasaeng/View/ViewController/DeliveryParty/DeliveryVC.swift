@@ -159,16 +159,15 @@ class DeliveryViewController: UIViewController {
             peopleFilterLabel,
             peopleFilterToggleImageView
         ].forEach { view.addSubview($0) }
-        
         peopleFilterLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().offset(screenWidth / 28.07)
+            make.left.equalToSuperview().offset(14)
         }
         peopleFilterToggleImageView.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 32.75)
-            make.height.equalTo(screenHeight / 142)
-            make.centerY.equalToSuperview().offset(-(screenHeight / screenHeight))
-            make.left.equalTo(peopleFilterLabel.snp.right).offset(screenWidth / 56.14)
+            make.width.equalTo(12)
+            make.height.equalTo(6)
+            make.centerY.equalToSuperview().offset(-1)
+            make.left.equalTo(peopleFilterLabel.snp.right).offset(7)
         }
     }
    
@@ -198,8 +197,8 @@ class DeliveryViewController: UIViewController {
         
         $0.addSubview(peopleOptionStackView)
         peopleOptionStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(screenHeight / 56.8)
-            make.left.equalToSuperview().inset(screenWidth / 28.07)
+            make.top.equalToSuperview().inset(15)
+            make.left.equalToSuperview().inset(14)
         }
     }
     
@@ -298,8 +297,6 @@ class DeliveryViewController: UIViewController {
         /* 광고 목록 데이터 로딩 */
         getAdList()
         
-        /* 배달 목록 데이터 로딩 */
-        getDeliveryList(DeliveryListInput())
         /* 1분마다 시간 재설정 */
         changeOrderTimeByMinute()
     }
@@ -392,35 +389,35 @@ class DeliveryViewController: UIViewController {
         /* Filter */
         // 인원수 필터
         filterImageView.snp.makeConstraints { make in
-            make.width.equalTo(screenWidth / 17.08)
-            make.height.equalTo(screenHeight / 56.8)
+            make.width.equalTo(23)
+            make.height.equalTo(15)
             make.centerY.equalTo(peopleFilterView.snp.centerY)
-            make.left.equalTo(adCollectionView.snp.left).offset(screenWidth / 14.03)
+            make.left.equalTo(adCollectionView.snp.left).offset(28)
         }
         peopleFilterView.snp.makeConstraints { make in
-            make.top.equalTo(adCollectionView.snp.bottom).offset(screenHeight / 53.25)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
-            make.width.equalTo(screenWidth / 3.89)
-            make.height.equalTo(screenHeight / 25.05)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
+            make.width.equalTo(101)
+            make.height.equalTo(34)
         }
         peopleDropDownView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.89)
+            make.height.equalTo(219)
             make.top.equalTo(peopleFilterView.snp.bottom)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         peopleFilterContainerView.snp.makeConstraints { make in
             make.width.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 3.36)
-            make.top.equalTo(adCollectionView.snp.bottom).offset(screenHeight / 53.25)
-            make.left.equalTo(filterImageView.snp.right).offset(screenWidth / 24.56)
+            make.height.equalTo(253)
+            make.top.equalTo(adCollectionView.snp.bottom).offset(16)
+            make.left.equalTo(filterImageView.snp.right).offset(16)
         }
         // 시간 필터
         timeCollectionView.snp.makeConstraints { make in
-            make.left.equalTo(peopleFilterView.snp.right).offset(screenWidth / 43.66)
-            make.right.equalToSuperview().inset(screenWidth / 43.66)
+            make.left.equalTo(peopleFilterView.snp.right).offset(9)
+            make.right.equalToSuperview().inset(9)
             make.centerY.equalTo(peopleFilterView)
-            make.height.equalTo(screenHeight / 25.05)
+            make.height.equalTo(34)
         }
         
         /* TableView */
@@ -955,16 +952,20 @@ class DeliveryViewController: UIViewController {
     /* 새로고침 기능 */
     @objc
     private func pullToRefresh() {
+        if isDropDownPeople {
+            tapPeopleFilterView()
+            if peopleFilterLabel.text == "인원 선택" {
+                peopleFilterLabel.textColor = .init(hex: 0xA8A8A8)
+            }
+        }
+        
         // 데이터가 적재된 상황에서 맨 위로 올려 새로고침을 했다면, 배열을 초기화시켜서 처음 10개만 다시 불러온다
-        print("DEBUG: 적재된 데이터 \(deliveryCellDataArray.count)개 삭제")
         removeCellData()
         
         // 값에 따른 API 호출
         let input = DeliveryListInput(maxMatching: nowPeopleFilter, orderTimeCategory: nowTimeFilter)
         getDeliveryList(input)
         
-        // 테이블뷰 새로고침
-        partyTableView.reloadData()
         // 당기는 게 끝나면 refresh도 끝나도록
         partyTableView.refreshControl?.endRefreshing()
     }

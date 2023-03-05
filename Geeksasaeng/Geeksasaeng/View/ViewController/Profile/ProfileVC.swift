@@ -600,7 +600,7 @@ class ProfileViewController: UIViewController {
         }
         nicknameLabel.snp.makeConstraints { make in
             make.top.equalTo(heartImageView.snp.top)
-            make.left.equalToSuperview().inset(screenWidth / 7.2)
+            make.left.equalTo(heartImageView.snp.right).offset(screenWidth / 63.38)
         }
         universityLabel.snp.makeConstraints { make in
             make.top.equalTo(nicknameLabel.snp.bottom).offset(screenHeight / 80)
