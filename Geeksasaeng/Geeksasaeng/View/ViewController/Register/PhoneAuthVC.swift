@@ -352,7 +352,7 @@ class PhoneAuthViewController: UIViewController {
            let university = self.university,
            let emailId = self.emailId,
            let phoneNumberId = self.phoneNumberId {
-            if idToken != nil {
+            if idToken != nil { // 애플 로그인의 경우
                 let agreementVC = AgreementViewController(idToken: idToken!, code: code!, nickNameData: nickNameData, university: university, email: email!, phoneNumber: phoneNumTextField.text!)
             }
             let agreementVC = AgreementViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: university, emailId: emailId, phoneNumberId: phoneNumberId)
