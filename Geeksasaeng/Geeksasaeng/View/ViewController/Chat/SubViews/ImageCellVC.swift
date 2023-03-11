@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
+// 채팅 이미지 상세보기 화면
 class ImageCellViewController: UIViewController {
     
     // MARK: - Properties
@@ -46,7 +47,8 @@ class ImageCellViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
     }
     
-    // MARK: - Life Cycles
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,25 +74,26 @@ class ImageCellViewController: UIViewController {
         imageMessageExpansionDateLabel.text = str.substring(start: 0, end: 10)
         imageMessageExpansionTimeLabel.text = str.substring(start: 11, end: 19)
         
-//        imageMessageExpansionImageView.kf.setImage(with: imageUrl)
         imageMessageExpansionImageView.kf.setImage(with: imageUrl) { result in
             switch result {
             case .success(let value):
+                // 수신한 이미지의 가로 세로 크기
                 let width = value.image.size.width
                 let height = value.image.size.height
                 
-                print("loaded image width: ", width)
-                print("loaded image height: ", height)
+                // 이미지를 축소하기 위해 비율 계산
+                let reductionRatio = (UIScreen.main.bounds.width - 30) / width
                 
-                self.imageMessageExpansionImageView.snp.makeConstraints { make in
-                    make.width.equalTo(width)
-                    make.height.equalTo(height)
+                // 제약조건 업데이트
+                self.imageMessageExpansionImageView.snp.remakeConstraints { make in
+                    // 가로와 세로를 같은 비율로 축소한다
+                    make.width.equalTo(width * reductionRatio)
+                    make.height.equalTo(height * reductionRatio)
                 }
             case .failure(let error):
                 print("kingfisher image load error: ", error)
             }
         }
-//        imageMessageExpansionImageView.image = UIImage(systemName: "pencil")
     }
     
     private func addSubViews() {
@@ -116,13 +119,13 @@ class ImageCellViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         
+        // TODO: - height가 매우 긴 이미지의 경우 labels을 가리는 문제가 있음
         imageMessageExpansionImageView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
     }
     
-    
-    // MARK: - objc Functions
+    // MARK: - @objc Functions
     
     @objc private func tapVisualEffectView() {
         dismiss(animated: true)
