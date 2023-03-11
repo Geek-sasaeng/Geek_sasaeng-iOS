@@ -16,6 +16,7 @@ import Kingfisher
 class PartyViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - Properties
+    
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     
@@ -500,6 +501,8 @@ class PartyViewController: UIViewController, UIScrollViewDelegate {
         if isEnded! {
             // 파란바 없애기
             matchingStatusView.removeFromSuperview()
+            // 나의 활동 목록 -> 파티 보기로 오는 경우 네비게이션 바 색깔을 .white로 복구한다
+            setCustomNavigationBar()
         }
     }
     
