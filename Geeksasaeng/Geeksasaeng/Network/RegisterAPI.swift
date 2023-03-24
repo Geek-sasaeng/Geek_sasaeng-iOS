@@ -146,7 +146,7 @@ class RegisterAPI {
                     guard let parsingResult = result.result else { return }
                     completion(true, parsingResult)
                 } else {
-                    print("DEBUG: 애플 회원가입 실패", result.message!)
+                    print("DEBUG: 애플 회원가입 실패", result.message!, result.code!)
                     completion(false, nil)
                 }
             case .failure(let error):

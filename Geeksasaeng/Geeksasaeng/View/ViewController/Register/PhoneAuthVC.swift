@@ -341,6 +341,11 @@ class PhoneAuthViewController: UIViewController {
     
     @objc
     private func showNextView() {
+        print(self.idToken)
+        print(self.code)
+        print(self.nickNameData)
+        print(self.university)
+        print(self.email)
         // 일치했을 때에만 화면 전환
         if let idData = self.idData,
            let pwData = self.pwData,
@@ -349,9 +354,6 @@ class PhoneAuthViewController: UIViewController {
            let university = self.university,
            let emailId = self.emailId,
            let phoneNumberId = self.phoneNumberId {
-            if idToken != nil { // 애플 로그인의 경우
-                let agreementVC = AgreementViewController(idToken: idToken!, code: code!, nickNameData: nickNameData, university: university, email: email!, phoneNumber: phoneNumTextField.text!)
-            }
             let agreementVC = AgreementViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData, university: university, emailId: emailId, phoneNumberId: phoneNumberId)
             
             let navVC = UINavigationController(rootViewController: agreementVC)
@@ -360,6 +362,26 @@ class PhoneAuthViewController: UIViewController {
             
             present(navVC, animated: true)
         }
+        
+        if let idToken = self.idToken,
+           let code = self.code,
+           let nickNameData = self.nickNameData,
+           let university = self.university,
+           let email = self.email {
+            let agreementVC = AgreementViewController(idToken: idToken, code: code, nickNameData: nickNameData, university: university, email: email, phoneNumber: phoneNumTextField.text!)
+            
+            let navVC = UINavigationController(rootViewController: agreementVC)
+            navVC.modalTransitionStyle = .crossDissolve
+            navVC.modalPresentationStyle = .fullScreen
+            
+            present(navVC, animated: true)
+        }
+//
+//        if idToken != nil { // 애플 로그인
+//            agreementVC = AgreementViewController(idToken: idToken!, code: code!, nickNameData: nickNameData, university: university, email: email!, phoneNumber: phoneNumTextField.text!)
+//        }
+        
+        
     }
     
     /* 핸드폰번호 인증번호 전송 버튼 눌렀을 때 실행되는 함수 */

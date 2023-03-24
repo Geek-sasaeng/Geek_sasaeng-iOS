@@ -425,6 +425,9 @@ class ProfileViewController: UIViewController {
         if let touch = touches.first, touch.view == self.visualEffectView {
             visualEffectView?.removeFromSuperview()
             visualEffectViewOnNav?.removeFromSuperview()
+            visualEffectView = nil
+            visualEffectViewOnNav = nil
+            self.tabBarController?.tabBar.isHidden = false
             // view에 addSubview가 된 즉, 현재 띄워져있는 뷰인지 확인
             if logoutView.isDescendant(of: view) {
                 logoutView.removeFromSuperview()
@@ -541,11 +544,14 @@ class ProfileViewController: UIViewController {
     }
     
     private func createBlurView() {
-        self.visualEffectView = setDarkBlurView()
-        self.visualEffectView!.snp.makeConstraints { make in
-            make.edges.equalTo(0)
+        if self.visualEffectView == nil {
+            self.tabBarController?.tabBar.isHidden = true
+            self.visualEffectView = setDarkBlurView()
+            self.visualEffectView!.snp.makeConstraints { make in
+                make.edges.equalTo(0)
+            }
+            self.visualEffectViewOnNav = setDarkBlurViewOnNav()
         }
-        self.visualEffectViewOnNav = setDarkBlurViewOnNav()
     }
     
     private func addSubViews() {
@@ -762,6 +768,9 @@ class ProfileViewController: UIViewController {
         visualEffectViewOnNav?.removeFromSuperview()
         logoutView.removeFromSuperview()
         withdrawalMembershipView.removeFromSuperview()
+        visualEffectView = nil
+        visualEffectViewOnNav = nil
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     @objc
