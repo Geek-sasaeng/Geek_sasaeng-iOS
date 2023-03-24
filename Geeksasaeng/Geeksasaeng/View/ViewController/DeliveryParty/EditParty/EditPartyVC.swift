@@ -677,15 +677,17 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
            let partyId = detailData?.id,
            let title = titleTextField.text,
            let content = contentsTextView.text {
-            EditPartyViewModel.editParty(dormitoryId: dormitoryInfo?.id ?? 1, partyId: partyId,
-                EditPartyInput(foodCategory: foodCategory,
-                               title: title, content: content,
-                               orderTime: orderTime,
-                               maxMatching: maxMatching,
-                               storeUrl: storeUrl,
-                               latitude: latitude,
-                               longitude: longitude,
-                               hashTag: hashTag)
+            EditPartyViewModel.editParty(dormitoryId: dormitoryInfo?.id ?? 1,
+                                         partyId: partyId,
+                                         chatRoomId: detailData?.partyChatRoomId ?? "",
+                                         EditPartyInput(foodCategory: foodCategory,
+                                                        title: title, content: content,
+                                                        orderTime: orderTime,
+                                                        maxMatching: maxMatching,
+                                                        storeUrl: storeUrl,
+                                                        latitude: latitude,
+                                                        longitude: longitude,
+                                                        hashTag: hashTag)
             ) { isSuccess in
                 MyLoadingView.shared.hide()
                 
