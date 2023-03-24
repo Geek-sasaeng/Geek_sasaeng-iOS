@@ -91,9 +91,6 @@ class PhoneAuthViewController: UIViewController {
         $0.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
     }
     
-    var visualEffectView: UIVisualEffectView?
-    
-    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
