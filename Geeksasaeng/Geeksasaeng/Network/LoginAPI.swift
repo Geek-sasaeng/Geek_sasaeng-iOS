@@ -32,7 +32,7 @@ struct AutoLoginModelResult: Decodable {
 
 /* 애플 로그인 */
 struct AppleLoginInput: Encodable {
-    var code: String?
+    var idToken: String?
     var refreshToken: String?
 }
 
@@ -49,7 +49,7 @@ struct AppleLoginModelResult: Decodable {
     var jwt: String?
     var loginStatus: String?
     var memberId: Int?
-    var nickname: String?
+    var nickName: String?
     var profileImgUrl: String?
 }
 
@@ -82,7 +82,10 @@ class LoginAPI {
     }
     
     public static func appleLogin(input: AppleLoginInput, completion: @escaping (Bool, AppleLoginModelResult?, Bool?) -> Void ) {
-        AF.request("https://geeksasaeng.shop/log-in/apple", method: .post)
+        AF.request("https://geeksasaeng.shop/log-in/apple",
+                   method: .post,
+                   parameters: input,
+                   encoder: JSONParameterEncoder.default)
             .validate()
             .responseDecodable(of: AppleLoginModel.self) { response in
                 switch response.result {

@@ -558,13 +558,26 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             print(".identityToken : \(idTokenStr ?? "")")
             print(".authorizationCode : \(codeStr ?? "")")
 
-            print(UserDefaults.standard.string(forKey: "appleRefreshToken"))
             if let appleRefreshToken = UserDefaults.standard.string(forKey: "appleRefreshToken") {
-                let appleLoginInput = AppleLoginInput(code: codeStr, refreshToken: appleRefreshToken)
+                let appleLoginInput = AppleLoginInput(idToken: idTokenStr, refreshToken: appleRefreshToken)
 
                 LoginAPI.appleLogin(input: appleLoginInput) { isSuccess, result, register in
                     if isSuccess {
                         print("애플 로그인 성공", result)
+
+                        // 소셜 로그인은 항상 자동 로그인
+                        UserDefaults.standard.set(result?.jwt, forKey: "jwt")
+                        
+                        LoginModel.jwt = result?.jwt
+                        LoginModel.nickname = result?.nickName
+                        LoginModel.profileImgUrl = result?.profileImgUrl
+                        LoginModel.memberId = result?.memberId
+                        LoginModel.dormitoryId = result?.dormitoryId
+                        LoginModel.dormitoryName = result?.dormitoryName
+                        LoginModel.isSocialLogin = true // 소셜 로그인임을 저장하기 위해
+                        
+                        self.userImageUrl = result?.profileImgUrl
+                        self.showHomeView()
                     } else {
                         if register! { // 가입으로
                             let registerVC = NaverRegisterViewController()
