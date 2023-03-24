@@ -32,7 +32,7 @@ class NaverRegisterViewController: UIViewController {
     // 애플 로그인
     var idToken: String?
     var code: String?
-    var uuid: UUID! = UUID()
+    var uuid: UUID?
     
     // Timer
     var currentSeconds = 300 // 남은 시간
@@ -615,9 +615,9 @@ class NaverRegisterViewController: UIViewController {
             authSendButton.setDeactivatedButton()   // 비활성화
             
             print("DEBUG: ", email+emailAddress, univ)
-            let uuid = UUID()
-            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid.uuidString)
-            print("DEBUG: ", uuid.uuidString)
+            self.uuid = UUID()
+            let input = EmailAuthInput(email: email+emailAddress, university: univ, uuid: uuid?.uuidString)
+            print("DEBUG: ", uuid?.uuidString)
             // 이메일로 인증번호 전송하는 API 호출
             EmailAuthViewModel.requestSendEmail(input) { model in
                 MyLoadingView.shared.hide()
@@ -707,7 +707,7 @@ class NaverRegisterViewController: UIViewController {
                let university = selectYourUnivLabel.text,
                let email = emailTextField.text,
                let emailAddress = emailAddressTextField.text {
-                let phoneAuthVC = PhoneAuthViewController(idToken: idToken, code: code, nicknameData: nickNameData, university: university, email: email + emailAddress, uuid: uuid)
+                let phoneAuthVC = PhoneAuthViewController(idToken: idToken, code: code, nicknameData: nickNameData, university: university, email: email + emailAddress, uuid: uuid ?? UUID())
                 
                 phoneAuthVC.modalTransitionStyle = .crossDissolve
                 phoneAuthVC.modalPresentationStyle = .fullScreen

@@ -202,6 +202,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.orderForecastTimeButton.setTitleColor(.black, for: .normal)
                 }
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
             }
@@ -217,6 +219,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedPersonLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
             }
@@ -232,6 +236,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedCategoryLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
             }
@@ -247,6 +253,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedUrlLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
             }
@@ -262,6 +270,8 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
                     self.selectedLocationLabel.backgroundColor = UIColor(hex: 0xF8F8F8)
                 }
                 self.visualEffectView?.removeFromSuperview()
+                self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
                 self.children.first?.view.removeFromSuperview()
                 self.children.first?.removeFromParent()
                 self.setMapView()
@@ -563,12 +573,17 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func createBlurView() {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.layer.opacity = 0.6
-        visualEffectView.frame = view.frame
-        visualEffectView.isUserInteractionEnabled = false
-        view.addSubview(visualEffectView)
-        self.visualEffectView = visualEffectView
+        if self.visualEffectView == nil {
+            self.tabBarController?.tabBar.isHidden = true
+            let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+            visualEffectView.layer.opacity = 0.6
+            visualEffectView.frame = view.frame
+            visualEffectView.isUserInteractionEnabled = false
+            view.addSubview(visualEffectView)
+            self.visualEffectView = visualEffectView
+        } else {
+            print("visualeffectview is not nil")
+        }
     }
     
     // 서브뷰 띄워주기
@@ -589,7 +604,10 @@ class EditPartyViewController: UIViewController, UIScrollViewDelegate {
     private func tapContentView() {
         view.endEditing(true)
         
-        visualEffectView?.removeFromSuperview()
+        self.visualEffectView?.removeFromSuperview()
+        self.visualEffectView = nil
+        self.tabBarController?.tabBar.isHidden = false
+        
         children.forEach {
             $0.view.removeFromSuperview()
             $0.removeFromParent()

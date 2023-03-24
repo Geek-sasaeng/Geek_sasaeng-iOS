@@ -372,6 +372,7 @@ class AgreementViewController: UIViewController {
                 RegisterAPI.registerUserFromApple(input) { isSuccess, result in
                     if isSuccess {
                         guard let parsingResult = result else { return }
+                        print("ressult: ", parsingResult)
                         UserDefaults.standard.set(parsingResult.jwt, forKey: "jwt")
                         UserDefaults.standard.set(parsingResult.refresh_token, forKey: "appleRefreshToken")
                         LoginModel.jwt = parsingResult.jwt

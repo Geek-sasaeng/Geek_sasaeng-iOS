@@ -120,6 +120,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     /* 서브뷰 나타났을 때 뒤에 블러뷰 */
     var visualEffectView: UIVisualEffectView?
+    var visualEffectViewOnTab: UIVisualEffectView?
     
     /* 네이버 지도 */
     let naverMapView = NMFNaverMapView().then {
@@ -216,6 +217,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
         
         visualEffectView?.removeFromSuperview()
         visualEffectView = nil
+        self.tabBarController?.tabBar.isHidden = false
         children.forEach {
             $0.view.removeFromSuperview()
             $0.removeFromParent()
@@ -289,6 +291,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
                 // Blur View 제거
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
                 
                 // subVC 제거
                 let viewControllers = self.children
@@ -312,6 +315,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
             if result == "true" {
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectView = nil
+                self.tabBarController?.tabBar.isHidden = false
             }
         }
         
@@ -488,6 +492,7 @@ class CreatePartyViewController: UIViewController, UIScrollViewDelegate {
     
     private func createBlurView() {
         if visualEffectView == nil {
+            self.tabBarController?.tabBar.isHidden = true
             let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             visualEffectView.layer.opacity = 0.6
             visualEffectView.frame = view.frame
