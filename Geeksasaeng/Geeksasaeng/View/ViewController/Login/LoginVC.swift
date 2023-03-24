@@ -559,7 +559,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
             print(".authorizationCode : \(codeStr ?? "")")
 
             if let appleRefreshToken = UserDefaults.standard.string(forKey: "appleRefreshToken") {
-                let appleLoginInput = AppleLoginInput(idToken: idTokenStr, refreshToken: appleRefreshToken)
+                let appleLoginInput = AppleLoginInput(idToken: idTokenStr, refreshToken: appleRefreshToken, fcmToken: UserDefaults.standard.string(forKey: "fcmToken"))
 
                 LoginAPI.appleLogin(input: appleLoginInput) { isSuccess, result, register in
                     if isSuccess {

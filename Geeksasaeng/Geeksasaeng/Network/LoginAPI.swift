@@ -34,6 +34,7 @@ struct AutoLoginModelResult: Decodable {
 struct AppleLoginInput: Encodable {
     var idToken: String?
     var refreshToken: String?
+    var fcmToken: String?
 }
 
 struct AppleLoginModel: Decodable {
