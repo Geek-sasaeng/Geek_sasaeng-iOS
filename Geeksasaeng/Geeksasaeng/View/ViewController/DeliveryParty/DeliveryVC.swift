@@ -981,57 +981,60 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PartyTableViewCell.identifier, for: indexPath) as? PartyTableViewCell else { return UITableViewCell() }
-        
-        // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
-        let nowData = deliveryCellDataArray[indexPath.row]
-        print(nowData)
-        
-        // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
-        if let currentMatching = nowData.currentMatching,
-           let maxMatching = nowData.maxMatching,
-           let orderTime = nowData.orderTime,
-           let title = nowData.title,
-           let hasHashTag = nowData.hasHashTag,
-           let foodCategory = nowData.foodCategory {
-            cell.peopleLabel.text = String(currentMatching) + "/" + String(maxMatching)
-            cell.titleLabel.text = title
-            cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
-            cell.categoryLabel.text = foodCategory
+        if (indexPath.row > self.deliveryCellDataArray.count-1) {
+            return UITableViewCell()
+        } else {
+            // 현재 row의 셀 데이터 -> DeliveryListModelResult 형식
+            let nowData = deliveryCellDataArray[indexPath.row]
+            print(nowData)
             
-            // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
-            // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
-            let formatter = FormatCreater.sharedLongFormat
-            let nowDate = Date()
-            let orderDate = formatter.date(from: orderTime)
-            
-            if let orderDate = orderDate {
-                // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
-                let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
+            // API를 통해 받아온 데이터들이 다 있으면, 데이터를 컴포넌트에 각각 할당해 준다
+            if let currentMatching = nowData.currentMatching,
+               let maxMatching = nowData.maxMatching,
+               let orderTime = nowData.orderTime,
+               let title = nowData.title,
+               let hasHashTag = nowData.hasHashTag,
+               let foodCategory = nowData.foodCategory {
+                cell.peopleLabel.text = String(currentMatching) + "/" + String(maxMatching)
+                cell.titleLabel.text = title
+                cell.hashtagLabel.textColor = (hasHashTag) ? UIColor(hex: 0x636363) : UIColor(hex: 0xEFEFEF)
+                cell.categoryLabel.text = foodCategory
                 
-                // 각각 일, 시간, 분 단위로 변환
-                let dayTime = intervalSecs / 60 / 60 / 24
-                let hourTime = intervalSecs / 60 / 60 % 24
-                let minuteTime = intervalSecs / 60 % 60
+                // TODO: - 추후에 모델이나 뷰모델로 위치 옮기면 될 듯
+                // 서버에서 받은 데이터의 형식대로 날짜 포맷팅
+                let formatter = FormatCreater.sharedLongFormat
+                let nowDate = Date()
+                let orderDate = formatter.date(from: orderTime)
                 
-                // 각 값이 0이면 텍스트에서 제외한다
-                var dayString: String? = nil
-                var hourString: String? = nil
-                var minuteString: String? = nil
-                
-                if dayTime != 0 {
-                    dayString = "\(dayTime)일 "
+                if let orderDate = orderDate {
+                    // (주문 예정 시간 - 현재 시간) 의 값을 초 단위로 받아온다
+                    let intervalSecs = Int(orderDate.timeIntervalSince(nowDate))
+                    
+                    // 각각 일, 시간, 분 단위로 변환
+                    let dayTime = intervalSecs / 60 / 60 / 24
+                    let hourTime = intervalSecs / 60 / 60 % 24
+                    let minuteTime = intervalSecs / 60 % 60
+                    
+                    // 각 값이 0이면 텍스트에서 제외한다
+                    var dayString: String? = nil
+                    var hourString: String? = nil
+                    var minuteString: String? = nil
+                    
+                    if dayTime != 0 {
+                        dayString = "\(dayTime)일 "
+                    }
+                    if hourTime != 0 {
+                        hourString = "\(hourTime)시간 "
+                    }
+                    if minuteTime != 0 {
+                        minuteString = "\(minuteTime)분 "
+                    }
+                    
+                    cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
                 }
-                if hourTime != 0 {
-                    hourString = "\(hourTime)시간 "
-                }
-                if minuteTime != 0 {
-                    minuteString = "\(minuteTime)분 "
-                }
-                
-                cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
             }
+            return cell
         }
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

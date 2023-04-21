@@ -599,6 +599,10 @@ class ChattingViewController: UIViewController {
                     
                     // 로컬에 isRead 값을 true로, unreadCnt도 수신한 값으로 업데이트
                     self.updateUnreadToRead(data: data)
+                } else if data.chatType! == "ban" {
+                    // 강제퇴장 당했다는 것
+                    // alert 뷰 띄워주기
+                    print("[Rabbit] 채팅방에서 강제퇴장 알림 수신", data)
                 }
             } catch {
                 print(error)
@@ -1145,14 +1149,21 @@ class ChattingViewController: UIViewController {
     /* 매칭 마감하기 뷰에서 확인 눌렀을 때 실행되는 함수 */
     @objc
     private func tapConfirmButton() {
-        ChatAPI.closeMatching(CloseMatchingInput(partyId: self.roomInfo?.partyId)) { isSuccess in
-            if isSuccess {
-                print("DEBUG: 매칭 마감 성공")
-                
-                // 매칭 마감 버튼 비활성화
-                self.setInactiveButton(index: 1)
+        ChatAPI.closeMatching(CloseMatchingInput(partyId: self.roomInfo?.partyId)) { model in
+            if let model = model {
+                switch model.code {
+                case 1000:
+                    print("DEBUG: 매칭 마감 성공")
+                    // 매칭 마감 버튼 비활성화
+                    self.setInactiveButton(index: 1)
+                case 2616:
+                    self.showToast(viewController: self, message: "이미 마감된 방입니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 240)
+                default:
+                    self.showToast(viewController: self, message: "매칭 마감이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 240)
+                }
             } else {
                 print("DEBUG: 매칭 마감 실패")
+                self.showToast(viewController: self, message: "매칭 마감이 실패하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 240)
             }
         }
         

@@ -645,21 +645,25 @@ extension ChattingListViewController: UITableViewDataSource, UITableViewDelegate
     /* 채팅방 목록 셀 내용 구성 */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingListTableViewCell.identifier, for: indexPath) as? ChattingListTableViewCell else { return UITableViewCell() }
-        let chattingRoom = chattingRoomList[indexPath.row]
-        
-        // 채팅방 타이틀 설정
-        cell.titleLabel.text = chattingRoom.roomTitle ?? "배달파티 채팅방"
-        // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
-        self.setRecentMessageAndTime(cell: cell,
-                                     messageContents: chattingRoom.recentMsg ?? "",
-                                     messageTime: chattingRoom.time ?? "",
-                                     row: indexPath.row)
-        // 안 읽은 메세지 개수 띄우기
-        if (chattingRoom.unreadedMsgCnt ?? 0 > 0) {
-            cell.unreadMessageCountLabel.text = "+\(chattingRoom.unreadedMsgCnt!)"
+        if (indexPath.row > self.chattingRoomList.count-1) {
+            return UITableViewCell()
+        } else {
+            let chattingRoom = chattingRoomList[indexPath.row]
+            
+            // 채팅방 타이틀 설정
+            cell.titleLabel.text = chattingRoom.roomTitle ?? "배달파티 채팅방"
+            // 가장 최신 메세지와 그 메세지의 전송시간 받아오기
+            self.setRecentMessageAndTime(cell: cell,
+                                         messageContents: chattingRoom.recentMsg ?? "",
+                                         messageTime: chattingRoom.time ?? "",
+                                         row: indexPath.row)
+            // 안 읽은 메세지 개수 띄우기
+            if (chattingRoom.unreadedMsgCnt ?? 0 > 0) {
+                cell.unreadMessageCountLabel.text = "+\(chattingRoom.unreadedMsgCnt!)"
+            }
+            
+            return cell
         }
-        
-        return cell
     }
 
     /* 채팅방 셀이 클릭될 때 실행되는 함수 */

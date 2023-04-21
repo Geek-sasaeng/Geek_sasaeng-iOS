@@ -452,7 +452,7 @@ class ChatAPI {
     }
     
     // 매칭 마감 API 호출 함수
-    public static func closeMatching(_ parameter: CloseMatchingInput, completion: @escaping (Bool) -> Void) {
+    public static func closeMatching(_ parameter: CloseMatchingInput, completion: @escaping (CloseMatchingModel?) -> Void) {
         guard let partyId = parameter.partyId else { return }
         let url = "https://geeksasaeng.shop/party-chat-room/matching-status"
         
@@ -465,10 +465,10 @@ class ChatAPI {
             switch response.result {
             case .success(let result):
                 print("DEBUG:", result)
-                completion(result.isSuccess!)
+                completion(result)
             case .failure(let error):
                 print("DEBUG:", error.localizedDescription)
-                completion(false)
+                completion(nil)
             }
         }
     }
