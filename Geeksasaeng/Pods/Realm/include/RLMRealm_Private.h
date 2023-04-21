@@ -18,7 +18,7 @@
 
 #import <Realm/RLMRealm.h>
 
-@class RLMFastEnumerator;
+@class RLMFastEnumerator, RLMAsyncRefreshTask, RLMScheduler;
 
 RLM_HEADER_AUDIT_BEGIN(nullability)
 
@@ -40,11 +40,18 @@ void RLMRealmTranslateException(NSError **error);
 FOUNDATION_EXTERN void RLMWaitForRealmToClose(NSString *path);
 BOOL RLMIsRealmCachedAtPath(NSString *path);
 
+// Register a block to be called from the next before_notify() invocation
+FOUNDATION_EXTERN void RLMAddBeforeNotifyBlock(RLMRealm *realm, dispatch_block_t block);
+
+FOUNDATION_EXTERN RLMRealm *_Nullable RLMGetCachedRealm(RLMRealmConfiguration *, RLMScheduler *) NS_RETURNS_RETAINED;
+FOUNDATION_EXTERN RLMRealm *_Nullable RLMGetAnyCachedRealm(RLMRealmConfiguration *) NS_RETURNS_RETAINED;
+
 // RLMRealm private members
 @interface RLMRealm ()
-
 @property (nonatomic, readonly) BOOL dynamic;
 @property (nonatomic, readwrite) RLMSchema *schema;
+@property (nonatomic, readonly, nullable) id actor;
+@property (nonatomic, readonly) bool isFlexibleSync;
 
 + (void)resetRealmState;
 
@@ -57,9 +64,18 @@ BOOL RLMIsRealmCachedAtPath(NSString *path);
 - (void)verifyNotificationsAreSupported:(bool)isCollection;
 
 - (RLMRealm *)frozenCopy NS_RETURNS_RETAINED;
-+ (RLMAsyncOpenTask *)asyncOpenWithConfiguration:(RLMRealmConfiguration *)configuration
-                                        callback:(void (^)(NSError * _Nullable))callback;
 
++ (nullable instancetype)realmWithConfiguration:(RLMRealmConfiguration *)configuration
+                                     confinedTo:(RLMScheduler *)options
+                                          error:(NSError **)error;
+- (void)waitForDownloadCompletion:(void (^)(NSError *_Nullable))completion;
+@end
+
+@interface RLMPinnedRealm : NSObject
+@property (nonatomic, readonly) RLMRealmConfiguration *configuration;
+
+- (instancetype)initWithRealm:(RLMRealm *)realm;
+- (void)unpin;
 @end
 
 RLM_HEADER_AUDIT_END(nullability)

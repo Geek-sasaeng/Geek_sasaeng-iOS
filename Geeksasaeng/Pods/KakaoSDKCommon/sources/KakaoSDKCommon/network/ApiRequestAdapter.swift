@@ -15,6 +15,7 @@
 import Foundation
 import Alamofire
 
+///:nodoc:
 public class ApiRequestAdapter : RequestInterceptor{
     private let kaHeader: String
     

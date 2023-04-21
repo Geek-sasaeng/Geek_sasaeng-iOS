@@ -17,6 +17,7 @@ import SafariServices
 import AuthenticationServices
 import KakaoSDKCommon
 
+@available(iOSApplicationExtension, unavailable)
 let AUTH_CONTROLLER = AuthController.shared
 
 /// 인가 코드 요청 시 추가 상호작용을 요청하고자 할 때 전달하는 파라미터입니다.
@@ -28,42 +29,22 @@ public enum Prompt : String {
     /// 보안 로그인을 요청합니다. 보안 로그인은 카카오 인증서 기반의 사용자 전자서명 과정을 포함합니다.
     case Cert = "cert"
     
-    ///:nodoc:
-    case Signup = "signup"
+    /// 카카오계정 가입 페이지로 이동 후, 카카오계정 가입 완료 후 동의 화면 출력
+    case Create = "create"
     
     ///:nodoc:
     case UnifyDaum = "unify_daum"
 }
 
-/// 톡 간편로그인 호출 방식
-public enum LaunchMethod: String {
-    
-    /// 커스텀 스킴
-    case CustomScheme
-    
-    /// 유니버셜 링크
-    case UniversalLink
-}
-
-extension SdkUtils {
-    /// :nodoc: //launchMethod 추가 익스텐션
-    static public func makeUrlWithParameters(url:String, parameters:[String:Any]?, launchMethod:LaunchMethod? = nil) -> URL? {
-        if let launchMethod = launchMethod, launchMethod == .UniversalLink {
-            if let customSchemeUrl = makeUrlWithParameters(url, parameters: parameters) {
-                let customSchemeStringUrl = "\(customSchemeUrl.absoluteString)"
-                let escapedStringUrl = customSchemeStringUrl.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-                
-                let universalLinkStringUrl = "\(Urls.compose(.UniversalLink, path:Paths.universalLink))/\(escapedStringUrl ?? "")"
-                return URL(string: universalLinkStringUrl)
-            }
-            else { return nil }
-        }
-        else {
-            return makeUrlWithParameters(url, parameters: parameters)
-        }
+@available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
+class DefaultPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
+    public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return UIApplication.shared.keyWindow ?? ASPresentationAnchor()
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 public class AuthController {
     
     // MARK: Fields
@@ -89,6 +70,8 @@ public class AuthController {
     public static let delayForAuthenticationSession : Double = 0.4
     
     public init() {
+        AUTH_API.checkMigrationAndInitSession()
+        
         resetCodeVerifier()
         
         if #available(iOS 13.0, *) {
@@ -105,7 +88,7 @@ public class AuthController {
     
     // MARK: Login with KakaoTalk
     /// :nodoc:
-    public func authorizeWithTalk(launchMethod: LaunchMethod? = nil,
+    public func _authorizeWithTalk(launchMethod: LaunchMethod? = nil,
                                   prompts: [Prompt]? = nil,
                                   state: String? = nil,
                                   channelPublicIds: [String]? = nil,
@@ -185,48 +168,11 @@ public class AuthController {
         return false
     }
     
-    // MARK: Login with Web Cookie
-    
-    /// :nodoc: iOS 11 이상에서 제공되는 (SF/ASWeb)AuthenticationSession 을 이용하여 로그인 페이지를 띄우고 쿠키 기반 로그인을 수행합니다. 이미 사파리에에서 로그인하여 카카오계정의 쿠키가 있다면 이를 활용하여 ID/PW 입력 없이 간편하게 로그인할 수 있습니다.
-    public func authorizeWithAuthenticationSession(prompts : [Prompt]? = nil,
-                                                   state: String? = nil,
-                                                   loginHint: String? = nil,
-                                                   nonce: String? = nil,
-                                                   completion: @escaping (OAuthToken?, Error?) -> Void) {
-        return _authorizeWithAuthenticationSession(prompts: prompts,
-                                                       state:state,
-                                                       agtToken: nil,
-                                                       scopes: nil,
-                                                       channelPublicIds: nil,
-                                                       serviceTerms:nil,
-                                                       loginHint: loginHint,
-                                                       nonce:nonce,
-                                                       completion: completion )
-    }
-    
-    /// :nodoc: 카카오싱크 전용입니다. 자세한 내용은 카카오싱크 전용 개발가이드를 참고하시기 바랍니다.
-    public func authorizeWithAuthenticationSession(prompts : [Prompt]? = nil,
-                                                   state: String? = nil,
-                                                   channelPublicIds: [String]? = nil,
-                                                   serviceTerms: [String]? = nil,
-                                                   loginHint: String? = nil,
-                                                   nonce: String? = nil,
-                                                   completion: @escaping (OAuthToken?, Error?) -> Void) {
-        return _authorizeWithAuthenticationSession(prompts: prompts,
-                                                       state:state,
-                                                       agtToken: nil,
-                                                       scopes: nil,
-                                                       channelPublicIds: channelPublicIds,
-                                                       serviceTerms:serviceTerms,
-                                                       loginHint:loginHint,
-                                                       nonce: nonce,
-                                                       completion: completion)
-    }
-    
     /// :nodoc:
-    public func authorizeWithAuthenticationSession(scopes:[String],
-                                                   nonce: String? = nil,
-                                                   completion: @escaping (OAuthToken?, Error?) -> Void) {
+    public func _authorizeByAgtWithAuthenticationSession(scopes:[String],
+                                                         state: String? = nil,
+                                                         nonce: String? = nil,
+                                                         completion: @escaping (OAuthToken?, Error?) -> Void) {
         
         AuthApi.shared.agt { [weak self] (agtToken, error) in
             guard let strongSelf = self else {
@@ -239,7 +185,7 @@ public class AuthController {
                 return
             }
             else {
-                strongSelf._authorizeWithAuthenticationSession(agtToken: agtToken, scopes: scopes, nonce:nonce) { (oauthToken, error) in
+                strongSelf._authorizeWithAuthenticationSession(state:state, agtToken: agtToken, scopes: scopes, nonce:nonce) { (oauthToken, error) in
                     if let topVC = UIApplication.getMostTopViewController() {
                         let topVCName = "\(type(of: topVC))"
                         SdkLog.d("top vc: \(topVCName)")
@@ -379,8 +325,7 @@ public class AuthController {
     }
 }
 
-
-
+@available(iOSApplicationExtension, unavailable)
 extension AuthController {
     //Rx 공통 Helper
     
@@ -389,7 +334,8 @@ extension AuthController {
                                       state: String? = nil,
                                       channelPublicIds: [String]? = nil,
                                       serviceTerms: [String]? = nil,
-                                      nonce: String? = nil)  -> [String:Any] {
+                                      nonce: String? = nil,
+                                      settleId: String? = nil) -> [String:Any] {
         self.resetCodeVerifier()
         
         var parameters = [String:Any]()
@@ -417,6 +363,9 @@ extension AuthController {
         }
         if let nonce = nonce {
             extraParameters["nonce"] = nonce
+        }
+        if let settleId = settleId {
+            extraParameters["settle_id"] = settleId
         }
         
         if let approvalType = KakaoSDK.shared.approvalType().type {
@@ -451,8 +400,8 @@ extension AuthController {
                                loginHint: String? = nil,
                                nonce: String? = nil,
                                accountsSkipIntro: Bool? = nil,
-                               accountsTalkLoginVisible: Bool? = nil) -> [String:Any]
-    {
+                               accountsTalkLoginVisible: Bool? = nil,
+                               settleId: String? = nil) -> [String:Any] {
         self.resetCodeVerifier()
         
         var parameters = [String:Any]()
@@ -508,6 +457,10 @@ extension AuthController {
             parameters["accounts_talk_login_visible"] = accountsTalkLoginVisible
         }
         
+        if let settleId = settleId {
+            parameters["settle_id"] = settleId
+        }
+        
         self.codeVerifier = SdkCrypto.shared.generateCodeVerifier()
         if let codeVerifier = self.codeVerifier {
             SdkLog.d("code_verifier: \(codeVerifier)")
@@ -522,53 +475,18 @@ extension AuthController {
     }
 }
 
-
-
-extension URL {
-    // SDK에서 state 제공 계획은 없지만 OAuth 표준이므로 파싱해둔다.
-    public func oauthResult() -> (code: String?, error: Error?, state: String?) {
-        var parameters = [String: String]()
-        if let queryItems = URLComponents(string: self.absoluteString)?.queryItems {
-            for item in queryItems {
-                parameters[item.name] = item.value
-            }
-        }
-        
-        let state = parameters["state"]
-        if let code = parameters["code"] {
-            return (code, nil, state)
-        } else {
-            if parameters["error"] == nil {
-                parameters["error"] = "unknown"
-                parameters["error_description"] = "Invalid authorization redirect URI."
-            }
-            if parameters["error"] == "cancelled" {
-                // 간편로그인 취소버튼 예외처리
-                return (nil, SdkError(reason: .Cancelled, message: "The KakaoTalk authentication has been canceled by user."), state)
-            } else {
-                return (nil, SdkError(parameters: parameters), state)
-            }
-        }
-    }
-}
-
-@available(iOS 13.0, *)
-class DefaultPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
-    public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return UIApplication.shared.keyWindow ?? ASPresentationAnchor()
-    }
-}
-
 // MARK: Cert Login
+@available(iOSApplicationExtension, unavailable)
 extension AuthController {
 
     /// :nodoc:
-    public func certAuthorizeWithTalk(launchMethod: LaunchMethod? = nil,
+    public func _certAuthorizeWithTalk(launchMethod: LaunchMethod? = nil,
                                       prompts: [Prompt]? = nil,
                                       state: String? = nil,
                                       channelPublicIds: [String]? = nil,
                                       serviceTerms: [String]? = nil,
-                                      nonce: String? = nil,                                      
+                                      nonce: String? = nil,
+                                      settleId: String? = nil,
                                       completion: @escaping (CertTokenInfo?, Error?) -> Void) {
         
         AUTH_CONTROLLER.authorizeWithTalkCompletionHandler = { (callbackUrl) in
@@ -602,7 +520,8 @@ extension AuthController {
                                                     state:state,
                                                     channelPublicIds: channelPublicIds,
                                                     serviceTerms: serviceTerms,
-                                                    nonce: nonce)
+                                                    nonce: nonce,
+                                                    settleId: settleId)
 
         guard let url = SdkUtils.makeUrlWithParameters(url:Urls.compose(.TalkAuth, path:Paths.authTalk),
                                                        parameters: parameters,
@@ -625,7 +544,7 @@ extension AuthController {
     }
     
     /// :nodoc:
-    public func certAuthorizeWithAuthenticationSession(prompts: [Prompt]? = nil,
+    public func _certAuthorizeWithAuthenticationSession(prompts: [Prompt]? = nil,
                                                        state: String? = nil,
                                                        agtToken: String? = nil,
                                                        scopes:[String]? = nil,
@@ -633,6 +552,7 @@ extension AuthController {
                                                        serviceTerms: [String]? = nil,
                                                        loginHint: String? = nil,
                                                        nonce: String? = nil,
+                                                       settleId: String? = nil,
                                                        completion: @escaping (CertTokenInfo?, Error?) -> Void) {
         
         let authenticationSessionCompletionHandler : (URL?, Error?) -> Void = {
@@ -697,7 +617,8 @@ extension AuthController {
                                              channelPublicIds: channelPublicIds,
                                              serviceTerms: serviceTerms,
                                              loginHint: loginHint,
-                                             nonce: nonce)
+                                             nonce: nonce,
+                                             settleId: settleId)
         
         if let url = SdkUtils.makeUrlWithParameters(Urls.compose(.Kauth, path:Paths.authAuthorize), parameters:parameters) {
             SdkLog.d("\n===================================================================================================")
@@ -724,62 +645,5 @@ extension AuthController {
                 (AUTH_CONTROLLER.authenticationSession as? SFAuthenticationSession)?.start()
             }
         }
-    }
-}
-
-extension AuthApi {    
-    /// :nodoc:
-    public func certToken(code: String,
-                          codeVerifier: String? = nil,
-                          redirectUri: String = KakaoSDK.shared.redirectUri(),
-                          completion:@escaping (CertTokenInfo?, Error?) -> Void) {
-                API.responseData(.post,
-                                Urls.compose(.Kauth, path:Paths.authToken),
-                                parameters: ["grant_type":"authorization_code",
-                                             "client_id":try! KakaoSDK.shared.appKey(),
-                                             "redirect_uri":redirectUri,
-                                             "code":code,
-                                             "code_verifier":codeVerifier,
-                                             "ios_bundle_id":Bundle.main.bundleIdentifier,
-                                             "approval_type":KakaoSDK.shared.approvalType().type].filterNil(),
-                                sessionType:.Auth,
-                                apiType: .KAuth) { (response, data, error) in
-                                    if let error = error {
-                                        completion(nil, error)
-                                        return
-                                    }
-                                    
-                                    if let data = data {
-                                        if let certOauthToken = try? SdkJSONDecoder.custom.decode(CertOAuthToken.self, from: data) {                                            
-                                            let oauthToken = OAuthToken(accessToken: certOauthToken.accessToken,
-                                                                        expiresIn: certOauthToken.expiresIn,
-                                                                        expiredAt: certOauthToken.expiredAt,
-                                                                        tokenType: certOauthToken.tokenType,
-                                                                        refreshToken: certOauthToken.refreshToken,
-                                                                        refreshTokenExpiresIn: certOauthToken.refreshTokenExpiresIn,
-                                                                        refreshTokenExpiredAt: certOauthToken.refreshTokenExpiredAt,
-                                                                        scope: certOauthToken.scope,
-                                                                        scopes: certOauthToken.scopes,
-                                                                        idToken: certOauthToken.idToken)
-                                            
-                                            if let txId = certOauthToken.txId {
-                                                AUTH.tokenManager.setToken(oauthToken)
-                                                
-                                                let certTokenInfo = CertTokenInfo(token: oauthToken, txId: txId)
-                                                completion(certTokenInfo, nil)
-                                            }
-                                            else {
-                                                completion(nil, SdkError(reason: .Unknown, message: "certToken - txId is nil."))
-                                            }
-                                            return
-                                        }
-                                        else {
-                                            completion(nil, SdkError(reason: .Unknown, message: "certToken - token parsing error."))
-                                            return
-                                        }
-                                    }
-                    
-                                    completion(nil, SdkError(reason: .Unknown, message: "certToken - data is nil."))
-                                }
     }
 }

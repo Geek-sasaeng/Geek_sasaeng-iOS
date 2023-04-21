@@ -45,7 +45,7 @@ extension StoryApi {
 
     /// 사용자가 카카오스토리 사용자인지 아닌지를 판별합니다.
     public func isStoryUser(completion:@escaping (Bool?, Error?) -> Void) {
-        AUTH.responseData(.get, Urls.compose(path:Paths.isStoryUser),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.isStoryUser),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
                                 completion(nil, error)
@@ -69,7 +69,7 @@ extension StoryApi {
     /// - seealso: `StoryProfile`
     
     public func profile(secureResource: Bool = true, completion:@escaping (StoryProfile?, Error?) -> Void) {
-        AUTH.responseData(.get, Urls.compose(path:Paths.storyProfile),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.storyProfile),
                           parameters: ["secure_resource": secureResource].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
@@ -89,7 +89,7 @@ extension StoryApi {
     /// 카카오스토리의 특정 내스토리 정보를 얻을 수 있습니다. comments, likes등의 상세정보도 포함됩니다.
     /// - seealso: `Story`
     public func story(id:String, completion:@escaping (Story?, Error?) -> Void)  {
-        AUTH.responseData(.get, Urls.compose(path:Paths.myStory),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.myStory),
                           parameters: ["id":id].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
@@ -109,7 +109,7 @@ extension StoryApi {
     /// 카카오스토리의 여러 개의 내스토리 정보들을 얻을 수 있습니다. 단, comments, likes등의 상세정보는 없으며 이는 내스토리 정보 요청 `story(id:)`을 통해 얻을 수 있습니다.
     /// - seealso: `Story`
     public func stories(lastId:String? = nil, completion:@escaping ([Story]?, Error?) -> Void) {
-        AUTH.responseData(.get, Urls.compose(path:Paths.myStories),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.myStories),
                           parameters: ["last_id":lastId].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
@@ -129,7 +129,7 @@ extension StoryApi {
     /// 포스팅하고자 하는 URL을 스크랩하여 링크 정보를 생성합니다.
     /// - seealso: `LinkInfo`
     public func linkInfo(url: URL, completion:@escaping (LinkInfo?, Error?) -> Void) {
-        AUTH.responseData(.get, Urls.compose(path:Paths.storyLinkInfo),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.storyLinkInfo),
                           parameters: ["url":url].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
@@ -156,7 +156,7 @@ extension StoryApi {
                          iosMarketParam: [String: String]? = nil,
                          completion:@escaping (String?, Error?) -> Void) {
         
-        AUTH.responseData(.post, Urls.compose(path:Paths.postNote),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.postNote),
                           parameters: ["content":content,
                                        "permission":permission.parameterValue,
                                        "enable_share":enableShare,
@@ -195,7 +195,7 @@ extension StoryApi {
                          iosMarketParam: [String: String]? = nil,
                          completion:@escaping (String?, Error?) -> Void) {
         
-        AUTH.responseData(.post, Urls.compose(path:Paths.postLink),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.postLink),
                           parameters: ["content":content,
                                        "link_info":SdkUtils.toJsonString(linkInfo),
                                        "permission":permission.parameterValue,
@@ -232,7 +232,7 @@ extension StoryApi {
                           iosMarketParam: [String: String]? = nil,
                           completion:@escaping (String?, Error?) -> Void) {
         
-        AUTH.responseData(.post, Urls.compose(path:Paths.postPhoto),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.postPhoto),
                           parameters: ["content":content,
                                        "image_url_list":imagePaths.toJsonString(),
                                        "permission":permission.parameterValue,
@@ -262,7 +262,7 @@ extension StoryApi {
     public func upload(_ images: [UIImage?],
                        completion:@escaping ([String]?, Error?) -> Void) {
         
-        AUTH.upload(.post, Urls.compose(path:Paths.uploadMulti), images: images,
+        AUTH_API.upload(.post, Urls.compose(path:Paths.uploadMulti), images: images,
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
                                 completion(nil, error)
@@ -282,7 +282,7 @@ extension StoryApi {
     
     /// 카카오스토리의 특정 내스토리 정보를 지울 수 있습니다.
     public func delete(_ id: String, completion:@escaping (Error?) -> Void) {
-        AUTH.responseData(.delete, Urls.compose(path:Paths.deleteMyStory),
+        AUTH_API.responseData(.delete, Urls.compose(path:Paths.deleteMyStory),
                           parameters: ["id":id].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {

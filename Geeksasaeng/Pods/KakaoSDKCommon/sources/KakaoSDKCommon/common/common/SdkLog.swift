@@ -134,6 +134,7 @@ open class SdkLog {
     }
 }
 
+///:nodoc:
 extension Date {
     public func toString() -> String {
         return SdkLog.dateFormatter.string(from: self as Date)

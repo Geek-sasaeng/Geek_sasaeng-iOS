@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 public class Properties {
     static let sdkVersionKey = "com.kakao.sdk.version"
     

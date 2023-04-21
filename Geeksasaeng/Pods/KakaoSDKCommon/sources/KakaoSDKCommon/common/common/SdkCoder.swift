@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 public class SdkJSONEncoder : JSONEncoder {
     public static var `default`: SdkJSONEncoder { return SdkJSONEncoder() }
     public static var `custom`: SdkJSONEncoder { return SdkJSONEncoder(useCustomStrategy:true) }
@@ -36,6 +37,7 @@ public class SdkJSONEncoder : JSONEncoder {
     }
 }
 
+///:nodoc:
 public class SdkJSONDecoder : JSONDecoder {
     public static var `default`: SdkJSONDecoder { return SdkJSONDecoder() }
     public static var `custom`: SdkJSONDecoder { return SdkJSONDecoder(useCustomStrategy:true) }
