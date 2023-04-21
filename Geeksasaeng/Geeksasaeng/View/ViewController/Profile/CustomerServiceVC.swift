@@ -174,7 +174,7 @@ class CustomerServiceViewController: UIViewController {
     }
     
     @objc
-    private func tapPersonalInfoAgreementButton() {
+    private func tapPersonalInf oAgreementButton() {
         let personalInfoAgreementOfProfileVC = PersonalInfoAgreementOfProfileViewController()
         self.navigationController?.pushViewController(personalInfoAgreementOfProfileVC, animated: true)
     }

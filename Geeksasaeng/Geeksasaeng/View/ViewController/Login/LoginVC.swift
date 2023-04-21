@@ -104,6 +104,13 @@ class LoginViewController: UIViewController {
         setNotificationCenter()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("CompleteLogout"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("CompleteWithdrawal"), object: nil)
+    }
+    
     // MARK: - Functions
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -457,6 +464,7 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
         guard let loginInstance = NaverThirdPartyLoginConnection.getSharedInstance() else { return }
         // 이미 로그인
         if loginInstance.isValidAccessTokenExpireTimeNow() {
+            // 유저 정보 가져오고 로그인 시도
             self.getNaverUserInfo(loginInstance.tokenType, loginInstance.accessToken)
             return
         }
@@ -482,7 +490,7 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
             guard let body = response.value as? [String: Any] else { return }
             
             if let resultCode = body["message"] as? String {
-                // 네이버에 로그인 할 떄 아이디가 DB에 등록이 안되어있으면 추가 회원가입 절차 진행 -> 가입하는 되는 순간 phone, email 정보와 함께 닉네임 설정 화면으로 이동 -> 닉네임 중복확인하고 학교 이메일 인증 화면으로 이동 -> phone, email, nickname, university 정보 업로드
+                // 네이버에 로그인 할 때 아이디가 DB에 등록이 안되어있으면 추가 회원가입 절차 진행 -> 가입하는 되는 순간 phone, email 정보와 함께 닉네임 설정 화면으로 이동 -> 닉네임 중복확인하고 학교 이메일 인증 화면으로 이동 -> phone, email, nickname, university 정보 업로드
                 
                 // 그니까 로그인 버튼 누르면 email, phone 정보 가져와서 기존 DB랑 비교하고 있으면 DB에 있는 사용자 정보 불러와서 로그인 완료, 홈 화면으로  <->  없으면 회원가입 화면으로
                 
@@ -520,10 +528,10 @@ extension LoginViewController: UITextFieldDelegate {
     
     // 키보드의 return 버튼 누르면 실행
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == idTextField {
+        if textField == idTextField { // 아이디 입력 TextField
             // 커서 이동
             passwordTextField.becomeFirstResponder()
-        } else {
+        } else { // 나머지 (비밀번호 입력 TextField)
             // 키보드 내리기
             textField.resignFirstResponder()
         }

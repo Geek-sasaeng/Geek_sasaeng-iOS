@@ -194,7 +194,7 @@ class EditReceiptPlaceViewController: UIViewController {
             if error != nil {
                 print("DEBUG 에러 발생: \(error!.localizedDescription)")
             } else if placemarks.count > 0 {
-                print("DEBUG: 카카오맵 placemarks", placemarks)
+                print("DEBUG: placemarks", placemarks)
                 let placemark = placemarks.first
                 let location = placemark?.location
                 let coordinate = location?.coordinate

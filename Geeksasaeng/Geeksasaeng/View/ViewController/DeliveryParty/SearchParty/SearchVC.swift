@@ -576,7 +576,7 @@ class SearchViewController: UIViewController {
         loadSearchRecords()
     }
     
-    // 최근 검색어 기록의 갯수에 따라 알맞은 동작 실행
+    // 최근 검색어 기록의 개수에 따라 알맞은 동작 실행
     private func checkSearchRecordsNum() {
         guard let searchRecords = recentSearchDataArray else { return }
         // 0개이면 컬렉션뷰 숨기고 안내 text 띄우기

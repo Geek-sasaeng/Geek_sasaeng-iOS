@@ -489,7 +489,7 @@ class NaverRegisterViewController: UIViewController {
         DispatchQueue.main.async { [weak self] in
             self?.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
                 let elapsedTimeSeconds = Int(Date().timeIntervalSince(startTime))
-                let expireLimit = 300
+                let expireLimit = 300 // 시간 설정
                 
                 guard elapsedTimeSeconds <= expireLimit else { // 시간 초과한 경우
                     timer.invalidate()
