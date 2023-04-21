@@ -9,8 +9,8 @@ import UIKit
 import Alamofire
 
 class EditPartyViewModel {
-    public static func editParty(dormitoryId: Int, partyId: Int, _ parameter : EditPartyInput, completion: @escaping (Bool) -> Void) {
-        AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party/\(partyId)", method: .put,
+    public static func editParty(dormitoryId: Int, partyId: Int, chatRoomId: String, _ parameter : EditPartyInput, completion: @escaping (Bool) -> Void) {
+        AF.request("https://geeksasaeng.shop/\(dormitoryId)/delivery-party/\(partyId)/\(chatRoomId)", method: .put,
                    parameters: parameter, encoder: JSONParameterEncoder.default,
                    headers: ["Authorization": "Bearer " + (LoginModel.jwt ?? "")])
         .validate()
