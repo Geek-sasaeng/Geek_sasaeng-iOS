@@ -548,7 +548,7 @@ class ProfileViewController: UIViewController {
             self.tabBarController?.tabBar.isHidden = true
             self.visualEffectView = setDarkBlurView()
             self.visualEffectView!.snp.makeConstraints { make in
-                make.edges.equalTo(0)
+                make.edges.equalToSuperview()
             }
             self.visualEffectViewOnNav = setDarkBlurViewOnNav()
         }

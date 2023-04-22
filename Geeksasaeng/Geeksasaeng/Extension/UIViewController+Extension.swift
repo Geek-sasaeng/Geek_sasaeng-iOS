@@ -97,23 +97,6 @@ extension UIViewController {
         return visualEffectView
     }
     
-//    /* 탭 바에 어두운 블러뷰 만드는 함수 */
-//    public func setDarkBlurViewOnTab() -> UIVisualEffectView {
-//        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-//        visualEffectView.layer.opacity = 0.6
-//        visualEffectView.frame = view.frame
-//        visualEffectView.frame = (self.tabBarController?.tabBar.bounds.insetBy(dx: 0, dy: -((self.tabBarController?.tabBar.frame.size.height)!)).offsetBy(dx: 0, dy: -((self.navigationController?.navigationBar.frame.size.height)!)))!
-//        self.tabBarController?.tabBar.isTranslucent = true
-////        self.tabBarController?.tabBar.setBackgroundImage(UIImage(), for: .default)
-//        self.tabBarController?.tabBar.backgroundImage = UIImage()
-//        self.tabBarController?.tabBar.addSubview(visualEffectView)
-////        self.navigationController?.navigationBar.isTranslucent = true
-////        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-////        self.navigationController?.navigationBar.addSubview(visualEffectView)
-//        
-//        return visualEffectView
-//    }
-    
     /* 더 어두운 배경 */
     public func setMoreDarkBlurView() -> UIVisualEffectView {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
