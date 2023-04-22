@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 extension URL {
   public func params() -> [String:Any]? {
     var dict = [String:Any]()
@@ -29,4 +30,32 @@ extension URL {
       return nil
     }
   }
+}
+
+///:nodoc:
+extension URL {
+    public func oauthResult() -> (code: String?, error: Error?, state: String?) {
+        var parameters = [String: String]()
+        if let queryItems = URLComponents(string: self.absoluteString)?.queryItems {
+            for item in queryItems {
+                parameters[item.name] = item.value
+            }
+        }
+        
+        let state = parameters["state"]
+        if let code = parameters["code"] {
+            return (code, nil, state)
+        } else {
+            if parameters["error"] == nil {
+                parameters["error"] = "unknown"
+                parameters["error_description"] = "Invalid authorization redirect URI."
+            }
+            if parameters["error"] == "cancelled" {
+                // 간편로그인 취소버튼 예외처리
+                return (nil, SdkError(reason: .Cancelled, message: "The KakaoTalk authentication has been canceled by user."), state)
+            } else {
+                return (nil, SdkError(parameters: parameters), state)
+            }
+        }
+    }
 }

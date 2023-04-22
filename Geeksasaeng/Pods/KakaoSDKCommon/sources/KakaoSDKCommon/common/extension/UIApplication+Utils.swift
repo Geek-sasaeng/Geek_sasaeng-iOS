@@ -15,8 +15,9 @@
 import Foundation
 import UIKit
 
+///:nodoc:
 extension UIApplication {
-
+    @available(iOSApplicationExtension, unavailable)
     public class func getMostTopViewController(base: UIViewController? = nil) -> UIViewController? {
 
         var baseVC: UIViewController?

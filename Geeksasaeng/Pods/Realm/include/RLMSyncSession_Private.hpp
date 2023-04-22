@@ -18,7 +18,6 @@
 
 #import "RLMSyncSession.h"
 
-#import "RLMSyncUtil_Private.h"
 #import <memory>
 
 namespace realm {
@@ -31,7 +30,10 @@ RLM_HEADER_AUDIT_BEGIN(nullability, sendability)
 @interface RLMSyncSession () {
 @public     // So it's visible to tests
     std::weak_ptr<realm::SyncSession> _session;
-} RLM_SYNC_UNINITIALIZABLE
+}
+
+- (instancetype)init __attribute__((unavailable("This type cannot be created directly")));
++ (instancetype)new __attribute__((unavailable("This type cannot be created directly")));
 
 - (instancetype)initWithSyncSession:(std::shared_ptr<realm::SyncSession> const&)session;
 
@@ -44,13 +46,7 @@ RLM_HEADER_AUDIT_BEGIN(nullability, sendability)
 @end
 
 @interface RLMSyncErrorActionToken ()
-
 - (instancetype)initWithOriginalPath:(std::string)originalPath;
-
-@end
-
-@interface RLMAsyncOpenTask ()
-@property (nonatomic) std::shared_ptr<realm::AsyncOpenTask> task;
 @end
 
 RLM_HEADER_AUDIT_END(nullability, sendability)

@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 public class SdkUtils {
     static public func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
         guard let returnValue = object as? T else {
@@ -45,5 +46,25 @@ public class SdkUtils {
     static public func makeUrlWithParameters(_ url:String, parameters:[String:Any]?) -> URL? {
         guard let finalStringUrl = makeUrlStringWithParameters(url, parameters:parameters) else { return nil }
         return URL(string:finalStringUrl)
+    }
+}
+
+///:nodoc:
+extension SdkUtils {
+    /// :nodoc: //launchMethod 추가 익스텐션
+    static public func makeUrlWithParameters(url:String, parameters:[String:Any]?, launchMethod:LaunchMethod? = nil) -> URL? {
+        if let launchMethod = launchMethod, launchMethod == .UniversalLink {
+            if let customSchemeUrl = makeUrlWithParameters(url, parameters: parameters) {
+                let customSchemeStringUrl = "\(customSchemeUrl.absoluteString)"
+                let escapedStringUrl = customSchemeStringUrl.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                
+                let universalLinkStringUrl = "\(Urls.compose(.UniversalLink, path:Paths.universalLink))/\(escapedStringUrl ?? "")"
+                return URL(string: universalLinkStringUrl)
+            }
+            else { return nil }
+        }
+        else {
+            return makeUrlWithParameters(url, parameters: parameters)
+        }
     }
 }

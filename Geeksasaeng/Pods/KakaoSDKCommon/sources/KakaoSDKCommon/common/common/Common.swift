@@ -15,6 +15,7 @@
 import Foundation
 import UIKit
 
+///:nodoc:
 public class Constants {
     static public let responseType = "code"
     
@@ -89,4 +90,14 @@ public class SdkIdentifier {
     public init(_ customIdentifier : String? = nil) {
         self.customIdentifier = customIdentifier
     }
+}
+
+/// 톡 간편로그인 호출 방식
+public enum LaunchMethod: String {
+    
+    /// 커스텀 스킴
+    case CustomScheme
+    
+    /// 유니버셜 링크
+    case UniversalLink
 }

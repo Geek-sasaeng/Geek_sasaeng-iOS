@@ -16,13 +16,10 @@ import Foundation
 import KakaoSDKCommon
 
 /// 카카오 로그인 인증서버로 API 요청을 담당하는 클래스입니다.
-///
 final public class AuthApi {
     
     /// 간편하게 API를 호출할 수 있도록 제공되는 공용 싱글톤 객체입니다.
     public static let shared = AuthApi()
-    
-    // MARK: Methods
     
     /// 카카오톡 으로부터 리다이렉트 된 URL 인지 체크합니다.
     public static func isKakaoTalkLoginUrl(_ url:URL) -> Bool {
@@ -169,5 +166,63 @@ final public class AuthApi {
     @available(*, deprecated, message: "use refreshToken(token:completion:) instead")
     public func refreshAccessToken(refreshToken: String? = nil,
                                    completion:@escaping (OAuthToken?, Error?) -> Void) {
+    }
+}
+
+
+extension AuthApi {
+    /// :nodoc:
+    public func certToken(code: String,
+                          codeVerifier: String? = nil,
+                          redirectUri: String = KakaoSDK.shared.redirectUri(),
+                          completion:@escaping (CertTokenInfo?, Error?) -> Void) {
+                API.responseData(.post,
+                                Urls.compose(.Kauth, path:Paths.authToken),
+                                parameters: ["grant_type":"authorization_code",
+                                             "client_id":try! KakaoSDK.shared.appKey(),
+                                             "redirect_uri":redirectUri,
+                                             "code":code,
+                                             "code_verifier":codeVerifier,
+                                             "ios_bundle_id":Bundle.main.bundleIdentifier,
+                                             "approval_type":KakaoSDK.shared.approvalType().type].filterNil(),
+                                sessionType:.Auth,
+                                apiType: .KAuth) { (response, data, error) in
+                                    if let error = error {
+                                        completion(nil, error)
+                                        return
+                                    }
+                                    
+                                    if let data = data {
+                                        if let certOauthToken = try? SdkJSONDecoder.custom.decode(CertOAuthToken.self, from: data) {
+                                            let oauthToken = OAuthToken(accessToken: certOauthToken.accessToken,
+                                                                        expiresIn: certOauthToken.expiresIn,
+                                                                        expiredAt: certOauthToken.expiredAt,
+                                                                        tokenType: certOauthToken.tokenType,
+                                                                        refreshToken: certOauthToken.refreshToken,
+                                                                        refreshTokenExpiresIn: certOauthToken.refreshTokenExpiresIn,
+                                                                        refreshTokenExpiredAt: certOauthToken.refreshTokenExpiredAt,
+                                                                        scope: certOauthToken.scope,
+                                                                        scopes: certOauthToken.scopes,
+                                                                        idToken: certOauthToken.idToken)
+                                            
+                                            if let txId = certOauthToken.txId {
+                                                AUTH.tokenManager.setToken(oauthToken)
+                                                
+                                                let certTokenInfo = CertTokenInfo(token: oauthToken, txId: txId)
+                                                completion(certTokenInfo, nil)
+                                            }
+                                            else {
+                                                completion(nil, SdkError(reason: .Unknown, message: "certToken - txId is nil."))
+                                            }
+                                            return
+                                        }
+                                        else {
+                                            completion(nil, SdkError(reason: .Unknown, message: "certToken - token parsing error."))
+                                            return
+                                        }
+                                    }
+                    
+                                    completion(nil, SdkError(reason: .Unknown, message: "certToken - data is nil."))
+                                }
     }
 }

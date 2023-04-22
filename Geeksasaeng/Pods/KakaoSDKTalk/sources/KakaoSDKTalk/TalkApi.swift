@@ -75,7 +75,7 @@ extension TalkApi {
     /// - seealso: `TalkProfile`
     public func profile(completion:@escaping (TalkProfile?, Error?) -> Void) {
         
-        AUTH.responseData(.get, Urls.compose(path:Paths.talkProfile),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.talkProfile),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
                                 completion(nil, error)
@@ -95,7 +95,7 @@ extension TalkApi {
 
     /// 카카오 디벨로퍼스에서 생성한 서비스만의 커스텀 메시지 템플릿을 사용하여, 카카오톡의 "나와의 채팅방"으로 메시지를 전송합니다. 템플릿을 생성하는 방법은 https://developers.kakao.com/docs/latest/ko/message/ios#create-message 을 참고하시기 바랍니다.
     public func sendCustomMemo(templateId: Int64, templateArgs: [String:String]? = nil, completion:@escaping (Error?) -> Void) {
-        AUTH.responseData(.post, Urls.compose(path:Paths.customMemo), parameters: ["template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.customMemo), parameters: ["template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
                           apiType: .KApi) { (_, _, error) in
                             completion(error)
                             return
@@ -105,7 +105,7 @@ extension TalkApi {
     /// 기본 템플릿을 이용하여, 카카오톡의 "나와의 채팅방"으로 메시지를 전송합니다.
     /// - seealso: [Template](../../KakaoSDKTemplate/Protocols/Templatable.html)
     public func sendDefaultMemo(templatable: Templatable, completion:@escaping (Error?) -> Void) {
-        AUTH.responseData(.post, Urls.compose(path:Paths.defaultMemo), parameters: ["template_object":templatable.toJsonObject()?.toJsonString()].filterNil(),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.defaultMemo), parameters: ["template_object":templatable.toJsonObject()?.toJsonString()].filterNil(),
                           apiType: .KApi) { (_, _, error) in
                             completion(error)
                             return
@@ -114,7 +114,7 @@ extension TalkApi {
 
     /// 지정된 URL을 스크랩하여, 카카오톡의 "나와의 채팅방"으로 메시지를 전송합니다.
     public func sendScrapMemo(requestUrl: String, templateId: Int64? = nil, templateArgs: [String:String]? = nil, completion:@escaping (Error?) -> Void) {
-        AUTH.responseData(.post, Urls.compose(path:Paths.scrapMemo), parameters: ["request_url":requestUrl,"template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.scrapMemo), parameters: ["request_url":requestUrl,"template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
                           apiType: .KApi) { (_, _, error) in
                             completion(error)
                             return
@@ -131,7 +131,7 @@ extension TalkApi {
                          friendOrder: FriendOrder? = nil,
                          completion:@escaping (Friends<Friend>?, Error?) -> Void) {
          
-         AUTH.responseData(.get,
+         AUTH_API.responseData(.get,
                            Urls.compose(path:Paths.friends),
                            parameters: ["offset": offset, "limit": limit, "order": order?.rawValue, "friend_order":friendOrder?.rawValue].filterNil(),
                            apiType: .KApi) { (response, data, error) in
@@ -170,7 +170,7 @@ extension TalkApi {
     /// - seealso: [Template](../../KakaoSDKTemplate/Protocols/Templatable.html) <br> `MessageSendResult`
     public func sendDefaultMessage(templatable:Templatable, receiverUuids:[String],
                                    completion:@escaping (MessageSendResult?, Error?) -> Void) {
-        AUTH.responseData(.post,
+        AUTH_API.responseData(.post,
                           Urls.compose(path:Paths.defaultMessage),
                           parameters: ["template_object":templatable.toJsonObject()?.toJsonString(), "receiver_uuids":receiverUuids.toJsonString()].filterNil(),
                           apiType: .KApi) { (response, data, error) in
@@ -193,7 +193,7 @@ extension TalkApi {
     /// - seealso: `MessageSendResult`
     public func sendCustomMessage(templateId: Int64, templateArgs:[String:String]? = nil, receiverUuids:[String],
                                   completion:@escaping (MessageSendResult?, Error?) -> Void) {
-        AUTH.responseData(.post, Urls.compose(path:Paths.customMessage), parameters: ["receiver_uuids":receiverUuids.toJsonString(), "template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.customMessage), parameters: ["receiver_uuids":receiverUuids.toJsonString(), "template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
                                 completion(nil, error)
@@ -213,7 +213,7 @@ extension TalkApi {
     /// - seealso: `MessageSendResult`
     public func sendScrapMessage(requestUrl: String, templateId: Int64? = nil, templateArgs:[String:String]? = nil, receiverUuids:[String],
                                  completion:@escaping (MessageSendResult?, Error?) -> Void) {
-        AUTH.responseData(.post, Urls.compose(path:Paths.scrapMessage),
+        AUTH_API.responseData(.post, Urls.compose(path:Paths.scrapMessage),
                           parameters: ["receiver_uuids":receiverUuids.toJsonString(), "request_url": requestUrl, "template_id":templateId, "template_args":templateArgs?.toJsonString()].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {
@@ -236,7 +236,7 @@ extension TalkApi {
     /// - seealso: `Channels`
     public func channels(publicIds: [String]? = nil,
                          completion:@escaping (Channels?, Error?) -> Void) {
-        AUTH.responseData(.get, Urls.compose(path:Paths.channels),
+        AUTH_API.responseData(.get, Urls.compose(path:Paths.channels),
                           parameters: ["channel_public_ids":publicIds?.toJsonString()].filterNil(),
                           apiType: .KApi) { (response, data, error) in
                             if let error = error {

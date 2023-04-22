@@ -10,7 +10,7 @@ extension CALayer {
   /// Constructs a `CAKeyframeAnimation` that reflects the given keyframes,
   /// and adds it to this `CALayer`.
   @nonobjc
-  func addAnimation<KeyframeValue, ValueRepresentation: Equatable>(
+  func addAnimation<KeyframeValue, ValueRepresentation>(
     for property: LayerProperty<ValueRepresentation>,
     keyframes: ContiguousArray<Keyframe<KeyframeValue>>,
     value keyframeValueMapping: (KeyframeValue) throws -> ValueRepresentation,
@@ -128,17 +128,15 @@ extension CALayer {
     if writeDirectlyToPropertyIfPossible {
       // If the keyframe value is the same as the layer's default value for this property,
       // then we can just ignore this set of keyframes.
-      if keyframeValue == property.defaultValue {
+      if property.isDefaultValue(keyframeValue) {
         return nil
       }
 
       // If the property on the CALayer being animated hasn't been modified from the default yet,
       // then we can apply the keyframe value directly to the layer using KVC instead
       // of creating a `CAAnimation`.
-      if
-        let defaultValue = property.defaultValue,
-        defaultValue == value(forKey: property.caLayerKeypath) as? ValueRepresentation
-      {
+      let currentValue = value(forKey: property.caLayerKeypath) as? ValueRepresentation
+      if property.isDefaultValue(currentValue) {
         setValue(keyframeValue, forKeyPath: property.caLayerKeypath)
         return nil
       }
@@ -178,11 +176,15 @@ extension CALayer {
       let isLastSegment = (index == animationSegments.indices.last!)
 
       if isFirstSegment {
-        segmentStartTime = context.time(for: context.animation.startFrame)
+        segmentStartTime = min(
+          context.time(for: context.animation.startFrame),
+          segmentStartTime)
       }
 
       if isLastSegment {
-        segmentEndTime = context.time(for: context.animation.endFrame)
+        segmentEndTime = max(
+          context.time(for: context.animation.endFrame),
+          segmentEndTime)
       }
 
       let segmentDuration = segmentEndTime - segmentStartTime

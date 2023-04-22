@@ -178,7 +178,7 @@ static const int RLMEnumerationBufferSize = 16;
 
 NSUInteger RLMFastEnumerate(NSFastEnumerationState *state,
                             NSUInteger len,
-                            id<RLMFastEnumerable> collection) {
+                            id<RLMCollectionPrivate> collection) {
     __autoreleasing RLMFastEnumerator *enumerator;
     if (state->state == 0) {
         enumerator = collection.fastEnumerator;
@@ -191,6 +191,42 @@ NSUInteger RLMFastEnumerate(NSFastEnumerationState *state,
 
     return [enumerator countByEnumeratingWithState:state count:len];
 }
+
+@interface RLMArrayHolder : NSObject
+@end
+@implementation RLMArrayHolder {
+    std::unique_ptr<id[]> items;
+}
+
+NSUInteger RLMUnmanagedFastEnumerate(id collection, NSFastEnumerationState *state) {
+    if (state->state != 0) {
+        return 0;
+    }
+
+    // We need to enumerate a copy of the backing array so that it doesn't
+    // reflect changes made during enumeration. This copy has to be autoreleased
+    // (since there's nowhere for us to store a strong reference), and uses
+    // RLMArrayHolder rather than an NSArray because NSArray doesn't guarantee
+    // that it'll use a single contiguous block of memory, and if it doesn't
+    // we'd need to forward multiple calls to this method to the same NSArray,
+    // which would require holding a reference to it somewhere.
+    __autoreleasing RLMArrayHolder *copy = [[RLMArrayHolder alloc] init];
+    copy->items = std::make_unique<id[]>([collection count]);
+
+    NSUInteger i = 0;
+    for (id object in collection) {
+        copy->items[i++] = object;
+    }
+
+    state->itemsPtr = (__unsafe_unretained id *)(void *)copy->items.get();
+    // needs to point to something valid, but the whole point of this is so
+    // that it can't be changed
+    state->mutationsPtr = state->extra;
+    state->state = i;
+
+    return i;
+}
+@end
 
 template<typename Collection>
 NSArray *RLMCollectionValueForKey(Collection& collection, NSString *key, RLMClassInfo& info) {
@@ -279,7 +315,7 @@ template NSArray *RLMCollectionValueForKey(realm::Results&, NSString *, RLMClass
 template NSArray *RLMCollectionValueForKey(realm::List&, NSString *, RLMClassInfo&);
 template NSArray *RLMCollectionValueForKey(realm::object_store::Set&, NSString *, RLMClassInfo&);
 
-void RLMCollectionSetValueForKey(id<RLMFastEnumerable> collection, NSString *key, id value) {
+void RLMCollectionSetValueForKey(id<RLMCollectionPrivate> collection, NSString *key, id value) {
     realm::TableView tv = [collection tableView];
     if (tv.size() == 0) {
         return;
@@ -385,15 +421,15 @@ static NSArray *toArray(realm::IndexSet const& set) {
 }
 
 - (NSArray<NSIndexPath *> *)deletionsInSection:(NSUInteger)section {
-    return toIndexPathArray(_indices.deletions, section);
+    return RLMToIndexPathArray(_indices.deletions, section);
 }
 
 - (NSArray<NSIndexPath *> *)insertionsInSection:(NSUInteger)section {
-    return toIndexPathArray(_indices.insertions, section);
+    return RLMToIndexPathArray(_indices.insertions, section);
 }
 
 - (NSArray<NSIndexPath *> *)modificationsInSection:(NSUInteger)section {
-    return toIndexPathArray(_indices.modifications, section);
+    return RLMToIndexPathArray(_indices.modifications, section);
 }
 
 - (NSString *)description {
@@ -405,7 +441,7 @@ static NSArray *toArray(realm::IndexSet const& set) {
 
 namespace {
 struct CollectionCallbackWrapper {
-    void (^block)(id, RLMCollectionChange *, NSError *);
+    void (^block)(id, id, NSError *);
     id collection;
     bool ignoreChangesInInitialNotification;
 
@@ -444,51 +480,51 @@ struct CollectionCallbackWrapper {
     _realm = nil;
 }
 
-template<typename RLMCollection>
-RLMNotificationToken *RLMAddNotificationBlock(RLMCollection *collection,
-                                              void (^block)(id, RLMCollectionChange *, NSError *),
+RLMNotificationToken *RLMAddNotificationBlock(id c, id block,
                                               NSArray<NSString *> *keyPaths,
                                               dispatch_queue_t queue) {
+    id<RLMThreadConfined, RLMCollectionPrivate> collection = c;
     RLMRealm *realm = collection.realm;
     if (!realm) {
-        @throw RLMException(@"Linking objects notifications are only supported on managed objects.");
+        @throw RLMException(@"Change notifications are only supported on managed collections.");
     }
-    bool skipFirst = std::is_same_v<RLMCollection, RLMResults>;
     auto token = [[RLMCancellationToken alloc] init];
-    
-    RLMClassInfo *info = collection.objectInfo;
-    realm::KeyPathArray keyPathArray = RLMKeyPathArrayFromStringArray(realm, info, keyPaths);
+    token->_realm = realm;
 
+    RLMClassInfo *info = collection.objectInfo;
     if (!queue) {
         [realm verifyNotificationsAreSupported:true];
-        token->_realm = realm;
-        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection, skipFirst}, std::move(keyPathArray));
+        token->_token = [collection addNotificationCallback:block keyPaths:info->keyPathArrayFromStringArray(keyPaths)];
         return token;
     }
 
     RLMThreadSafeReference *tsr = [RLMThreadSafeReference referenceWithThreadConfined:collection];
-    token->_realm = realm;
     RLMRealmConfiguration *config = realm.configuration;
     dispatch_async(queue, ^{
         std::lock_guard<std::mutex> lock(token->_mutex);
         if (!token->_realm) {
             return;
         }
-        NSError *error;
-        RLMRealm *realm = token->_realm = [RLMRealm realmWithConfiguration:config queue:queue error:&error];
-        if (!realm) {
-            block(nil, nil, error);
-            return;
-        }
-        RLMCollection *collection = [realm resolveThreadSafeReference:tsr];
-        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection, skipFirst}, std::move(keyPathArray));
+        RLMRealm *realm = token->_realm = [RLMRealm realmWithConfiguration:config queue:queue error:nil];
+        id collection = [realm resolveThreadSafeReference:tsr];
+        token->_token = [collection addNotificationCallback:block keyPaths:info->keyPathArrayFromStringArray(keyPaths)];
     });
     return token;
 }
 
+realm::CollectionChangeCallback RLMWrapCollectionChangeCallback(void (^block)(id, id, NSError *),
+                                                                id collection, bool skipFirst) {
+    return CollectionCallbackWrapper{block, collection, skipFirst};
+}
+
 @end
 
-// Explicitly instantiate the templated function for the two types we'll use it on
-template RLMNotificationToken *RLMAddNotificationBlock<>(RLMManagedArray *, void (^)(id, RLMCollectionChange *, NSError *),  NSArray<NSString *> *, dispatch_queue_t);
-template RLMNotificationToken *RLMAddNotificationBlock<>(RLMManagedSet *, void (^)(id, RLMCollectionChange *, NSError *), NSArray<NSString *> *, dispatch_queue_t);
-template RLMNotificationToken *RLMAddNotificationBlock<>(RLMResults *, void (^)(id, RLMCollectionChange *, NSError *),  NSArray<NSString *> *, dispatch_queue_t);
+NSArray *RLMToIndexPathArray(realm::IndexSet const& set, NSUInteger section) {
+    NSMutableArray *ret = [NSMutableArray new];
+    NSUInteger path[2] = {section, 0};
+    for (auto index : set.as_indexes()) {
+        path[1] = index;
+        [ret addObject:[NSIndexPath indexPathWithIndexes:path length:2]];
+    }
+    return ret;
+}

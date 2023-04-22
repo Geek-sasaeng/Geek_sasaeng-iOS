@@ -10,7 +10,9 @@ import SnapKit
 import Then
 
 class EditUrlViewController: UIViewController {
+    
     // MARK: - SubViews
+    
     /* titleLabel: 매칭 인원 선택 */
     let titleLabel = UILabel().then {
         $0.text = "식당 링크"
@@ -71,6 +73,7 @@ class EditUrlViewController: UIViewController {
     // MARK: - Properties
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -82,6 +85,7 @@ class EditUrlViewController: UIViewController {
     }
     
     // MARK: - Functions
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
@@ -97,7 +101,7 @@ class EditUrlViewController: UIViewController {
     
     private func addSubViews() {
         [titleLabel, urlTextField, passButton, nextButton,
-         urlTextFieldArrow, urlExplainLabel, urlExampleLabel, urlImageView].forEach {
+         urlTextFieldArrow, urlImageView, urlExplainLabel, urlExampleLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -154,6 +158,8 @@ class EditUrlViewController: UIViewController {
             urlTextField.text = url
         }
     }
+    
+    // MARK: - @objc Functions
     
     @objc
     private func tapConfirmButton() {

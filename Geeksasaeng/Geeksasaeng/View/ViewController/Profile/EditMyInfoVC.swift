@@ -415,14 +415,12 @@ class EditMyInfoViewController: UIViewController {
     }
     
     private func createBlurView() {
-        if self.visualEffectView == nil {
-            self.tabBarController?.tabBar.isHidden = true
-            self.visualEffectView = setDarkBlurView()
-            self.visualEffectView!.snp.makeConstraints { make in
-                make.edges.equalTo(0)
-            }
-            self.visualEffectViewOnNav = setDarkBlurViewOnNav()
+        self.tabBarController?.tabBar.isHidden = true
+        self.visualEffectView = setDarkBlurView()
+        self.visualEffectView!.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
+        self.visualEffectViewOnNav = setDarkBlurViewOnNav()
     }
     
     private func setUserInfo() {
@@ -508,8 +506,6 @@ class EditMyInfoViewController: UIViewController {
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectViewOnNav?.removeFromSuperview()
                 self.tabBarController?.tabBar.isHidden = false
-                self.visualEffectView = nil
-                self.visualEffectViewOnNav = nil
                 self.userImageView.isUserInteractionEnabled = true
             }
         }
@@ -520,8 +516,6 @@ class EditMyInfoViewController: UIViewController {
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectViewOnNav?.removeFromSuperview()
                 self.tabBarController?.tabBar.isHidden = false
-                self.visualEffectView = nil
-                self.visualEffectViewOnNav = nil
                 self.userImageView.isUserInteractionEnabled = true
             }
         }
@@ -568,8 +562,6 @@ class EditMyInfoViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
         visualEffectViewOnNav?.removeFromSuperview()
         self.tabBarController?.tabBar.isHidden = false
-        visualEffectView = nil
-        visualEffectViewOnNav = nil
         changeProfileImageView.removeFromSuperview()
         
         if isChangedNickname {
@@ -583,14 +575,12 @@ class EditMyInfoViewController: UIViewController {
     
     @objc
     private func tapRightBarButton() {
-        if visualEffectView == nil {
-            createBlurView()
-            view.addSubview(editConfirmView)
-            editConfirmView.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalTo(256)
-                make.height.equalTo(202)
-            }
+        createBlurView()
+        view.addSubview(editConfirmView)
+        editConfirmView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(256)
+            make.height.equalTo(202)
         }
     }
     
@@ -617,7 +607,6 @@ class EditMyInfoViewController: UIViewController {
                 self.setUserInfo()
                 self.visualEffectViewOnNav?.removeFromSuperview()
                 self.tabBarController?.tabBar.isHidden = false
-                self.visualEffectViewOnNav = nil
                 self.editConfirmView.removeFromSuperview()
                 self.navigationController?.popViewController(animated: true)
             } else {
@@ -627,8 +616,6 @@ class EditMyInfoViewController: UIViewController {
                 self.visualEffectView?.removeFromSuperview()
                 self.visualEffectViewOnNav?.removeFromSuperview()
                 self.tabBarController?.tabBar.isHidden = false
-                self.visualEffectView = nil
-                self.visualEffectViewOnNav = nil
             }
         }
     }
@@ -638,8 +625,6 @@ class EditMyInfoViewController: UIViewController {
         visualEffectView?.removeFromSuperview()
         visualEffectViewOnNav?.removeFromSuperview()
         self.tabBarController?.tabBar.isHidden = false
-        visualEffectView = nil
-        visualEffectViewOnNav = nil
         editConfirmView.removeFromSuperview()
     }
     
@@ -715,17 +700,13 @@ class EditMyInfoViewController: UIViewController {
     
     @objc
     private func closePasswordCheckView() {
-        if visualEffectView != nil {
-            editConfirmView.removeFromSuperview()
-            changeProfileImageView.removeFromSuperview()
-            visualEffectView?.removeFromSuperview()
-            visualEffectViewOnNav?.removeFromSuperview()
-            self.tabBarController?.tabBar.isHidden = false
-            visualEffectView = nil
-            visualEffectViewOnNav = nil
-            userImageView.isUserInteractionEnabled = true
-            NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
-        }
+        editConfirmView.removeFromSuperview()
+        changeProfileImageView.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+        visualEffectViewOnNav?.removeFromSuperview()
+        self.tabBarController?.tabBar.isHidden = false
+        userImageView.isUserInteractionEnabled = true
+        NotificationCenter.default.post(name: NSNotification.Name("ClosePasswordCheckVC"), object: "true")
     }
 }
 
@@ -794,13 +775,9 @@ extension EditMyInfoViewController: PHPickerViewControllerDelegate {
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     self.userImageView.image = image as? UIImage
-                    
-                    // TODO: - visualEffectView를 remove하고 nil로 하면 imageView가 다시 탭 안 되는 이슈가 있음
                     self.visualEffectView?.removeFromSuperview()
                     self.visualEffectViewOnNav?.removeFromSuperview()
                     self.tabBarController?.tabBar.isHidden = false
-                    self.visualEffectView = nil
-                    self.visualEffectViewOnNav = nil
                     self.changeProfileImageView.removeFromSuperview()
                 }
             }

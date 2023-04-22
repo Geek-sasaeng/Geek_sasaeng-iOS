@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 extension Date {
     public func toSeconds() -> Int64 {
         return Int64(self.timeIntervalSince1970)

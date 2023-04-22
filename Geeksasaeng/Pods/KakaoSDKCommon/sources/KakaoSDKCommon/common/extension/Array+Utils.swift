@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 extension Array where Element == String {
     public func toJsonString() -> String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options:[]) {
@@ -25,6 +26,7 @@ extension Array where Element == String {
     }
 }
 
+///:nodoc:
 extension Array where Element == Int64 {
     public func toJsonString() -> String? {
         if let data = try? JSONSerialization.data(withJSONObject: self, options:[]) {

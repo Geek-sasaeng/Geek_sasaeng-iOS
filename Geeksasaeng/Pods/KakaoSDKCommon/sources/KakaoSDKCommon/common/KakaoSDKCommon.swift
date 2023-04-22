@@ -32,7 +32,7 @@ final public class KakaoSDK {
     // MARK: Fields
     
     //static 라이브러리용 버전.
-    private let _version = "2.13.1"
+    private let _version = "2.15.0"
     
     /// 카카오 SDK의 싱글톤 객체입니다. SDK를 사용할 때 반드시 이 객체가 가장 먼저 초기화되어야 합니다.
     public static let shared = KakaoSDK()
@@ -106,18 +106,22 @@ final public class KakaoSDK {
         return _loggingEnable
     }
     
+    /// :nodoc:
     public func hosts() -> Hosts {
         return _hosts != nil ? _hosts! : Hosts.shared
     }
     
+    /// :nodoc:
     public func approvalType() -> ApprovalType {
         return _approvalType != nil ? _approvalType! : ApprovalType.shared
     }
     
+    /// :nodoc:
     public func sdkType() -> SdkType {
         return _sdkType != nil ? _sdkType : .Swift
     }
     
+    /// :nodoc:
     public func scheme() throws -> String {
         guard _appKey != nil else {
             throw SdkError(reason: .MustInitAppKey)
@@ -125,6 +129,7 @@ final public class KakaoSDK {
         return _customScheme ?? "kakao\(_appKey!)"
     }
     
+    /// :nodoc:
     public func sdkIdentifier() -> SdkIdentifier? {
         return _sdkIdentifier
     }
