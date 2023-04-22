@@ -14,6 +14,7 @@
 
 import Foundation
 
+///:nodoc:
 public class Hosts {
     public static let shared = Hosts()
     
@@ -52,6 +53,7 @@ public class Hosts {
     }
 }
 
+///:nodoc:
 public enum HostType {
     case Kapi
     case Dapi
@@ -96,6 +98,7 @@ public enum HostType {
     }
 }
 
+///:nodoc:
 public class Paths {
     //kauth
     public static let authAuthorize = "/oauth/authorize"
@@ -180,6 +183,7 @@ public class Paths {
     public static let searchCafe = "/v2/search/cafe"
 }
 
+///:nodoc:
 public class Urls {
     public static func compose(_ hostType:HostType = .Kapi, path:String) -> String {
         return "\(hostType.host)\(path)"

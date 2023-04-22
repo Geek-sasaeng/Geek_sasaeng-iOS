@@ -40,24 +40,6 @@ using Level = realm::util::Logger::Level;
 
 namespace {
 
-#if __clang_major__ >= 14
-class UnfairMutex {
-public:
-    void lock() {
-        os_unfair_lock_lock(&_lock);
-    }
-
-    void unlock() {
-        os_unfair_lock_unlock(&_lock);
-    }
-
-private:
-    os_unfair_lock _lock = OS_UNFAIR_LOCK_INIT;
-};
-#else
-using UnfairMutex = std::mutex;
-#endif
-
 Level levelForSyncLogLevel(RLMSyncLogLevel logLevel) {
     switch (logLevel) {
         case RLMSyncLogLevelOff:    return Level::off;
@@ -90,7 +72,7 @@ RLMSyncLogLevel logLevelForLevel(Level logLevel) {
 
 #pragma mark - Loggers
 
-struct CocoaSyncLogger : public realm::util::RootLogger {
+struct CocoaSyncLogger : public realm::util::Logger {
     void do_log(Level, const std::string& message) override {
         NSLog(@"Sync: %@", RLMStringDataToNSString(message));
     }
@@ -102,7 +84,7 @@ static std::unique_ptr<realm::util::Logger> defaultSyncLogger(realm::util::Logge
     return std::move(logger);
 }
 
-struct CallbackLogger : public realm::util::RootLogger {
+struct CallbackLogger : public realm::util::Logger {
     RLMSyncLogFunction logFn;
     void do_log(Level level, const std::string& message) override {
         @autoreleasepool {
@@ -130,7 +112,7 @@ std::shared_ptr<realm::util::Logger> RLMWrapLogFunction(RLMSyncLogFunction fn) {
 @end
 
 @implementation RLMSyncManager {
-    UnfairMutex _mutex;
+    RLMUnfairMutex _mutex;
     std::shared_ptr<SyncManager> _syncManager;
     NSDictionary<NSString *,NSString *> *_customRequestHeaders;
     RLMSyncLogFunction _logger;

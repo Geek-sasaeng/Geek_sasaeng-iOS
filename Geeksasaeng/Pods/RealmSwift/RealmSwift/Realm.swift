@@ -160,7 +160,7 @@ public typealias AsyncTransactionId = RLMAsyncTransactionId
      - returns: A publisher. If the Realm was successfully opened, it will be received by the subscribers.
                 Otherwise, a `Swift.Error` describing what went wrong will be passed upstream instead.
      */
-    @available(OSX 10.15, watchOS 6.0, iOS 13.0, iOSApplicationExtension 13.0, OSXApplicationExtension 10.15, tvOS 13.0, *)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     public static func asyncOpen(configuration: Realm.Configuration = .defaultConfiguration) -> RealmPublishers.AsyncOpenPublisher {
         return RealmPublishers.AsyncOpenPublisher(configuration: configuration)
     }
@@ -251,7 +251,7 @@ public typealias AsyncTransactionId = RLMAsyncTransactionId
     @discardableResult
     public func write<Result>(withoutNotifying tokens: [NotificationToken] = [], _ block: (() throws -> Result)) throws -> Result {
         beginWrite()
-        var ret: Result!
+        let ret: Result
         do {
             ret = try block()
         } catch let error {
@@ -367,7 +367,7 @@ public typealias AsyncTransactionId = RLMAsyncTransactionId
         return rlmRealm.inWriteTransaction
     }
 
-// MARK: Asynchronous Transactions
+    // MARK: Asynchronous Transactions
 
     /**
      Asynchronously performs actions contained within the given block inside a write transaction.
@@ -563,13 +563,6 @@ public typealias AsyncTransactionId = RLMAsyncTransactionId
         }
     }
 
-    /// :nodoc:
-    @discardableResult
-    @available(*, unavailable, message: "Pass .error, .modified or .all rather than a boolean. .error is equivalent to false and .all is equivalent to true.")
-    public func create<T: Object>(_ type: T.Type, value: Any = [:], update: Bool) -> T {
-        fatalError()
-    }
-
     /**
      Creates a Realm object with a given value, adding it to the Realm and returning it.
 
@@ -601,20 +594,13 @@ public typealias AsyncTransactionId = RLMAsyncTransactionId
      - returns: The newly created object.
      */
     @discardableResult
-    public func create<T: Object>(_ type: T.Type, value: Any = [:], update: UpdatePolicy = .error) -> T {
+    public func create<T: Object>(_ type: T.Type, value: Any = [String: Any](), update: UpdatePolicy = .error) -> T {
         if update != .error {
             RLMVerifyHasPrimaryKey(type)
         }
         let typeName = (type as Object.Type).className()
         return unsafeDowncast(RLMCreateObjectInRealmWithValue(rlmRealm, typeName, value,
                                                               RLMUpdatePolicy(rawValue: UInt(update.rawValue))!), to: type)
-    }
-
-    /// :nodoc:
-    @discardableResult
-    @available(*, unavailable, message: "Pass .error, .modified or .all rather than a boolean. .error is equivalent to false and .all is equivalent to true.")
-    public func dynamicCreate(_ typeName: String, value: Any = [:], update: Bool) -> DynamicObject {
-        fatalError()
     }
 
     /**
@@ -656,7 +642,7 @@ public typealias AsyncTransactionId = RLMAsyncTransactionId
      :nodoc:
      */
     @discardableResult
-    public func dynamicCreate(_ typeName: String, value: Any = [:], update: UpdatePolicy = .error) -> DynamicObject {
+    public func dynamicCreate(_ typeName: String, value: Any = [String: Any](), update: UpdatePolicy = .error) -> DynamicObject {
         if update != .error && schema[typeName]?.primaryKeyProperty == nil {
             throwRealmException("'\(typeName)' does not have a primary key and can not be updated")
         }
@@ -1114,7 +1100,7 @@ extension Realm {
      - parameter type:   The type of the object to create.
      - parameter value:  The value used to populate the object.
      */
-    public func create<T: AsymmetricObject>(_ type: T.Type, value: Any = [:]) {
+    public func create<T: AsymmetricObject>(_ type: T.Type, value: Any = [String: Any]()) {
         let typeName = (type as AsymmetricObject.Type).className()
         RLMCreateAsymmetricObjectInRealm(rlmRealm, typeName, value)
     }
@@ -1162,7 +1148,20 @@ extension Realm {
 public typealias NotificationBlock = (_ notification: Realm.Notification, _ realm: Realm) -> Void
 
 #if canImport(_Concurrency)
-@available(macOS 10.15, tvOS 13.0, iOS 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+private func shouldAsyncOpen(_ configuration: Realm.Configuration,
+                             _ downloadBeforeOpen: Realm.OpenBehavior) -> Bool {
+    switch downloadBeforeOpen {
+    case .never:
+        return false
+    case .once:
+        return !Realm.fileExists(for: configuration)
+    case .always:
+        return true
+    }
+}
+
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension Realm {
     /// Options for when to download all data from the server before opening
     /// a synchronized Realm.
@@ -1205,35 +1204,76 @@ extension Realm {
     @MainActor
     public init(configuration: Realm.Configuration = .defaultConfiguration,
                 downloadBeforeOpen: OpenBehavior = .never) async throws {
-        var rlmRealm: RLMRealm?
-        switch downloadBeforeOpen {
-        case .never:
-            break
-        case .once:
-            if !Realm.fileExists(for: configuration) {
-                fallthrough
-            }
-        case .always:
-            rlmRealm = try await withCheckedThrowingContinuation { continuation in
-                RLMRealm.asyncOpen(with: configuration.rlmConfiguration, callbackQueue: .main) { (realm, error) in
-                    if let error = error {
-                        continuation.resume(with: .failure(error))
-                    } else {
-                        continuation.resume(with: .success(realm!))
-                    }
-                }
+        let scheduler = RLMScheduler.dispatchQueue(.main)
+        let rlmConfiguration = configuration.rlmConfiguration
+
+        // If we already have a cached Realm for this actor, just reuse it
+        // If this Realm is open but with a different scheduler, open it synchronously.
+        // An async open would just dispatch to the background and then back to
+        // perform the final synchronous open.
+        var realm = RLMGetCachedRealm(rlmConfiguration, scheduler)
+        if realm == nil, let cachedRealm = RLMGetAnyCachedRealm(rlmConfiguration) {
+            realm = try withExtendedLifetime(cachedRealm) {
+                try RLMRealm(configuration: rlmConfiguration, confinedTo: scheduler)
             }
         }
-        if rlmRealm == nil {
-            rlmRealm = try RLMRealm(configuration: configuration.rlmConfiguration)
+        if let realm = realm {
+            // This can't be hit on the first open so .once == .never
+            if downloadBeforeOpen == .always {
+                let task = RLMAsyncDownloadTask(realm: realm)
+                try await task.waitWithCancellationHandler()
+            }
+            rlmRealm = realm
+            return
         }
-        self.init(rlmRealm!)
+
+        // We're doing the first open and hitting the expensive path, so do an async
+        // open on a background thread
+        let task = RLMAsyncOpenTask(configuration: rlmConfiguration, confinedTo: scheduler,
+                                    download: shouldAsyncOpen(configuration, downloadBeforeOpen))
+        do {
+            try await task.waitWithCancellationHandler()
+            rlmRealm = task.localRealm!
+            task.localRealm = nil
+        } catch {
+            // Check if the task was cancelled and if so replace the error
+            // with reporting cancellation
+            try Task.checkCancellation()
+            throw error
+        }
     }
 }
-#endif // swift(>=5.5)
+
+@available(macOS 10.15, tvOS 13.0, iOS 13.0, watchOS 6.0, *)
+private protocol TaskWithCancellation: Sendable {
+    func waitWithCancellationHandler() async throws
+    func wait() async throws
+    func cancel()
+}
+
+@available(macOS 10.15, tvOS 13.0, iOS 13.0, watchOS 6.0, *)
+extension TaskWithCancellation {
+    func waitWithCancellationHandler() async throws {
+        do {
+            try await withTaskCancellationHandler {
+                try await wait()
+            } onCancel: {
+                cancel()
+            }
+        } catch {
+            // Check if the task was cancelled and if so replace the error
+            // with reporting cancellation
+            try Task.checkCancellation()
+            throw error
+        }
+    }
+}
+extension RLMAsyncOpenTask: TaskWithCancellation {}
+extension RLMAsyncDownloadTask: TaskWithCancellation {}
+#endif // canImport(_Concurrency)
 
 /**
- Objects which can be feched from the Realm - Object or Projection
+ Objects which can be fetched from the Realm - Object or Projection
  */
 public protocol RealmFetchable: RealmCollectionValue {
     /// :nodoc:

@@ -604,19 +604,19 @@ PODS:
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
   - CocoaAsyncSocket (7.6.5)
-  - Firebase/Core (10.3.0):
+  - Firebase/Core (10.8.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 10.3.0)
-  - Firebase/CoreOnly (10.3.0):
-    - FirebaseCore (= 10.3.0)
-  - Firebase/Firestore (10.3.0):
+    - FirebaseAnalytics (~> 10.8.0)
+  - Firebase/CoreOnly (10.8.0):
+    - FirebaseCore (= 10.8.0)
+  - Firebase/Firestore (10.8.0):
     - Firebase/CoreOnly
-    - FirebaseFirestore (~> 10.3.0)
-  - Firebase/Messaging (10.3.0):
+    - FirebaseFirestore (~> 10.8.0)
+  - Firebase/Messaging (10.8.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.3.0)
-  - FirebaseAnalytics (10.3.0):
-    - FirebaseAnalytics/AdIdSupport (= 10.3.0)
+    - FirebaseMessaging (~> 10.8.0)
+  - FirebaseAnalytics (10.8.0):
+    - FirebaseAnalytics/AdIdSupport (= 10.8.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
@@ -624,24 +624,24 @@ PODS:
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (10.3.0):
+  - FirebaseAnalytics/AdIdSupport (10.8.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleAppMeasurement (= 10.3.0)
+    - GoogleAppMeasurement (= 10.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseCore (10.3.0):
+  - FirebaseCore (10.8.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreExtension (10.3.0):
+  - FirebaseCoreExtension (10.8.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.3.0):
+  - FirebaseCoreInternal (10.8.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseFirestore (10.3.0):
+  - FirebaseFirestore (10.8.0):
     - abseil/algorithm (~> 1.20211102.0)
     - abseil/base (~> 1.20211102.0)
     - abseil/container/flat_hash_map (~> 1.20211102.0)
@@ -654,17 +654,17 @@ PODS:
     - "gRPC-C++ (~> 1.44.0)"
     - leveldb-library (~> 1.22)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseFirestoreSwift (10.3.0):
+  - FirebaseFirestoreSwift (10.8.0):
     - FirebaseCore (~> 10.0)
     - FirebaseCoreExtension (~> 10.0)
     - FirebaseFirestore (~> 10.0)
     - FirebaseSharedSwift (~> 10.0)
-  - FirebaseInstallations (10.3.0):
+  - FirebaseInstallations (10.8.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.3.0):
+  - FirebaseMessaging (10.8.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.2)
@@ -673,49 +673,49 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseSharedSwift (10.3.0)
-  - GoogleAppMeasurement (10.3.0):
-    - GoogleAppMeasurement/AdIdSupport (= 10.3.0)
+  - FirebaseSharedSwift (10.8.0)
+  - GoogleAppMeasurement (10.8.0):
+    - GoogleAppMeasurement/AdIdSupport (= 10.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (10.3.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.3.0)
+  - GoogleAppMeasurement/AdIdSupport (10.8.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (10.3.0):
+  - GoogleAppMeasurement/WithoutAdIdSupport (10.8.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleDataTransport (9.2.0):
+  - GoogleDataTransport (9.2.2):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.11.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.11.1):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.11.0):
+  - GoogleUtilities/Environment (7.11.1):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.11.0):
+  - GoogleUtilities/Logger (7.11.1):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.11.0):
+  - GoogleUtilities/MethodSwizzler (7.11.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.11.0):
+  - GoogleUtilities/Network (7.11.1):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.11.0)"
-  - GoogleUtilities/Reachability (7.11.0):
+  - "GoogleUtilities/NSData+zlib (7.11.1)"
+  - GoogleUtilities/Reachability (7.11.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.11.0):
+  - GoogleUtilities/UserDefaults (7.11.1):
     - GoogleUtilities/Logger
   - "gRPC-C++ (1.44.0)":
     - "gRPC-C++/Implementation (= 1.44.0)"
@@ -769,63 +769,63 @@ PODS:
     - Libuv-gRPC (= 0.0.10)
   - gRPC-Core/Interface (1.44.0)
   - JKVValue (1.3.3)
-  - KakaoSDK (2.13.1):
-    - KakaoSDKAuth (= 2.13.1)
-    - KakaoSDKCommon (= 2.13.1)
-    - KakaoSDKFriend (= 2.13.1)
-    - KakaoSDKNavi (= 2.13.1)
-    - KakaoSDKShare (= 2.13.1)
-    - KakaoSDKStory (= 2.13.1)
-    - KakaoSDKTalk (= 2.13.1)
-    - KakaoSDKTemplate (= 2.13.1)
-    - KakaoSDKUser (= 2.13.1)
-  - KakaoSDKAuth (2.13.1):
-    - KakaoSDKCommon (= 2.13.1)
-  - KakaoSDKCommon (2.13.1):
-    - KakaoSDKCommon/Common (= 2.13.1)
-    - KakaoSDKCommon/Network (= 2.13.1)
-  - KakaoSDKCommon/Common (2.13.1)
-  - KakaoSDKCommon/Network (2.13.1):
+  - KakaoSDK (2.15.0):
+    - KakaoSDKAuth (= 2.15.0)
+    - KakaoSDKCommon (= 2.15.0)
+    - KakaoSDKFriend (= 2.15.0)
+    - KakaoSDKNavi (= 2.15.0)
+    - KakaoSDKShare (= 2.15.0)
+    - KakaoSDKStory (= 2.15.0)
+    - KakaoSDKTalk (= 2.15.0)
+    - KakaoSDKTemplate (= 2.15.0)
+    - KakaoSDKUser (= 2.15.0)
+  - KakaoSDKAuth (2.15.0):
+    - KakaoSDKCommon (= 2.15.0)
+  - KakaoSDKCommon (2.15.0):
+    - KakaoSDKCommon/Common (= 2.15.0)
+    - KakaoSDKCommon/Network (= 2.15.0)
+  - KakaoSDKCommon/Common (2.15.0)
+  - KakaoSDKCommon/Network (2.15.0):
     - Alamofire (~> 5.1)
-    - KakaoSDKCommon/Common (= 2.13.1)
-  - KakaoSDKFriend (2.13.1):
-    - KakaoSDKUser (= 2.13.1)
-  - KakaoSDKNavi (2.13.1):
-    - KakaoSDKCommon/Common (= 2.13.1)
-  - KakaoSDKShare (2.13.1):
-    - KakaoSDKCommon (= 2.13.1)
-    - KakaoSDKTemplate (= 2.13.1)
-  - KakaoSDKStory (2.13.1):
-    - KakaoSDKUser (= 2.13.1)
-  - KakaoSDKTalk (2.13.1):
-    - KakaoSDKTemplate (= 2.13.1)
-    - KakaoSDKUser (= 2.13.1)
-  - KakaoSDKTemplate (2.13.1):
-    - KakaoSDKCommon/Common (= 2.13.1)
-  - KakaoSDKUser (2.13.1):
-    - KakaoSDKAuth (= 2.13.1)
-  - Kingfisher (7.5.0)
-  - leveldb-library (1.22.1)
+    - KakaoSDKCommon/Common (= 2.15.0)
+  - KakaoSDKFriend (2.15.0):
+    - KakaoSDKUser (= 2.15.0)
+  - KakaoSDKNavi (2.15.0):
+    - KakaoSDKCommon/Common (= 2.15.0)
+  - KakaoSDKShare (2.15.0):
+    - KakaoSDKCommon (= 2.15.0)
+    - KakaoSDKTemplate (= 2.15.0)
+  - KakaoSDKStory (2.15.0):
+    - KakaoSDKUser (= 2.15.0)
+  - KakaoSDKTalk (2.15.0):
+    - KakaoSDKTemplate (= 2.15.0)
+    - KakaoSDKUser (= 2.15.0)
+  - KakaoSDKTemplate (2.15.0):
+    - KakaoSDKCommon/Common (= 2.15.0)
+  - KakaoSDKUser (2.15.0):
+    - KakaoSDKAuth (= 2.15.0)
+  - Kingfisher (7.6.2)
+  - leveldb-library (1.22.2)
   - Libuv-gRPC (0.0.10):
     - Libuv-gRPC/Implementation (= 0.0.10)
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Implementation (0.0.10):
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
-  - lottie-ios (4.0.1)
+  - lottie-ios (4.1.3)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
-  - naveridlogin-sdk-ios (4.1.5)
+  - naveridlogin-sdk-ios (4.1.6)
   - NMapsMap (3.10.0)
-  - PromisesObjC (2.1.1)
-  - Realm (10.34.0):
-    - Realm/Headers (= 10.34.0)
-  - Realm/Headers (10.34.0)
-  - RealmSwift (10.34.0):
-    - Realm (= 10.34.0)
+  - PromisesObjC (2.2.0)
+  - Realm (10.38.0):
+    - Realm/Headers (= 10.38.0)
+  - Realm/Headers (10.38.0)
+  - RealmSwift (10.38.0):
+    - Realm (= 10.38.0)
   - RMQClient (0.12.0):
     - CocoaAsyncSocket (~> 7.6)
     - JKVValue (~> 1.3)
@@ -902,42 +902,42 @@ SPEC CHECKSUMS:
   Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  Firebase: f92fc551ead69c94168d36c2b26188263860acd9
-  FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
-  FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
-  FirebaseCoreExtension: 93d252fabdc9696bf14a73b04d84877ab9b3a832
-  FirebaseCoreInternal: 29b76f784d607df8b2a1259d73c3f04f1210137b
-  FirebaseFirestore: 244f71ff14ef44f39e00b44d356eac708ce03103
-  FirebaseFirestoreSwift: 55098402529ce59ba54a2ce1ad5798ae1ba563ef
-  FirebaseInstallations: e2f26126089dcf41e215f7b8925af8d953c7d602
-  FirebaseMessaging: e345b219fd15d325f0cf2fef28cb8ce00d851b3f
-  FirebaseSharedSwift: d82ad66b3f8de9dda19c77b9627cbcaad71e245e
-  GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
-  GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
-  GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
+  Firebase: b49ef44e5ec9a3d0c1f6450f410337e97872279c
+  FirebaseAnalytics: e1fc758bd5d71823bba970c076abee4b2450a5f4
+  FirebaseCore: e78636a990b54be427ce300aa09a0e359f4e0e87
+  FirebaseCoreExtension: d815fd6fec8bb3a0940bc02dd5e3e641ea7229d8
+  FirebaseCoreInternal: fa2899eb1f340054858d289e5a0fb935a0a74e52
+  FirebaseFirestore: 45b8ac2def7e9b6c4c10c09521b1e0b410d211fc
+  FirebaseFirestoreSwift: d607f5e8a206640ffd2573f99e9830b80ab7d1c0
+  FirebaseInstallations: b2a05a3fe707df764345d68685534d07d0664af3
+  FirebaseMessaging: 16c395d01ecd269357c5b86abe662851fff98236
+  FirebaseSharedSwift: e9e23efae965af553a8d1524efa3f64b5ef7ef0a
+  GoogleAppMeasurement: 0ba93018e916f7badf915c2337d43cc1fa96b3f9
+  GoogleDataTransport: 8378d1fa8ac49753ea6ce70d65a7cb70ce5f66e6
+  GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
   gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
   JKVValue: d7941071b1cf9ba35c194fd40bcf4c4d9b5462e9
-  KakaoSDK: c898c01a07ea78081f618c676664ea15596ad573
-  KakaoSDKAuth: d9de0cb0c723441ced3616d481952bde34438dcb
-  KakaoSDKCommon: a16807e19984a0a208c3117c7ef117f101a9a128
-  KakaoSDKFriend: 3bfc8e3c620661365b237b1c839ae4873ec66116
-  KakaoSDKNavi: bc3c7b5fc8fe4a958fc0a392a5918b0a51bcc849
-  KakaoSDKShare: c5d7f1cf9dc38a0a084892f3cab3469c3a8a789d
-  KakaoSDKStory: f4f7e5159766ce1896e44b81f631a06450f4cff8
-  KakaoSDKTalk: 4e43ecb1484191783bf7439da536be8677a0619b
-  KakaoSDKTemplate: 9732b6123946efd1dbafacd0e807ac76c1b3d71c
-  KakaoSDKUser: 92d34cf6af7b123c22a7ee44424332123e356901
-  Kingfisher: b9c2a4a4af2990a768445c277359b27bde287d71
-  leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  KakaoSDK: 08316dffa8a0a040c3986d8d70b3f66448f2a2ca
+  KakaoSDKAuth: 0fe5cf1756e8a9f66f8fc77826061aafa93034f3
+  KakaoSDKCommon: 89d863b7f34398e6fb93a0acb28a204908551a39
+  KakaoSDKFriend: 09a67aa6e2e47301558cc4b74e71633bbfce399e
+  KakaoSDKNavi: b47131f0fa64857bc69d3fe7d2cad5fa70137900
+  KakaoSDKShare: f9a7dc7baa8ad9eb7b6b6a3b99802407ab3c81a2
+  KakaoSDKStory: d7c0c186bf869a6b107c5d416ad7f2a88fa524a9
+  KakaoSDKTalk: 846856743650b0eea4040a38368a7c1e8dcb0072
+  KakaoSDKTemplate: c9cbc64b0248c7a33c211a56dada7e38c1210751
+  KakaoSDKUser: a997ca5c4c18ece2ab30646ff74841bc29d4399d
+  Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
+  leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
-  lottie-ios: 54d22edf55b839f0929cabbfe609c9aa548b1145
+  lottie-ios: d0954d3150061f662ed0adf96ef98d7421864c47
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
-  naveridlogin-sdk-ios: 4351fe7162cd6b8b6dbb37bd7cc205304fa1d889
+  naveridlogin-sdk-ios: cdd34e3585a3d5aaf37c1d84c1f41faba4a25d1a
   NMapsMap: 17caab4af9a3fc5c25b79858de18bdeab1eaff87
-  PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
-  Realm: 991e7c4d6d37f1d6470a48bb072782ef00b91b67
-  RealmSwift: 11e77934e4af6d011d2970645fe56e11fa0e3c2c
+  PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  Realm: 5902885dd1d5e71b0b020830caab937ecdf5bf07
+  RealmSwift: 0fc037d6c32c7c4fc9362892380f380114ecdcf0
   RMQClient: 74776ee4d0f891f71667a2629f26a26de5ad3e90
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9

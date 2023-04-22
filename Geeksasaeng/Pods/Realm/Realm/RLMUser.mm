@@ -41,23 +41,22 @@ using namespace realm;
 @end
 
 @implementation RLMUserSubscriptionToken {
-@public
-    std::unique_ptr<realm::Subscribable<SyncUser>::Token> _token;
+    std::shared_ptr<SyncUser> _user;
+    std::optional<realm::Subscribable<SyncUser>::Token> _token;
 }
 
-- (instancetype)initWithToken:(realm::Subscribable<SyncUser>::Token&&)token {
+- (instancetype)initWithUser:(std::shared_ptr<SyncUser>)user token:(realm::Subscribable<SyncUser>::Token&&)token {
     if (self = [super init]) {
-        _token = std::make_unique<realm::Subscribable<SyncUser>::Token>(std::move(token));
-        return self;
+        _user = std::move(user);
+        _token = std::move(token);
     }
-
-    return nil;
+    return self;
 }
 
-- (NSUInteger)value {
-    return _token->value();
+- (void)unsubscribe {
+    _token.reset();
+    _user.reset();
 }
-
 @end
 
 @implementation RLMUser
@@ -307,7 +306,7 @@ using namespace realm;
             return completion([self customData], nil);
         }
 
-        completion(nil, RLMAppErrorToNSError(*error));
+        completion(nil, makeError(*error));
     });
 }
 
@@ -315,8 +314,8 @@ using namespace realm;
                      completion:(RLMOptionalUserBlock)completion {
     _app._realmApp->link_user(_user, credentials.appCredentials,
                    ^(std::shared_ptr<SyncUser> user, std::optional<app::AppError> error) {
-        if (error && error->error_code) {
-            return completion(nil, RLMAppErrorToNSError(*error));
+        if (error) {
+            return completion(nil, makeError(*error));
         }
 
         completion([[RLMUser alloc] initWithUser:user app:_app], nil);
@@ -362,7 +361,7 @@ using namespace realm;
                                   [completionBlock](std::optional<bson::Bson>&& response,
                                                     std::optional<app::AppError> error) {
         if (error) {
-            return completionBlock(nil, RLMAppErrorToNSError(*error));
+            return completionBlock(nil, makeError(*error));
         }
 
         completionBlock(RLMConvertBsonToRLMBSON(*response), nil);
@@ -371,8 +370,8 @@ using namespace realm;
 
 - (void)handleResponse:(std::optional<realm::app::AppError>)error
             completion:(RLMOptionalErrorBlock)completion {
-    if (error && error->error_code) {
-        return completion(RLMAppErrorToNSError(*error));
+    if (error) {
+        return completion(makeError(*error));
     }
     completion(nil);
 }
@@ -418,16 +417,11 @@ using namespace realm;
     return _user;
 }
 
-- (RLMUserSubscriptionToken *)subscribe:(RLMUserNotificationBlock) block {
-    return [[RLMUserSubscriptionToken alloc] initWithToken:_user->subscribe([block, self] (auto&) {
+- (RLMUserSubscriptionToken *)subscribe:(RLMUserNotificationBlock)block {
+    return [[RLMUserSubscriptionToken alloc] initWithUser:_user token:_user->subscribe([block, self] (auto&) {
         block(self);
     })];
 }
-
-- (void)unsubscribe:(RLMUserSubscriptionToken *)token {
-    _user->unsubscribe(*token->_token);
-}
-
 @end
 
 #pragma mark - RLMUserIdentity

@@ -17,6 +17,7 @@ import UIKit
 
 import CommonCrypto
 
+///:nodoc:
 public class SdkCrypto {
     public static let shared = SdkCrypto()
     

@@ -16,8 +16,10 @@ import Foundation
 import UIKit
 import Alamofire
 
+/// :nodoc:
 public let API = Api.shared
 
+/// :nodoc:
 public enum SessionType {
     case Auth       //KA
     case Api        //KA
@@ -31,6 +33,7 @@ public enum SessionType {
 //    case KAuth
 //}
 
+/// :nodoc:
 public class Api {
     public static let shared = Api()
     
@@ -44,6 +47,7 @@ public class Api {
     }
 }
 
+/// :nodoc:
 extension Api {    
     private func initSession() {
         let apiSessionConfiguration : URLSessionConfiguration = URLSessionConfiguration.default
@@ -68,6 +72,7 @@ extension Api {
     }
 }
 
+/// :nodoc:
 extension Api {
     public func getSdkError(error: Error) -> SdkError? {
         if let aferror = error as? AFError {

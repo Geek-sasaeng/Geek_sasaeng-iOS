@@ -41,6 +41,12 @@ struct CollectionCallbackWrapper {
         block(collection, [[RLMSectionedResultsChange alloc] initWithChanges:changes]);
     }
 };
+
+template<typename Function>
+__attribute__((always_inline))
+auto translateErrors(Function&& f) {
+    return translateCollectionError(static_cast<Function&&>(f), @"SectionedResults");
+}
 } // anonymous namespace
 
 @implementation RLMSectionedResultsChange {
@@ -55,7 +61,7 @@ struct CollectionCallbackWrapper {
     return self;
 }
 
-- (NSArray<NSIndexPath *> *)indexesFromIndexMap:(std::map<size_t, realm::IndexSet>&)indexMap {
+- (NSArray<NSIndexPath *> *)indexesFromIndexMap:(std::map<size_t, realm::IndexSet> const&)indexMap {
     NSMutableArray<NSIndexPath *> *a = [NSMutableArray new];
     for (auto& [section_idx, indices] : indexMap) {
         NSUInteger path[2] = {section_idx, 0};
@@ -97,17 +103,17 @@ struct CollectionCallbackWrapper {
 
 /// Returns the index paths of the deletion indices in the given section.
 - (NSArray<NSIndexPath *> *)deletionsInSection:(NSUInteger)section {
-    return toIndexPathArray(_indices.deletions[section], section);
+    return RLMToIndexPathArray(_indices.deletions[section], section);
 }
 
 /// Returns the index paths of the insertion indices in the given section.
 - (NSArray<NSIndexPath *> *)insertionsInSection:(NSUInteger)section {
-    return toIndexPathArray(_indices.insertions[section], section);
+    return RLMToIndexPathArray(_indices.insertions[section], section);
 }
 
 /// Returns the index paths of the modification indices in the given section.
 - (NSArray<NSIndexPath *> *)modificationsInSection:(NSUInteger)section {
-    return toIndexPathArray(_indices.modifications[section], section);
+    return RLMToIndexPathArray(_indices.modifications[section], section);
 }
 
 static NSString *indexPathToString(NSArray<NSIndexPath *> *indexes) {
@@ -252,45 +258,6 @@ NSUInteger RLMFastEnumerate(NSFastEnumerationState *state,
     RLMClassInfo *_info;
 }
 
-static realm::SectionedResults& RLMGetBackingCollection(RLMSectionedResults *self) {
-    return self->_sectionedResults;
-}
-
-static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collection,
-                                                     void (^block)(id, RLMSectionedResultsChange *),
-                                                     NSArray<NSString *> *keyPaths,
-                                                     dispatch_queue_t queue) {
-    RLMRealm *realm = collection.realm;
-    if (!realm) {
-        @throw RLMException(@"Collection of Sectioned Results has been invalidated or deleted.");
-    }
-    auto token = [[RLMCancellationToken alloc] init];
-
-    RLMClassInfo *info = collection.objectInfo;
-    realm::KeyPathArray keyPathArray = RLMKeyPathArrayFromStringArray(realm, info, keyPaths);
-
-    if (!queue) {
-        [realm verifyNotificationsAreSupported:true];
-        token->_realm = realm;
-        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection}, std::move(keyPathArray));
-        return token;
-    }
-
-    RLMThreadSafeReference *tsr = [RLMThreadSafeReference referenceWithThreadConfined:collection];
-    token->_realm = realm;
-    RLMRealmConfiguration *config = realm.configuration;
-    dispatch_async(queue, ^{
-        std::lock_guard<std::mutex> lock(token->_mutex);
-        if (!token->_realm) {
-            return;
-        }
-        RLMRealm *realm = token->_realm = [RLMRealm realmWithConfiguration:config queue:queue error:nil];
-        RLMSectionedResults *collection = [realm resolveThreadSafeReference:tsr];
-        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection}, std::move(keyPathArray));
-    });
-    return token;
-}
-
 - (instancetype)initWithResults:(realm::Results&&)results
                           realm:(RLMRealm *)realm
                      objectInfo:(RLMClassInfo&)objectInfo
@@ -330,7 +297,7 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
 }
 
 - (NSArray *)allKeys {
-    return translateRLMResultsErrors([&] {
+    return translateErrors([&] {
         NSUInteger count = [self count];
         NSMutableArray *arr = [NSMutableArray arrayWithCapacity:count];
         for (NSUInteger i = 0; i < count; i++) {
@@ -349,7 +316,7 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
 }
 
 - (NSUInteger)count {
-    return translateRLMResultsErrors([&] {
+    return translateErrors([&] {
         return _sectionedResults.size();
     });
 }
@@ -382,7 +349,8 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
     return RLMAddNotificationBlock(self, block, nil, queue);
 }
 
-- (RLMNotificationToken *)addNotificationBlock:(void (^)(RLMResults *, RLMSectionedResultsChange *))block keyPaths:(NSArray<NSString *> *)keyPaths {
+- (RLMNotificationToken *)addNotificationBlock:(void (^)(RLMResults *, RLMSectionedResultsChange *))block
+                                      keyPaths:(NSArray<NSString *> *)keyPaths {
     return RLMAddNotificationBlock(self, block, keyPaths, nil);
 }
 
@@ -393,12 +361,17 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
 }
 #pragma clang diagnostic pop
 
+- (realm::NotificationToken)addNotificationCallback:(id)block
+keyPaths:(std::optional<std::vector<std::vector<std::pair<realm::TableKey, realm::ColKey>>>>&&)keyPaths {
+    return _sectionedResults.add_notification_callback(CollectionCallbackWrapper{block, self}, std::move(keyPaths));
+}
+
 - (RLMClassInfo *)objectInfo {
     return _info;
 }
 
 - (instancetype)resolveInRealm:(RLMRealm *)realm {
-     return translateRLMResultsErrors([&] {
+     return translateErrors([&] {
         if (realm.isFrozen) {
             return [[RLMSectionedResults alloc] initWithSectionedResults:_sectionedResults.freeze(realm->_realm)
                                                               objectInfo:_info->resolve(realm)
@@ -451,7 +424,7 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
 }
 
 - (BOOL)isInvalidated {
-    return translateRLMResultsErrors([&] { return !_sectionedResults.is_valid(); });
+    return translateErrors([&] { return !_sectionedResults.is_valid(); });
 }
 
 - (NSString *)description {
@@ -495,7 +468,7 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
 }
 
 - (BOOL)isFrozen {
-    return translateRLMResultsErrors([&] { return _sectionedResults.is_frozen(); });
+    return translateErrors([&] { return _sectionedResults.is_frozen(); });
 }
 
 @end
@@ -527,45 +500,6 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSectionedResults *collec
 @implementation RLMSection {
     RLMSectionedResults *_parent;
     realm::ResultsSection _resultsSection;
-}
-
-static realm::ResultsSection& RLMGetBackingCollection(RLMSection *self) {
-    return self->_resultsSection;
-}
-
-static RLMNotificationToken *RLMAddNotificationBlock(RLMSection *collection,
-                                                     void (^block)(id, RLMSectionedResultsChange *),
-                                                     NSArray<NSString *> *keyPaths,
-                                                     dispatch_queue_t queue) {
-    RLMRealm *realm = collection.realm;
-    if (!realm) {
-        @throw RLMException(@"Collection of Sectioned Results has been invalidated or deleted.");
-    }
-    auto token = [[RLMCancellationToken alloc] init];
-
-    RLMClassInfo *info = collection.objectInfo;
-    realm::KeyPathArray keyPathArray = RLMKeyPathArrayFromStringArray(realm, info, keyPaths);
-
-    if (!queue) {
-        [realm verifyNotificationsAreSupported:true];
-        token->_realm = realm;
-        token->_token = collection->_resultsSection.add_notification_callback(CollectionCallbackWrapper{block, collection}, std::move(keyPathArray));
-        return token;
-    }
-
-    RLMThreadSafeReference *tsr = [RLMThreadSafeReference referenceWithThreadConfined:collection];
-    token->_realm = realm;
-    RLMRealmConfiguration *config = realm.configuration;
-    dispatch_async(queue, ^{
-        std::lock_guard<std::mutex> lock(token->_mutex);
-        if (!token->_realm) {
-            return;
-        }
-        RLMRealm *realm = token->_realm = [RLMRealm realmWithConfiguration:config queue:queue error:nil];
-        RLMSection *collection = [realm resolveThreadSafeReference:tsr];
-        token->_token = RLMGetBackingCollection(collection).add_notification_callback(CollectionCallbackWrapper{block, collection}, std::move(keyPathArray));
-    });
-    return token;
 }
 
 - (NSString *)description {
@@ -611,19 +545,19 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSection *collection,
 
 - (id)objectAtIndex:(NSUInteger)index {
     RLMAccessorContext ctx(*_parent.objectInfo);
-    return translateRLMResultsErrors([&] {
+    return translateErrors([&] {
         return ctx.box(_resultsSection[index]);
     });
 }
 
 - (NSUInteger)count {
-    return translateRLMResultsErrors([&] {
+    return translateErrors([&] {
         return _resultsSection.size();
     });
 }
 
 - (id<RLMValue>)key {
-    return translateRLMResultsErrors([&] {
+    return translateErrors([&] {
         return RLMMixedToObjc(_resultsSection.key());
     });
 }
@@ -647,11 +581,11 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSection *collection,
 }
 
 - (BOOL)isInvalidated {
-    return translateRLMResultsErrors([&] { return !_resultsSection.is_valid(); });
+    return translateErrors([&] { return !_resultsSection.is_valid(); });
 }
 
 - (BOOL)isFrozen {
-    return translateRLMResultsErrors([&] { return _parent.frozen; });
+    return translateErrors([&] { return _parent.frozen; });
 }
 
 // The compiler complains about the method's argument type not matching due to
@@ -678,6 +612,11 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSection *collection,
 }
 #pragma clang diagnostic pop
 
+- (realm::NotificationToken)addNotificationCallback:(id)block
+keyPaths:(std::optional<std::vector<std::vector<std::pair<realm::TableKey, realm::ColKey>>>>&&)keyPaths {
+    return _resultsSection.add_notification_callback(CollectionCallbackWrapper{block, self}, std::move(keyPaths));
+}
+
 #pragma mark - Thread Confined Protocol Conformance
 
 - (realm::ThreadSafeReference)makeThreadSafeReference {
@@ -699,14 +638,14 @@ static RLMNotificationToken *RLMAddNotificationBlock(RLMSection *collection,
                                                                      realm:realm
                                                                 objectInfo:realm->_info[objType]
                                                                   keyBlock:metadata.keyBlock];
-    return translateRLMResultsErrors([&] {
+    return translateErrors([&] {
         return [[RLMSection alloc] initWithResultsSection:sr->_sectionedResults[RLMObjcToMixed(metadata.sectionKey)]
                                                    parent:sr];
     });
 }
 
 - (instancetype)resolveInRealm:(RLMRealm *)realm {
-     return translateRLMResultsErrors([&] {
+     return translateErrors([&] {
         RLMSectionedResults *sr = realm.isFrozen ? [_parent freeze] : [_parent thaw];
         return [[RLMSection alloc] initWithResultsSection:sr->_sectionedResults[RLMObjcToMixed(self.key)]
                                                    parent:sr];
