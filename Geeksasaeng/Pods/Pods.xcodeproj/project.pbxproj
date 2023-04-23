@@ -15538,7 +15538,7 @@
 		437E427A41BDDE9F93803C5B5F6C6929 /* FIRConfiguration.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FIRConfiguration.m; path = FirebaseCore/Sources/FIRConfiguration.m; sourceTree = "<group>"; };
 		4383940FE7C0CBC3259C09585851FFCA /* FIRMessagingTokenInfo.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FIRMessagingTokenInfo.m; path = FirebaseMessaging/Sources/Token/FIRMessagingTokenInfo.m; sourceTree = "<group>"; };
 		438CCC1AA746D7A9D92D9DA70055C0DF /* RLMRealmConfiguration.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RLMRealmConfiguration.h; path = include/RLMRealmConfiguration.h; sourceTree = "<group>"; };
-		43A3711116412E5894202170319A8099 /* JKVValue */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JKVValue; path = JKVValue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		43A3711116412E5894202170319A8099 /* JKVValue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JKVValue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43AAC18F75BC895569F9F7488E350D9C /* leveldb_document_overlay_cache.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = leveldb_document_overlay_cache.cc; path = Firestore/core/src/local/leveldb_document_overlay_cache.cc; sourceTree = "<group>"; };
 		43C61D146922D6107FCBECFD5A827B33 /* d1_srtp.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = d1_srtp.cc; path = src/ssl/d1_srtp.cc; sourceTree = "<group>"; };
 		43CFEFA4DB2A8A87DC222B442553EF82 /* stats.upb.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = stats.upb.h; path = "src/core/ext/upb-generated/envoy/config/metrics/v3/stats.upb.h"; sourceTree = "<group>"; };
@@ -19584,7 +19584,7 @@
 				1911113E0FBF13CFF9132E5FF7685228 /* gRPC-C++ */,
 				9C7C87B5D0A6752AFA2642F1BCA967A3 /* gRPC-C++-gRPCCertificates-Cpp */,
 				B471867C535B02FA55D87E260F6480F8 /* gRPC-Core */,
-				43A3711116412E5894202170319A8099 /* JKVValue */,
+				43A3711116412E5894202170319A8099 /* JKVValue.framework */,
 				9F453801F27585052F413F613C847DB2 /* KakaoSDKAuth */,
 				25BDA6E824AD6CBD857358A023C694AD /* KakaoSDKCommon */,
 				9D0E56404A234C3736519ADFC2F9CF78 /* KakaoSDKNavi */,
@@ -29959,7 +29959,7 @@
 			);
 			name = JKVValue;
 			productName = JKVValue;
-			productReference = 43A3711116412E5894202170319A8099 /* JKVValue */;
+			productReference = 43A3711116412E5894202170319A8099 /* JKVValue.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		69AA1CD97ADEF721EFB8D16AF3E96CDE /* Libuv-gRPC */ = {
@@ -35249,7 +35249,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/JKVValue/JKVValue-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/JKVValue/JKVValue-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -36048,7 +36048,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/JKVValue/JKVValue-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/JKVValue/JKVValue-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
