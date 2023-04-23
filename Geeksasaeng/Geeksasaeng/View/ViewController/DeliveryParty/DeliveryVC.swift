@@ -1020,17 +1020,22 @@ extension DeliveryViewController: UITableViewDataSource, UITableViewDelegate {
                     var hourString: String? = nil
                     var minuteString: String? = nil
                     
-                    if dayTime != 0 {
-                        dayString = "\(dayTime)일 "
-                    }
-                    if hourTime != 0 {
-                        hourString = "\(hourTime)시간 "
-                    }
-                    if minuteTime != 0 {
-                        minuteString = "\(minuteTime)분 "
-                    }
                     
-                    cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
+                    
+                    if dayTime == 0 && hourTime == 0 && minuteTime == 0{
+                        cell.timeLabel.text = "\(intervalSecs)초 남았어요"
+                    } else {
+                        if dayTime != 0 {
+                            dayString = "\(dayTime)일 "
+                        }
+                        if hourTime != 0 {
+                            hourString = "\(hourTime)시간 "
+                        }
+                        if minuteTime != 0 {
+                            minuteString = "\(minuteTime)분 "
+                        }
+                        cell.timeLabel.text = (dayString ?? "") + (hourString ?? "") + (minuteString ?? "") + "남았어요"
+                    }
                 }
             }
             return cell
