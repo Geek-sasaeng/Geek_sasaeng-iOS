@@ -81,6 +81,9 @@ class ChattingListViewController: UIViewController {
     // 채팅방 목록 데이터
     private var chattingRoomList: [ChattingRoom] = []
     
+    // 강퇴당한 방의 이름
+    private var exitedRoomTitle: String?
+    
     // MARK: - SubViews
     
     /* Filter Icon */
@@ -117,6 +120,103 @@ class ChattingListViewController: UIViewController {
             make.height.equalTo(UIScreen.main.bounds.height / 5.6)
         }
     }
+    
+    // 강퇴당한 사람에게 띄워주는 알림뷰
+    lazy var exitedNotiView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "강제 퇴장 알림"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapExitedNotiXButton), for: .touchUpInside)
+        }
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(153)
+        }
+        
+        let contentLabel = UILabel().then {
+            $0.text = "\(self.exitedRoomTitle! ?? "") 방에 더 이상 참여할 수 없어요."
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapExitedNotiXButton), for: .touchUpInside)
+        }
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(31)
+            make.top.equalToSuperview().inset(20)
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
+        }
+    }
+    
+    /* 배경 블러 처리를 위해 추가한 visualEffectView */
+    var visualEffectView: UIVisualEffectView?
+    var visualEffectViewOnNav: UIVisualEffectView?
     
     // MARK: - Life Cycle
     
@@ -160,6 +260,16 @@ class ChattingListViewController: UIViewController {
     }
     
     // MARK: - Functions
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+        
+        // 배경 클릭 시 블러뷰와 서브뷰 제거
+        if let touch = touches.first, touch.view == visualEffectView {
+            tapExitedNotiXButton()
+        }
+    }
     
     /* 배달파티 채팅방 목록 조회 */
     private func getChatRoomList() {
@@ -272,8 +382,19 @@ class ChattingListViewController: UIViewController {
                     
                     // 채팅방 목록 맨 위로 셀 올리기
                     self.moveToTopOfList(roomIndex: roomIndex)
-                } else {
+                } else if data.chatType! == "read" {
                     print("[Rabbit] 목록에서 채팅 읽음 수신???", data)
+                } else if data.chatType! == "ban" {
+                    // 강제퇴장 당함 -> 뷰 띄워주기
+                    print("[Rabbit] 채팅방 목록에서 강제퇴장 알림 수신", data)
+                    DispatchQueue.main.async {
+                        // 블러뷰랑 알림뷰 띄우기, 하단탭바 숨기기
+                        self.exitedRoomTitle = data.content
+                        self.visualEffectView = self.setDarkBlurView()
+                        self.visualEffectViewOnNav = self.setDarkBlurViewOnNav()
+                        self.tabBarController?.tabBar.isHidden = true
+                        self.showExitedNotiView()
+                    }
                 }
             } catch {
                 print(error)
@@ -602,6 +723,23 @@ class ChattingListViewController: UIViewController {
         readyView.removeFromSuperview()
     }
     
+    /* 강퇴 알림 뷰 띄우기 */
+    private func showExitedNotiView() {
+        view.addSubview(exitedNotiView)
+        exitedNotiView.snp.makeConstraints { make in
+            make.width.equalTo(256)
+            make.height.equalTo(203)
+            make.centerX.centerY.equalToSuperview()
+        }
+    }
+    
+    /* 파라미터로 온 뷰와 배경 블러뷰 함께 제거 */
+    private func removeViewWithBlurView(_ view: UIView) {
+        view.removeFromSuperview()
+        visualEffectView?.removeFromSuperview()
+        self.visualEffectViewOnNav?.removeFromSuperview()
+    }
+    
     // MARK: - @objc Functions
     
     /* 필터를 탭하면 텍스트 색깔이 바뀌도록 */
@@ -630,6 +768,18 @@ class ChattingListViewController: UIViewController {
     @objc
     private func completeExit() {
         self.showToast(viewController: self, message: "채팅에서 나갔습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 184)
+    }
+    
+    // 강퇴 알림뷰 X 버튼 클릭 시 실행
+    @objc
+    private func tapExitedNotiXButton() {
+        // 띄운 뷰 없애기
+        removeViewWithBlurView(exitedNotiView)
+        // 하단바 띄우기
+        self.tabBarController?.tabBar.isHidden = false
+        // 채팅방 목록 새로고침
+        self.removeRoomListData()
+        self.getChatRoomList()
     }
 }
 
