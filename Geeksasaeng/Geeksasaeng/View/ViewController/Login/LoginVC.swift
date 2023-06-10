@@ -490,7 +490,7 @@ extension LoginViewController : NaverThirdPartyLoginConnectionDelegate {
                     let resultJson = body["response"] as! [String: Any]
                     print("naver user info: ", resultJson)
                     
-                    let phone = resultJson["mobile"] as! String
+                    let phone = resultJson["mobile"] as? String ?? ""
                     let email = resultJson["email"] as? String ?? ""
                     
                     print("네이버 로그인 핸드폰 ",phone)
