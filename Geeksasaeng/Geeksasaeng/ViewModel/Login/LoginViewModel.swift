@@ -11,7 +11,7 @@ import Alamofire
 
 // 로그인 API 연동
 class LoginViewModel {
-    public static func login(_ viewController: LoginViewController, _ parameter : LoginInput, completion: @escaping (LoginModelResult) -> Void) {
+    public static func login(_ parameter : LoginInput, completion: @escaping (LoginOutput?) -> Void) {
         AF.request("https://geeksasaeng.shop/login", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -19,45 +19,52 @@ class LoginViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    guard let passedResult = result.result else { return }
-                    print("DEBUG: 성공")
-                    completion(passedResult)
+                    print("DEBUG: 일반 로그인 성공", result)
                 } else {
-                    print("DEBUG:", result.message!)
-                    viewController.showBottomToast(viewController: viewController, message: result.message!, font: .customFont(.neoMedium, size: 15), color: .lightGray)
+                    print("DEBUG: 일반 로그인 실패", result)
                 }
+                completion(result)
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
+                print("DEBUG: 일반 로그인 실패", error.localizedDescription)
+                completion(nil)
             }
         }
     }
     
+    // TODO: - viewController를 넘기지 않는 방식으로 변경 필요.
     public static func loginNaver(viewController: LoginViewController, _ parameter : NaverLoginInput) {
         AF.request("https://geeksasaeng.shop/login/social", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
-        .responseDecodable(of: NaverLoginOutput.self) { response in
+        .responseDecodable(of: LoginOutput.self) { response in
+            MyLoadingView.shared.hide()
+            
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
                     LoginModel.jwt = result.result?.jwt
                     LoginModel.nickname = result.result?.nickName
-                    LoginModel.userImgUrl = result.result?.userImageUrl
+                    LoginModel.profileImgUrl = result.result?.profileImgUrl
+                    LoginModel.memberId = result.result?.memberId
+                    LoginModel.dormitoryId = result.result?.dormitoryId
+                    LoginModel.dormitoryName = result.result?.dormitoryName
+                    LoginModel.isSocialLogin = true // 소셜 로그인임을 저장하기 위해
                     
                     if result.result?.loginStatus == "NEVER" { // 사용자는 등록되어 있으나 첫 로그인 -> 기숙사 선택화면으로 이동
-                        print("DEBUG: 성공")
+                        print("DEBUG: 네이버 로그인 성공 후 기숙사 화면", result.result)
                         print("DEBUG: \(result.code!)")
                         viewController.showDormitoryView(nickname: result.result?.nickName ?? "홍길동")
                     } else { // 로그인 성공 -> 홈 화면으로 이동
-                        viewController.dormitoryInfo = DormitoryNameResult(id: result.result?.dormitoryId, name: result.result?.dormitoryName)
-                        viewController.userImageUrl = result.result?.userImageUrl
+                        viewController.userImageUrl = result.result?.profileImgUrl
                         viewController.showHomeView()
+                        
+                        print("DEBUG: 네이버 로그인 성공 후 홈 화면", result.result)
                     }
                     
                 } else {
                     // 네이버 로그인 실패
                     print(result.code!)
-                    print("DEBUG:", result.message!)
+                    print("DEBUG: 네이버 로그인 실패", result.result)
                     
                     if result.code == 2807 { // 아예 첫 로그인 -> 회원가입 화면으로 이동
                         viewController.accessToken = parameter.accessToken
@@ -65,8 +72,14 @@ class LoginViewModel {
                     }
                 }
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
+                print("DEBUG: 네이버 로그인 실패", error.localizedDescription)
             }
         }
     }
+}
+
+enum ResponseCase {
+    case success
+    case onlyRequestSuccess
+    case failure
 }

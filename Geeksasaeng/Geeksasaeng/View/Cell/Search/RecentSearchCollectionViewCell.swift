@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
 
 class RecentSearchCollectionViewCell: UICollectionViewCell {
 
@@ -16,19 +18,15 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Subviews
     
-    var recentSearchLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 14)
-        label.textColor = .init(hex: 0x5B5B5B)
-        return label
-    }()
+    var recentSearchLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 14)
+        $0.textColor = .init(hex: 0x5B5B5B)
+    }
     
-    var xImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "xmark")
-        imageView.tintColor = .init(hex: 0x5B5B5B)
-        return imageView
-    }()
+    var xButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "xmark"), for: .normal)
+        $0.tintColor = .init(hex: 0x5B5B5B)
+    }
     
     // MARK: - Initialization
     
@@ -36,12 +34,6 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.backgroundColor = .white
-        
-        // 레이아웃 설정
-        contentView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
         contentView.clipsToBounds = true
         setLayouts()
     }
@@ -53,15 +45,21 @@ class RecentSearchCollectionViewCell: UICollectionViewCell {
     // MARK: - Functions
     
     func setLayouts() {
-        [recentSearchLabel, xImageView].forEach { contentView.addSubview($0) }
+        // 레이아웃 설정
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        [recentSearchLabel, xButton].forEach { contentView.addSubview($0) }
         
         recentSearchLabel.snp.makeConstraints { make in
             make.centerY.left.equalToSuperview()
         }
         
-        xImageView.snp.makeConstraints { make in
+        xButton.snp.makeConstraints { make in
             make.centerY.equalTo(recentSearchLabel)
             make.right.equalToSuperview()
+            make.left.equalTo(recentSearchLabel.snp.right).offset(3)
             make.width.equalTo(13)
             make.height.equalTo(16)
         }

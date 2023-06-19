@@ -14,7 +14,14 @@ target 'Geeksasaeng' do
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Messaging'
   pod 'lottie-ios'
+  pod 'Then'
+  pod 'RMQClient'
+  pod 'RealmSwift'
+  pod 'Starscream'
+  pod 'NMapsMap', '3.10.0'
+  pod 'KakaoSDK'
 
   target 'GeeksasaengTests' do
     inherit! :search_paths
@@ -25,4 +32,13 @@ target 'Geeksasaeng' do
     # Pods for testing
   end
 
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+	config.build_settings["ONLY_ACTIVE_ARCH"] = "NO"
+      end
+  end
 end

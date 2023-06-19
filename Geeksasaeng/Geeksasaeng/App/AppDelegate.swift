@@ -8,14 +8,31 @@
 import UIKit
 import NaverThirdPartyLogin
 import Firebase
+import FirebaseMessaging
+import KakaoSDKCommon
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        KakaoSDK.initSDK(appKey: APIKEY().kakaoAppKey)
+        
         FirebaseApp.configure()
         
+        /* 푸시 알림 전송을 위해 fcm 사용 */
+        Messaging.messaging().delegate = self
+        
+        /* FCM 다시 사용 설정 */
+        Messaging.messaging().isAutoInitEnabled = true
+        
+        UNUserNotificationCenter.current().delegate = self
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { _, _ in }
         application.registerForRemoteNotifications()
+        
+        /* device token 요청 */
+        UIApplication.shared.registerForRemoteNotifications()
+        
         let instance = NaverThirdPartyLoginConnection.getSharedInstance()
         instance?.isNaverAppOauthEnable = true
         instance?.isInAppOauthEnable = true
@@ -28,9 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        print("DEBUG: deviceToken값", deviceTokenString)
+        
+        Messaging.messaging().apnsToken = deviceToken
+    }
+    
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         NaverThirdPartyLoginConnection.getSharedInstance().application(app, open: url, options: options)
-        
         return true
     }
     
@@ -48,6 +71,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
-    
 }
 
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .badge, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
+    }
+}
+
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        // fcm 등록 토큰 저장
+        guard let fcmToken = fcmToken else { return }
+        UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
+        print("DEBUG: 이 사용자의 fcmToken은", fcmToken)
+    }
+}

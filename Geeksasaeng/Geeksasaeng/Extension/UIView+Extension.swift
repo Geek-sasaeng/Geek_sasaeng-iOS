@@ -9,30 +9,23 @@ import UIKit
 
 extension UIView {
     
-    // ?? 얜 어디에 쓰는 거지
-    func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
-        let border = CALayer()
-        border.backgroundColor = color.cgColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - width, width: self.frame.size.width, height: width)
-        self.layer.addSublayer(border)
-    }
-    
     /* view에 그라데이션 적용 -> vertical style */
     func setGradient(startColor: UIColor, endColor: UIColor){
-        let gradient = CAGradientLayer()
-        // startColor가 더 연한 색깔
-        gradient.colors = [startColor.cgColor, endColor.cgColor]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
-        gradient.endPoint = CGPoint(x: 0.0, y: 1.0)
-        gradient.frame = bounds
+        let gradient = CAGradientLayer().then {
+            // startColor가 더 연한 색깔
+            $0.colors = [startColor.cgColor, endColor.cgColor]
+            $0.startPoint = CGPoint(x: 0.0, y: 0.0)
+            $0.endPoint = CGPoint(x: 0.0, y: 1.0)
+            $0.frame = bounds
+        }
         layer.addSublayer(gradient)
     }
     
     /* 뷰에 원하는 그림자 적용 */
-    public func setViewShadow(shadowOpacity: Float, shadowRadius: CGFloat) {
-        self.layer.shadowColor = UIColor.init(hex: 0x000000).cgColor
-        self.layer.shadowOpacity = shadowOpacity
+    public func setViewShadow(shadowColor: CGColor, shadowOpacity: Float, shadowRadius: CGFloat) {
+        self.layer.shadowColor = shadowColor
         self.layer.shadowOffset = .zero
+        self.layer.shadowOpacity = shadowOpacity
         self.layer.shadowRadius = shadowRadius
     }
 }

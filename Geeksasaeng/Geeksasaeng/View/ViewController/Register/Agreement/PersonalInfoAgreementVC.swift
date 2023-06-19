@@ -13,6 +13,14 @@ protocol PersonalInfoAgreementDelegate {
 }
 
 class PersonalInfoAgreementViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var personalInfoAgreementDelegate: PersonalInfoAgreementDelegate?
+    
+    
     // MARK: - SubViews
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -65,15 +73,15 @@ class PersonalInfoAgreementViewController: UIViewController {
         
         infoLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(29)
+            make.left.equalToSuperview().inset(screenWidth / 13.55)
         }
         agreementArrow.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(29)
+            make.right.equalToSuperview().inset(screenWidth / 13.55)
         }
         agreementLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalTo(agreementArrow.snp.left).offset(-11)
+            make.right.equalTo(agreementArrow.snp.left).offset(-(screenWidth / 35.72))
         }
         
         view.isUserInteractionEnabled = true
@@ -85,13 +93,10 @@ class PersonalInfoAgreementViewController: UIViewController {
     
     var contentImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "TermsOfUseAgreement")
+        imageView.image = UIImage(named: "PersonalInfoAgreement")
         return imageView
     }()
     
-    
-    // MARK: - Properties
-    var personalInfoAgreementDelegate: PersonalInfoAgreementDelegate?
     
     // MARK: - Life Cycles
     override func viewDidLoad() {
@@ -104,9 +109,9 @@ class PersonalInfoAgreementViewController: UIViewController {
     }
     
     private func setAttributes() {
-        navigationItem.title = "약관 동의"
+        navigationItem.title = "개인정보 수집 및 이용동의"
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
@@ -131,19 +136,19 @@ class PersonalInfoAgreementViewController: UIViewController {
         
         contentsView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.bottom.equalTo(contentImageView.snp.bottom).offset(30)
+            make.bottom.equalTo(contentImageView.snp.bottom).offset(screenHeight / 28.4)
         }
         
         agreementView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-            make.height.equalTo(55)
+            make.height.equalTo(screenHeight / 15.49)
             make.width.equalToSuperview()
         }
         
         contentImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(10)
+            make.top.equalToSuperview().inset(screenHeight / 85.2)
             make.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.width * 12.7)
+            make.height.equalTo(screenWidth * 12.7)
         }
     }
     

@@ -6,563 +6,866 @@
 //
 
 import UIKit
+
 import SnapKit
+import Then
+import Kingfisher
+import KakaoSDKTalk
+import NaverThirdPartyLogin
+import SafariServices
 
 class ProfileViewController: UIViewController {
 
     // MARK: - Properties
     
-    var ongoingPartyList: [RecentPartyModelResult] = [] {
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var safariVC: SFSafariViewController?
+    var myActivities: [EndedDeliveryPartyList] = [] {
         didSet {
-            ongoingTableView.reloadData()
+            myActivityCollectionView.reloadData()
         }
     }
+    var updatedAt: [String] = []
+    
     
     // MARK: - SubViews
     
     // 스크롤뷰
-    let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
-        return scrollView
-    }()
-    let contentView: UIView = {
-        let view = UIView()
+    lazy var scrollView = UIScrollView().then {
+        $0.backgroundColor = .white
+        $0.delegate = self
+    }
+    
+    // 콘텐츠뷰
+    let contentView = UIView().then {
+        $0.backgroundColor = .white
+    }
+    
+    /* MyInfo View가 올라가는 background View */
+    let backgroundView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF1F5F9)
+    }
+    
+    lazy var gradeLabel = UILabel().then {
+        $0.font = .customFont(.neoBold, size: 12)
+        $0.textColor = .white
+    }
+    lazy var remainLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 12)
+        $0.textColor = .white
+    }
+    /* grade & 복학까지 ~ 가 들어있는 view */
+    lazy var gradeView = UIView().then { view in
+        view.backgroundColor = .mainColor
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 10
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        
+        let separateImageView = UIImageView(image: UIImage(named: "MyInfoSeparateIcon"))
+        let arrowImageView = UIImageView(image: UIImage(named: "MyInfoArrowIcon"))
+        
+        [ gradeLabel, separateImageView, remainLabel, arrowImageView ].forEach {
+            view.addSubview($0)
+        }
+        
+        gradeLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().inset(20)
+        }
+        separateImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(gradeLabel.snp.right).offset(12)
+        }
+        remainLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(separateImageView.snp.right).offset(12)
+        }
+        arrowImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(remainLabel.snp.right).offset(6)
+        }
+    }
+    
+    /* 내 정보 View Components */
+    let heartImageView = UIImageView()
+    let nicknameLabel = UILabel().then {
+        $0.font = .customFont(.neoBold, size: 20)
+    }
+    let universityLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = .init(hex: 0x636363)
+    }
+    let dormitoryLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.textColor = .init(hex: 0x636363)
+    }
+    let profileImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 54
+    }
+    
+    /* 내 정보 view */
+    lazy var myInfoView = UIView().then { view in
+        view.layer.masksToBounds = false
+        view.layer.cornerRadius = 10
         view.backgroundColor = .white
-        return view
-    }()
+        view.setViewShadow(shadowColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.17).cgColor, shadowOpacity: 1, shadowRadius: 7)
+        view.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapMyInfoView))
+        view.addGestureRecognizer(tapGesture)
+    }
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "DefaultProfile"))
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 118 / 2
-        return imageView
-    }()
-    let levelIconImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LevelIcon"))
-        imageView.backgroundColor = .white
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 37 / 2
-        // 테두리 그림자 생성
-        imageView.layer.shadowRadius = 5
-        imageView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        imageView.layer.shadowOpacity = 1
-        imageView.layer.shadowOffset = CGSize(width: 0, height: 0)
-        imageView.layer.masksToBounds = false
-        return imageView
-    }()
+    // 나의 활동 보기 옆의 화살표 버튼
+    lazy var myActivityArrowButton = UIButton().then {
+        $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
+        $0.addTarget(self, action: #selector(tapMyActivityArrowButton), for: .touchUpInside)
+    }
+    /* 나의 활동 container view */
+    lazy var myActivityContainerView = UIView()
     
-    let degreeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "별별학사"
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    let dotImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "Dot"))
-        return imageView
-    }()
-    let univLabel: UILabel = {
-        let label = UILabel()
-        label.text = "별별대학교"
-        label.font = .customFont(.neoMedium, size: 15)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    
-    let nickNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = LoginModel.nickname
-        label.font = .customFont(.neoBold, size: 17)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    
-    let levelGuideView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF1F5F9)
-        view.layer.cornerRadius = 39 / 2
-        let label: UILabel = {
-            let label = UILabel()
-            label.text = "복학까지 2학기 남았어요"
-            label.font = .customFont(.neoMedium, size: 14)
-            label.textColor = .mainColor
-            return label
-        }()
-        view.addSubview(label)
-        label.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+    /* 나의 활동 view (활동 내역이 있을 때) */
+    lazy var existMyActivityView = UIView().then { view in
+        view.isUserInteractionEnabled = true
+        let showMyActivityLabel = UILabel().then {
+            $0.text = "나의 활동 보기"
+            $0.font = .customFont(.neoMedium, size: 15)
         }
-        return view
-    }()
-    
-    // 신입생 lv 이미지
-    let freshmanView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 11 / 2
-        view.snp.makeConstraints { make in
-            make.width.height.equalTo(11)
+        
+        [ showMyActivityLabel, self.myActivityArrowButton].forEach {
+            view.addSubview($0)
         }
-        view.backgroundColor = .mainColor
-        return view
-    }()
-    // 복학생 lv 이미지
-    let returningStudentView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 7 / 2
-        view.snp.makeConstraints { make in
-            make.width.height.equalTo(7)
+        showMyActivityLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(27)
+            make.left.equalToSuperview().inset(24)
         }
-        view.backgroundColor = .init(hex: 0xD9D9D9)
-        return view
-    }()
-    // 졸업생 lv 이미지
-    let graduateView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 7 / 2
-        view.snp.makeConstraints { make in
-            make.width.height.equalTo(7)
+        myActivityArrowButton.snp.makeConstraints { make in
+            make.centerY.equalTo(showMyActivityLabel.snp.centerY)
+            make.right.equalToSuperview().inset(30)
         }
-        view.backgroundColor = .init(hex: 0xD9D9D9)
-        return view
-    }()
+    }
+    let myActivityCollectionViewFlowLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        $0.minimumLineSpacing = 7
+        
+        let screenWidth = UIScreen.main.bounds.width
+        $0.itemSize = CGSize(width: (screenWidth-54)/3, height: 84 + 17 + 22)
+        
+        $0.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+    }
+    lazy var myActivityCollectionView = UICollectionView(frame: .zero, collectionViewLayout: myActivityCollectionViewFlowLayout)
     
-    // level 정보에 관한 스택뷰들
-    let levelViewStackView = UIStackView()
-    let levelLabelStackView = UIStackView()
-    
-    // level 바
-    let freshmanBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.layer.cornerRadius = 2.5
-        return view
-    }()
-    let totalBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xEFEFEF)
-        view.layer.cornerRadius = 2.5
-        return view
-    }()
-    
-    let ongoingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "진행 중인 활동"
-        label.font = .customFont(.neoMedium, size: 16)
-        label.textColor = .init(hex: 0x2F2F2F)
-        return label
-    }()
-    
-    let ongoingTableView = UITableView()
+    /* 나의 활동 view (활동 내역이 없을 때) */
+    let noneMyActivityView = UIView().then { view in
+        let noneActivityLabel = UILabel().then {
+            $0.text = "진행한 활동이 없어요"
+            $0.font = .customFont(.neoMedium, size: 18)
+            $0.textColor = .init(hex: 0x636363)
+        }
+        let noneActivityImageView = UIImageView(image: UIImage(named: "NoneActivityIcon"))
+        
+        [ noneActivityLabel, noneActivityImageView ].forEach {
+            view.addSubview($0)
+        }
+        
+        noneActivityLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().inset(40)
+        }
+        noneActivityImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().inset(40)
+        }
+    }
     
     /* 구분선 View */
-    let separateView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF8F8F8)
-        return view
-    }()
-    
-    /* 공지사항 옆에 파란색 동그라미 */
-    let noticeCheckAlarmView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 5 / 2
-        return view
-    }()
-    
-    /* 공지사항, 나의 활동 보기, 나의 정보, 문의하기, 이용 약관 보기 */
-    let noticeLabel = UILabel()
-    let myActivityLabel = UILabel()
-    let myInfoLabel = UILabel()
-    let contactUsLabel = UILabel()
-    let termsOfUseLabel = UILabel()
-    
-    // 공지사항 contents 뷰
-    let noticeView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 5
-        view.backgroundColor = .init(hex: 0xEFEFEF)
-        
-        let noticeImageView = UIImageView(image: UIImage(named: "NoticeImage"))
-        view.addSubview(noticeImageView)
-        noticeImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(18)
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(17)
-        }
-        
-        let noticeContentLabel: UILabel = {
-            let label = UILabel()
-            label.font = .customFont(.neoMedium, size: 13)
-            label.textColor = .init(hex: 0x2F2F2F)
-            label.text = "긱사생 이용자분들께 알립니다. 본 공지는 더미 데이터입니다."
-            return label
-        }()
-        view.addSubview(noticeContentLabel)
-        noticeContentLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalTo(noticeImageView.snp.right).offset(10)
-            make.right.equalToSuperview().inset(16)
-        }
-        
-        return view
-    }()
-    
-    // 공지사항, 나의 활동 보기, 나의 정보, 문의하기, 이용 약관 보기 옆의 화살표 버튼
-    let noticeArrowButton = UIButton()
-    let myActivityArrowButton = UIButton()
-    let myInfoArrowButton = UIButton()
-    let contactUsArrowButton = UIButton()
-    let termsOfUseArrowButton = UIButton()
-    
-    // 구분선들
+    let separateView = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF8F8F8)
+    }
     let firstLineView = UIView()
     let secondLineView = UIView()
-    let thirdLineView = UIView()
-    let fourthLineView = UIView()
     
-    // 버전 표시
-    let versionLabel: UILabel = {
-        let label = UILabel()
-        label.text = "ver. 1.0"
-        label.textColor = .init(hex: 0xA8A8A8)
-        label.font = .customFont(.neoMedium, size: 12)
-        return label
-    }()
+    /* 나의 정보 수정, 문의하기, 이용 약관 보기, 로그아웃 */
+    let editMyInfoLabel = UILabel().then { $0.text = "나의 정보 수정" }
+    let customerServiceLabel = UILabel().then { $0.text = "고객센터" }
+    let logoutLabel = UILabel().then { $0.text = "로그아웃"}
     
+    lazy var withdrawalMembershipButton = UIButton().then {
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoMedium, size: 13)
+        $0.makeBottomLine(color: 0xA8A8A8, width: 48, height: 1, offsetToTop: -8)
+        $0.setTitle("회원탈퇴", for: .normal)
+        $0.addTarget(self, action: #selector(tapWithdrawalMembershipButton), for: .touchUpInside)
+    }
+    
+    // 나의 정보 수정, 문의하기, 이용 약관 보기, 로그아웃 옆의 화살표 버튼
+    let editMyInfoArrowButton = UIButton()
+    let customerServiceButton = UIButton()
+    let logoutArrowButton = UIButton()
+    
+    lazy var logoutView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "로그아웃"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
+        }
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(186)
+        }
+        
+        let contentLabel = UILabel().then {
+            $0.text = "서비스 사용이 제한되며,\n로그인이 필요해요.\n로그아웃을 진행할까요?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapLogoutConfirmButton), for: .touchUpInside)
+        }
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(25)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
+        }
+    }
+    
+    lazy var withdrawalMembershipView = UIView().then {
+        $0.backgroundColor = .white
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 7
+        
+        let topSubView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xF8F8F8)
+        }
+        $0.addSubview(topSubView)
+        topSubView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(50)
+        }
+        
+        /* set titleLabel */
+        let titleLabel = UILabel().then {
+            $0.text = "회원탈퇴"
+            $0.textColor = UIColor(hex: 0xA8A8A8)
+            $0.font = .customFont(.neoMedium, size: 14)
+        }
+        topSubView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        /* set cancelButton */
+        lazy var cancelButton = UIButton().then {
+            $0.setImage(UIImage(named: "Xmark"), for: .normal)
+            $0.addTarget(self, action: #selector(self.tapXButton), for: .touchUpInside)
+        }
+        topSubView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(12)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        /* bottom View: contents, 확인 버튼 */
+        let bottomSubView = UIView().then {
+            $0.backgroundColor = UIColor.white
+        }
+        $0.addSubview(bottomSubView)
+        bottomSubView.snp.makeConstraints { make in
+            make.top.equalTo(topSubView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(186)
+        }
+        
+        let contentLabel = UILabel().then {
+            $0.text = "긱사생 서비스를 더 이상\n이용할 수 없어요.\n탈퇴를 진행할까요?"
+            $0.numberOfLines = 0
+            $0.textColor = .init(hex: 0x2F2F2F)
+            $0.font = .customFont(.neoMedium, size: 14)
+            let attrString = NSMutableAttributedString(string: $0.text!)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 6
+            paragraphStyle.alignment = .center
+            attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+            $0.attributedText = attrString
+        }
+        let lineView = UIView().then {
+            $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        }
+        lazy var confirmButton = UIButton().then {
+            $0.setTitleColor(.mainColor, for: .normal)
+            $0.setTitle("확인", for: .normal)
+            $0.titleLabel?.font = .customFont(.neoBold, size: 18)
+            $0.addTarget(self, action: #selector(self.tapWithdrawalMembershipConfirmButton), for: .touchUpInside)
+        }
+        
+        [contentLabel, lineView, confirmButton].forEach {
+            bottomSubView.addSubview($0)
+        }
+        contentLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+        }
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(23)
+            make.left.equalTo(18)
+            make.right.equalTo(-18)
+            make.height.equalTo(1.7)
+        }
+        confirmButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(lineView.snp.bottom).offset(18)
+            make.width.height.equalTo(34)
+        }
+    }
+    
+    var visualEffectView: UIVisualEffectView?
+    var visualEffectViewOnNav: UIVisualEffectView?
+
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setAttributes()
-        
-        /* 스택뷰 설정 */
-        setStackView(passedArray: [freshmanView, returningStudentView, graduateView], stackView: levelViewStackView)
-        setStackView(passedArray: ["신입생", "복학생", "졸업생"], stackView: levelLabelStackView)
-        
+        setCollectionView()
         addSubViews()
         setLayouts()
-        setTableView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        /* 가장 최근에 참여한 배달 파티 3개 가져오는 API 호출 */
-        RecentPartyViewModel.requestGetRecentPartyList { result in
-            // 성공 시에 값 추가
-            self.ongoingPartyList = result
-        }
+        super.viewWillAppear(animated)
+        
+        self.getUserInfo()
+        // 나의 활동 3개 띄우기
+        self.getUserActivities()
+        
+        // 다른 VC에서 여기에 토스트 메세지를 띄우기 위한 옵저버 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(completeChangingPw), name: NSNotification.Name("CompleteChangingPw"), object: nil)
+        
+        setCustomNavigationBar(.init(hex: 0xF1F5F9))
     }
     
     // MARK: - Functions
     
+    // 배경의 블러뷰를 터치하면 띄워진 뷰와 블러뷰가 같이 사라지도록 설정
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        if let touch = touches.first, touch.view == self.visualEffectView {
+            visualEffectView?.removeFromSuperview()
+            visualEffectViewOnNav?.removeFromSuperview()
+            visualEffectView = nil
+            visualEffectViewOnNav = nil
+            self.tabBarController?.tabBar.isHidden = false
+            // view에 addSubview가 된 즉, 현재 띄워져있는 뷰인지 확인
+            if logoutView.isDescendant(of: view) {
+                logoutView.removeFromSuperview()
+            } else if withdrawalMembershipView.isDescendant(of: view) {
+                withdrawalMembershipView.removeFromSuperview()
+            }
+        }
+    }
+    
+    private func getUserInfo() {
+        MyLoadingView.shared.show()
+        
+        UserInfoAPI.getUserInfo { isSuccess, result in
+            MyLoadingView.shared.hide()
+            print(result)
+            
+            if isSuccess {
+                self.gradeLabel.text = result.grade
+                if result.grade == "신입생" {
+                    self.heartImageView.image = UIImage(named: "FreshmanIcon")
+                } else if result.grade == "복학생" {
+                    self.heartImageView.image = UIImage(named: "ReturningIcon")
+                } else {
+                    self.heartImageView.image = UIImage(named: "GraduIcon")
+                }
+                
+                self.remainLabel.text = result.nextGradeAndRemainCredits
+                self.nicknameLabel.text = result.nickname
+                self.universityLabel.text = result.universityName
+                self.dormitoryLabel.text = result.dormitoryName
+                
+                let url = URL(string: result.profileImgUrl!)
+                self.profileImageView.kf.setImage(with: url)
+            }
+        }
+    }
+    
+    // 나의 활동 3개 데이터 보여주기
+        private func getUserActivities() {
+            MyLoadingView.shared.show()
+            
+            // 목록의 최상단 3개를 가져와서 보여준다
+            UserInfoAPI.getMyActivityList(cursor: 0) { isSuccess, result in
+                MyLoadingView.shared.hide()
+                
+                // 활동 내역이 있냐 없냐에 따라 맞는 뷰 띄워주기
+                if let parties = result?.endedDeliveryPartiesVoList {
+                    if parties.count == 0 { // 활동 내역이 없을 때
+                        self.showNoneMyActivityView()
+                    } else { // 있으면 내역 띄우기
+                        self.showExistMyActivityView()
+                    }
+                } else { // 활동 내역이 없을 때
+                    self.showNoneMyActivityView()
+                }
+                
+                if isSuccess {
+                    if let result = result {
+                        guard var parties = result.endedDeliveryPartiesVoList else { return }
+                        // 3개보다 많으면 그 뒤에 데이터들은 안 쓴다
+                        if parties.count > 3 {
+                            let endIdx = parties.index(parties.startIndex, offsetBy: 2)
+                            parties = Array(parties[...endIdx])
+                        }
+                        self.myActivities = parties
+                        
+                        parties.forEach {
+                            let str = $0.updatedAt
+                            let endIdx = str?.index(str!.startIndex, offsetBy: 10)
+                            self.updatedAt.append(String(str![...endIdx!]))
+                        }
+                    }
+                } else {
+                    self.showToast(viewController: self, message: "나의 활동을 불러오지 못했어요", font: .customFont(.neoBold, size: 15), color: .mainColor)
+                }
+            }
+        }
+    
+    private func setCollectionView() {
+        myActivityCollectionView.backgroundColor = .white
+        myActivityCollectionView.dataSource = self
+        myActivityCollectionView.delegate = self
+        myActivityCollectionView.register(MyActivityCollectionViewCell.self, forCellWithReuseIdentifier: MyActivityCollectionViewCell.identifier)
+    }
+    
     private func setAttributes() {
         /* Navigation Bar Attrs */
         self.navigationItem.title = "나의 정보"
-        self.navigationItem.setRightBarButton(
-            UIBarButtonItem(image: UIImage(named: "Bell"), style: .plain, target: self, action: #selector(tapBellButton)
-                           ), animated: true)
-        self.navigationItem.rightBarButtonItem?.tintColor = .init(hex: 0x2F2F2F)
-        self.navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
-    
-        ongoingTableView.backgroundColor = .white
         
         /* 서비스 labels Attrs 설정 */
-        [ noticeLabel, myActivityLabel, myInfoLabel, contactUsLabel, termsOfUseLabel].forEach {
+        [ editMyInfoLabel, customerServiceLabel, logoutLabel ].forEach {
             $0.font = .customFont(.neoMedium, size: 15)
             $0.textColor = .init(hex: 0x2F2F2F)
         }
         
-        noticeLabel.text = "공지사항"
-        myActivityLabel.text = "나의 활동 보기"
-        myInfoLabel.text = "나의 정보"
-        contactUsLabel.text = "문의하기"
-        termsOfUseLabel.text = "서비스 이용 약관 보기"
-        
-        [firstLineView, secondLineView, fourthLineView].forEach {
+        /* 구분선 설정 */
+        [firstLineView, secondLineView].forEach {
             $0.backgroundColor = .init(hex: 0xF8F8F8)
         }
         
         /* 화살표 버튼들 */
-        [ noticeArrowButton, myActivityArrowButton, myInfoArrowButton, contactUsArrowButton, termsOfUseArrowButton ].forEach {
+        [ editMyInfoArrowButton, customerServiceButton, logoutArrowButton ].forEach {
             $0.setImage(UIImage(named: "ServiceArrow"), for: .normal)
         }
         
         /* 타겟 설정 */
-        myInfoArrowButton.addTarget(self, action: #selector(tapMyInfoButton), for: .touchUpInside)
+        editMyInfoArrowButton.addTarget(self, action: #selector(tapEditMyInfoButton), for: .touchUpInside)
+        logoutArrowButton.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
+        customerServiceButton.addTarget(self, action: #selector(tapcustomerServiceButton), for: .touchUpInside)
+        
+        gradeView.isUserInteractionEnabled = true
+        let gestureToGradeView = UITapGestureRecognizer(target: self, action: #selector(showUserStageView))
+        gradeView.addGestureRecognizer(gestureToGradeView)
     }
     
-    // 스택뷰 구성
-    private func setStackView(passedArray: [Any], stackView: UIStackView) {
-        if let viewArray = passedArray as? [UIView] {
-            stackView.axis = .horizontal
-            stackView.sizeToFit()
-            stackView.layoutIfNeeded()
-            stackView.distribution = .fillProportionally
-            stackView.alignment = .center
-            stackView.spacing = 110
-            
-            for view in viewArray {
-                stackView.addArrangedSubview(view)
+    private func createBlurView() {
+        if self.visualEffectView == nil {
+            self.tabBarController?.tabBar.isHidden = true
+            self.visualEffectView = setDarkBlurView()
+            self.visualEffectView!.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
             }
-        } else {
-            let stringArray = passedArray as! [String]
-            stackView.axis = .horizontal
-            stackView.sizeToFit()
-            stackView.layoutIfNeeded()
-            stackView.distribution = .fillProportionally
-            stackView.alignment = .center
-            stackView.spacing = 85
-            
-            for string in stringArray {
-                let label = UILabel()
-                label.font = .customFont(.neoMedium, size: 12)
-                label.textColor = .init(hex: 0x636363)
-                label.text = string
-                stackView.addArrangedSubview(label)
-            }
+            self.visualEffectViewOnNav = setDarkBlurViewOnNav()
         }
     }
     
     private func addSubViews() {
-        self.view.addSubview(scrollView)
+        view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         [
-            profileImageView,
-            levelIconImageView,
-            degreeLabel, dotImageView, univLabel,
-            nickNameLabel,
-            levelGuideView,
-            levelViewStackView,
-            totalBar, freshmanBar,
-            levelLabelStackView,
-            ongoingLabel,
-            ongoingTableView,
+            backgroundView,
+            myActivityContainerView,
             separateView,
-            noticeCheckAlarmView,
-            noticeLabel,
-            noticeView, noticeArrowButton,
-            firstLineView,
-            myActivityLabel, myActivityArrowButton,
-            secondLineView,
-            myInfoLabel, myInfoArrowButton,
-            thirdLineView,
-            contactUsLabel, contactUsArrowButton,
-            fourthLineView,
-            termsOfUseLabel, termsOfUseArrowButton,
-            versionLabel
+            editMyInfoLabel, editMyInfoArrowButton, firstLineView,
+            customerServiceLabel, customerServiceButton, secondLineView,
+            logoutLabel, logoutArrowButton,
+            withdrawalMembershipButton
         ].forEach { contentView.addSubview($0) }
+        
+        [ heartImageView, nicknameLabel, universityLabel, dormitoryLabel, profileImageView ].forEach {
+            myInfoView.addSubview($0)
+        }
+        myInfoView.addSubview(gradeView)
+        backgroundView.addSubview(myInfoView)
     }
     
     private func setLayouts() {
         // 스크롤뷰
         scrollView.snp.makeConstraints { make in
-            make.edges.width.equalTo(view.safeAreaLayoutGuide)
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalTo(screenWidth)
         }
-        // 스크롤뷰 안에 들어갈 컨텐츠뷰
+        
+        // 컨텐츠뷰
         contentView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.bottom.equalTo(versionLabel.snp.bottom).offset(21)
+            make.bottom.equalTo(withdrawalMembershipButton.snp.bottom).offset(screenHeight / 20)
         }
         
+        backgroundView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.left.right.equalToSuperview()
+            make.bottom.equalTo(myInfoView.snp.bottom).offset(16)
+        }
+        
+        gradeView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(36)
+        }
+        
+        heartImageView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.left.equalToSuperview().inset(screenWidth / 18)
+        }
+        nicknameLabel.snp.makeConstraints { make in
+            make.top.equalTo(heartImageView.snp.top)
+            make.left.equalTo(heartImageView.snp.right).offset(screenWidth / 63.38)
+        }
+        universityLabel.snp.makeConstraints { make in
+            make.top.equalTo(nicknameLabel.snp.bottom).offset(screenHeight / 80)
+            make.left.equalTo(nicknameLabel.snp.left)
+        }
+        dormitoryLabel.snp.makeConstraints { make in
+            make.top.equalTo(universityLabel.snp.bottom).offset(screenHeight / 80)
+            make.left.equalTo(universityLabel.snp.left)
+        }
         profileImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(28)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(118)
-        }
-        levelIconImageView.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.top).offset(3)
-            make.left.equalTo(profileImageView.snp.left).offset(-6)
-            make.width.height.equalTo(37)
+            make.bottom.equalToSuperview().inset(10)
+            make.right.equalToSuperview().inset(36)
+            make.width.height.equalTo(108)
         }
         
-        dotImageView.snp.makeConstraints { make in
-            make.centerX.equalTo(profileImageView)
-            make.top.equalTo(profileImageView.snp.bottom).offset(18)
-            make.width.height.equalTo(3)
-        }
-        degreeLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(dotImageView)
-            make.right.equalTo(dotImageView.snp.left).offset(-5)
-        }
-        univLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(dotImageView)
-            make.left.equalTo(dotImageView.snp.right).offset(5)
-        }
-        nickNameLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(profileImageView)
-            make.top.equalTo(univLabel.snp.bottom).offset(4)
-        }
-        levelGuideView.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(13)
-            make.centerX.equalTo(nickNameLabel)
-            make.width.equalTo(180)
-            make.height.equalTo(39)
-        }
-        levelViewStackView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(levelGuideView.snp.bottom).offset(17)
-            make.height.equalTo(11)
-        }
-        totalBar.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(44)
-            make.top.equalTo(levelViewStackView.snp.bottom).offset(9)
-            make.height.equalTo(5)
-        }
-        freshmanBar.snp.makeConstraints { make in
-            make.top.left.equalTo(totalBar)
-            make.width.equalTo((UIScreen.main.bounds.width - 44 - 44) / 3)
-            make.height.equalTo(5)
-        }
-        levelLabelStackView.snp.makeConstraints { make in
-            make.centerX.equalTo(totalBar)
-            make.top.equalTo(totalBar.snp.bottom).offset(11)
+        myInfoView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(screenHeight / 40)
+            make.left.right.equalToSuperview().inset(23)
+            make.height.equalTo(166)
         }
         
-        ongoingLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(levelLabelStackView.snp.bottom).offset(38)
+        myActivityContainerView.snp.makeConstraints { make in
+            make.top.equalTo(backgroundView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(162)
         }
-        ongoingTableView.snp.makeConstraints { make in
-            make.top.equalTo(ongoingLabel.snp.bottom).offset(27)
-            make.left.right.equalToSuperview().inset(42)
-            make.height.equalTo(9 + 44 + 9 + 44 + 9 + 44)
-        }
+        
         separateView.snp.makeConstraints { make in
-            make.top.equalTo(ongoingTableView.snp.bottom).offset(31)
+            make.top.equalTo(myActivityContainerView.snp.bottom)
             make.width.equalToSuperview()
             make.height.equalTo(8)
         }
-        
-        noticeCheckAlarmView.snp.makeConstraints { make in
-            make.top.equalTo(separateView.snp.bottom).offset(11)
-            make.left.equalToSuperview().inset(81)
-            make.width.height.equalTo(5)
-        }
-        noticeLabel.snp.makeConstraints { make in
-            make.top.equalTo(noticeCheckAlarmView.snp.bottom).offset(1)
-            make.left.equalToSuperview().inset(24)
-        }
-        noticeView.snp.makeConstraints { make in
-            make.top.equalTo(noticeLabel.snp.bottom).offset(13)
-            make.left.equalToSuperview().inset(29)
-            make.right.equalToSuperview().inset(27)
-            make.height.equalTo(42)
+
+        editMyInfoLabel.snp.makeConstraints { make in
+            make.top.equalTo(separateView.snp.bottom).offset(screenHeight / 42.1)
+            make.left.equalToSuperview().inset(screenWidth / 15)
         }
         firstLineView.snp.makeConstraints { make in
-            make.top.equalTo(noticeView.snp.bottom).offset(12)
-            make.left.right.equalToSuperview().inset(19)
+            make.top.equalTo(editMyInfoLabel.snp.bottom).offset(screenHeight / 42.1)
+            make.left.right.equalToSuperview().inset(screenWidth / 18.95)
             make.height.equalTo(1)
         }
-        myActivityLabel.snp.makeConstraints { make in
-            make.top.equalTo(firstLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
+
+        customerServiceLabel.snp.makeConstraints { make in
+            make.top.equalTo(firstLineView.snp.bottom).offset(screenHeight / 42.1)
+            make.left.equalToSuperview().inset(screenWidth / 15)
         }
         secondLineView.snp.makeConstraints { make in
-            make.top.equalTo(myActivityLabel.snp.bottom).offset(19)
-            make.left.right.equalToSuperview().inset(18)
+            make.top.equalTo(customerServiceLabel.snp.bottom).offset(screenHeight / 42.1)
+            make.left.right.equalToSuperview().inset(screenWidth / 20)
             make.height.equalTo(1)
-        }
-        myInfoLabel.snp.makeConstraints { make in
-            make.top.equalTo(secondLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
-        }
-        thirdLineView.snp.makeConstraints { make in
-            make.top.equalTo(myInfoLabel.snp.bottom).offset(19)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1)
-        }
-        contactUsLabel.snp.makeConstraints { make in
-            make.top.equalTo(thirdLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
-        }
-        fourthLineView.snp.makeConstraints { make in
-            make.top.equalTo(contactUsLabel.snp.bottom).offset(19)
-            make.left.right.equalToSuperview().inset(18)
-            make.height.equalTo(1)
-        }
-        termsOfUseLabel.snp.makeConstraints { make in
-            make.top.equalTo(fourthLineView.snp.bottom).offset(19)
-            make.left.equalToSuperview().inset(24)
         }
         
-        noticeArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(noticeLabel)
-            make.right.equalToSuperview().inset(31)
+        logoutLabel.snp.makeConstraints { make in
+            make.top.equalTo(secondLineView.snp.bottom).offset(screenHeight / 42.1)
+            make.left.equalToSuperview().inset(screenWidth / 15)
         }
-        myActivityArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(myActivityLabel)
-            make.right.equalToSuperview().inset(31)
+
+        editMyInfoArrowButton.snp.makeConstraints { make in
+            make.centerY.equalTo(editMyInfoLabel)
+            make.right.equalToSuperview().inset(screenWidth / 11.6)
         }
-        myInfoArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(myInfoLabel)
-            make.right.equalToSuperview().inset(31)
+        customerServiceButton.snp.makeConstraints { make in
+            make.centerY.equalTo(customerServiceLabel)
+            make.right.equalToSuperview().inset(screenWidth / 11.6)
         }
-        contactUsArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(contactUsLabel)
-            make.right.equalToSuperview().inset(31)
+        logoutArrowButton.snp.makeConstraints { make in
+            make.centerY.equalTo(logoutLabel)
+            make.right.equalToSuperview().inset(screenWidth / 11.6)
         }
-        termsOfUseArrowButton.snp.makeConstraints { make in
-            make.centerY.equalTo(termsOfUseLabel)
-            make.right.equalToSuperview().inset(31)
-        }
-        versionLabel.snp.makeConstraints { make in
+        
+        withdrawalMembershipButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(termsOfUseLabel.snp.bottom).offset(43)
+            make.top.equalTo(logoutLabel.snp.bottom).offset(screenHeight / 8)
         }
     }
     
-    private func setTableView() {
-        ongoingTableView.dataSource = self
-        ongoingTableView.delegate = self
-        ongoingTableView.register(OngoingTableViewCell.self, forCellReuseIdentifier: OngoingTableViewCell.identifier)
+    // 진행한 활동 내역이 없다는 뷰 띄우기
+    private func showNoneMyActivityView() {
+        self.existMyActivityView.removeFromSuperview()
+        self.myActivityContainerView.addSubview(self.noneMyActivityView)
+        self.noneMyActivityView.snp.makeConstraints { make in
+            make.left.right.top.bottom.equalToSuperview()
+        }
+    }
+    
+    // 진행한 활동 내역 띄우기
+    private func showExistMyActivityView() {
+        self.noneMyActivityView.removeFromSuperview()
         
-        ongoingTableView.rowHeight = 53
-        ongoingTableView.separatorColor = .none
-        ongoingTableView.separatorStyle = .none
+        self.myActivityContainerView.addSubview(self.existMyActivityView)
+        self.existMyActivityView.snp.makeConstraints { make in
+            make.left.right.top.bottom.equalToSuperview()
+        }
+        self.existMyActivityView.addSubview(self.myActivityCollectionView)
+        self.myActivityCollectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(49)
+            make.left.right.equalToSuperview().inset(15)
+            make.bottom.equalToSuperview()
+        }
     }
     
     // MARK: - @objc Functions
     
     @objc
-    private func tapBellButton() {
-        print("DEBUG: 종 버튼 클릭")
+    private func tapMyInfoView() {
+        let profileCardVC = ProfileCardViewController()
+        profileCardVC.modalPresentationStyle = .overFullScreen
+        profileCardVC.modalTransitionStyle = .crossDissolve
+        self.present(profileCardVC, animated: true)
+    }
+    
+    // 나의 활동 목록 화면으로 이동
+    @objc
+    private func tapMyActivityArrowButton() {
+        let activityListVC = ActivityListViewController()
+        activityListVC.modalPresentationStyle = .overFullScreen
+        activityListVC.modalTransitionStyle = .crossDissolve
+        self.navigationController?.pushViewController(activityListVC, animated: true)
     }
     
     @objc
-    private func tapPencilButton() {
-        print("DEBUG: 연필 버튼 클릭")
+    private func tapEditMyInfoButton() {
+        let editMyInfoVC = EditMyInfoViewController()
+        self.navigationController?.pushViewController(editMyInfoVC, animated: true)
     }
     
     @objc
-    private func tapMyInfoButton() {
-        print("DEBUG: 나의 정보 화살표 클릭")
-        let myInfoVC = MyInfoViewController()
-        navigationController?.pushViewController(myInfoVC, animated: true)
+    private func tapcustomerServiceButton() {
+        let customerServiceVC = CustomerServiceViewController()
+        self.navigationController?.pushViewController(customerServiceVC, animated: true)
+    }
+    
+    @objc
+    private func tapLogoutButton() {
+        createBlurView()
+        view.addSubview(logoutView)
+        logoutView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(256)
+            make.height.equalTo(236)
+        }
+    }
+    
+    @objc
+    private func tapWithdrawalMembershipButton() {
+        createBlurView()
+        view.addSubview(withdrawalMembershipView)
+        withdrawalMembershipView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(256)
+            make.height.equalTo(236)
+        }
+    }
+    
+    @objc
+    private func tapXButton() {
+        visualEffectView?.removeFromSuperview()
+        visualEffectViewOnNav?.removeFromSuperview()
+        logoutView.removeFromSuperview()
+        withdrawalMembershipView.removeFromSuperview()
+        visualEffectView = nil
+        visualEffectViewOnNav = nil
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
+    @objc
+    private func tapLogoutConfirmButton() {
+        MyLoadingView.shared.show()
+        
+        LoginAPI.logout { isSuccess in
+            MyLoadingView.shared.hide()
+            
+            if isSuccess {
+                print("DEBUG: 로그아웃 완료")
+//                NaverThirdPartyLoginConnection.requestDeleteToken(NaverThirdPartyLoginConnection.getSharedInstance())
+                UserDefaults.standard.set("nil", forKey: "jwt") // delete local jwt
+                
+                let rootVC = LoginViewController()
+                UIApplication.shared.windows.first?.rootViewController = rootVC
+                self.view.window?.rootViewController?.dismiss(animated: true)
+                
+                // 로그인 VC에 토스트 메세지 띄우기
+                NotificationCenter.default.post(name: NSNotification.Name("CompleteLogout"), object: nil)
+            }
+        }
+    }
+    
+    @objc
+    private func tapWithdrawalMembershipConfirmButton() {
+        MyLoadingView.shared.show()
+        
+        UserInfoAPI.deleteMember(memberId: LoginModel.memberId!) { isSuccess in
+            MyLoadingView.shared.hide()
+            
+            if isSuccess {
+                print("DEBUG: 회원 탈퇴 완료")
+//                NaverThirdPartyLoginConnection.requestDeleteToken(NaverThirdPartyLoginConnection.getSharedInstance())
+                
+                let rootVC = LoginViewController()
+                UIApplication.shared.windows.first?.rootViewController = rootVC
+                self.view.window?.rootViewController?.dismiss(animated: true)
+                
+                // 로그인 VC에 토스트 메세지 띄우기
+                NotificationCenter.default.post(name: NSNotification.Name("CompleteWithdrawal"), object: nil)
+            } else {
+                print("회원 탈퇴 실패")
+            }
+        }
+    }
+    
+    @objc
+    private func showUserStageView() {
+        let userStageVC = UserStageViewController()
+        self.navigationController?.pushViewController(userStageVC, animated: true)
+    }
+    
+    // 비밀번호 변경을 완료했을 때 토스트 메세지 띄우기
+    @objc
+    private func completeChangingPw(_ notification: Notification) {
+        self.showToast(viewController: self, message: "비밀번호를 변경하였습니다", font: .customFont(.neoBold, size: 15), color: .mainColor, width: 225)
     }
 }
 
-// MARK: - UITableViewDataSource, UITableViewDelegate
-
-extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ongoingPartyList.count
+extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        self.myActivities.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: OngoingTableViewCell.identifier, for: indexPath) as? OngoingTableViewCell else { return UITableViewCell() }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyActivityCollectionViewCell.identifier, for: indexPath) as? MyActivityCollectionViewCell else { return UICollectionViewCell() }
         
-        // index에 따른 title, partyId 설정
-        cell.partyTitle = ongoingPartyList[indexPath.row].title
+        cell.titleLabel.text = myActivities[indexPath.row].title
+        cell.updatedAtLabel.text = updatedAt[indexPath.row]
+        
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let partyVC = PartyViewController()
-        partyVC.partyId = ongoingPartyList[indexPath.row].id
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedPartyId = myActivities[indexPath.row].id else { return }
+        
+        let partyVC = PartyViewController(partyId: selectedPartyId, isEnded: true)
         self.navigationController?.pushViewController(partyVC, animated: true)
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension ProfileViewController: UIScrollViewDelegate {
+    // 스크롤 감지
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 스크롤을 위로 올릴 때는 스크롤뷰 배경색을 0xF1F5F9로
+        if scrollView.contentOffset.y < 0 {
+            self.scrollView.backgroundColor = .init(hex: 0xF1F5F9)
+        } else {
+            // 스크롤을 아래로 내릴 때는 스크롤뷰 배경색을 white로 설정
+            self.scrollView.backgroundColor = .white
+        }
     }
 }

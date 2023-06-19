@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import UIKit
 
 extension UILabel {
     // UILabel의 아래 라인 만들어주는 함수
     func makeBottomLine(color: UInt, width: CGFloat, height: CGFloat, offsetToTop: CGFloat) {
-        let bottomLine = UIView()
-        bottomLine.backgroundColor = UIColor.init(hex: color)
+        let bottomLine = UIView().then {
+            $0.backgroundColor = UIColor.init(hex: color)
+        }
         
         self.addSubview(bottomLine)
         bottomLine.snp.makeConstraints { make in
@@ -20,6 +22,29 @@ extension UILabel {
             make.height.equalTo(height)
             make.left.equalTo(self.snp.left).offset(-5)
         }
+    }
+    
+    /* label의 텍스트, 컬러, 폰트를 설정하는 함수 */
+    func setTextAndColorAndFont(text: String? = nil, textColor: UIColor, font: UIFont) {
+        if let text = text {
+            self.text = text
+        }
+        self.textColor = textColor
+        self.font = font
+    }
+    
+    /* 라벨의 너비 반환 */
+    func getWidth(text: String) -> CGFloat {
+        self.frame = CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        
+        self.text = text
+        self.font = .customFont(.neoMedium, size: 13)
+        self.numberOfLines = 1
+        self.lineBreakMode = .byCharWrapping
+        self.sizeToFit()
+        self.setNeedsDisplay()
+        
+        return self.frame.width
     }
 }
 

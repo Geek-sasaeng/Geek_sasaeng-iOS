@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 extension String {
     func isValidId() -> Bool {
@@ -30,5 +31,46 @@ extension String {
         let nicknameValidation = NSPredicate.init(format: "SELF MATCHES %@", nicknameExpression)
         
         return nicknameValidation.evaluate(with: self)
+    }
+    
+    // 계좌 번호 Validation 확인 -> 숫자로만 이루어져 있는지
+    func isValidAccountNum() -> Bool {
+        let accountExpression = "^[0-9]*$"
+        return (self.range(of: accountExpression, options: .regularExpression ) != nil)
+    }
+    
+    /* limit만큼 text를 잘라서 return 해주는 함수 */
+    func createSlicedText(_ limit: Int) -> String {
+        if self.count > limit {
+            return self.truncated(after: limit)
+        } else {
+            return self
+        }
+    }
+    
+    // yyyy-MM-dd HH:mm:ss 형식의 str을 MM/dd HH:mm 형식으로 포맷팅
+    func formatToMMddHHmm() -> String {
+        let str = self.replacingOccurrences(of: " ", with: "")
+        let startIdx = str.index(str.startIndex, offsetBy: 5)
+        let middleIdx = str.index(startIdx, offsetBy: 5)
+        let endIdx = str.index(middleIdx, offsetBy: 5)
+        
+        let dateStr = str[startIdx..<middleIdx].replacingOccurrences(of: "-", with: "/") // MM/dd
+        let timeStr = str[middleIdx..<endIdx] // HH:mm
+        
+        return dateStr + "  " + timeStr
+    }
+    
+    /* count 뒤로는 자르고 ...을 붙여서 byTruncatingTail 처럼 보이게 만들어 주는 함수 */
+    private func truncated(after count: Int) -> String {
+        let truncateAfter = index(startIndex, offsetBy: count)
+        guard endIndex > truncateAfter else { return self }
+        return String(self[startIndex..<truncateAfter]) + "…"
+    }
+    
+    func substring(start: Int, end: Int) -> String{
+        let start = self.index(self.startIndex, offsetBy: start)
+        let end = self.index(self.startIndex, offsetBy: end)
+        return String(self[start..<end])
     }
 }

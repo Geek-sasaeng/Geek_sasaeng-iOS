@@ -13,6 +13,15 @@ protocol TermsOfUseAgreementDelegate {
 }
 
 class TermsOfUseAgreementViewController: UIViewController {
+    
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var TermsOfUseAgreementDelegate: TermsOfUseAgreementDelegate?
+    
+    
+    // MARK: - SubViews
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
@@ -40,7 +49,7 @@ class TermsOfUseAgreementViewController: UIViewController {
             let label = UILabel()
             label.font = .customFont(.neoMedium, size: 16)
             label.textColor = .white
-            label.text = "개인정보 수집 및 이용동의"
+            label.text = "서비스 이용약관 동의"
             return label
         }()
         
@@ -64,15 +73,15 @@ class TermsOfUseAgreementViewController: UIViewController {
         
         infoLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(29)
+            make.left.equalToSuperview().inset(screenWidth / 13.55)
         }
         agreementArrow.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(29)
+            make.right.equalToSuperview().inset(screenWidth / 13.55)
         }
         agreementLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalTo(agreementArrow.snp.left).offset(-11)
+            make.right.equalTo(agreementArrow.snp.left).offset(-(screenWidth / 35.72))
         }
         
         view.isUserInteractionEnabled = true
@@ -84,13 +93,10 @@ class TermsOfUseAgreementViewController: UIViewController {
     
     var contentImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "PersonalInfoAgreement")
+        imageView.image = UIImage(named: "TermsOfUseAgreement")
         return imageView
     }()
     
-    
-    // MARK: - Properties
-    var TermsOfUseAgreementDelegate: TermsOfUseAgreementDelegate?
     
     
     // MARK: - Life Cycles
@@ -105,9 +111,9 @@ class TermsOfUseAgreementViewController: UIViewController {
     }
     
     private func setAttributes() {
-        navigationItem.title = "약관 동의"
+        navigationItem.title = "서비스 이용약관 동의"
         navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(back(sender:)))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
@@ -132,29 +138,24 @@ class TermsOfUseAgreementViewController: UIViewController {
         
         contentsView.snp.makeConstraints { make in
             make.edges.width.equalToSuperview()
-            make.bottom.equalTo(contentImageView.snp.bottom).offset(30)
+            make.bottom.equalTo(contentImageView.snp.bottom).offset(screenHeight / 28.4)
         }
         
         agreementView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-            make.height.equalTo(55)
+            make.height.equalTo(screenHeight / 15.49)
             make.width.equalToSuperview()
         }
         
         contentImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(10)
+            make.top.equalToSuperview().inset(screenHeight / 85.2)
             make.width.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.width * 29)
+            make.height.equalTo(screenWidth * 29)
         }
     }
     
     
     // MARK: - Functions
-    
-    @objc
-    private func back() {
-        navigationController?.popViewController(animated: true)
-    }
     
     @objc
     private func tapAgreementView() {

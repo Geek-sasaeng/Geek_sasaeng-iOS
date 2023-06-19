@@ -19,8 +19,10 @@
 #import "FIRFirestoreSource.h"
 #import "FIRListenerRegistration.h"
 
+@class FIRAggregateQuery;
 @class FIRFieldPath;
 @class FIRFirestore;
+@class FIRFilter;
 @class FIRQuerySnapshot;
 @class FIRDocumentSnapshot;
 
@@ -102,6 +104,14 @@ NS_SWIFT_NAME(Query)
     NS_SWIFT_NAME(addSnapshotListener(includeMetadataChanges:listener:));
 
 #pragma mark - Filtering Data
+/**
+ * Creates and returns a new Query with the additional filter.
+ *
+ * @param filter The new filter to apply to the existing query.
+ * @return The newly created Query.
+ */
+- (FIRQuery *)queryWhereFilter:(FIRFilter *)filter NS_SWIFT_NAME(whereFilter(_:));
+
 /**
  * Creates and returns a new `Query` with the additional filter that documents must
  * contain the specified field and the value must be equal to the specified value.
@@ -541,6 +551,18 @@ NS_SWIFT_NAME(Query)
  * @return The created `Query`.
  */
 - (FIRQuery *)queryEndingAtValues:(NSArray *)fieldValues NS_SWIFT_NAME(end(at:));
+
+#pragma mark - Aggregation
+
+/**
+ * A query that counts the documents in the result set of this query, without actually downloading
+ * the documents.
+ *
+ * Using this `AggregateQuery` to count the documents is efficient because only the final count,
+ * not the documents' data, is downloaded. The query can even count the documents if the result
+ * set would be prohibitively large to download entirely (e.g. thousands of documents).
+ */
+@property(nonatomic, readonly) FIRAggregateQuery *count;
 
 @end
 

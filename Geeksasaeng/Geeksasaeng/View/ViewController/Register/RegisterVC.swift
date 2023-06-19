@@ -6,120 +6,98 @@
 //
 
 import UIKit
+
 import SnapKit
-import Alamofire
+import Then
 
 class RegisterViewController: UIViewController {
+    // MARK: - Properties
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    
+    var idCheck = false
+    var nicknameCheck = false
     
     // MARK: - Subviews
     
-    var progressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainColor
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    var progressBar = UIView().then {
+        $0.backgroundColor = .mainColor
+        $0.layer.cornerRadius = 1.5
+    }
     
-    var remainBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .init(hex: 0xF2F2F2)
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 1.5
-        return view
-    }()
+    var remainBar = UIView().then {
+        $0.backgroundColor = .init(hex: 0xF2F2F2)
+        $0.layer.cornerRadius = 1.5
+    }
     
-    var progressIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoTop"))
-        return imageView
-    }()
-    
-    var remainIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "LogoBottom"))
-        return imageView
-    }()
+    var progressIcon = UIImageView(image: UIImage(named: "LogoTop"))
+    var remainIcon = UIImageView(image: UIImage(named: "LogoBottom"))
     
     var idLabel = UILabel()
     var passwordLabel = UILabel()
     var passwordCheckLabel = UILabel()
     var nickNameLabel = UILabel()
     
-    var idTextField = UITextField()
-    lazy var pwTextField: UITextField = {
-        let textField = UITextField()
-        textField.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
-        return textField
-    }()
-    lazy var pwCheckTextField: UITextField = {
-        let textField = UITextField()
-        textField.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
-        return textField
-    }()
-    var nickNameTextField = UITextField()
+    lazy var idTextField = UITextField().then {
+        $0.delegate = self
+    }
+    lazy var pwTextField = UITextField().then {
+        $0.addTarget(self, action: #selector(isValidPwTextField), for: .editingDidEnd)
+        $0.delegate = self
+    }
+    lazy var pwCheckTextField = UITextField().then {
+        $0.addTarget(self, action: #selector(isValidPwCheckTextField), for: .editingDidEnd)
+        $0.delegate = self
+    }
+    lazy var nickNameTextField = UITextField().then {
+        $0.delegate = self
+    }
     
-    var idAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var idAvailableLabel = UILabel().then {
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    var passwordAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.text = "문자, 숫자 및 특수문자 포함 8자 이상으로 입력해주세요"
-        label.textColor = .red
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var passwordAvailableLabel = UILabel().then {
+        $0.text = "문자, 숫자 및 특수문자 포함 8자 이상으로 입력해주세요"
+        $0.textColor = .red
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    var passwordSameCheckLabel: UILabel = {
-        let label = UILabel()
-        label.text = "비밀번호를 다시 확인해주세요"
-        label.textColor = .red
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var passwordSameCheckLabel = UILabel().then {
+        $0.text = "비밀번호를 다시 확인해주세요"
+        $0.textColor = .red
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    var nickNameAvailableLabel: UILabel = {
-        let label = UILabel()
-        label.text = "사용 가능한 아이디입니다"
-        label.textColor = .mainColor
-        label.font = .customFont(.neoMedium, size: 13)
-        label.isHidden = true
-        return label
-    }()
+    var nickNameAvailableLabel = UILabel().then {
+        $0.text = "사용 가능한 아이디입니다"
+        $0.textColor = .mainColor
+        $0.font = .customFont(.neoMedium, size: 13)
+        $0.isHidden = true
+    }
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("다음", for: .normal)
-        button.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
-        button.titleLabel?.font = .customFont(.neoBold, size: 20)
-        button.layer.cornerRadius = 5
-        button.backgroundColor = UIColor(hex: 0xEFEFEF)
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
-        button.isEnabled = false
-        return button
-    }()
+    lazy var nextButton = UIButton().then {
+        $0.setTitle("다음", for: .normal)
+        $0.setTitleColor(UIColor(hex: 0xA8A8A8), for: .normal)
+        $0.titleLabel?.font = .customFont(.neoBold, size: 20)
+        $0.layer.cornerRadius = 5
+        $0.backgroundColor = UIColor(hex: 0xEFEFEF)
+        $0.clipsToBounds = true
+        $0.addTarget(self, action: #selector(showNextView), for: .touchUpInside)
+        $0.isEnabled = false
+    }
     
-    lazy var idCheckButton:  UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(tapIdCheckButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var idCheckButton = UIButton().then {
+        $0.addTarget(self, action: #selector(tapIdCheckButton), for: .touchUpInside)
+    }
     
-    lazy var nickNameCheckButton: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
-        return button
-    }()
+    lazy var nickNameCheckButton = UIButton().then {
+        $0.addTarget(self, action: #selector(tapNickNameCheckButton), for: .touchUpInside)
+    }
     
-    // MARK: - Properties
-    
-    var idCheck = false
-    var nicknameCheck = false
     
     // MARK: - Life Cycle
     
@@ -132,6 +110,20 @@ class RegisterViewController: UIViewController {
         setLayouts()
         setTextFieldTarget()
         addRightSwipe()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -154,136 +146,134 @@ class RegisterViewController: UIViewController {
     private func setLayouts() {
         /* progress Bar */
         progressBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.width.equalTo((UIScreen.main.bounds.width - 50) / 5)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.left.equalToSuperview().inset(25)
+            make.height.equalTo(screenWidth / 142)
+            make.width.equalTo((screenWidth - 50) / 5)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
+            make.left.equalToSuperview().inset(screenWidth / 15.72)
         }
-
+        
         remainBar.snp.makeConstraints { make in
-            make.height.equalTo(3)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.height.equalTo(screenWidth / 142)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight / 85.2)
             make.left.equalTo(progressBar.snp.right)
-            make.right.equalToSuperview().inset(25)
+            make.right.equalToSuperview().inset(screenWidth / 15.72)
         }
         
         progressIcon.snp.makeConstraints { make in
-            make.width.equalTo(35)
-            make.height.equalTo(22)
-            make.top.equalTo(progressBar.snp.top).offset(-10)
-            make.left.equalTo(progressBar.snp.right).inset(15)
+            make.width.equalTo(screenWidth / 11.22)
+            make.height.equalTo(screenHeight / 38.72)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 85.2))
+            make.left.equalTo(progressBar.snp.right).inset(screenWidth / 26.2)
         }
         
         remainIcon.snp.makeConstraints { make in
-            make.width.equalTo(22)
-            make.height.equalTo(36)
-            make.top.equalTo(progressBar.snp.top).offset(-8)
-            make.right.equalTo(remainBar.snp.right).offset(3)
+            make.width.equalTo(screenWidth / 17.86)
+            make.height.equalTo(screenHeight / 23.66)
+            make.top.equalTo(progressBar.snp.top).offset(-(screenHeight / 106.5))
+            make.right.equalTo(remainBar.snp.right).offset(screenWidth / 131)
         }
         
         /* id */
         idLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(progressBar.snp.bottom).offset(50)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(progressBar.snp.bottom).offset(screenHeight / 17.04)
         }
         
         idCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.top.equalTo(remainBar.snp.bottom).offset(82)
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 4.85)
+            make.height.equalTo(screenHeight / 20.78)
+            make.top.equalTo(remainBar.snp.bottom).offset(screenHeight / 10.39)
         }
         
         idTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalTo(idCheckButton.snp.left).offset(-16)
-            make.top.equalTo(idLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.right.equalTo(idCheckButton.snp.left).offset(-(screenWidth / 24.56))
+            make.top.equalTo(idLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         idAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(idTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(idTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* password */
         passwordLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(idAvailableLabel.snp.bottom).offset(31)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(idAvailableLabel.snp.bottom).offset(screenHeight / 27.48)
         }
         
         pwTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(26)
-            make.top.equalTo(passwordLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         passwordAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(pwTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(pwTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* password check */
         passwordCheckLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(passwordAvailableLabel.snp.bottom).offset(31)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordAvailableLabel.snp.bottom).offset(screenHeight / 27.48)
         }
         
         pwCheckTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalToSuperview().inset(26)
-            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordCheckLabel.snp.bottom).offset(screenHeight / 42.6)
         }
         
         passwordSameCheckLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(pwCheckTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(pwCheckTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* nickname */
         nickNameLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.top.equalTo(passwordSameCheckLabel.snp.bottom).offset(31)
-        }
-        
-        nickNameCheckButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(26)
-            make.width.equalTo(81)
-            make.height.equalTo(41)
-            make.top.equalTo(pwCheckTextField.snp.bottom).offset(73)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.top.equalTo(passwordSameCheckLabel.snp.bottom).offset(screenHeight / 27.48)
         }
         
         nickNameTextField.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(27)
-            make.right.equalTo(nickNameCheckButton.snp.left).offset(-16)
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().inset(screenWidth / 14.55)
+            make.right.equalTo(nickNameCheckButton.snp.left).offset(-(screenWidth / 24.56))
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(screenHeight / 42.6)
         }
-
+        
+        nickNameCheckButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(screenWidth / 15.11)
+            make.width.equalTo(screenWidth / 4.85)
+            make.height.equalTo(screenHeight / 20)
+            make.bottom.equalTo(nickNameTextField.snp.bottom).offset(6)
+        }
+        
         nickNameAvailableLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(40)
-            make.top.equalTo(nickNameTextField.snp.bottom).offset(21)
+            make.left.equalToSuperview().inset(screenWidth / 9.82)
+            make.top.equalTo(nickNameTextField.snp.bottom).offset(screenHeight / 40.57)
         }
         
         /* nextButton */
         nextButton.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(28)
-            make.bottom.equalToSuperview().inset(51)
-            make.height.equalTo(51)
+            make.left.right.equalToSuperview().inset(screenWidth / 14.03)
+            make.bottom.equalToSuperview().inset(screenHeight / 16.7)
+            make.height.equalTo(screenHeight / 16.7)
         }
     }
     
     private func setAttributes() {
         /* label attr */
-        idLabel = setMainLabelAttrs("아이디")
-        passwordLabel = setMainLabelAttrs("비밀번호")
-        passwordCheckLabel = setMainLabelAttrs("비밀번호 확인")
-        nickNameLabel = setMainLabelAttrs("닉네임")
+        setMainLabelAttrs(idLabel, "아이디")
+        setMainLabelAttrs(passwordLabel, "비밀번호")
+        setMainLabelAttrs(passwordCheckLabel, "비밀번호 확인")
+        setMainLabelAttrs(nickNameLabel, "닉네임")
         
         /* textFields attr */
         setTextFieldAttrs(textField: idTextField, msg: "6-20자 영문+숫자로 입력", width: 210)
         setTextFieldAttrs(textField: pwTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
         setTextFieldAttrs(textField: pwCheckTextField, msg: "문자, 숫자 및 특수문자 포함 8자 이상으로 입력", width: 307)
         setTextFieldAttrs(textField: nickNameTextField, msg: "3-8자 영문 혹은 한글로 입력", width: 210)
-    
+        
         /* 중복확인 buttons attr */
         [idCheckButton, nickNameCheckButton].forEach {
             $0.setTitle("중복 확인", for: .normal)
@@ -295,12 +285,10 @@ class RegisterViewController: UIViewController {
     }
     
     // 공통 속성을 묶어놓은 함수
-    private func setMainLabelAttrs(_ text: String) -> UILabel {
-        let label = UILabel()
+    private func setMainLabelAttrs(_ label: UILabel, _ text: String) {
         label.text = text
         label.font = .customFont(.neoMedium, size: 18)
         label.textColor = .black
-        return label
     }
     
     private func setTextFieldAttrs(textField: UITextField, msg: String, width: CGFloat){
@@ -322,95 +310,185 @@ class RegisterViewController: UIViewController {
         }
     }
     
+    // MARK: - @objc Functions
+    
     // EmailAuthVC로 화면 전환.
-    @objc private func showNextView() {
-        let emailAuthVC = EmailAuthViewController()
-        
-        emailAuthVC.modalTransitionStyle = .crossDissolve
-        emailAuthVC.modalPresentationStyle = .fullScreen
-        
-        // 데이터 전달
+    @objc
+    private func showNextView() {
         if let idData = self.idTextField.text,
            let pwData = self.pwTextField.text,
            let pwCheckData = self.pwCheckTextField.text,
            let nickNameData = self.nickNameTextField.text {
-            emailAuthVC.idData = idData
-            emailAuthVC.pwData = pwData
-            emailAuthVC.pwCheckData = pwCheckData
-            emailAuthVC.nickNameData = nickNameData
+            // 생성자를 통한 필수 데이터 전달
+            let emailAuthVC = EmailAuthViewController(idData: idData, pwData: pwData, pwCheckData: pwCheckData, nickNameData: nickNameData)
             
+            emailAuthVC.modalTransitionStyle = .crossDissolve
+            emailAuthVC.modalPresentationStyle = .fullScreen
+            
+            // 화면 전환
             present(emailAuthVC, animated: true)
         }
     }
     
-    @objc private func didChangeTextField(_ sender: UITextField) {
+    @objc
+    private func didChangeTextField(_ sender: UITextField) {
+        guard let idCount = idTextField.text?.count,
+              let nickNameCount = nickNameTextField.text?.count,
+              let isValidPassword = pwTextField.text?.isValidPassword()
+        else { return }
+        
+        /* 변경될 때마다 중복확인 다시 하기 위해 false로 */
         if sender == idTextField {
             idCheck = false
         } else if sender == nickNameTextField {
             nicknameCheck = false
         }
         
-        if idTextField.text?.count ?? 0 >= 1 {
+        if idCount >= 1 {
             idCheckButton.setActivatedButton()
-        } else if idTextField.text?.count ?? 0 < 1 {
+        } else if idCount < 1 {
             idCheckButton.setDeactivatedButton()
         }
-        if nickNameTextField.text?.count ?? 0 >= 1 {
+        
+        if nickNameCount >= 1 {
             nickNameCheckButton.setActivatedButton()
-        } else if nickNameTextField.text?.count ?? 0 < 1 {
+        } else if nickNameCount < 1 {
             nickNameCheckButton.setDeactivatedButton()
         }
         
-        if pwTextField.text?.isValidPassword() ?? false && pwCheckTextField.text == pwTextField.text
-            && idCheck && nicknameCheck
-        {
+        if idCheck && nicknameCheck && isValidPassword && pwCheckTextField.text == pwTextField.text {
             nextButton.setActivatedNextButton()
         } else {
             nextButton.setDeactivatedNextButton()
         }
     }
     
-    @objc private func tapIdCheckButton() {
-        if idTextField.text?.isValidId() ?? false == false {
+    @objc
+    private func tapIdCheckButton() {
+        guard let isValidId = idTextField.text?.isValidId() else { return }
+        
+        if !isValidId {
             idAvailableLabel.text = "6-20자 영문+숫자로 입력"
             idAvailableLabel.textColor = .red
             idAvailableLabel.isHidden = false
         } else {
             if let id = idTextField.text {
+                MyLoadingView.shared.show()
+                
                 let input = IdRepetitionInput(loginId: id)
-                RepetitionAPI.checkIdRepetition(self, parameters: input)
+                RepetitionAPI.checkIdRepetition(input) { isSuccess, message in
+                    MyLoadingView.shared.hide()
+                    
+                    switch isSuccess {
+                    case .success:
+                        self.idCheck = true
+                        if self.idTextField.text?.isValidId() ?? false
+                            && self.pwTextField.text?.isValidPassword() ?? false
+                            && self.pwCheckTextField.text == self.pwTextField.text
+                            && self.nicknameCheck {
+                            self.nextButton.setActivatedNextButton()
+                        }
+                        self.idAvailableLabel.text = message
+                        self.idAvailableLabel.textColor = .mainColor
+                        self.idAvailableLabel.isHidden = false
+                    case .onlyRequestSuccess:
+                        self.idCheck = false
+                        self.idAvailableLabel.text = message
+                        self.idAvailableLabel.textColor = .red
+                        self.idAvailableLabel.isHidden = false
+                    case .failure:
+                        print(message)
+                    }
+                }
             }
         }
     }
     
-    @objc private func tapNickNameCheckButton() {
-        if nickNameTextField.text?.isValidNickname() ?? false == false {
+    @objc
+    private func tapNickNameCheckButton() {
+        guard let isValidNickname = nickNameTextField.text?.isValidNickname() else { return }
+        
+        if !isValidNickname {
             nickNameAvailableLabel.text = "3-8자 영문 혹은 한글로 입력"
             nickNameAvailableLabel.textColor = .red
             nickNameAvailableLabel.isHidden = false
         } else {
             if let nickname = nickNameTextField.text {
+                MyLoadingView.shared.show()
+                
                 let input = NickNameRepetitionInput(nickName: nickname)
-                RepetitionAPI.checkNicknameRepetition(self, parameters: input)
+                RepetitionAPI.checkNicknameRepetition(input) { isSuccess, message in
+                    MyLoadingView.shared.hide()
+                    
+                    switch isSuccess {
+                    case .success:
+                        self.nicknameCheck = true
+                        if self.idTextField.text?.isValidId() ?? false
+                            && self.pwTextField.text?.isValidPassword() ?? false
+                            && self.pwCheckTextField.text == self.pwTextField.text
+                            && self.idCheck {
+                            self.nextButton.setActivatedNextButton()
+                        }
+                        self.nickNameAvailableLabel.text = message
+                        self.nickNameAvailableLabel.textColor = .mainColor
+                        self.nickNameAvailableLabel.isHidden = false
+                    case .onlyRequestSuccess:
+                        self.nicknameCheck = true
+                        self.nickNameAvailableLabel.text = message
+                        self.nickNameAvailableLabel.textColor = .red
+                        self.nickNameAvailableLabel.isHidden = false
+                    case .failure:
+                        print(message)
+                    }
+                }
             }
         }
     }
     
-    // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
-    @objc private func isValidPwTextField() {
-        if !(pwTextField.text?.isValidPassword() ?? false) {
-            passwordAvailableLabel.isHidden = false
-        } else {
-            passwordAvailableLabel.isHidden = true
+    // 닉네임 textfield 채울 때 뷰 y값을 키보드 높이만큼 올리기 -> 닉네임 텍스트 필드가 꽤나 밑에 있어서 키보드에 가려지기 때문
+    @objc
+    private func keyboardWillChange(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if nickNameTextField.isFirstResponder {
+                self.view.frame.origin.y = -keyboardSize.height
+            }
         }
     }
     
+    @objc
+    private func keyboardWillHide() {
+        self.view.frame.origin.y = 0    // 뷰의 y값 되돌리기
+    }
+    
+    // 중복 확인 버튼 눌렀을 때, validation 검사하고(불일치하면 return) id 중복 확인 API 호출
+    @objc
+    private func isValidPwTextField() {
+        guard let isValidPassword = pwTextField.text?.isValidPassword() else { return }
+        passwordAvailableLabel.isHidden = isValidPassword
+    }
+    
     // pw validation 검사
-    @objc private func isValidPwCheckTextField() {
-        if pwCheckTextField.text != pwTextField.text {
-            passwordSameCheckLabel.isHidden = false
-        } else {
-            passwordSameCheckLabel.isHidden = true
+    @objc
+    private func isValidPwCheckTextField() {
+        passwordSameCheckLabel.isHidden = (pwCheckTextField.text == pwTextField.text)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension RegisterViewController: UITextFieldDelegate {
+    // return 버튼 클릭 시 실행
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 키보드 내리거나 커서 이동
+        if textField == idTextField {
+            textField.resignFirstResponder()
+        } else if textField == pwTextField {
+            pwCheckTextField.becomeFirstResponder()
+        } else if textField == pwCheckTextField {
+            nickNameTextField.becomeFirstResponder()
+        } else if textField == nickNameTextField {
+            nickNameTextField.resignFirstResponder()
         }
+        return true
     }
 }

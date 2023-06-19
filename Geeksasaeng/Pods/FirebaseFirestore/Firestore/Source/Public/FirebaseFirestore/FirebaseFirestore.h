@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
+#import "FIRAggregateQuery.h"
+#import "FIRAggregateQuerySnapshot.h"
+#import "FIRAggregateSource.h"
 #import "FIRCollectionReference.h"
 #import "FIRDocumentChange.h"
 #import "FIRDocumentReference.h"
 #import "FIRDocumentSnapshot.h"
 #import "FIRFieldPath.h"
 #import "FIRFieldValue.h"
+#import "FIRFilter.h"
 #import "FIRFirestore.h"
 #import "FIRFirestoreErrors.h"
 #import "FIRFirestoreSettings.h"

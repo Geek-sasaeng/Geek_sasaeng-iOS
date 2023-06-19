@@ -11,7 +11,7 @@ import Alamofire
 // 이메일로 인증번호 전송하는 API 연동
 class EmailAuthViewModel {
     
-    public static func requestSendEmail(_ parameter : EmailAuthInput, completion: @escaping (Bool, String) -> ()) {
+    public static func requestSendEmail(_ parameter : EmailAuthInput, completion: @escaping (EmailAuthModel?) -> ()) {
         AF.request("https://geeksasaeng.shop/email", method: .post,
                    parameters: parameter, encoder: JSONParameterEncoder.default, headers: nil)
         .validate()
@@ -19,16 +19,14 @@ class EmailAuthViewModel {
             switch response.result {
             case .success(let result):
                 if result.isSuccess! {
-                    print("DEBUG: 성공", result.message!)
-                    completion(result.isSuccess!, "인증번호가 전송되었습니다.")
-                    
+                    print("DEBUG: 이메일 전송 성공", result.message!)
                 } else {
-                    print("DEBUG: 실패", result.message!)
-                    completion(result.isSuccess!, "인증번호 전송이 실패했습니다.")
+                    print("DEBUG: 이메일 전송 실패", result)
                 }
+                completion(result)
             case .failure(let error):
-                print("DEBUG:", error.localizedDescription)
-                completion(false, "이메일 주소를 다시 확인해 주세요.")
+                print("DEBUG: 이메일 전송 실패", error)
+                completion(nil)
             }
         }
     }
